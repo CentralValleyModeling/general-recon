@@ -4,9 +4,10 @@ import pandss as pdss
 import pandas as pd
 import numpy as np
 
-from dash import Dash, html, dcc, Input, Output, callback
+from dash import Dash, html, dcc, Input, Output, callback, dash_table
 import plotly.express as px
 import plotly.graph_objects as go
+import dash_bootstrap_components as dbc
 
 
 Scenario = namedtuple('Scenario',['pathname','alias','active'])
@@ -36,6 +37,15 @@ for path in paths:
 df = pd.DataFrame()
 df = pd.read_csv('temp_mult.csv', index_col=0, parse_dates=True)
 
+# Make Summary Table from dataframe
+monthfilter = [1,2,3,4,5,6,7,8,9,10,11,12]
+monthfilter = [9]
+df1 = df.loc[(df['icm'].isin(monthfilter)) &
+             (df['iwy']>=1929) &(df['iwy']<=1934)
+            ] 
+df_tbl = df1.groupby(["Scenario"]).mean().round(1)
+df_tbl.drop(['icy','icm','iwy','iwm','cfs_taf'],axis=1,inplace=True)
+print(df_tbl)
 
 app = Dash(__name__)
 app.layout = html.Div(children=[
@@ -55,6 +65,14 @@ app.layout = html.Div(children=[
     html.Div(id='my-output'),
     html.H5("Timeseries Plot"),
     dcc.Graph(id='timeseries-plot'),
+    
+    dash_table.DataTable(
+        id='sum_tbl',
+        columns=[{"name": i, "id": i} 
+                 for i in df_tbl.columns],
+        data=df_tbl.to_dict(orient='records')
+    )
+
     ]
 )
 
@@ -106,7 +124,15 @@ def update_timeseries(b_part):
     fig = px.line(df, x=df.index, y=b_part, color='Scenario')
     print(df)
     return fig
-
+'''
+@callback(
+    Output('sum_tbl', 'table'),
+    Input(component_id='b-part', component_property='value')
+)
+def update_table(b_part):
+    table = dash_table.DataTable(df.to_dict('records'),[{"name": i, "id": i} for i in df.columns])
+    return table
+'''
 
 if __name__ == '__main__':
     app.run(debug=True)
