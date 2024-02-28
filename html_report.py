@@ -10,6 +10,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
 
+from utils import make_summary_df
+
 
 Scenario = namedtuple('Scenario',['pathname','alias','active'])
 with open('dictionary.yaml', 'r') as file:
@@ -26,80 +28,13 @@ s4 = Scenario(None,None,0)
 # Generator object for Scenarios
 scenarios = (scenario for scenario in [s1,s2,s3,s4] if scenario.active==1)
 
-
-paths = [
-        # Storage
-        "/CALSIM/S_OROVL/STORAGE//.*/.*/;",
-        "/CALSIM/S_FOLSM/STORAGE//.*/.*/;",
-        "/CALSIM/S_SHSTA/STORAGE//.*/.*/;",            
-        "/CALSIM/S_TRNTY/STORAGE//.*/.*/;",            
-        "/CALSIM/S_SLUIS_SWP/STORAGE//.*/.*/;",
-        "/CALSIM/S_SLUIS_CVP/STORAGE//.*/.*/;",
-        # River Flows
-        "/CALSIM/C_LWSTN/.*//.*/.*/;1",
-        "/CALSIM/D_LWSTN_CCT011/.*//.*/.*/;1",
-        "/CALSIM/C_WKYTN/.*//.*/.*/;1",
-        "/CALSIM/C_KSWCK/.*//.*/.*/;1",
-        "/CALSIM/C_SAC097/.*//.*/.*/;1",
-        "/CALSIM/C_FTR059/.*//.*/.*/;1",
-        "/CALSIM/C_FTR003/.*//.*/.*/;1",
-        "/CALSIM/C_YUB006/.*//.*/.*/;1",
-        "/CALSIM/C_SAC083/.*//.*/.*/;1",
-        "/CALSIM/C_NTOMA/.*//.*/.*/;1",
-        "/CALSIM/C_AMR004/.*//.*/.*/;1",
-        "/CALSIM/GP_SACWBA/.*//.*/.*/;1",
-        #Exports
-        "/CALSIM/C_CAA003/.*//.*/.*/;1",
-        "/CALSIM/C_CAA003_SWP/.*//.*/.*/;1",
-        "/CALSIM/C_CAA003_CVP/.*//.*/.*/;1",
-        "/CALSIM/C_CAA003_WTS/.*//.*/.*/;1",
-        "/CALSIM/C_DMC000/.*//.*/.*/;1",
-        "/CALSIM/C_DMC000_CVP/.*//.*/.*/;1",
-        "/CALSIM/C_DMC000_WTS/.*//.*/.*/;1",
-        #Deliveries
-        "/CALSIM/SWP_TA_TOTAL/.*//.*/.*/;1",
-        "/CALSIM/SWP_IN_TOTAL/.*//.*/.*/;1",
-        "/CALSIM/SWP_CO_TOTAL/.*//.*/.*/;1",
-        ]
-
 bparts = []
-#for path in paths:
-#    bparts.append(path.split('/')[2])
-
 for var in var_dict:
     bparts.append(var_dict[var]['bpart'])
 
-df = pd.DataFrame()
 df = pd.read_csv('temp_mult.csv', index_col=0, parse_dates=True)
 
-# Make Summary Table from dataframe
-start_yr = 1922
-end_yr = 2021
-monthfilter = [1,2,3,4,5,6,7,8,9,10,11,12]
-df1 = df.loc[(df['icm'].isin(monthfilter)) &
-             (df['iwy']>=start_yr) &(df['iwy']<=end_yr)
-            ] 
-
-# Do Conversions
-for var in var_dict:
-    b = (var_dict[var]['bpart'])
-    if var_dict[var]['table_convert']=='cfs_taf':
-        print(f'converted {b} to TAF')
-        df1[b]=df1[b]*df1['cfs_taf']
-    else:
-        print(var_dict[var]['pathname'])
-
-# Annual Average
-df_tbl = round(df1.groupby(["Scenario"]).sum()/(end_yr-start_yr+1))
-
-# Drop the index columns
-df_tbl.drop(['icy','icm','iwy','iwm','cfs_taf'],axis=1,inplace=True)
-
-df_tbl = df_tbl.T
-df_tbl['diff']=df_tbl['Orov_Sens']-df_tbl['Baseline']
-df_tbl['perdiff'] = round((df_tbl['Orov_Sens']-df_tbl['Baseline'])/df_tbl['Baseline'],2)*100
-df_tbl.reset_index(inplace=True)
-print(df_tbl)
+df_tbl = make_summary_df(df,var_dict)
 
 app = Dash(__name__)
 app.layout = html.Div(children=[
@@ -120,7 +55,23 @@ app.layout = html.Div(children=[
     html.Div(id='my-output'),
     html.H5("Timeseries Plot"),
     dcc.Graph(id='timeseries-plot'),
+
+    dcc.Markdown("#### Table Controls"),
     
+    dcc.Checklist(
+    ['Oct', 'Nov', 'Dec',
+    'Jan', 'Feb', 'Mar',
+    'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep'],
+    inline=True, id = 'monthchecklist'
+    ),
+
+    dcc.RangeSlider(1922, 2021, 1, value=[1922, 2021],
+                    marks={i: '{}'.format(i) for i in range(1922,2021,5)},
+                    pushable=True,
+                    id='slider-yr-range'),
+    html.Div(id='output-container-range-slider'),
+    html.Button('Load', id='btn-refresh-tbl', n_clicks=0),
     dash_table.DataTable(
         id='sum_tbl',
         columns=[{"name": i, "id": i} 
@@ -187,15 +138,21 @@ def update_timeseries(b_part):
     fig = px.line(df, x=df.index, y=b_part, color='Scenario')
     print(df)
     return fig
-'''
+
+#@callback(
+#    Output(component_id='sum_tbl', component_property='data'),
+#    Input(component_id='btn-refresh-tbl', component_property='n_clicks')
+#)
 @callback(
-    Output('sum_tbl', 'table'),
-    Input(component_id='b-part', component_property='value')
+    Output(component_id='sum_tbl', component_property='data'),
+    #Output(component_id='output-container-range-slider', component_property='children'),
+    Input(component_id='slider-yr-range', component_property='value')
 )
-def update_table(b_part):
-    table = dash_table.DataTable(df.to_dict('records'),[{"name": i, "id": i} for i in df.columns])
-    return table
-'''
+def update_table(value):
+    df_tbl = make_summary_df(df,var_dict,start_yr=value[0],end_yr=value[1])
+    data=df_tbl.to_dict(orient='records')
+    return data
+    #return value[0],str('-'),value[1]
 
 if __name__ == '__main__':
     app.run(debug=True)
