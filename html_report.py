@@ -76,7 +76,7 @@ df1 = df.loc[(df['icm'].isin(monthfilter)) &
 
 # Do Conversions
 for path in paths:
-    print(path.split(';')[1]==str(1))
+    #print(path.split(';')[1]==str(1))
     if path.split(';')[1]==str(1):
         print(f'converted {path} to TAF')
         df1[path.split('/')[2]]=df1[path.split('/')[2]]*df1['cfs_taf']
@@ -102,7 +102,8 @@ app.layout = html.Div(children=[
     dcc.Upload(id='upload-data',children=html.Div([
             'Drag and Drop or ',
             html.A('Select Files')
-        ]),),
+    ]),
+    ),
     html.Button('Load', id='btn-load-study-1', n_clicks=0),
     html.Div(id='dummy-div'),
     html.Div([
@@ -121,11 +122,15 @@ app.layout = html.Div(children=[
         data=df_tbl.to_dict(orient='records'),
         style_header={
                 'backgroundColor': 'rgb(200, 200, 200)',
-                'fontWeight': 'bold'}
+                'fontWeight': 'bold'
+        },
+        style_cell={
+        'width': '{}%'.format(len(df_tbl.columns)),
+        'textOverflow': 'ellipsis',
+        'overflow': 'hidden'
+        },
     )
-
-    ]
-)
+])
 
 @app.callback(
   Output(component_id='dummy-div', component_property='children'),

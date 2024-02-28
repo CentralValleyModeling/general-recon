@@ -1,0 +1,47 @@
+S_OROVL:
+  bpart: S_OROVL
+  pathname: /CALSIM/S_OROVL/STORAGE//.*/.*/
+  alias: Oroville Reservoir Storage
+  table_convert: orig # "cfs_taf" or "orig"inal units
+  table_display: 9       # "wy" or number of the month
+  type: Reservoir Storage
+    
+S_FOLSM:
+  bpart: S_FOLSM
+  pathname: /CALSIM/S_FOLSM/STORAGE//.*/.*/
+  alias: Folsom Reservoir Storage
+  table_convert: orig # "cfs_taf" or "orig"inal units
+  table_display: 9       # "wy" or number of the month
+  type: Reservoir Storage
+  
+S_SHSTA:
+  bpart: S_SHSTA
+  pathname: /CALSIM/S_SHSTA/STORAGE//.*/.*/
+  alias: Shasta Reservoir Storage
+  table_convert: orig # "cfs_taf" or "orig"inal units
+  table_display: 9       # "wy" or number of the month
+  type: Reservoir Storage
+  
+S_TRNTY:
+  bpart: S_TRNTY
+  pathname: /CALSIM/S_TRNTY/STORAGE//.*/.*/
+  alias: Trinity Reservoir Storage
+  table_convert: orig # "cfs_taf" or "orig"inal units
+  table_display: 9       # "wy" or number of the month
+  type: Reservoir Storage
+  
+S_SLUIS_SWP:
+  bpart: S_SLUIS_SWP
+  pathname: /CALSIM/S_SLUIS_SWP/STORAGE//.*/.*/
+  alias: San Luis SWP Reservoir Storage
+  table_convert: orig # "cfs_taf" or "orig"inal units
+  table_display: 9       # "wy" or number of the month
+  type: Reservoir Storage
+  
+S_SLUIS_CVP:
+  bpart: S_SLUIS_CVP
+  pathname: /CALSIM/S_SLUIS_CVP/STORAGE//.*/.*/
+  alias: San Luis CVP Reservoir Storage
+  table_convert: orig # "cfs_taf" or "orig"inal units
+  table_display: 9       # "wy" or number of the month
+  type: Reservoir Storage
