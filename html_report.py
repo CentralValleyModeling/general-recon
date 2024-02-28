@@ -24,10 +24,38 @@ scenarios = (scenario for scenario in [s1,s2,s3,s4] if scenario.active==1)
 
 
 paths = [
-        "/CALSIM/S_OROVL/STORAGE//.*/.*/",
-        "/CALSIM/S_FOLSM/STORAGE//.*/.*/",
-        "/CALSIM/S_SHSTA/STORAGE//.*/.*/",            
-        "/CALSIM/S_TRNTY/STORAGE//.*/.*/",            
+        # Storage
+        "/CALSIM/S_OROVL/STORAGE//.*/.*/;",
+        "/CALSIM/S_FOLSM/STORAGE//.*/.*/;",
+        "/CALSIM/S_SHSTA/STORAGE//.*/.*/;",            
+        "/CALSIM/S_TRNTY/STORAGE//.*/.*/;",            
+        "/CALSIM/S_SLUIS_SWP/STORAGE//.*/.*/;",
+        "/CALSIM/S_SLUIS_CVP/STORAGE//.*/.*/;",
+        # River Flows
+        "/CALSIM/C_LWSTN/.*//.*/.*/;1",
+        "/CALSIM/D_LWSTN_CCT011/.*//.*/.*/;1",
+        "/CALSIM/C_WKYTN/.*//.*/.*/;1",
+        "/CALSIM/C_KSWCK/.*//.*/.*/;1",
+        "/CALSIM/C_SAC097/.*//.*/.*/;1",
+        "/CALSIM/C_FTR059/.*//.*/.*/;1",
+        "/CALSIM/C_FTR003/.*//.*/.*/;1",
+        "/CALSIM/C_YUB006/.*//.*/.*/;1",
+        "/CALSIM/C_SAC083/.*//.*/.*/;1",
+        "/CALSIM/C_NTOMA/.*//.*/.*/;1",
+        "/CALSIM/C_AMR004/.*//.*/.*/;1",
+        "/CALSIM/GP_SACWBA/.*//.*/.*/;1",
+        #Exports
+        "/CALSIM/C_CAA003/.*//.*/.*/;1",
+        "/CALSIM/C_CAA003_SWP/.*//.*/.*/;1",
+        "/CALSIM/C_CAA003_CVP/.*//.*/.*/;1",
+        "/CALSIM/C_CAA003_WTS/.*//.*/.*/;1",
+        "/CALSIM/C_DMC000/.*//.*/.*/;1",
+        "/CALSIM/C_DMC000_CVP/.*//.*/.*/;1",
+        "/CALSIM/C_DMC000_WTS/.*//.*/.*/;1",
+        #Deliveries
+        "/CALSIM/SWP_TA_TOTAL/.*//.*/.*/;1",
+        "/CALSIM/SWP_IN_TOTAL/.*//.*/.*/;1",
+        "/CALSIM/SWP_CO_TOTAL/.*//.*/.*/;1",
         ]
 
 bparts = []
@@ -38,13 +66,33 @@ df = pd.DataFrame()
 df = pd.read_csv('temp_mult.csv', index_col=0, parse_dates=True)
 
 # Make Summary Table from dataframe
+start_yr = 1922
+end_yr = 2021
 monthfilter = [1,2,3,4,5,6,7,8,9,10,11,12]
-monthfilter = [9]
+#monthfilter = [9]
 df1 = df.loc[(df['icm'].isin(monthfilter)) &
-             (df['iwy']>=1929) &(df['iwy']<=1934)
+             (df['iwy']>=start_yr) &(df['iwy']<=end_yr)
             ] 
-df_tbl = df1.groupby(["Scenario"]).mean().round(1)
+
+# Do Conversions
+for path in paths:
+    print(path.split(';')[1]==str(1))
+    if path.split(';')[1]==str(1):
+        print(f'converted {path} to TAF')
+        df1[path.split('/')[2]]=df1[path.split('/')[2]]*df1['cfs_taf']
+    else:
+        print(path)
+
+# Annual Average
+df_tbl = round(df1.groupby(["Scenario"]).sum()/(end_yr-start_yr+1))
+
+# Drop the index columns
 df_tbl.drop(['icy','icm','iwy','iwm','cfs_taf'],axis=1,inplace=True)
+
+df_tbl = df_tbl.T
+df_tbl['diff']=df_tbl['Orov_Sens']-df_tbl['Baseline']
+df_tbl['perdiff'] = round((df_tbl['Orov_Sens']-df_tbl['Baseline'])/df_tbl['Baseline'],2)*100
+df_tbl.reset_index(inplace=True)
 print(df_tbl)
 
 app = Dash(__name__)
@@ -70,7 +118,10 @@ app.layout = html.Div(children=[
         id='sum_tbl',
         columns=[{"name": i, "id": i} 
                  for i in df_tbl.columns],
-        data=df_tbl.to_dict(orient='records')
+        data=df_tbl.to_dict(orient='records'),
+        style_header={
+                'backgroundColor': 'rgb(200, 200, 200)',
+                'fontWeight': 'bold'}
     )
 
     ]
@@ -95,8 +146,9 @@ def load_data_mult(n_clicks):
   
             # Loop to read all paths into DataFrame
             for path in paths:
-                print (path)
+                path = path.split(';')[0]
                 path_i = pdss.DatasetPath.from_str(path)
+                print (path)
 
                 for regular_time_series in dss.read_multiple_rts(path_i):
                     dfi['Scenario'] = scenario.alias
