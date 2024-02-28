@@ -1,10 +1,12 @@
 # summary_table.py
 # Make Summary Table from dataframe
+monthfilter = [1,2,3,4,5,6,7,8,9,10,11,12]
+month_map = {'Jan':1,'Feb':2,'Mar':3, 'Apr':4,
+            'May':5,'Jun':6,'Jul':7, 'Aug':8,
+            'Sep':9,'Oct':10,'Nov':11, 'Dec':12,}
 
-def make_summary_df(df,var_dict,start_yr=1922,end_yr=2021):
-    #start_yr = 1922
-    #end_yr = 2021
-    monthfilter = [1,2,3,4,5,6,7,8,9,10,11,12]
+def make_summary_df(df,var_dict,start_yr=1922,end_yr=2021,
+                    monthfilter=monthfilter):
     df1 = df.loc[(df['icm'].isin(monthfilter)) &
                 (df['iwy']>=start_yr) &(df['iwy']<=end_yr)
                 ] 
@@ -16,7 +18,8 @@ def make_summary_df(df,var_dict,start_yr=1922,end_yr=2021):
             print(f'converted {b} to TAF')
             df1[b]=df1[b]*df1['cfs_taf']
         else:
-            print(var_dict[var]['pathname'])
+            continue
+            #print(var_dict[var]['pathname'])
 
     # Annual Average
     df_tbl = round(df1.groupby(["Scenario"]).sum()/(end_yr-start_yr+1))

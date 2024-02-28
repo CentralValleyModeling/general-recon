@@ -10,7 +10,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
 
-from utils import make_summary_df
+from utils import make_summary_df, month_map
 
 
 Scenario = namedtuple('Scenario',['pathname','alias','active'])
@@ -53,24 +53,39 @@ app.layout = html.Div(children=[
     ]),
     html.Br(),
     html.Div(id='my-output'),
-    html.H5("Timeseries Plot"),
+    dcc.Markdown("#### Timeseries Plot"),
     dcc.Graph(id='timeseries-plot'),
 
     dcc.Markdown("#### Table Controls"),
-    
-    dcc.Checklist(
-    ['Oct', 'Nov', 'Dec',
+    dcc.Markdown("End-of-Month (for Reservoirs)"),
+    dcc.RadioItems(
+    options = ['Oct', 'Nov', 'Dec',
     'Jan', 'Feb', 'Mar',
     'Apr', 'May', 'Jun',
     'Jul', 'Aug', 'Sep'],
+    value = 'Sep',
+    inline=True, id = 'monthradio'
+    ),
+    dcc.Markdown("Flow Average Period"),
+    dcc.Checklist(
+    options = ['Oct', 'Nov', 'Dec',
+    'Jan', 'Feb', 'Mar',
+    'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep'],
+    value = ['Oct', 'Nov', 'Dec',
+    'Jan', 'Feb', 'Mar',
+    'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep'],   
     inline=True, id = 'monthchecklist'
     ),
+    html.Div(id='output-container-month-checklist'),
 
     dcc.RangeSlider(1922, 2021, 1, value=[1922, 2021],
                     marks={i: '{}'.format(i) for i in range(1922,2021,5)},
                     pushable=True,
                     id='slider-yr-range'),
     html.Div(id='output-container-range-slider'),
+
     html.Button('Load', id='btn-refresh-tbl', n_clicks=0),
     dash_table.DataTable(
         id='sum_tbl',
@@ -146,13 +161,27 @@ def update_timeseries(b_part):
 @callback(
     Output(component_id='sum_tbl', component_property='data'),
     #Output(component_id='output-container-range-slider', component_property='children'),
+    Input(component_id='slider-yr-range', component_property='value'),
+    Input(component_id='monthchecklist', component_property='value')
+)
+def update_table(slider_yr_range,monthchecklist):
+    monthfilter = []
+    for v in monthchecklist:
+        monthfilter.append(month_map[v])
+
+    df_tbl = make_summary_df(df,var_dict,
+                             start_yr=slider_yr_range[0],end_yr=slider_yr_range[1],
+                             monthfilter=monthfilter)
+    data=df_tbl.to_dict(orient='records')
+    return data
+
+
+@callback(
+    Output(component_id='output-container-range-slider', component_property='children'),
     Input(component_id='slider-yr-range', component_property='value')
 )
 def update_table(value):
-    df_tbl = make_summary_df(df,var_dict,start_yr=value[0],end_yr=value[1])
-    data=df_tbl.to_dict(orient='records')
-    return data
-    #return value[0],str('-'),value[1]
+    return value[0],str('-'),value[1]
 
 if __name__ == '__main__':
     app.run(debug=True)
