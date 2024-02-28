@@ -3,6 +3,7 @@ from collections import namedtuple
 import pandss as pdss
 import pandas as pd
 import numpy as np
+import yaml
 
 from dash import Dash, html, dcc, Input, Output, callback, dash_table
 import plotly.express as px
@@ -11,6 +12,9 @@ import dash_bootstrap_components as dbc
 
 
 Scenario = namedtuple('Scenario',['pathname','alias','active'])
+with open('dictionary.yaml', 'r') as file:
+    var_dict = yaml.safe_load(file)
+
 
 dv_files = ["DCR2023_DV_8.15.5_Nile_Hist_v14.dss","DCR2023_DV_8.15.5_Nile_Hist_v14_orov_sens.dss"]
 
@@ -59,8 +63,11 @@ paths = [
         ]
 
 bparts = []
-for path in paths:
-    bparts.append(path.split('/')[2])
+#for path in paths:
+#    bparts.append(path.split('/')[2])
+
+for var in var_dict:
+    bparts.append(var_dict[var]['bpart'])
 
 df = pd.DataFrame()
 df = pd.read_csv('temp_mult.csv', index_col=0, parse_dates=True)
@@ -69,19 +76,18 @@ df = pd.read_csv('temp_mult.csv', index_col=0, parse_dates=True)
 start_yr = 1922
 end_yr = 2021
 monthfilter = [1,2,3,4,5,6,7,8,9,10,11,12]
-#monthfilter = [9]
 df1 = df.loc[(df['icm'].isin(monthfilter)) &
              (df['iwy']>=start_yr) &(df['iwy']<=end_yr)
             ] 
 
 # Do Conversions
-for path in paths:
-    #print(path.split(';')[1]==str(1))
-    if path.split(';')[1]==str(1):
-        print(f'converted {path} to TAF')
-        df1[path.split('/')[2]]=df1[path.split('/')[2]]*df1['cfs_taf']
+for var in var_dict:
+    b = (var_dict[var]['bpart'])
+    if var_dict[var]['table_convert']=='cfs_taf':
+        print(f'converted {b} to TAF')
+        df1[b]=df1[b]*df1['cfs_taf']
     else:
-        print(path)
+        print(var_dict[var]['pathname'])
 
 # Annual Average
 df_tbl = round(df1.groupby(["Scenario"]).sum()/(end_yr-start_yr+1))
@@ -150,10 +156,10 @@ def load_data_mult(n_clicks):
         with pdss.DSS(scenario.pathname) as dss:
   
             # Loop to read all paths into DataFrame
-            for path in paths:
-                path = path.split(';')[0]
-                path_i = pdss.DatasetPath.from_str(path)
-                print (path)
+            for var in var_dict:
+                pn = var_dict[var]['pathname']
+                path_i = pdss.DatasetPath.from_str(pn)
+                print (pn)
 
                 for regular_time_series in dss.read_multiple_rts(path_i):
                     dfi['Scenario'] = scenario.alias
