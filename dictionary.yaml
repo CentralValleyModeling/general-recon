@@ -45,3 +45,179 @@ S_SLUIS_CVP:
   table_convert: orig # "cfs_taf" or "orig"inal units
   table_display: 9       # "wy" or number of the month
   type: Reservoir Storage
+
+C_LWSTN:
+  bpart: C_LWSTN
+  pathname: /CALSIM/C_LWSTN/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+D_LWSTN_CCT011:
+  bpart: D_LWSTN_CCT011
+  pathname: /CALSIM/D_LWSTN_CCT011/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+C_WKYTN:
+  bpart: C_WKYTN
+  pathname: /CALSIM/C_WKYTN/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+C_KSWCK:
+  bpart: C_KSWCK
+  pathname: /CALSIM/C_KSWCK/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+C_SAC097:
+  bpart: C_SAC097
+  pathname: /CALSIM/C_SAC097/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+C_FTR059:
+  bpart: C_FTR059
+  pathname: /CALSIM/C_FTR059/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+C_FTR003:
+  bpart: C_FTR003
+  pathname: /CALSIM/C_FTR003/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+C_YUB006:
+  bpart: C_YUB006
+  pathname: /CALSIM/C_YUB006/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+C_SAC083:
+  bpart: C_SAC083
+  pathname: /CALSIM/C_SAC083/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+C_NTOMA:
+  bpart: C_NTOMA
+  pathname: /CALSIM/C_NTOMA/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+C_AMR004:
+  bpart: C_AMR004
+  pathname: /CALSIM/C_AMR004/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+GP_SACWBA:
+  bpart: GP_SACWBA
+  pathname: /CALSIM/GP_SACWBA/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+C_CAA003:
+  bpart: C_CAA003
+  pathname: /CALSIM/C_CAA003/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+C_CAA003_SWP:
+  bpart: C_CAA003_SWP
+  pathname: /CALSIM/C_CAA003_SWP/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+C_CAA003_CVP:
+  bpart: C_CAA003_CVP
+  pathname: /CALSIM/C_CAA003_CVP/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+C_CAA003_WTS:
+  bpart: C_CAA003_WTS
+  pathname: /CALSIM/C_CAA003_WTS/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+C_DMC000:
+  bpart: C_DMC000
+  pathname: /CALSIM/C_DMC000/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+C_DMC000_CVP:
+  bpart: C_DMC000_CVP
+  pathname: /CALSIM/C_DMC000_CVP/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+C_DMC000_WTS:
+  bpart: C_DMC000_WTS
+  pathname: /CALSIM/C_DMC000_WTS/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+SWP_TA_TOTAL:
+  bpart: SWP_TA_TOTAL
+  pathname: /CALSIM/SWP_TA_TOTAL/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+SWP_IN_TOTAL:
+  bpart: SWP_IN_TOTAL
+  pathname: /CALSIM/SWP_IN_TOTAL/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
+
+SWP_CO_TOTAL:
+  bpart: SWP_CO_TOTAL
+  pathname: /CALSIM/SWP_CO_TOTAL/.*//.*/.*/
+  alias:
+  table_convert: cfs_taf
+  table_display: wy
+  type: Flow
