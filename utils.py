@@ -57,7 +57,7 @@ def make_ressum_df(df,var_dict,start_yr=1922,end_yr=2021,
             except KeyError:
                 continue
         
-        print(df1)
+        #print(df1)
         df_tbl = round(df1.groupby(["Scenario"]).sum()/(end_yr-start_yr+1))
 
         # Drop the index columns

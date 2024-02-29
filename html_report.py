@@ -47,12 +47,17 @@ app.layout = html.Div(children=[
     html.Div(id='dummy-div'),
     html.Div([
         "B-Part: ",
-        dcc.Dropdown(bparts, id='b-part')
+        dcc.Dropdown(bparts, id='b-part',value="S_OROVL")
     ]),
     html.Br(),
     html.Div(id='my-output'),
     dcc.Markdown("#### Timeseries Plot"),
-    dcc.Graph(id='timeseries-plot'),
+    dcc.Markdown("Plot Controls"),
+
+    html.Div(className='row',children=[
+        dcc.Graph(id='timeseries-plot',style={'display': 'inline-block'}),
+        dcc.Graph(id='exceedance-plot',style={'display': 'inline-block'}),
+    ]),
 
     dcc.Markdown("#### Table Controls"),
     dcc.Markdown("End-of-Month (for Reservoirs)"),
@@ -130,14 +135,40 @@ def load(n_clicks):
     load_data_mult(scenarios,var_dict)
     return
 
+# Timeseries Plot
 @callback(
     Output(component_id='timeseries-plot', component_property='figure'),
     Input(component_id='b-part', component_property='value')
 )
 def update_timeseries(b_part):
     fig = px.line(df, x=df.index, y=b_part, color='Scenario')
-    print(df)
+    #print(df)
     return fig
+
+
+
+
+
+# Exceedance Plot
+@callback(
+    Output(component_id='exceedance-plot', component_property='figure'),
+    Input(component_id='b-part', component_property='value')
+)
+def update_exceedance(b_part):
+    df1 = df.loc[df['Scenario']=='Orov_Sens',b_part]
+    #df1.reset_index(inplace=True)
+    df1 = df1.sort_values()
+    df1 = df1.reset_index(drop=True)
+    print(df1)
+    fig = px.line(df1)
+    #print(df)
+    return fig
+
+
+
+
+
+
 
 @callback(
     Output(component_id='sum_tbl', component_property='data'),
@@ -153,7 +184,7 @@ def update_table(slider_yr_range,monthchecklist):
                              start_yr=slider_yr_range[0],end_yr=slider_yr_range[1],
                              monthfilter=monthfilter)
     data=df_tbl.to_dict(orient='records')
-    print(monthchecklist)
+    #print(monthchecklist)
     return data
 
 @callback(
@@ -168,7 +199,7 @@ def update_table2(slider_yr_range,monthradio):
                              start_yr=slider_yr_range[0],end_yr=slider_yr_range[1],
                              monthfilter=monthradio)
     data=df_tbl.to_dict(orient='records')
-    print(monthradio)
+    #print(monthradio)
     return data
 
 @callback(
