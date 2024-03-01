@@ -6,21 +6,18 @@ import yaml
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# Assuming df is your DataFrame
+
+# Assuming df is your DataFrame with a datetime index
 # Replace df with the name of your DataFrame
 
 # Create a sample DataFrame
-data = {'A': [3, 6, 2],
-        'B': [9, 1, 5],
-        'C': [4, 7, 8]}
-df = pd.DataFrame(data)
+date_rng = pd.date_range(start='2022-01-01', end='2022-12-31', freq='D')
+df = pd.DataFrame(date_rng, columns=['date'])
+df['data'] = range(len(df))
+df.set_index('date', inplace=True)
+print(df)
+# Resample the DataFrame by month and calculate the mean for each month
+monthly_avg = df.resample('M').mean()
 
-# Rank the DataFrame
-ranked_df = df.rank(axis=0)
-
-# Plot the ranked DataFrame
-ranked_df.plot(kind='bar')
-plt.title('Ranked DataFrame')
-plt.xlabel('Index')
-plt.ylabel('Rank')
-plt.show()
+print("Monthly Averages:")
+print(monthly_avg)

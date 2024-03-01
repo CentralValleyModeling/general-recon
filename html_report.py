@@ -9,7 +9,8 @@ from dash import Dash, html, dcc, Input, Output, callback, dash_table
 import plotly.express as px
 #import plotly.graph_objects as go
 #import dash_bootstrap_components as dbc
-from utils import make_summary_df, month_map, load_data_mult, make_ressum_df
+from utils import (make_summary_df, month_map, load_data_mult, 
+                   make_ressum_df, month_list)
 
 
 
@@ -53,34 +54,28 @@ app.layout = html.Div(children=[
     html.Div(id='my-output'),
     dcc.Markdown("#### Timeseries Plot"),
     dcc.Markdown("Plot Controls"),
-
+    dcc.Graph(id='timeseries-plot'),
+              
     html.Div(className='row',children=[
-        dcc.Graph(id='timeseries-plot',style={'display': 'inline-block'}),
-        dcc.Graph(id='exceedance-plot',style={'display': 'inline-block'}),
+       dcc.Graph(id='bar-plot',style={'display': 'inline-block'}),
+       dcc.Graph(id='exceedance-plot',style={'display': 'inline-block'}),
+       
+    
     ]),
 
     dcc.Markdown("#### Table Controls"),
     dcc.Markdown("End-of-Month (for Reservoirs)"),
 
     dcc.RadioItems(
-    options = ['Oct', 'Nov', 'Dec',
-    'Jan', 'Feb', 'Mar',
-    'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep'],
+    options = month_list,
     value = 'Sep',
     inline=True, id = 'monthradio'
     ),
 
     dcc.Markdown("Flow Average Period"),
     dcc.Checklist(
-    options = ['Oct', 'Nov', 'Dec',
-    'Jan', 'Feb', 'Mar',
-    'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep'],
-    value = ['Oct', 'Nov', 'Dec',
-    'Jan', 'Feb', 'Mar',
-    'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep'],   
+    options = month_list,
+    value = month_list,   
     inline=True, id = 'monthchecklist'
     ),
     html.Div(id='output-container-month-checklist'),
@@ -156,19 +151,34 @@ def update_timeseries(b_part):
 )
 def update_exceedance(b_part):
     df1 = df.loc[df['Scenario']=='Orov_Sens',b_part]
+    df2 = df.loc[df['Scenario']=='Baseline',b_part]
     #df1.reset_index(inplace=True)
     df1 = df1.sort_values()
+    df2 = df2.sort_values()
     df1 = df1.reset_index(drop=True)
-    print(df1)
-    fig = px.line(df1)
+    df2 = df2.reset_index(drop=True)
+
+    df3 = pd.DataFrame()
+    df3['Orov_Sens']=df1
+    df3['Baseline']=df2
+
+    #print(df3)
+    fig = px.line(df3)
     #print(df)
     return fig
 
 
-
-
-
-
+# Monthly Bar Plot
+@callback(
+    Output(component_id='bar-plot', component_property='figure'),
+    Input(component_id='b-part', component_property='value')
+)
+def update_bar(b_part):
+    df1 = round(df.groupby(['Scenario','iwm']).mean())
+    print(df1)
+    fig = px.bar(df1, x = df1.index.get_level_values(1), y = b_part, 
+                 color=df1.index.get_level_values(0), barmode='group')
+    return fig
 
 @callback(
     Output(component_id='sum_tbl', component_property='data'),
