@@ -12,6 +12,16 @@ month_map = {'Jan':1,'Feb':2,'Mar':3, 'Apr':4,
 month_list = ['Oct', 'Nov', 'Dec','Jan', 'Feb', 'Mar',
             'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep']
 
+def convert_cm_nums(monthchecklist):
+    '''
+    Converts calendar month strings to calendar month numbers
+    Jan=1, etc.
+    '''
+    monthfilter = []
+    for v in monthchecklist:
+        monthfilter.append(month_map[v])
+    return monthfilter
+
 def load_data_mult(scenarios, var_dict):
     """
     # Load data from the selected DSS files into a .csv

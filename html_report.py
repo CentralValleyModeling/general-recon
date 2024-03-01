@@ -10,7 +10,7 @@ import plotly.express as px
 #import plotly.graph_objects as go
 #import dash_bootstrap_components as dbc
 from utils import (make_summary_df, month_map, load_data_mult, 
-                   make_ressum_df, month_list)
+                   make_ressum_df, month_list, convert_cm_nums)
 
 
 
@@ -25,6 +25,7 @@ s4 = Scenario(None,None,0)
 
 # Generator object for Scenarios
 scenarios = (scenario for scenario in [s1,s2,s3,s4] if scenario.active==1)
+
 #load_data_mult(scenarios,var_dict)
 bparts = []
 for var in var_dict:
@@ -57,9 +58,12 @@ app.layout = html.Div(children=[
     dcc.Graph(id='timeseries-plot'),
               
     html.Div(className='row',children=[
-       dcc.Graph(id='bar-plot',style={'display': 'inline-block'}),
-       dcc.Graph(id='exceedance-plot',style={'display': 'inline-block'}),
-       
+        dcc.Graph(id='exceedance-plot',style={'display': 'inline-block'}),
+        dcc.Graph(id='bar-plot',style={'display': 'inline-block'}),
+        dcc.Checklist(
+        options = month_list, value = month_list, inline=True,
+        id = 'monthchecklist-exc'
+    ),
     
     ]),
 
@@ -74,9 +78,8 @@ app.layout = html.Div(children=[
 
     dcc.Markdown("Flow Average Period"),
     dcc.Checklist(
-    options = month_list,
-    value = month_list,   
-    inline=True, id = 'monthchecklist'
+        options = month_list, value = month_list, inline=True,
+        id = 'monthchecklist'
     ),
     html.Div(id='output-container-month-checklist'),
 
@@ -140,31 +143,27 @@ def update_timeseries(b_part):
     #print(df)
     return fig
 
-
-
-
-
 # Exceedance Plot
+
 @callback(
     Output(component_id='exceedance-plot', component_property='figure'),
-    Input(component_id='b-part', component_property='value')
+    Input(component_id='b-part', component_property='value'),
+    Input(component_id='monthchecklist-exc', component_property='value')
 )
-def update_exceedance(b_part):
-    df1 = df.loc[df['Scenario']=='Orov_Sens',b_part]
-    df2 = df.loc[df['Scenario']=='Baseline',b_part]
-    #df1.reset_index(inplace=True)
-    df1 = df1.sort_values()
-    df2 = df2.sort_values()
-    df1 = df1.reset_index(drop=True)
-    df2 = df2.reset_index(drop=True)
+def update_exceedance(b_part,monthchecklist):
+    df2 = pd.DataFrame()
+    df0 = df.loc[df['icm'].isin(convert_cm_nums(monthchecklist))]
+    scenarios = (scenario for scenario in [s1,s2,s3,s4] if scenario.active==1)
 
-    df3 = pd.DataFrame()
-    df3['Orov_Sens']=df1
-    df3['Baseline']=df2
+    for scenario in scenarios:
+        print(scenario[1])
+        df1 = df0.loc[df0['Scenario']==scenario[1],b_part]
+        print(df1)
+        df1 = df1.sort_values()
+        df1 = df1.reset_index(drop=True)
+        df2[scenario[1]]=df1
+    fig = px.line(df2)
 
-    #print(df3)
-    fig = px.line(df3)
-    #print(df)
     return fig
 
 
@@ -175,7 +174,7 @@ def update_exceedance(b_part):
 )
 def update_bar(b_part):
     df1 = round(df.groupby(['Scenario','iwm']).mean())
-    print(df1)
+    #print(df1)
     fig = px.bar(df1, x = df1.index.get_level_values(1), y = b_part, 
                  color=df1.index.get_level_values(0), barmode='group')
     return fig
