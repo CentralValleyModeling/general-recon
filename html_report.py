@@ -18,18 +18,23 @@ Scenario = namedtuple('Scenario',['pathname','alias','active'])
 with open('dictionary.yaml', 'r') as file:
     var_dict = yaml.safe_load(file)
 
-s1 = Scenario('DCR2023_DV_8.15.5_Nile_Hist_v14.dss', 'Baseline',1)
-s2 = Scenario('DCR2023_DV_8.15.5_Nile_Hist_v14_orov_sens.dss', 'Orov_Sens',1)
-s3 = Scenario(None,None,0)
-s4 = Scenario(None,None,0)
+s1 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1.dss', 'Baseline',1)
+s2 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1_oa_1.dss', 'OA_1',1)
+s3 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1_oa_2.dss', 'OA_2',1)
+s4 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1_oa_3.dss', 'OA_3',1)
+s5 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1_oa_4.dss', 'OA_4',1)
 
 # Generator object for Scenarios
-scenarios = (scenario for scenario in [s1,s2,s3,s4] if scenario.active==1)
+scenarios = (scenario for scenario in [s1,s2,s3,s4,s5] if scenario.active==1)
 
 #load_data_mult(scenarios,var_dict)
 bparts = []
+
+#print(var_dict)
+
 for var in var_dict:
-    bparts.append(var_dict[var]['bpart'])
+    print(var)
+    bparts.append(var)
 
 df = pd.read_csv('temp_mult.csv', index_col=0, parse_dates=True)
 

@@ -1,5 +1,6 @@
 import pandas as pd
 import pandss as pdss
+import yaml
 
 
 # Constants
@@ -79,8 +80,8 @@ def make_ressum_df(df,var_dict,start_yr=1922,end_yr=2021,
         df_tbl.drop(['icy','icm','iwy','iwm','cfs_taf'],axis=1,inplace=True)
 
         df_tbl = df_tbl.T
-        df_tbl['diff']=df_tbl['Orov_Sens']-df_tbl['Baseline']
-        df_tbl['perdiff'] = round((df_tbl['Orov_Sens']-df_tbl['Baseline'])/df_tbl['Baseline'],2)*100
+        df_tbl['diff']=df_tbl['OA_1']-df_tbl['Baseline']
+        df_tbl['perdiff'] = round((df_tbl['OA_1']-df_tbl['Baseline'])/df_tbl['Baseline'],2)*100
         df_tbl.reset_index(inplace=True)
         return df_tbl
 
@@ -97,7 +98,7 @@ def make_summary_df(df,var_dict,start_yr=1922,end_yr=2021,
 
     # Do Conversions
     for var in var_dict:
-        b = (var_dict[var]['bpart'])
+        b = var
         if var_dict[var]['table_convert']=='cfs_taf':
             #print(f'converted {b} to TAF')
             df1[b]=df1[b]*df1['cfs_taf']
@@ -112,8 +113,34 @@ def make_summary_df(df,var_dict,start_yr=1922,end_yr=2021,
     df_tbl.drop(['icy','icm','iwy','iwm','cfs_taf'],axis=1,inplace=True)
 
     df_tbl = df_tbl.T
-    df_tbl['diff']=df_tbl['Orov_Sens']-df_tbl['Baseline']
-    df_tbl['perdiff'] = round((df_tbl['Orov_Sens']-df_tbl['Baseline'])/df_tbl['Baseline'],2)*100
+    df_tbl['diff']=df_tbl['OA_1']-df_tbl['Baseline']
+    df_tbl['perdiff'] = round((df_tbl['OA_1']-df_tbl['Baseline'])/df_tbl['Baseline'],2)*100
     df_tbl.reset_index(inplace=True)
     return df_tbl
 
+def generate_yaml_file(varlist, filename):
+    """
+    Generate a YAML file with given data.
+
+    Args:
+    - data: Dictionary containing the data to be written to the YAML file.
+    - filename: Name of the YAML file to be generated.
+    """
+    data = {}
+
+    for var in varlist:
+        data[var[0]] = {
+            'bpart': var[0],
+            'pathname': f'/CALSIM/{var[0]}/.*//.*/.*/',
+            'alias': var[1],
+            'table_convert': 'cfs_taf',
+            'table_display': 'wy',
+            'type': 'Channel'
+        }    
+
+
+
+
+    with open(filename, 'w') as file:
+        yaml.dump(data, file)
+    print(f"YAML file '{filename}' generated successfully.")
