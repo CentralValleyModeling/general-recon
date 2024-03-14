@@ -2,21 +2,42 @@ BD_EC_MONTH:
   alias: Salinity - BD EC
   bpart: BD_EC_MONTH
   pathname: /CALSIM/BD_EC_MONTH/.*//.*/.*/
-  table_convert:
+  table_convert: null
   table_display: wy
   type: EC
 CI_EC_MONTH:
   alias: Salinity - CI EC
   bpart: CI_EC_MONTH
   pathname: /CALSIM/CI_EC_MONTH/.*//.*/.*/
-  table_convert:
+  table_convert: null
+  table_display: wy
+  type: Channel
+CO_AVAILABLE_DV:
+  alias: Delivery - SWP CO available
+  bpart: CO_AVAILABLE_DV
+  pathname: /CALSIM/CO_AVAILABLE_DV/.*//.*/.*/
+  table_convert: cfs_taf
   table_display: wy
   type: Channel
 CO_EC_MONTH:
   alias: Salinity - CO EC
   bpart: CO_EC_MONTH
   pathname: /CALSIM/CO_EC_MONTH/.*//.*/.*/
-  table_convert:
+  table_convert: null
+  table_display: wy
+  type: Channel
+CO_EST_DV:
+  alias: Delivery - SWP CO est
+  bpart: CO_EST_DV
+  pathname: /CALSIM/CO_EST_DV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+CO_FINAL_DV:
+  alias: Delivery - SWP CO final
+  bpart: CO_FINAL_DV
+  pathname: /CALSIM/CO_FINAL_DV/.*//.*/.*/
+  table_convert: cfs_taf
   table_display: wy
   type: Channel
 CT_VERONA:
@@ -30,9 +51,16 @@ CVPRuleCv:
   alias: Storage - SL CVP Rule curve
   bpart: CVPRuleCv
   pathname: /CALSIM/CVPRuleCv/.*//.*/.*/
-  table_convert:
+  table_convert: null
   table_display: wy
   type: Rule
+CVPTOTALDEL:
+  alias: Delivery - CVP Delivery SOD
+  bpart: CVPTOTALDEL
+  pathname: /CALSIM/CVPTOTALDEL/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
 C_AMR004:
   alias: Upstream Flows - H-Street
   bpart: C_AMR004
@@ -124,13 +152,90 @@ C_CAA003_WTS:
   table_convert: cfs_taf
   table_display: wy
   type: Channel
+C_CAA005:
+  alias: C_CAA005
+  bpart: C_CAA005
+  pathname: /CALSIM/C_CAA005/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA006:
+  alias: C_CAA006
+  bpart: C_CAA006
+  pathname: /CALSIM/C_CAA006/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA009:
+  alias: C_CAA009
+  bpart: C_CAA009
+  pathname: /CALSIM/C_CAA009/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA012:
+  alias: C_CAA012
+  bpart: C_CAA012
+  pathname: /CALSIM/C_CAA012/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA024:
+  alias: C_CAA024
+  bpart: C_CAA024
+  pathname: /CALSIM/C_CAA024/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA046:
+  alias: C_CAA046
+  bpart: C_CAA046
+  pathname: /CALSIM/C_CAA046/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA051:
+  alias: C_CAA051
+  bpart: C_CAA051
+  pathname: /CALSIM/C_CAA051/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA066:
+  alias: C_CAA066
+  bpart: C_CAA066
+  pathname: /CALSIM/C_CAA066/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA067:
+  alias: C_CAA067
+  bpart: C_CAA067
+  pathname: /CALSIM/C_CAA067/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA069:
+  alias: C_CAA069
+  bpart: C_CAA069
+  pathname: /CALSIM/C_CAA069/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA071:
+  alias: C_CAA071
+  bpart: C_CAA071
+  pathname: /CALSIM/C_CAA071/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
 C_CAA087:
-  alias: Dos Amigos Pumping Plant (Total)
+  alias: Dos Amigos Pumping Plant
   bpart: C_CAA087
   pathname: /CALSIM/C_CAA087/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Delivery
+  type: Channel
 C_CAA087_CVP:
   alias: Dos Amigos Pumping Plant (CVP)
   bpart: C_CAA087_CVP
@@ -145,27 +250,202 @@ C_CAA087_SWP:
   table_convert: cfs_taf
   table_display: wy
   type: Delivery
+C_CAA095:
+  alias: C_CAA095
+  bpart: C_CAA095
+  pathname: /CALSIM/C_CAA095/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA109:
+  alias: C_CAA109
+  bpart: C_CAA109
+  pathname: /CALSIM/C_CAA109/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA143:
+  alias: C_CAA143
+  bpart: C_CAA143
+  pathname: /CALSIM/C_CAA143/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA155:
+  alias: C_CAA155
+  bpart: C_CAA155
+  pathname: /CALSIM/C_CAA155/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA156:
+  alias: C_CAA156
+  bpart: C_CAA156
+  pathname: /CALSIM/C_CAA156/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA165:
+  alias: C_CAA165
+  bpart: C_CAA165
+  pathname: /CALSIM/C_CAA165/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA172:
+  alias: C_CAA172
+  bpart: C_CAA172
+  pathname: /CALSIM/C_CAA172/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA173:
+  alias: C_CAA173
+  bpart: C_CAA173
+  pathname: /CALSIM/C_CAA173/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA181:
+  alias: C_CAA181
+  bpart: C_CAA181
+  pathname: /CALSIM/C_CAA181/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA183:
+  alias: C_CAA183
+  bpart: C_CAA183
+  pathname: /CALSIM/C_CAA183/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA184:
+  alias: C_CAA184
+  bpart: C_CAA184
+  pathname: /CALSIM/C_CAA184/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA185:
+  alias: C_CAA185
+  bpart: C_CAA185
+  pathname: /CALSIM/C_CAA185/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA194:
+  alias: C_CAA194
+  bpart: C_CAA194
+  pathname: /CALSIM/C_CAA194/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA207:
+  alias: C_CAA207
+  bpart: C_CAA207
+  pathname: /CALSIM/C_CAA207/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA210:
+  alias: C_CAA210
+  bpart: C_CAA210
+  pathname: /CALSIM/C_CAA210/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA220:
+  alias: C_CAA220
+  bpart: C_CAA220
+  pathname: /CALSIM/C_CAA220/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA238:
+  alias: C_CAA238
+  bpart: C_CAA238
+  pathname: /CALSIM/C_CAA238/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA239:
+  alias: C_CAA239
+  bpart: C_CAA239
+  pathname: /CALSIM/C_CAA239/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA240:
+  alias: C_CAA240
+  bpart: C_CAA240
+  pathname: /CALSIM/C_CAA240/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA241:
+  alias: C_CAA241
+  bpart: C_CAA241
+  pathname: /CALSIM/C_CAA241/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA242:
+  alias: C_CAA242
+  bpart: C_CAA242
+  pathname: /CALSIM/C_CAA242/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA245:
+  alias: Buena Vista Pumping Plant
+  bpart: C_CAA245
+  pathname: /CALSIM/C_CAA245/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_CAA262:
+  alias: C_CAA262
+  bpart: C_CAA262
+  pathname: /CALSIM/C_CAA262/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
 C_CAA278:
   alias: Wheeler Ridge Pumping Plant
   bpart: C_CAA278
   pathname: /CALSIM/C_CAA278/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Delivery
+  type: Channel
+C_CAA279:
+  alias: C_CAA279
+  bpart: C_CAA279
+  pathname: /CALSIM/C_CAA279/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
 C_CAA280:
   alias: Chrisman Pumping Plant
   bpart: C_CAA280
   pathname: /CALSIM/C_CAA280/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Delivery
+  type: Channel
 C_CAA293:
-  alias: A.D. Edmondston Pumping Plant
+  alias: Edmondston Pumping Plant
   bpart: C_CAA293
   pathname: /CALSIM/C_CAA293/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Delivery
+  type: Channel
+C_CAA305:
+  alias: C_CAA305
+  bpart: C_CAA305
+  pathname: /CALSIM/C_CAA305/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
 C_CLR011:
   alias: Upstream Flows - Release-ClearCreek
   bpart: C_CLR011
@@ -537,6 +817,20 @@ DELTAINFLOWFORNDOI:
   table_convert: cfs_taf
   table_display: wy
   type: Channel
+DELTARDV_TOTAL:
+  alias: Delivery - SWP Del Target TA + CO
+  bpart: DELTARDV_TOTAL
+  pathname: /CALSIM/DELTARDV_TOTAL/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+DELTAR_A_DV:
+  alias: Delivery - SWP Del Target TA
+  bpart: DELTAR_A_DV
+  pathname: /CALSIM/DELTAR_A_DV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
 DEL_CVP_PAG_N:
   alias: Delivery - CVP Delivery PAG N
   bpart: DEL_CVP_PAG_N
@@ -740,6 +1034,20 @@ LV_EC_MONTH:
   table_convert: cfs_taf
   table_display: wy
   type: Channel
+MAXEXP_RPA_CVPDV:
+  alias: Other - RPA Constraint Jones
+  bpart: MAXEXP_RPA_CVPDV
+  pathname: /CALSIM/MAXEXP_RPA_CVPDV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+MAXEXP_RPA_SWPDV:
+  alias: Other - RPA Constraint Banks
+  bpart: MAXEXP_RPA_SWPDV
+  pathname: /CALSIM/MAXEXP_RPA_SWPDV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
 MRDO_FINALDV:
   alias: Delta - Modeled Required DO
   bpart: MRDO_FINALDV
@@ -797,12 +1105,12 @@ NDOI_MIN:
   table_display: wy
   type: Channel
 NET_DICU:
-  alias: Net DICU DCD
+  alias: Other - net DICU
   bpart: NET_DICU
   pathname: /CALSIM/NET_DICU/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Delta Inflow
+  type: Channel
 PERDV_CVPAG_S:
   alias: Delivery - CVP Allocation (SOD Ag)
   bpart: PERDV_CVPAG_S
@@ -877,7 +1185,7 @@ RS_EC_MONTH:
   alias: Salinity - RS EC
   bpart: RS_EC_MONTH
   pathname: /CALSIM/RS_EC_MONTH/.*//.*/.*/
-  table_convert:
+  table_convert: null
   table_display: wy
   type: EC
 SHORT_CVP_TOT_N:
@@ -937,12 +1245,12 @@ SWP_CO_NBAY:
   table_display: wy
   type: Channel
 SWP_CO_TOTAL:
-  alias: null
+  alias: Delivery - SWP_CO_TOTAL
   bpart: SWP_CO_TOTAL
   pathname: /CALSIM/SWP_CO_TOTAL/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Delivery
+  type: Channel
 SWP_IN_FEATH:
   alias: Delivery - SWP_IN_FEATH
   bpart: SWP_IN_FEATH
@@ -958,16 +1266,23 @@ SWP_IN_NBAY:
   table_display: wy
   type: Channel
 SWP_IN_TOTAL:
-  alias: null
+  alias: Delivery - SWP_IN_TOTAL
   bpart: SWP_IN_TOTAL
   pathname: /CALSIM/SWP_IN_TOTAL/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Delivery
+  type: Channel
 SWP_LOSS:
   alias: Delivery - SWP_LOSS
   bpart: SWP_LOSS
   pathname: /CALSIM/SWP_LOSS/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+SWP_PERDELDV:
+  alias: Delivery - SWP PERCENT DELIVERY
+  bpart: SWP_PERDELDV
+  pathname: /CALSIM/SWP_PERDELDV/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
@@ -986,12 +1301,12 @@ SWP_TA_NBAY:
   table_display: wy
   type: Channel
 SWP_TA_TOTAL:
-  alias: null
+  alias: Delivery - SWP_TA_TOTAL
   bpart: SWP_TA_TOTAL
   pathname: /CALSIM/SWP_TA_TOTAL/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Delivery
+  type: Channel
 S_FOLSM:
   alias: Storage - Folsom Storage
   bpart: S_FOLSM
@@ -1069,6 +1384,20 @@ S_WKYTN:
   table_convert: orig
   table_display: 9
   type: Reservoir Storage
+UNUSED_TOTALDV:
+  alias: Delivery - SWP_UNUSED_TA_TOTAL
+  bpart: UNUSED_TOTALDV
+  pathname: /CALSIM/UNUSED_TOTALDV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+VARDELTARDV:
+  alias: Delivery - SWP Var Demand Deltar
+  bpart: VARDELTARDV
+  pathname: /CALSIM/VARDELTARDV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
 VI_EC_MONTH:
   alias: Salinity - VI EC
   bpart: VI_EC_MONTH
@@ -1089,108 +1418,150 @@ X2_PRV:
   table_convert: orig
   table_display: wy
   type: Channel
-CO_AVAILABLE_DV:
-  alias: Delivery - SWP CO available
-  bpart: CO_AVAILABLE_DV
-  pathname: /CALSIM/CO_AVAILABLE_DV/.*//.*/.*/
+C_ESB306:
+  alias: 'SWP Alamo Powerplant               '
+  bpart: C_ESB306
+  pathname: /CALSIM/C_ESB306/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
-CO_EST_DV:
-  alias: Delivery - SWP CO est
-  bpart: CO_EST_DV
-  pathname: /CALSIM/CO_EST_DV/.*//.*/.*/
+C_ESB324:
+  alias: 'SWP Reach 19-22A  Avek Wa          '
+  bpart: C_ESB324
+  pathname: /CALSIM/C_ESB324/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
-CO_FINAL_DV:
-  alias: Delivery - SWP CO final
-  bpart: CO_FINAL_DV
-  pathname: /CALSIM/CO_FINAL_DV/.*//.*/.*/
+C_ESB347:
+  alias: 'SWP Reach 20A-20B  Palmdale WD     '
+  bpart: C_ESB347
+  pathname: /CALSIM/C_ESB347/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
-CVPTOTALDEL:
-  alias: Delivery - CVP Delivery SOD
-  bpart: CVPTOTALDEL
-  pathname: /CALSIM/CVPTOTALDEL/.*//.*/.*/
+C_ESB355:
+  alias: 'SWP Reach 21  Littlerock Cr Id     '
+  bpart: C_ESB355
+  pathname: /CALSIM/C_ESB355/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
-DELTAR_A_DV:
-  alias: Delivery - SWP Del Target TA
-  bpart: DELTAR_A_DV
-  pathname: /CALSIM/DELTAR_A_DV/.*//.*/.*/
+C_ESB361:
+  alias: Pearblossom PP & Reach 17-21 Losses
+  bpart: C_ESB361
+  pathname: /CALSIM/C_ESB361/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
-DELTARDV_TOTAL:
-  alias: Delivery - SWP Del Target TA + CO
-  bpart: DELTARDV_TOTAL
-  pathname: /CALSIM/DELTARDV_TOTAL/.*//.*/.*/
+C_ESB403:
+  alias: 'SWP Reach 22B-23  Mojave Wa        '
+  bpart: C_ESB403
+  pathname: /CALSIM/C_ESB403/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
-MAXEXP_RPA_CVPDV:
-  alias: Other - RPA Constraint Jones
-  bpart: MAXEXP_RPA_CVPDV
-  pathname: /CALSIM/MAXEXP_RPA_CVPDV/.*//.*/.*/
+C_ESB406:
+  alias: 'Mojave PWP & Reach 22A-23 Losses   '
+  bpart: C_ESB406
+  pathname: /CALSIM/C_ESB406/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
-MAXEXP_RPA_SWPDV:
-  alias: Other - RPA Constraint Banks
-  bpart: MAXEXP_RPA_SWPDV
-  pathname: /CALSIM/MAXEXP_RPA_SWPDV/.*//.*/.*/
+C_ESB407:
+  alias: 'SWP Reach 26A Coachella Valley WD  '
+  bpart: C_ESB407
+  pathname: /CALSIM/C_ESB407/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
-NET_DICU:
-  alias: Other - net DICU
-  bpart: NET_DICU
-  pathname: /CALSIM/NET_DICU/.*//.*/.*/
+C_ESB408:
+  alias: 'SWP Reach 26A  Desert Wa           '
+  bpart: C_ESB408
+  pathname: /CALSIM/C_ESB408/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
-SWP_CO_TOTAL:
-  alias: Delivery - SWP_CO_TOTAL
-  bpart: SWP_CO_TOTAL
-  pathname: /CALSIM/SWP_CO_TOTAL/.*//.*/.*/
+C_ESB413:
+  alias: 'SWP Reach 26  MWD                  '
+  bpart: C_ESB413
+  pathname: /CALSIM/C_ESB413/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
-SWP_IN_TOTAL:
-  alias: Delivery - SWP_IN_TOTAL
-  bpart: SWP_IN_TOTAL
-  pathname: /CALSIM/SWP_IN_TOTAL/.*//.*/.*/
+C_ESB414:
+  alias: 'SWP Reach 26A  San Bernardino      '
+  bpart: C_ESB414
+  pathname: /CALSIM/C_ESB414/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
-SWP_TA_TOTAL:
-  alias: Delivery - SWP_TA_TOTAL
-  bpart: SWP_TA_TOTAL
-  pathname: /CALSIM/SWP_TA_TOTAL/.*//.*/.*/
+C_ESB415:
+  alias: 'SWP Reach 26  San Gabriel Valley   '
+  bpart: C_ESB415
+  pathname: /CALSIM/C_ESB415/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
-SWP_PERDELDV:
-  alias: Delivery - SWP PERCENT DELIVERY
-  bpart: SWP_PERDELDV
-  pathname: /CALSIM/SWP_PERDELDV/.*//.*/.*/
+C_ESB420:
+  alias: 'SWP Reach 26 San Gorgonio Pass Wa  '
+  bpart: C_ESB420
+  pathname: /CALSIM/C_ESB420/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
-UNUSED_TOTALDV:
-  alias: Delivery - SWP_UNUSED_TA_TOTAL
-  bpart: UNUSED_TOTALDV
-  pathname: /CALSIM/UNUSED_TOTALDV/.*//.*/.*/
+C_ESB425:
+  alias: 'SWP Reach 24-28  Rec + Losses      '
+  bpart: C_ESB425
+  pathname: /CALSIM/C_ESB425/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
-VARDELTARDV:
-  alias: Delivery - SWP Var Demand Deltar
-  bpart: VARDELTARDV
-  pathname: /CALSIM/VARDELTARDV/.*//.*/.*/
+C_ESB433:
+  alias: 'SWP Reach 28G-28H  MWD              '
+  bpart: C_ESB433
+  pathname: /CALSIM/C_ESB433/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_WSB001:
+  alias: 'SWP OSO Power Plant                '
+  bpart: C_WSB001
+  pathname: /CALSIM/C_WSB001/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_WSB006:
+  alias: 'SWP Reach 29A-29F Losses           '
+  bpart: C_WSB006
+  pathname: /CALSIM/C_WSB006/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_WSB014:
+  alias: 'SWP Warne PWP & Reach 29A-F Losses '
+  bpart: C_WSB014
+  pathname: /CALSIM/C_WSB014/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_WSB026:
+  alias: ' Castaic PWP & Reach 29H-29J Losses'
+  bpart: C_WSB026
+  pathname: /CALSIM/C_WSB026/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_WSB027:
+  alias: ' SWP Reach 30  Rec + Losses        '
+  bpart: C_WSB027
+  pathname: /CALSIM/C_WSB027/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Channel
+C_WSB031:
+  alias: ' SWP Reach 30  MWD                 '
+  bpart: C_WSB031
+  pathname: /CALSIM/C_WSB031/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
