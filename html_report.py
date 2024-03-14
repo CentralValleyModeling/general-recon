@@ -29,12 +29,12 @@ scenarios = (scenario for scenario in [s1,s2,s3,s4,s5] if scenario.active==1)
 
 #load_data_mult(scenarios,var_dict)
 bparts = []
-
+aliases = []
 #print(var_dict)
 
 for var in var_dict:
-    print(var)
     bparts.append(var)
+    aliases.append(var_dict[var]['alias'])
 
 df = pd.read_csv('temp_mult.csv', index_col=0, parse_dates=True)
 
@@ -54,7 +54,8 @@ app.layout = html.Div(children=[
     html.Div(id='dummy-div'),
     html.Div([
         "B-Part: ",
-        dcc.Dropdown(bparts, id='b-part',value="S_OROVL")
+        dcc.Dropdown(bparts, id='b-part',value="S_OROVL"),
+        dcc.Dropdown(options=aliases, id='alias')
     ]),
     html.Br(),
     html.Div(id='my-output'),
@@ -138,6 +139,17 @@ def load(n_clicks):
     load_data_mult(scenarios,var_dict)
     return
 
+
+# Return B Part based on alias search
+@callback(
+    Output(component_id='b-part', component_property='value'),
+    Input(component_id='alias', component_property='value')        
+)
+def update_b_part(alias):
+    i=aliases.index(str(alias))
+    b = bparts[i]
+    return b
+
 # Timeseries Plot
 @callback(
     Output(component_id='timeseries-plot', component_property='figure'),
@@ -161,9 +173,9 @@ def update_exceedance(b_part,monthchecklist):
     scenarios = (scenario for scenario in [s1,s2,s3,s4] if scenario.active==1)
 
     for scenario in scenarios:
-        print(scenario[1])
+        #print(scenario[1])
         df1 = df0.loc[df0['Scenario']==scenario[1],b_part]
-        print(df1)
+        #print(df1)
         df1 = df1.sort_values()
         df1 = df1.reset_index(drop=True)
         df2[scenario[1]]=df1
