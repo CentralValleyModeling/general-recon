@@ -8,11 +8,10 @@ import yaml
 from dash import Dash, html, dcc, Input, Output, callback, dash_table
 import plotly.express as px
 #import plotly.graph_objects as go
-#import dash_bootstrap_components as dbc
+import dash_bootstrap_components as dbc
+
 from utils import (make_summary_df, month_map, load_data_mult, 
                    make_ressum_df, month_list, convert_cm_nums)
-
-
 
 Scenario = namedtuple('Scenario',['pathname','alias','active'])
 with open('dictionary.yaml', 'r') as file:
@@ -30,7 +29,6 @@ scenarios = (scenario for scenario in [s1,s2,s3,s4,s5] if scenario.active==1)
 #load_data_mult(scenarios,var_dict)
 bparts = []
 aliases = []
-#print(var_dict)
 
 for var in var_dict:
     bparts.append(var)
@@ -41,8 +39,9 @@ df = pd.read_csv('temp_mult.csv', index_col=0, parse_dates=True)
 df_tbl = make_summary_df(df,var_dict)
 df_tbl_res = make_ressum_df(df,var_dict)
 
-app = Dash(__name__)
-app.layout = html.Div(children=[
+app = Dash(__name__,external_stylesheets=[dbc.themes.YETI])
+
+app.layout = dbc.Container([
     html.H1(children="CalSim 3 Results Dashboard"),
     html.H2("A General dashboard for reviewing CalSim 3 Results"),
     dcc.Upload(id='upload-data',children=html.Div([
@@ -53,19 +52,23 @@ app.layout = html.Div(children=[
     html.Button('Load', id='btn-load-study-1', n_clicks=0),
     html.Div(id='dummy-div'),
     html.Div([
-        "B-Part: ",
-        dcc.Dropdown(bparts, id='b-part',value="S_OROVL"),
-        dcc.Dropdown(options=aliases, id='alias')
+        "Select B-Part: ",
+        dcc.Dropdown(bparts, id='b-part',value="S_OROVL",
+                     style={'width': '50%'}
+                    ),
+        "Or search by alias: ",
+        dcc.Dropdown(options=aliases, id='alias',
+                     style={'width': '50%'}
+                    )
     ]),
     html.Br(),
     html.Div(id='my-output'),
     dcc.Markdown("#### Timeseries Plot"),
-    dcc.Markdown("Plot Controls"),
     dcc.Graph(id='timeseries-plot'),
               
-    html.Div(className='row',children=[
-        dcc.Graph(id='exceedance-plot',style={'display': 'inline-block'}),
-        dcc.Graph(id='bar-plot',style={'display': 'inline-block'}),
+    dbc.Row([
+        dbc.Col(dcc.Graph(id='exceedance-plot')),
+        dbc.Col(dcc.Graph(id='bar-plot')),
         dcc.Checklist(
         options = month_list, value = month_list, inline=True,
         id = 'monthchecklist-exc'
