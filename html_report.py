@@ -11,7 +11,8 @@ import plotly.express as px
 import dash_bootstrap_components as dbc
 
 from utils import (make_summary_df, month_map, load_data_mult, 
-                   make_ressum_df, month_list, convert_cm_nums)
+                   make_ressum_df, month_list, convert_cm_nums,
+                   wyt_list, convert_wyt_nums)
 
 Scenario = namedtuple('Scenario',['pathname','alias','active'])
 with open('dictionary.yaml', 'r') as file:
@@ -39,41 +40,90 @@ df = pd.read_csv('temp_mult.csv', index_col=0, parse_dates=True)
 df_tbl = make_summary_df(df,var_dict)
 df_tbl_res = make_ressum_df(df,var_dict)
 
+
+
 app = Dash(__name__,external_stylesheets=[dbc.themes.YETI])
 
 app.layout = dbc.Container([
-    html.H1(children="CalSim 3 Results Dashboard"),
-    html.H2("A General dashboard for reviewing CalSim 3 Results"),
-    dcc.Upload(id='upload-data',children=html.Div([
-            'Drag and Drop or ',
-            html.A('Select Files')
-    ]),
+    dcc.Markdown("# CalSim 3 Results Dashboard"),
+    dcc.Markdown("### A General dashboard for reviewing CalSim 3 Results"),
+
+dbc.Row([
+    dbc.Col(
+        [
+            dcc.Upload(id='upload-data',
+                children=html.Div([
+                    'Drag and Drop or ',
+                    html.A('Select DSS Files')
+                ]),
+                style={
+                    'width': '100%',
+                    'height': '120px',
+                    'lineHeight': '120px',
+                    'borderWidth': '1px',
+                    'borderStyle': 'dashed',
+                    'borderRadius': '5px',
+                    'textAlign': 'center',
+                    'margin': '10px'
+                }
+            ),
+            html.Button('Load', id='btn-load-study-1', n_clicks=0),
+            html.Div(id='dummy-div',children=[])
+        ],
+        width=6
     ),
-    html.Button('Load', id='btn-load-study-1', n_clicks=0),
-    html.Div(id='dummy-div'),
-    html.Div([
-        "Select B-Part: ",
-        dcc.Dropdown(bparts, id='b-part',value="S_OROVL",
-                     style={'width': '50%'}
-                    ),
-        "Or search by alias: ",
-        dcc.Dropdown(options=aliases, id='alias',
-                     style={'width': '50%'}
-                    )
-    ]),
+
+    dbc.Col(
+        [
+            "Select B-Part: ",
+            dcc.Dropdown(bparts, id='b-part',value="S_OROVL",
+                        style={'width': '100%'}
+                        ),
+            "Or search by alias: ",
+            dcc.Dropdown(options=aliases, id='alias',
+                        style={'width': '100%'}
+                        )
+        ],
+        width=6
+    ),
+]),
+
+    
     html.Br(),
     html.Div(id='my-output'),
-    dcc.Markdown("#### Timeseries Plot"),
+    dcc.Markdown("**Timeseries**"),
     dcc.Graph(id='timeseries-plot'),
               
     dbc.Row([
-        dbc.Col(dcc.Graph(id='exceedance-plot')),
-        dbc.Col(dcc.Graph(id='bar-plot')),
-        dcc.Checklist(
-        options = month_list, value = month_list, inline=True,
-        id = 'monthchecklist-exc'
-    ),
-    
+        dbc.Col([dcc.Markdown("**Monthly Exceedance**"),
+                 dcc.Checklist(options = month_list,
+                    value = month_list,
+                    inline=True,
+                    id = 'monthchecklist-exc',
+                    inputStyle={"margin-right": "5px","margin-left": "5px"}),
+                 
+                 dcc.Graph(id='exceedance-plot')
+                 ],
+                 align="center"
+                 ),
+        
+        
+        dbc.Col([dcc.Markdown("**Monthly Average**"),
+                 dcc.Checklist(options = wyt_list,
+                    value = wyt_list,
+                    inline=True,
+                    id = 'wyt_checklist',
+                    inputStyle={"margin-right": "5px","margin-left": "30px"},
+                    ),
+                    dcc.Graph(id='bar-plot'),                 
+                 
+                 
+                 
+                 ]),
+        
+        
+        
+
     ]),
 
     dcc.Markdown("#### Table Controls"),
@@ -164,7 +214,6 @@ def update_timeseries(b_part):
     return fig
 
 # Exceedance Plot
-
 @callback(
     Output(component_id='exceedance-plot', component_property='figure'),
     Input(component_id='b-part', component_property='value'),
@@ -174,7 +223,6 @@ def update_exceedance(b_part,monthchecklist):
     df2 = pd.DataFrame()
     df0 = df.loc[df['icm'].isin(convert_cm_nums(monthchecklist))]
     scenarios = (scenario for scenario in [s1,s2,s3,s4] if scenario.active==1)
-
     for scenario in scenarios:
         #print(scenario[1])
         df1 = df0.loc[df0['Scenario']==scenario[1],b_part]
@@ -190,13 +238,15 @@ def update_exceedance(b_part,monthchecklist):
 # Monthly Bar Plot
 @callback(
     Output(component_id='bar-plot', component_property='figure'),
-    Input(component_id='b-part', component_property='value')
+    Input(component_id='b-part', component_property='value'),
+    Input(component_id='wyt_checklist', component_property='value')
 )
-def update_bar(b_part):
-    df1 = round(df.groupby(['Scenario','iwm']).mean())
-    #print(df1)
+def update_bar(b_part,wytchecklist):
+    df0=df.loc[df['WYT_SAC_'].isin(convert_wyt_nums(wytchecklist))]
+    df1 = round(df0.groupby(['Scenario','iwm']).mean())
     fig = px.bar(df1, x = df1.index.get_level_values(1), y = b_part, 
                  color=df1.index.get_level_values(0), barmode='group')
+    print(wytchecklist)
     return fig
 
 @callback(

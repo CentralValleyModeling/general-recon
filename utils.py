@@ -13,6 +13,12 @@ month_map = {'Jan':1,'Feb':2,'Mar':3, 'Apr':4,
 month_list = ['Oct', 'Nov', 'Dec','Jan', 'Feb', 'Mar',
             'Apr', 'May', 'Jun','Jul', 'Aug', 'Sep']
 
+wyt_map = {'Wet':1,'Above Normal':2,'Below Normal':3, 
+           'Dry':4,'Critical':5}
+
+wyt_list = ['Wet', 'Above Normal', 'Below Normal',
+            'Dry', 'Critical']
+
 def convert_cm_nums(monthchecklist):
     '''
     Converts calendar month strings to calendar month numbers
@@ -22,6 +28,15 @@ def convert_cm_nums(monthchecklist):
     for v in monthchecklist:
         monthfilter.append(month_map[v])
     return monthfilter
+
+def convert_wyt_nums(wytchecklist):
+    '''
+    Converts WYT strings to numbers: Wet = 1, etc.
+    '''
+    wytfilter = []
+    for v in wytchecklist:
+        wytfilter.append(wyt_map[v])
+    return wytfilter
 
 def load_data_mult(scenarios, var_dict):
     """
