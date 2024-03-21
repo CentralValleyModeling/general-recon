@@ -165,7 +165,7 @@ dbc.Row([
     html.Div(id='output-container-range-slider'),
 
     html.Button('Load', id='btn-refresh-tbl', n_clicks=0),
-
+    dcc.Markdown("**Reservoir Summary Tables (Single Month)**"),
     dash_table.DataTable(
         id='sum_tbl_res',
         columns=[{"name": i, "id": i} 
@@ -181,7 +181,7 @@ dbc.Row([
         'overflow': 'hidden'
         },
     ),
-
+    dcc.Markdown("**Flow Summary Tables (Average Annual)**"),
     dash_table.DataTable(
         id='sum_tbl',
         columns=[{"name": i, "id": i} 
@@ -197,7 +197,9 @@ dbc.Row([
         'overflow': 'hidden'
         },
     )
-])
+],
+fluid=False
+)
 
 @app.callback(
   Output(component_id='dummy-div', component_property='children'),
