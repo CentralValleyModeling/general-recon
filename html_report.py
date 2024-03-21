@@ -14,6 +14,10 @@ from utils import (make_summary_df, month_map, load_data_mult,
                    make_ressum_df, month_list, convert_cm_nums,
                    wyt_list, convert_wyt_nums, cfs_taf)
 
+cs3_icon_path = 'assets/cs3_icon_draft.png'
+#html.Img(src=cs3_icon_path,width="84",height="107")
+
+
 Scenario = namedtuple('Scenario',['pathname','alias','active'])
 with open('dictionary.yaml', 'r') as file:
     var_dict = yaml.safe_load(file)
@@ -45,7 +49,7 @@ df_tbl_res = make_ressum_df(df,var_dict)
 app = Dash(__name__,external_stylesheets=[dbc.themes.YETI])
 
 app.layout = dbc.Container([
-    dcc.Markdown("# CalSim 3 Results Dashboard"),
+    dcc.Markdown("# ![](/assets/cs3_icon_draft.png) CalSim 3 Results Dashboard"),
     dcc.Markdown("### A General dashboard for reviewing CalSim 3 Results"),
 
 dbc.Row([
