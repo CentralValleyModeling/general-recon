@@ -53,8 +53,8 @@ dbc.Row([
         [
             dcc.Upload(id='upload-data',
                 children=html.Div([
-                    'Drag and Drop or ',
-                    html.A('Select DSS Files')
+                    'Connect to SQL Database ',
+                    html.A('or Select DSS Files')
                 ]),
                 style={
                     'width': '100%',
@@ -119,10 +119,23 @@ dbc.Row([
 
     dbc.Row([
          dbc.Col([dcc.Markdown("**Annual Exceedance**"),
+                  dcc.Dropdown(
+                        options=['Calendar Year','Water Year'], 
+                        id='yearwindow',
+                        style={'width': '50%'},
+                        value = "Water Year"
+                        ),
                  dcc.Graph(id='exceedance-plot-annual')
                  ]),
 
          dbc.Col([dcc.Markdown("**Annual Average**"),
+                  dcc.Dropdown(
+                        options=['Calendar Year','Water Year'], 
+                        id='yearwindow-repeater',
+                        style={'width': '50%'},
+                        value = "Water Year",
+                        disabled=True
+                        ),
                   dcc.Graph(id='bar-plot-annual')
                   ]),
 
@@ -242,13 +255,20 @@ def update_exceedance(b_part,monthchecklist):
 @callback(
     Output(component_id='exceedance-plot-annual', component_property='figure'),
     Input(component_id='b-part', component_property='value'),
-    Input(component_id='monthchecklist-exc', component_property='value')
+    Input(component_id='monthchecklist-exc', component_property='value'),
+    Input(component_id='yearwindow', component_property='value')
 )
-def update_exceedance(b_part,monthchecklist):
+def update_exceedance(b_part,monthchecklist,yearwindow):
+    if yearwindow=="Calendar Year":
+        yw='icy'
+    else:
+        yw='iwy'
+    
+    print(yw)
     df2 = pd.DataFrame()
     df0 = df.loc[df['icm'].isin(convert_cm_nums(monthchecklist))]
     cfs_taf(df0,var_dict)
-    df0 = df0.groupby(['Scenario','iwy']).sum()
+    df0 = df0.groupby(['Scenario',yw]).sum()
     print(df0)
     scenarios = (scenario for scenario in [s1,s2,s3,s4] if scenario.active==1)
     for scenario in scenarios:
@@ -327,7 +347,6 @@ def update_table2(slider_yr_range,monthradio):
                              start_yr=slider_yr_range[0],end_yr=slider_yr_range[1],
                              monthfilter=monthradio)
     data=df_tbl.to_dict(orient='records')
-    #print(monthradio)
     return data
 
 @callback(
