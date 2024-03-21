@@ -238,6 +238,31 @@ def update_exceedance(b_part,monthchecklist):
     return fig
 
 
+# Annual Exceedance Plot
+@callback(
+    Output(component_id='exceedance-plot-annual', component_property='figure'),
+    Input(component_id='b-part', component_property='value'),
+    Input(component_id='monthchecklist-exc', component_property='value')
+)
+def update_exceedance(b_part,monthchecklist):
+    df2 = pd.DataFrame()
+    df0 = df.loc[df['icm'].isin(convert_cm_nums(monthchecklist))]
+    cfs_taf(df0,var_dict)
+    df0 = df0.groupby(['Scenario','iwy']).sum()
+    print(df0)
+    scenarios = (scenario for scenario in [s1,s2,s3,s4] if scenario.active==1)
+    for scenario in scenarios:
+        df1 = df0.loc[df0.index.get_level_values(0)==scenario[1],b_part]
+        df1 = df1.sort_values()
+        df1 = df1.reset_index(drop=True)
+        df2[scenario[1]]=df1
+    fig = px.line(df2)
+    print(df2)
+
+    return fig
+
+
+
 # Monthly Bar Plot
 @callback(
     Output(component_id='bar-plot', component_property='figure'),
@@ -273,7 +298,7 @@ def update_bar_annual(b_part,wytchecklist,slider_yr_range):
     fig.update_layout(barmode='relative')
     return fig
 
-
+# Summary tables
 @callback(
     Output(component_id='sum_tbl', component_property='data'),
     Input(component_id='slider-yr-range', component_property='value'),
