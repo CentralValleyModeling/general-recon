@@ -100,7 +100,15 @@ def make_ressum_df(df,var_dict,start_yr=1922,end_yr=2021,
         df_tbl.reset_index(inplace=True)
         return df_tbl
 
-
+def cfs_taf(df,var_dict):
+    for var in var_dict:
+        b = var
+        if var_dict[var]['table_convert']=='cfs_taf':
+            #print(f'converted {b} to TAF')
+            df[b]=df[b]*df['cfs_taf']
+        else:
+            continue
+    return df
 
 def make_summary_df(df,var_dict,start_yr=1922,end_yr=2021,
                     monthfilter=monthfilter):
@@ -119,7 +127,6 @@ def make_summary_df(df,var_dict,start_yr=1922,end_yr=2021,
             df1[b]=df1[b]*df1['cfs_taf']
         else:
             continue
-            #print(var_dict[var]['pathname'])
 
     # Annual Average
     df_tbl = round(df1.groupby(["Scenario"]).sum()/(end_yr-start_yr+1))

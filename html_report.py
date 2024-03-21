@@ -12,7 +12,7 @@ import dash_bootstrap_components as dbc
 
 from utils import (make_summary_df, month_map, load_data_mult, 
                    make_ressum_df, month_list, convert_cm_nums,
-                   wyt_list, convert_wyt_nums)
+                   wyt_list, convert_wyt_nums, cfs_taf)
 
 Scenario = namedtuple('Scenario',['pathname','alias','active'])
 with open('dictionary.yaml', 'r') as file:
@@ -76,7 +76,7 @@ dbc.Row([
     dbc.Col(
         [
             "Select B-Part: ",
-            dcc.Dropdown(bparts, id='b-part',value="S_OROVL",
+            dcc.Dropdown(bparts, id='b-part',value="D_OMR027_CAA000",
                         style={'width': '100%'}
                         ),
             "Or search by alias: ",
@@ -88,7 +88,6 @@ dbc.Row([
     ),
 ]),
 
-    
     html.Br(),
     html.Div(id='my-output'),
     dcc.Markdown("**Timeseries**"),
@@ -107,22 +106,26 @@ dbc.Row([
                  align="center"
                  ),
         
-        
         dbc.Col([dcc.Markdown("**Monthly Average**"),
                  dcc.Checklist(options = wyt_list,
                     value = wyt_list,
                     inline=True,
-                    id = 'wyt_checklist',
+                    id = 'wytchecklist-bar',
                     inputStyle={"margin-right": "5px","margin-left": "30px"},
                     ),
                     dcc.Graph(id='bar-plot'),                 
-                 
-                 
-                 
                  ]),
-        
-        
-        
+    ]),
+
+    dbc.Row([
+         dbc.Col([dcc.Markdown("**Annual Exceedance**"),
+                 dcc.Graph(id='exceedance-plot-annual')
+                 ]),
+
+         dbc.Col([dcc.Markdown("**Annual Average**"),
+                  dcc.Graph(id='bar-plot-annual')
+                  ]),
+
 
     ]),
 
@@ -239,7 +242,7 @@ def update_exceedance(b_part,monthchecklist):
 @callback(
     Output(component_id='bar-plot', component_property='figure'),
     Input(component_id='b-part', component_property='value'),
-    Input(component_id='wyt_checklist', component_property='value')
+    Input(component_id='wytchecklist-bar', component_property='value')
 )
 def update_bar(b_part,wytchecklist):
     df0=df.loc[df['WYT_SAC_'].isin(convert_wyt_nums(wytchecklist))]
@@ -248,6 +251,28 @@ def update_bar(b_part,wytchecklist):
                  color=df1.index.get_level_values(0), barmode='group')
     print(wytchecklist)
     return fig
+
+
+# Annual Bar Plot
+@callback(
+    Output(component_id='bar-plot-annual', component_property='figure'),
+    Input(component_id='b-part', component_property='value'),
+    Input(component_id='wytchecklist-bar', component_property='value'),
+    Input(component_id='slider-yr-range', component_property='value')
+)
+def update_bar_annual(b_part,wytchecklist,slider_yr_range):
+    startyr=slider_yr_range[0]
+    endyr=slider_yr_range[1]
+    df0=df.loc[df['WYT_SAC_'].isin(convert_wyt_nums(wytchecklist))]
+    
+    cfs_taf(df0,var_dict)
+    
+    df1 = round(df0.groupby(['Scenario']).sum()/(endyr-startyr+1))
+    fig = px.bar(df1, x = df1.index.get_level_values(0), y = b_part, 
+                 color=df1.index.get_level_values(0),text_auto=True)
+    fig.update_layout(barmode='relative')
+    return fig
+
 
 @callback(
     Output(component_id='sum_tbl', component_property='data'),
@@ -263,7 +288,6 @@ def update_table(slider_yr_range,monthchecklist):
                              start_yr=slider_yr_range[0],end_yr=slider_yr_range[1],
                              monthfilter=monthfilter)
     data=df_tbl.to_dict(orient='records')
-    #print(monthchecklist)
     return data
 
 @callback(
