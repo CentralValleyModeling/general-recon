@@ -69,7 +69,7 @@ C_AMR004:
   table_display: wy
   type: Channel
 C_CAA003:
-  alias: null
+  alias: Total Banks Exports
   bpart: C_CAA003
   pathname: /CALSIM/C_CAA003/.*//.*/.*/
   table_convert: cfs_taf

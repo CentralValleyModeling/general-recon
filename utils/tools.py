@@ -108,7 +108,7 @@ def cfs_taf(df:pd.DataFrame,var_dict:dict)->pd.DataFrame:
     return df
 
 def make_summary_df(df,var_dict,start_yr=1922,end_yr=2021,
-                    monthfilter=monthfilter):
+                    monthfilter=monthfilter,bparts=None):
 
     df1 = df.loc[(df['icm'].isin(monthfilter)) &
                 (df['iwy']>=start_yr) &(df['iwy']<=end_yr)
@@ -116,21 +116,36 @@ def make_summary_df(df,var_dict,start_yr=1922,end_yr=2021,
     columns_to_drop = [col for col in df1.columns if 'S_' in col]
     df1 = df1.drop(columns=columns_to_drop)
 
+    #print(var_dict)
     # Do Conversions
     for var in var_dict:
-        b = var
         if var_dict[var]['table_convert']=='cfs_taf':
-            df1[b]=df1[b]*df1['cfs_taf']
+            df1[var]=df1[var]*df1['cfs_taf']
         else:
             continue
-
+    
     # Annual Average
     df_tbl = round(df1.groupby(["Scenario"]).sum()/(end_yr-start_yr+1))
 
-    # Drop the index columns
+    # Time slicing is done; drop the index columns
     df_tbl.drop(['icy','icm','iwy','iwm','cfs_taf'],axis=1,inplace=True)
 
+    # Filter B-Parts, if user-specified
+    if bparts != None:
+        df1 = df_tbl.loc[:,bparts]
+        df_tbl = df1
+
+    alias_dict = {}
+    # Make a dictionary of just aliases to map to the dataframe
+    for key in var_dict:
+        for subkey in list(var_dict[key]):
+            if subkey != 'alias':
+                del var_dict[key][subkey]
+        alias_dict[key]=var_dict[key]['alias']
+
     df_tbl = df_tbl.T
+    df_tbl['Description'] = df_tbl.index.map(alias_dict)
+
     df_tbl['diff']=df_tbl['CC50']-df_tbl['Hist']
     df_tbl['perdiff'] = round((df_tbl['CC50']-df_tbl['Hist'])/df_tbl['Hist'],2)*100
     df_tbl.reset_index(inplace=True)
