@@ -135,12 +135,10 @@ def make_summary_df(df,var_dict,start_yr=1922,end_yr=2021,
         df1 = df_tbl.loc[:,bparts]
         df_tbl = df1
 
-    alias_dict = {}
+
     # Make a dictionary of just aliases to map to the dataframe
+    alias_dict = {}
     for key in var_dict:
-        for subkey in list(var_dict[key]):
-            if subkey != 'alias':
-                del var_dict[key][subkey]
         alias_dict[key]=var_dict[key]['alias']
 
     df_tbl = df_tbl.T

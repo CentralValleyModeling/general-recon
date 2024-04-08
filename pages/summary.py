@@ -24,7 +24,6 @@ with open('constants/vars.yaml', 'r') as file:
 df = pd.read_csv('data/temp.csv', index_col=0, parse_dates=True)
 
 exp_tbl = make_summary_df(df,var_dict,bparts=[
-    
     'C_CAA003',
     'C_CAA003_SWP',
     'C_CAA003_CVP',
@@ -32,6 +31,13 @@ exp_tbl = make_summary_df(df,var_dict,bparts=[
     'C_DMC000',
     'C_DMC000_CVP',
     'C_DMC000_WTS'])
+
+#print(var_dict)
+
+deliv_tbl = make_summary_df(df,var_dict,bparts=[
+    'SWP_TA_TOTAL',
+    'SWP_IN_TOTAL',
+    'SWP_CO_TOTAL'])
 
 table_order = [{"name": 'Description', "id": 'Description'},
           {"name": 'B-Part', "id": 'index'}]
@@ -42,11 +48,12 @@ table_order.extend([{"name": i, "id": i, "type": "numeric","format": { "specifie
 def layout():
     layout = dbc.Container([
         dcc.Markdown("# ![](/assets/cs3_icon_draft.png) CalSim 3 Results Dashboard"),
-        dcc.Markdown("### Summary Table"),
-
-        dbc.Row(
+        dcc.Markdown("### Summary Tables"),
+        
+        dbc.Row([
+            dcc.Markdown("#### Project Exports"),
             dash_table.DataTable(
-                id='sum_tbl',
+                id='exp_tbl',
                 columns=table_order,
                 data=exp_tbl.to_dict(orient='records'),
                 style_header={
@@ -55,10 +62,30 @@ def layout():
                 },
                 style_cell={
                 'width': '{}%'.format(len(exp_tbl.columns)),
+                #'width': '1000px',
                 'textOverflow': 'ellipsis',
-                'overflow': 'hidden'
+                'overflow': 'hidden',
+                'textAlign': 'left',
                 },
-            )
-        )
+            ),
+            dcc.Markdown("#### Project Deliveries"),
+            dash_table.DataTable(
+                id='deliv_tbl',
+                columns=table_order,
+                data=deliv_tbl.to_dict(orient='records'),
+                style_header={
+                        'backgroundColor': 'rgb(200, 200, 200)',
+                        'fontWeight': 'bold'
+                },
+                style_cell={
+                'width': '{}%'.format(len(deliv_tbl.columns)),
+                #'width': '1000px',
+                'textOverflow': 'ellipsis',
+                'overflow': 'hidden',
+                'textAlign': 'left',
+                },
+            ),
+        ])
     ])
     return layout
+layout()

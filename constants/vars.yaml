@@ -510,7 +510,7 @@ C_DMC000_TD:
   table_display: wy
   type: Channel
 C_DMC000_WTS:
-  alias: Other - Jones Export WTS
+  alias: Jones Export WTS
   bpart: C_DMC000_WTS
   pathname: /CALSIM/C_DMC000_WTS/.*//.*/.*/
   table_convert: cfs_taf
@@ -1245,7 +1245,7 @@ SWP_CO_NBAY:
   table_display: wy
   type: Channel
 SWP_CO_TOTAL:
-  alias: Delivery - SWP_CO_TOTAL
+  alias: SWP Carryover Deliveries
   bpart: SWP_CO_TOTAL
   pathname: /CALSIM/SWP_CO_TOTAL/.*//.*/.*/
   table_convert: cfs_taf
@@ -1266,7 +1266,7 @@ SWP_IN_NBAY:
   table_display: wy
   type: Channel
 SWP_IN_TOTAL:
-  alias: Delivery - SWP_IN_TOTAL
+  alias: SWP Article 21 Deliveries
   bpart: SWP_IN_TOTAL
   pathname: /CALSIM/SWP_IN_TOTAL/.*//.*/.*/
   table_convert: cfs_taf
@@ -1301,7 +1301,7 @@ SWP_TA_NBAY:
   table_display: wy
   type: Channel
 SWP_TA_TOTAL:
-  alias: Delivery - SWP_TA_TOTAL
+  alias: SWP Table A Deliveries
   bpart: SWP_TA_TOTAL
   pathname: /CALSIM/SWP_TA_TOTAL/.*//.*/.*/
   table_convert: cfs_taf
