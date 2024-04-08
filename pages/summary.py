@@ -23,12 +23,21 @@ with open('constants/vars.yaml', 'r') as file:
     var_dict = yaml.safe_load(file)
 df = pd.read_csv('data/temp.csv', index_col=0, parse_dates=True)
 
-exp_tbl = make_summary_df(df,var_dict,bparts=['C_CAA003'])
+exp_tbl = make_summary_df(df,var_dict,bparts=[
+    
+    'C_CAA003',
+    'C_CAA003_SWP',
+    'C_CAA003_CVP',
+    'C_CAA003_WTS',
+    'C_DMC000',
+    'C_DMC000_CVP',
+    'C_DMC000_WTS'])
 
 table_order = [{"name": 'Description', "id": 'Description'},
           {"name": 'B-Part', "id": 'index'}]
 
-table_order.extend([{"name": i, "id": i} for i in exp_tbl.columns if i not in['Description','index']])
+table_order.extend([{"name": i, "id": i, "type": "numeric","format": { "specifier": ",.0f"}} 
+                    for i in exp_tbl.columns if i not in['Description','index']])
 
 def layout():
     layout = dbc.Container([

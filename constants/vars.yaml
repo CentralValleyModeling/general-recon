@@ -83,7 +83,7 @@ C_CAA003_CVC:
   table_display: wy
   type: Channel
 C_CAA003_CVP:
-  alias: Delta - Banks CVP Exports
+  alias: Banks CVP Exports
   bpart: C_CAA003_CVP
   pathname: /CALSIM/C_CAA003_CVP/.*//.*/.*/
   table_convert: cfs_taf
@@ -125,7 +125,7 @@ C_CAA003_IF:
   table_display: wy
   type: Channel
 C_CAA003_SWP:
-  alias: Delta - Banks SWP Exports
+  alias: Banks SWP Exports
   bpart: C_CAA003_SWP
   pathname: /CALSIM/C_CAA003_SWP/.*//.*/.*/
   table_convert: cfs_taf
@@ -146,7 +146,7 @@ C_CAA003_TD:
   table_display: wy
   type: Channel
 C_CAA003_WTS:
-  alias: Other - Banks Export WTS
+  alias: Banks Export WTS
   bpart: C_CAA003_WTS
   pathname: /CALSIM/C_CAA003_WTS/.*//.*/.*/
   table_convert: cfs_taf
@@ -468,14 +468,14 @@ C_CSL004B:
   table_display: wy
   type: Channel
 C_DMC000:
-  alias: null
+  alias: Total Jones Exports
   bpart: C_DMC000
   pathname: /CALSIM/C_DMC000/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Export
 C_DMC000_CVP:
-  alias: null
+  alias: Jones CVP Exports
   bpart: C_DMC000_CVP
   pathname: /CALSIM/C_DMC000_CVP/.*//.*/.*/
   table_convert: cfs_taf
