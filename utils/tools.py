@@ -19,7 +19,7 @@ wyt_map = {'Wet':1,'Above Normal':2,'Below Normal':3,
 wyt_list = ['Wet', 'Above Normal', 'Below Normal',
             'Dry', 'Critical']
 
-def convert_cm_nums(monthchecklist):
+def convert_cm_nums(monthchecklist)->list:
     '''
     Converts calendar month strings to calendar month numbers
     Jan=1, etc.
@@ -29,7 +29,7 @@ def convert_cm_nums(monthchecklist):
         monthfilter.append(month_map[v])
     return monthfilter
 
-def convert_wyt_nums(wytchecklist):
+def convert_wyt_nums(wytchecklist)->list:
     '''
     Converts WYT strings to numbers: Wet = 1, etc.
     '''
@@ -38,7 +38,7 @@ def convert_wyt_nums(wytchecklist):
         wytfilter.append(wyt_map[v])
     return wytfilter
 
-def load_data_mult(scenarios, var_dict):
+def load_data_mult(scenarios, var_dict)->None:
     """
     # Load data from the selected DSS files into a .csv
     """
@@ -73,8 +73,8 @@ def load_data_mult(scenarios, var_dict):
     print(df)
     return
 
-def make_ressum_df(df,var_dict,start_yr=1922,end_yr=2021,
-                    monthfilter=monthfilter):
+def make_ressum_df(df:pd.DataFrame,var_dict,start_yr=1922,end_yr=2021,
+                    monthfilter=monthfilter)->pd.DataFrame:
         df1 = df.loc[(df['icm'].isin(monthfilter)) &
                 (df['iwy']>=start_yr) &(df['iwy']<=end_yr)
                 ] 
@@ -88,7 +88,6 @@ def make_ressum_df(df,var_dict,start_yr=1922,end_yr=2021,
             except KeyError:
                 continue
         
-        #print(df1)
         df_tbl = round(df1.groupby(["Scenario"]).sum()/(end_yr-start_yr+1))
 
         # Drop the index columns
@@ -100,7 +99,7 @@ def make_ressum_df(df,var_dict,start_yr=1922,end_yr=2021,
         df_tbl.reset_index(inplace=True)
         return df_tbl
 
-def cfs_taf(df,var_dict):
+def cfs_taf(df:pd.DataFrame,var_dict:dict)->pd.DataFrame:
     for var in var_dict:
         b = var
         if var_dict[var]['table_convert']=='cfs_taf':
@@ -123,7 +122,6 @@ def make_summary_df(df,var_dict,start_yr=1922,end_yr=2021,
     for var in var_dict:
         b = var
         if var_dict[var]['table_convert']=='cfs_taf':
-            #print(f'converted {b} to TAF')
             df1[b]=df1[b]*df1['cfs_taf']
         else:
             continue
@@ -159,9 +157,6 @@ def generate_yaml_file(varlist, filename):
             'table_display': 'wy',
             'type': 'Channel'
         }    
-
-
-
 
     with open(filename, 'w') as file:
         yaml.dump(data, file)
