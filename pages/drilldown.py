@@ -13,9 +13,10 @@ from utils.tools import (make_summary_df, month_map, load_data_mult,
                    make_ressum_df, month_list, convert_cm_nums,
                    wyt_list, convert_wyt_nums, cfs_taf)
 
+
 register_page(
     __name__,
-    #name='Home',
+    name='Drilldown',
     top_nav=True,
     path='/drilldown'
 )
