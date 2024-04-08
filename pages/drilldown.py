@@ -28,16 +28,15 @@ Scenario = namedtuple('Scenario',['pathname','alias','active'])
 with open('constants/vars.yaml', 'r') as file:
     var_dict = yaml.safe_load(file)
 
-s1 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1.dss', 'Baseline',1)
-s2 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1_oa_1.dss', 'OA_1',1)
-s3 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1_oa_2.dss', 'OA_2',1)
-s4 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1_oa_3.dss', 'OA_3',1)
-s5 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1_oa_4.dss', 'OA_4',1)
+s1 = Scenario('dcr_analysis/DCR2023_DV_9.0.0_Danube_Hist_v1.1.dss', 'Hist',1)
+s2 = Scenario('dcr_analysis/DCR2023_DV_9.0.0_Danube_Adj_v1.2.dss', 'AdjHist',1)
+s3 = Scenario('dcr_analysis/DCR2023_DV_9.0.0_Danube_CC50_v1.2.1.dss', 'CC50',1)
+s4 = Scenario('dcr_analysis/DCR2023_DV_9.0.0_Danube_CC75_v1.2.1.dss', 'CC75',1)
+s5 = Scenario('dcr_analysis/DCR2023_DV_9.0.0_Danube_CC95_v1.2.1.dss', 'CC95',1)
 
 # Generator object for Scenarios
 scenarios = (scenario for scenario in [s1,s2,s3,s4,s5] if scenario.active==1)
 
-#load_data_mult(scenarios,var_dict)
 bparts = []
 aliases = []
 
@@ -46,7 +45,7 @@ for var in var_dict:
     aliases.append(var_dict[var]['alias'])
 
 # Temporary "database"
-df = pd.read_csv('data/temp_mult.csv', index_col=0, parse_dates=True)
+df = pd.read_csv('data/temp.csv', index_col=0, parse_dates=True)
 
 # DataFrames for the summary tables
 df_tbl = make_summary_df(df,var_dict)
@@ -215,15 +214,6 @@ def layout():
 
 
 # CALLBACKS Start Here
-
-@callback(
-  Output(component_id='dummy-div', component_property='children'),
-  Input(component_id='btn-load-study-1', component_property='n_clicks'),
-  prevent_initial_call=True
-)
-def load(n_clicks):
-    load_data_mult(scenarios,var_dict)
-    return
 
 
 # Return B Part based on alias search

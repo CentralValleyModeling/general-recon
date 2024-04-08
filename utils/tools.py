@@ -38,7 +38,7 @@ def convert_wyt_nums(wytchecklist)->list:
         wytfilter.append(wyt_map[v])
     return wytfilter
 
-def load_data_mult(scenarios, var_dict)->None:
+def load_data_mult(scenarios, var_dict, date_map)->None:
     """
     # Load data from the selected DSS files into a .csv
     """
@@ -66,10 +66,8 @@ def load_data_mult(scenarios, var_dict)->None:
 
     # concatenate the individual DataFrames into one big DataFrame
     df = pd.concat(appended_data)
-        
-    date_map = pd.read_csv('date_map.csv', index_col=0, parse_dates=True)
     df = pd.merge(df,date_map, left_index=True, right_index=True)
-    df.to_csv('temp_mult.csv')
+    df.to_csv('temp.csv')
     print(df)
     return
 
@@ -94,8 +92,8 @@ def make_ressum_df(df:pd.DataFrame,var_dict,start_yr=1922,end_yr=2021,
         df_tbl.drop(['icy','icm','iwy','iwm','cfs_taf'],axis=1,inplace=True)
 
         df_tbl = df_tbl.T
-        df_tbl['diff']=df_tbl['OA_1']-df_tbl['Baseline']
-        df_tbl['perdiff'] = round((df_tbl['OA_1']-df_tbl['Baseline'])/df_tbl['Baseline'],2)*100
+        df_tbl['diff']=df_tbl['CC50']-df_tbl['Hist']
+        df_tbl['perdiff'] = round((df_tbl['CC50']-df_tbl['Hist'])/df_tbl['Hist'],2)*100
         df_tbl.reset_index(inplace=True)
         return df_tbl
 
@@ -133,8 +131,8 @@ def make_summary_df(df,var_dict,start_yr=1922,end_yr=2021,
     df_tbl.drop(['icy','icm','iwy','iwm','cfs_taf'],axis=1,inplace=True)
 
     df_tbl = df_tbl.T
-    df_tbl['diff']=df_tbl['OA_1']-df_tbl['Baseline']
-    df_tbl['perdiff'] = round((df_tbl['OA_1']-df_tbl['Baseline'])/df_tbl['Baseline'],2)*100
+    df_tbl['diff']=df_tbl['CC50']-df_tbl['Hist']
+    df_tbl['perdiff'] = round((df_tbl['CC50']-df_tbl['Hist'])/df_tbl['Hist'],2)*100
     df_tbl.reset_index(inplace=True)
     return df_tbl
 
