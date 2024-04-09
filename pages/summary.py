@@ -30,20 +30,19 @@ exp_tbl = make_summary_df(df,var_dict,bparts=[
     'C_CAA003_WTS',
     'C_DMC000',
     'C_DMC000_CVP',
-    'C_DMC000_WTS'])
-
-#print(var_dict)
-
-deliv_tbl = make_summary_df(df,var_dict,bparts=[
+    'C_DMC000_WTS',
+    '----',
     'SWP_TA_TOTAL',
     'SWP_IN_TOTAL',
     'SWP_CO_TOTAL'])
 
-table_order = [{"name": 'Description', "id": 'Description'},
-          {"name": 'B-Part', "id": 'index'}]
+
+table_order = [{"name": 'Type', "id": 'type'},
+               {"name": 'Description', "id": 'description'},
+               {"name": 'B-Part', "id": 'index'}]
 
 table_order.extend([{"name": i, "id": i, "type": "numeric","format": { "specifier": ",.0f"}} 
-                    for i in exp_tbl.columns if i not in['Description','index']])
+                    for i in exp_tbl.columns if i not in['description','index','type']])
 
 def layout():
     layout = dbc.Container([
@@ -62,23 +61,6 @@ def layout():
                 },
                 style_cell={
                 'width': '{}%'.format(len(exp_tbl.columns)),
-                #'width': '1000px',
-                'textOverflow': 'ellipsis',
-                'overflow': 'hidden',
-                'textAlign': 'left',
-                },
-            ),
-            dcc.Markdown("#### Project Deliveries"),
-            dash_table.DataTable(
-                id='deliv_tbl',
-                columns=table_order,
-                data=deliv_tbl.to_dict(orient='records'),
-                style_header={
-                        'backgroundColor': 'rgb(200, 200, 200)',
-                        'fontWeight': 'bold'
-                },
-                style_cell={
-                'width': '{}%'.format(len(deliv_tbl.columns)),
                 #'width': '1000px',
                 'textOverflow': 'ellipsis',
                 'overflow': 'hidden',

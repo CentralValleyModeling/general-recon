@@ -130,19 +130,25 @@ def make_summary_df(df,var_dict,start_yr=1922,end_yr=2021,
     # Time slicing is done; drop the index columns
     df_tbl.drop(['icy','icm','iwy','iwm','cfs_taf'],axis=1,inplace=True)
 
+    #df_tbl = df_tbl.reindex(df_tbl.index.values.tolist()+['BLANK'])
+    df_tbl["----"]=0#pd.NA
+    print(df_tbl)
     # Filter B-Parts, if user-specified
     if bparts != None:
         df1 = df_tbl.loc[:,bparts]
         df_tbl = df1
 
-
     # Make a dictionary of just aliases to map to the dataframe
     alias_dict = {}
+    type_dict = {}
     for key in var_dict:
         alias_dict[key]=var_dict[key]['alias']
+        type_dict[key]=var_dict[key]['type']
 
     df_tbl = df_tbl.T
-    df_tbl['Description'] = df_tbl.index.map(alias_dict)
+    df_tbl['description'] = df_tbl.index.map(alias_dict)
+    df_tbl['type'] = df_tbl.index.map(type_dict)
+
 
     df_tbl['diff']=df_tbl['CC50']-df_tbl['Hist']
     df_tbl['perdiff'] = round((df_tbl['CC50']-df_tbl['Hist'])/df_tbl['Hist'],2)*100

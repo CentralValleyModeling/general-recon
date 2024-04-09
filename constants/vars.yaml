@@ -81,77 +81,77 @@ C_CAA003_CVC:
   pathname: /CALSIM/C_CAA003_CVC/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Export
 C_CAA003_CVP:
   alias: Banks CVP Exports
   bpart: C_CAA003_CVP
   pathname: /CALSIM/C_CAA003_CVP/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Export
 C_CAA003_CVPDED:
   alias: Other - Banks Export CVP Dedicated
   bpart: C_CAA003_CVPDED
   pathname: /CALSIM/C_CAA003_CVPDED/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Export
 C_CAA003_CVPWHL:
   alias: Other - Banks Export JPOD
   bpart: C_CAA003_CVPWHL
   pathname: /CALSIM/C_CAA003_CVPWHL/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Export
 C_CAA003_EXP1:
   alias: Other - Banks Export State Share
   bpart: C_CAA003_EXP1
   pathname: /CALSIM/C_CAA003_EXP1/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Export
 C_CAA003_EXP2:
   alias: Other - Banks Export Fed Share
   bpart: C_CAA003_EXP2
   pathname: /CALSIM/C_CAA003_EXP2/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Export
 C_CAA003_IF:
   alias: Other - Banks PP North Delta
   bpart: C_CAA003_IF
   pathname: /CALSIM/C_CAA003_IF/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Export
 C_CAA003_SWP:
   alias: Banks SWP Exports
   bpart: C_CAA003_SWP
   pathname: /CALSIM/C_CAA003_SWP/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Export
 C_CAA003_SWP_TD:
   alias: Other - Banks PP SWP Through Delta
   bpart: C_CAA003_SWP_TD
   pathname: /CALSIM/C_CAA003_SWP_TD/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Export
 C_CAA003_TD:
   alias: Other - Banks PP Through Delta
   bpart: C_CAA003_TD
   pathname: /CALSIM/C_CAA003_TD/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Export
 C_CAA003_WTS:
   alias: Banks Export WTS
   bpart: C_CAA003_WTS
   pathname: /CALSIM/C_CAA003_WTS/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Export
 C_CAA005:
   alias: C_CAA005
   bpart: C_CAA005
@@ -487,35 +487,35 @@ C_DMC000_EXP1:
   pathname: /CALSIM/C_DMC000_EXP1/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Export
 C_DMC000_EXP2:
   alias: Other - Jones Export State Share
   bpart: C_DMC000_EXP2
   pathname: /CALSIM/C_DMC000_EXP2/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Export
 C_DMC000_IF:
   alias: Other - Jones PP North Delta
   bpart: C_DMC000_IF
   pathname: /CALSIM/C_DMC000_IF/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Export
 C_DMC000_TD:
   alias: Other - Jones PP Through Delta
   bpart: C_DMC000_TD
   pathname: /CALSIM/C_DMC000_TD/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Export
 C_DMC000_WTS:
   alias: Jones Export WTS
   bpart: C_DMC000_WTS
   pathname: /CALSIM/C_DMC000_WTS/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Export
 C_DMC116:
   alias: Other - DMC inflow to MendotaPool
   bpart: C_DMC116
@@ -1250,7 +1250,7 @@ SWP_CO_TOTAL:
   pathname: /CALSIM/SWP_CO_TOTAL/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Delivery
 SWP_IN_FEATH:
   alias: Delivery - SWP_IN_FEATH
   bpart: SWP_IN_FEATH
@@ -1271,7 +1271,7 @@ SWP_IN_TOTAL:
   pathname: /CALSIM/SWP_IN_TOTAL/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Delivery
 SWP_LOSS:
   alias: Delivery - SWP_LOSS
   bpart: SWP_LOSS
@@ -1306,7 +1306,7 @@ SWP_TA_TOTAL:
   pathname: /CALSIM/SWP_TA_TOTAL/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Delivery
 S_FOLSM:
   alias: Storage - Folsom Storage
   bpart: S_FOLSM
