@@ -46,11 +46,11 @@ table_order.extend([{"name": i, "id": i, "type": "numeric","format": { "specifie
 
 def layout():
     layout = dbc.Container([
-        dcc.Markdown("# ![](/assets/cs3_icon_draft.png) CalSim 3 Results Dashboard"),
-        dcc.Markdown("### Summary Tables"),
+        dcc.Markdown("# ![](/assets/cs3_icon_draft.png) CalSim 3 Results One Pager"),
+        dcc.Markdown("### Summary Table"),
         
         dbc.Row([
-            dcc.Markdown("#### Project Exports"),
+            dcc.Markdown("#### "),
             dash_table.DataTable(
                 id='exp_tbl',
                 columns=table_order,
