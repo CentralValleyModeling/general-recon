@@ -13,6 +13,7 @@ from utils.tools import (make_summary_df, month_map, load_data_mult,
                    make_ressum_df, month_list, convert_cm_nums,
                    wyt_list, convert_wyt_nums, cfs_taf)
 
+from pages.study_selection import scenarios, scen_aliases
 
 register_page(
     __name__,
@@ -23,19 +24,8 @@ register_page(
 
 cs3_icon_path = 'assets/cs3_icon_draft.png'
 
-# Scenario management
-Scenario = namedtuple('Scenario',['pathname','alias','active'])
 with open('constants/vars.yaml', 'r') as file:
     var_dict = yaml.safe_load(file)
-
-s1 = Scenario('dcr_analysis/DCR2023_DV_9.0.0_Danube_Hist_v1.1.dss', 'Hist',1)
-s2 = Scenario('dcr_analysis/DCR2023_DV_9.0.0_Danube_Adj_v1.2.dss', 'AdjHist',1)
-s3 = Scenario('dcr_analysis/DCR2023_DV_9.0.0_Danube_CC50_v1.2.1.dss', 'CC50',1)
-s4 = Scenario('dcr_analysis/DCR2023_DV_9.0.0_Danube_CC75_v1.2.1.dss', 'CC75',1)
-s5 = Scenario('dcr_analysis/DCR2023_DV_9.0.0_Danube_CC95_v1.2.1.dss', 'CC95',1)
-
-# Generator object for Scenarios
-scenarios = (scenario for scenario in [s1,s2,s3,s4,s5] if scenario.active==1)
 
 bparts = []
 aliases = []
@@ -48,7 +38,7 @@ for var in var_dict:
 df = pd.read_csv('data/temp.csv', index_col=0, parse_dates=True)
 
 # DataFrames for the summary tables
-df_tbl = make_summary_df(df,var_dict)
+df_tbl = make_summary_df(scen_aliases,df,var_dict)
 df_tbl_res = make_ressum_df(df,var_dict)
 
 
@@ -242,10 +232,9 @@ def update_timeseries(b_part):
     Input(component_id='b-part', component_property='value'),
     Input(component_id='monthchecklist-exc', component_property='value')
 )
-def update_exceedance(b_part,monthchecklist):
+def update_exceedance(scenarios,b_part,monthchecklist):
     df2 = pd.DataFrame()
     df0 = df.loc[df['icm'].isin(convert_cm_nums(monthchecklist))]
-    scenarios = (scenario for scenario in [s1,s2,s3,s4] if scenario.active==1)
     for scenario in scenarios:
         #print(scenario[1])
         df1 = df0.loc[df0['Scenario']==scenario[1],b_part]
@@ -265,7 +254,7 @@ def update_exceedance(b_part,monthchecklist):
     Input(component_id='monthchecklist-exc', component_property='value'),
     Input(component_id='yearwindow', component_property='value')
 )
-def update_exceedance(b_part,monthchecklist,yearwindow):
+def update_exceedance(scenarios,b_part,monthchecklist,yearwindow):
     if yearwindow=="Calendar Year":
         yw='icy'
     else:
@@ -277,7 +266,6 @@ def update_exceedance(b_part,monthchecklist,yearwindow):
     cfs_taf(df0,var_dict)
     df0 = df0.groupby(['Scenario',yw]).sum()
     print(df0)
-    scenarios = (scenario for scenario in [s1,s2,s3,s4] if scenario.active==1)
     for scenario in scenarios:
         df1 = df0.loc[df0.index.get_level_values(0)==scenario[1],b_part]
         df1 = df1.sort_values()
@@ -336,7 +324,7 @@ def update_table(slider_yr_range,monthchecklist):
     for v in monthchecklist:
         monthfilter.append(month_map[v])
 
-    df_tbl = make_summary_df(df,var_dict,
+    df_tbl = make_summary_df(scen_aliases,df,var_dict,
                              start_yr=slider_yr_range[0],end_yr=slider_yr_range[1],
                              monthfilter=monthfilter)
     data=df_tbl.to_dict(orient='records')

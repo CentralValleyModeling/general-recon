@@ -107,8 +107,9 @@ def cfs_taf(df:pd.DataFrame,var_dict:dict)->pd.DataFrame:
             continue
     return df
 
-def make_summary_df(df,var_dict,start_yr=1922,end_yr=2021,
+def make_summary_df(scenlist,df,var_dict,start_yr=1922,end_yr=2021,
                     monthfilter=monthfilter,bparts=None):
+
 
     df1 = df.loc[(df['icm'].isin(monthfilter)) &
                 (df['iwy']>=start_yr) &(df['iwy']<=end_yr)
@@ -131,8 +132,8 @@ def make_summary_df(df,var_dict,start_yr=1922,end_yr=2021,
     df_tbl.drop(['icy','icm','iwy','iwm','cfs_taf'],axis=1,inplace=True)
 
     #df_tbl = df_tbl.reindex(df_tbl.index.values.tolist()+['BLANK'])
-    df_tbl["----"]=0#pd.NA
-    print(df_tbl)
+    #df_tbl["----"] = 0#pd.NA
+    #print(df_tbl)
     # Filter B-Parts, if user-specified
     if bparts != None:
         df1 = df_tbl.loc[:,bparts]
@@ -150,8 +151,11 @@ def make_summary_df(df,var_dict,start_yr=1922,end_yr=2021,
     df_tbl['type'] = df_tbl.index.map(type_dict)
 
 
-    df_tbl['diff']=df_tbl['CC50']-df_tbl['Hist']
-    df_tbl['perdiff'] = round((df_tbl['CC50']-df_tbl['Hist'])/df_tbl['Hist'],2)*100
+    df_tbl['diff']=df_tbl[scenlist[1]].sub(df_tbl[scenlist[0]], fill_value = 0)
+    df_tbl['perdiff'] = round(
+            (df_tbl[scenlist[1]].sub(df_tbl[scenlist[0]], fill_value = 0))
+            .div(df_tbl[scenlist[0]],fill_value = 0),
+        2)*100
     df_tbl.reset_index(inplace=True)
     return df_tbl
 

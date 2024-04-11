@@ -30,6 +30,11 @@ date_map = pd.read_csv('constants/date_map.csv', index_col=0, parse_dates=True)
 # Generator object for Scenarios
 scenarios = (scenario for scenario in [s1,s2,s3,s4,s5] if scenario.active==1)
 
+scen_aliases = []
+for s in scenarios:
+    scen_aliases.append(s.alias)
+print(scen_aliases)
+
 #load_data_mult(scenarios,var_dict,date_map)
 
 
@@ -67,11 +72,11 @@ def layout():
 
 
 
-@callback(
-  Output(component_id='dummy-div', component_property='children'),
-  Input(component_id='btn-load-study-1', component_property='n_clicks'),
-  prevent_initial_call=True
-)
-def load(n_clicks):
-    load_data_mult(scenarios,var_dict)
-    return
+#@callback(
+#  Output(component_id='dummy-div', component_property='children'),
+#  Input(component_id='btn-load-study-1', component_property='n_clicks'),
+#  prevent_initial_call=True
+#)
+#def load(n_clicks):
+#    load_data_mult(scenarios,var_dict)
+#    return

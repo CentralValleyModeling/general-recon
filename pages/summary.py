@@ -10,6 +10,10 @@ from utils.tools import (make_summary_df, month_map, load_data_mult,
                    make_ressum_df, month_list, convert_cm_nums,
                    wyt_list, convert_wyt_nums, cfs_taf)
 
+from pages.study_selection import scenarios, scen_aliases
+
+
+
 register_page(
     __name__,
     #name='Page 4',
@@ -17,13 +21,11 @@ register_page(
     path='/summary'
 )
 
-
-
 with open('constants/vars.yaml', 'r') as file:
     var_dict = yaml.safe_load(file)
 df = pd.read_csv('data/temp.csv', index_col=0, parse_dates=True)
 
-exp_tbl = make_summary_df(df,var_dict,bparts=[
+exp_tbl = make_summary_df(scen_aliases,df,var_dict,bparts=[
     'C_CAA003',
     'C_CAA003_SWP',
     'C_CAA003_CVP',
@@ -31,18 +33,21 @@ exp_tbl = make_summary_df(df,var_dict,bparts=[
     'C_DMC000',
     'C_DMC000_CVP',
     'C_DMC000_WTS',
-    '----',
+    #'----',
     'SWP_TA_TOTAL',
     'SWP_IN_TOTAL',
     'SWP_CO_TOTAL'])
 
-
+# Determine the table order
+# Descriptive stuff goes first
 table_order = [{"name": 'Type', "id": 'type'},
                {"name": 'Description', "id": 'description'},
                {"name": 'B-Part', "id": 'index'}]
 
-table_order.extend([{"name": i, "id": i, "type": "numeric","format": { "specifier": ",.0f"}} 
-                    for i in exp_tbl.columns if i not in['description','index','type']])
+# Scenarios go next
+table_order.extend([{"name": s, "id": s, "type": "numeric","format": { "specifier": ",.0f"}} 
+                    for s in scen_aliases if s not in['description','index','type']])
+
 
 def layout():
     layout = dbc.Container([
