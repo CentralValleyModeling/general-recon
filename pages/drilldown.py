@@ -276,9 +276,9 @@ def update_exceedance(b_part,monthchecklist,yearwindow):
 def update_bar(b_part,wytchecklist):
     df0=df.loc[df['WYT_SAC_'].isin(convert_wyt_nums(wytchecklist))]
     df1 = round(df0.groupby(['Scenario','iwm']).mean())
+    df1 = df1.reindex(scen_aliases, level='Scenario')
     fig = px.bar(df1, x = df1.index.get_level_values(1), y = b_part, 
                  color=df1.index.get_level_values(0), barmode='group')
-    print(wytchecklist)
     return fig
 
 
@@ -297,6 +297,7 @@ def update_bar_annual(b_part,wytchecklist,slider_yr_range):
     cfs_taf(df0,var_dict)
     
     df1 = round(df0.groupby(['Scenario']).sum()/(endyr-startyr+1))
+    df1 = df1.reindex(scen_aliases, level='Scenario')
     fig = px.bar(df1, x = df1.index.get_level_values(0), y = b_part, 
                  color=df1.index.get_level_values(0),text_auto=True)
     fig.update_layout(barmode='relative')
