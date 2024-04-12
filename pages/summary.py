@@ -1,4 +1,3 @@
-from dash import html, register_page  #, callback # If you need callbacks, import it here.
 from dash import Dash, html, dcc, Input, Output, callback, dash_table, register_page
 import plotly.express as px
 #import plotly.graph_objects as go
@@ -10,7 +9,7 @@ from utils.tools import (make_summary_df, month_map, load_data_mult,
                    make_ressum_df, month_list, convert_cm_nums,
                    wyt_list, convert_wyt_nums, cfs_taf)
 
-from pages.study_selection import scenarios, scen_aliases
+from pages.study_selection import scenarios, scen_aliases, var_dict
 
 
 
@@ -21,8 +20,7 @@ register_page(
     path='/summary'
 )
 
-with open('constants/vars.yaml', 'r') as file:
-    var_dict = yaml.safe_load(file)
+
 df = pd.read_csv('data/temp.csv', index_col=0, parse_dates=True)
 
 exp_tbl = make_summary_df(scen_aliases,df,var_dict,bparts=[

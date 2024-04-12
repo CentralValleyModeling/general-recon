@@ -47,6 +47,7 @@ def create_navbar():
                     dbc.DropdownMenuItem("Home", href='/'),
                     dbc.DropdownMenuItem(divider=True),
                     dbc.DropdownMenuItem("Study Selection", href='/study_selection'),
+                    dbc.DropdownMenuItem("Heatmap", href='/heatmap'),
                     dbc.DropdownMenuItem("Summary", href='/summary'),
                     dbc.DropdownMenuItem("Drilldown", href='/drilldown'),
                 ],

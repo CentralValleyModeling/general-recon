@@ -42,6 +42,7 @@ def load_data_mult(scenarios, var_dict, date_map)->None:
     """
     # Load data from the selected DSS files into a .csv
     """
+    print(date_map)
     dfi = pd.DataFrame()
     df = pd.DataFrame()
     appended_data = []

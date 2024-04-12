@@ -26,6 +26,7 @@ s4 = Scenario('dcr_analysis/DCR2023_DV_9.0.0_Danube_CC75_v1.2.1.dss', 'CC75',1)
 s5 = Scenario('dcr_analysis/DCR2023_DV_9.0.0_Danube_CC95_v1.2.1.dss', 'CC95',1)
 
 date_map = pd.read_csv('constants/date_map.csv', index_col=0, parse_dates=True)
+#date_map['month'] = date_map['month'].astype(str)
 
 # Generator object for Scenarios
 scenarios = (scenario for scenario in [s1,s2,s3,s4,s5] if scenario.active==1)
