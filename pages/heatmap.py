@@ -36,7 +36,8 @@ def make_heatmap_df(scenlist,df,var_dict,start_yr=1922,end_yr=2021,
     # Annual Average
     df_tbl = round(df1.groupby(["Scenario"]).sum()/(end_yr-start_yr+1))
 
-    df_tbl = (df_tbl - df_tbl.iloc[0])
+    df_tbl = (df_tbl - df_tbl.iloc[0])/df_tbl.iloc[0]
+    df_tbl = df_tbl[df_tbl.index.isin(scenlist)]
 
 
     # Time slicing is done; drop the index columns
@@ -57,9 +58,6 @@ def make_heatmap_df(scenlist,df,var_dict,start_yr=1922,end_yr=2021,
 
 
 bparts=[
-    'C_LWSTN',
-    'D_LWSTN_CCT011',
-    'C_WKYTN',
     'C_KSWCK',
     'C_SAC097',
     'C_FTR059',
@@ -69,15 +67,10 @@ bparts=[
     'C_NTOMA',
     'C_AMR004',
 #   '----'
-    'DELTAINFLOWFORNDOI',
+#    'DELTAINFLOWFORNDOI',
 #    '----'
     'C_CAA003',
-    'C_CAA003_SWP',
-    'C_CAA003_CVP',
-    'C_CAA003_WTS',
     'C_DMC000',
-    'C_DMC000_CVP',
-    'C_DMC000_WTS',
 #    '----',
     'SWP_TA_TOTAL',
     'SWP_IN_TOTAL',
@@ -106,7 +99,11 @@ def layout():
 def filter_heatmap(cols):
     #df = px.data.medals_wide(indexed=True) # replace with your own data source
     df = heatmap_df
-    fig = px.imshow(df[cols])
+    fig = px.imshow(df[cols])#,color_continuous_scale=px.colors.sequential.Viridis)
+    fig.layout.height = 1500
+    fig.layout.width = 1500
+    #fig.color_continuous_scale="Viridis"
+    #fig.color_continuous_scale=[[0, 'red'], [0.5, 'yellow'], [1, 'blue']]
     return fig
 
 layout()
