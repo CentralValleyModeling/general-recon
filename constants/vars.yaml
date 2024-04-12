@@ -25,28 +25,28 @@ CO_EC_MONTH:
   pathname: /CALSIM/CO_EC_MONTH/.*//.*/.*/
   table_convert: null
   table_display: wy
-  type: Channel
+  type: Salinity
 CO_EST_DV:
   alias: Delivery - SWP CO est
   bpart: CO_EST_DV
   pathname: /CALSIM/CO_EST_DV/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Delivery
 CO_FINAL_DV:
   alias: Delivery - SWP CO final
   bpart: CO_FINAL_DV
   pathname: /CALSIM/CO_FINAL_DV/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Delivery
 CT_VERONA:
   alias: Upstream Flows - Verona Closure Term
   bpart: CT_VERONA
   pathname: /CALSIM/CT_VERONA/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Closure Term
 CVPRuleCv:
   alias: Storage - SL CVP Rule curve
   bpart: CVPRuleCv
@@ -60,14 +60,14 @@ CVPTOTALDEL:
   pathname: /CALSIM/CVPTOTALDEL/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Delivery
 C_AMR004:
-  alias: Upstream Flows - H-Street
+  alias: American River at H-Street
   bpart: C_AMR004
   pathname: /CALSIM/C_AMR004/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_CAA003:
   alias: Total Banks Exports
   bpart: C_CAA003
@@ -538,12 +538,12 @@ C_ESB406:
   table_display: wy
   type: Delivery
 C_FTR003:
-  alias: Upstream Flows - FeatherMouth
+  alias: Feather Mouth
   bpart: C_FTR003
   pathname: /CALSIM/C_FTR003/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_FTR031:
   alias: Upstream Flows - FeatherYubaConfluence
   bpart: C_FTR031
@@ -552,12 +552,12 @@ C_FTR031:
   table_display: wy
   type: Channel
 C_FTR059:
-  alias: Upstream Flows - Feather below Thermolito
+  alias: Feather below Thermalito
   bpart: C_FTR059
   pathname: /CALSIM/C_FTR059/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_FTR068:
   alias: Upstream Flows - FeatherLowFlow
   bpart: C_FTR068
@@ -566,19 +566,19 @@ C_FTR068:
   table_display: wy
   type: Channel
 C_KSWCK:
-  alias: Upstream Flows - Release-Sacramento Keswick
+  alias: Release - Sacramento at Keswick
   bpart: C_KSWCK
   pathname: /CALSIM/C_KSWCK/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_LWSTN:
-  alias: Upstream Flows - Release-Trinity
+  alias: Trinity Release
   bpart: C_LWSTN
   pathname: /CALSIM/C_LWSTN/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_MCD021:
   alias: Upstream Flows - MercedMouth
   bpart: C_MCD021
@@ -629,19 +629,19 @@ C_MOK022:
   table_display: wy
   type: Channel
 C_NTOMA:
-  alias: Upstream Flows - Release-American Nimbus
+  alias: Release-American Nimbus
   bpart: C_NTOMA
   pathname: /CALSIM/C_NTOMA/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_OMR014:
-  alias: Delta - Old and Middle River flow
+  alias: Old and Middle River flow
   bpart: C_OMR014
   pathname: /CALSIM/C_OMR014/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Delta
 C_OROVL:
   alias: Upstream Flows - Release-Oroville
   bpart: C_OROVL
@@ -662,147 +662,147 @@ C_SAC000:
   pathname: /CALSIM/C_SAC000/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Delta OUtflow
+  type: Delta
 C_SAC017:
   alias: Delta - Flow at Rio Vista
   bpart: C_SAC017
   pathname: /CALSIM/C_SAC017/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Delta
 C_SAC029B:
   alias: Delta - Flow at Georgiana Slough
   bpart: C_SAC029B
   pathname: /CALSIM/C_SAC029B/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Delta
 C_SAC030:
   alias: Delta - Flow below DXC
   bpart: C_SAC030
   pathname: /CALSIM/C_SAC030/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Delta
 C_SAC041:
-  alias: Upstream Flows - SacFlowHood
+  alias: Sac R. Flow at Hood
   bpart: C_SAC041
   pathname: /CALSIM/C_SAC041/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_SAC048:
-  alias: Delta - Sac Flow at Freeport
+  alias: Sac R. Flow at Freeport
   bpart: C_SAC048
   pathname: /CALSIM/C_SAC048/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_SAC083:
-  alias: Upstream Flows - SacFlowVerona
+  alias: Sac R. Flow at Verona
   bpart: C_SAC083
   pathname: /CALSIM/C_SAC083/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_SAC085:
-  alias: Upstream Flows - SacFlowAbvFremontWeir
+  alias: Sac R. Flow Above Fremont Weir
   bpart: C_SAC085
   pathname: /CALSIM/C_SAC085/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_SAC097:
-  alias: Upstream Flows - SacFlowWilkinsSlough
+  alias: Sac R. Flow at Wilkins Slough
   bpart: C_SAC097
   pathname: /CALSIM/C_SAC097/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_SAC240:
-  alias: Upstream Flows - SacFlowRedBluff
+  alias: Sac R. Flow at RedBluff
   bpart: C_SAC240
   pathname: /CALSIM/C_SAC240/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_SJR013:
-  alias: Upstream Flows - SJR QWEST flows
+  alias: SJR QWEST flows
   bpart: C_SJR013
   pathname: /CALSIM/C_SJR013/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_SJR070:
-  alias: Upstream Flows - Vernalis Flow
+  alias: Vernalis
   bpart: C_SJR070
   pathname: /CALSIM/C_SJR070/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_SJR075:
-  alias: Upstream Flows - SJRUpstreamStan
+  alias: SJR Upstream of Stanislaus
   bpart: C_SJR075
   pathname: /CALSIM/C_SJR075/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_SJR119:
-  alias: Upstream Flows - SJRUpstreamMerc
+  alias: SJR Upstream of Merced
   bpart: C_SJR119
   pathname: /CALSIM/C_SJR119/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_STS030:
-  alias: Upstream Flows - StanislausMouth
+  alias: Stanislaus Mouth
   bpart: C_STS030
   pathname: /CALSIM/C_STS030/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_STS059:
-  alias: Upstream Flows - Release-Stanislaus (Goodwin)
+  alias: Release-Stanislaus (Goodwin)
   bpart: C_STS059
   pathname: /CALSIM/C_STS059/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_TUO003:
-  alias: Upstream Flows - TuolumneMouth
+  alias: Tuolumne Mouth
   bpart: C_TUO003
   pathname: /CALSIM/C_TUO003/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_WKYTN:
-  alias: null
+  alias: Clear Creek below Whiskeytown
   bpart: C_WKYTN
   pathname: /CALSIM/C_WKYTN/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Flow
+  type: Upstream Flows
 C_YBP020:
-  alias: Upstream Flows - Yolo Bypass
+  alias: Yolo Bypass
   bpart: C_YBP020
   pathname: /CALSIM/C_YBP020/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_YUB002:
-  alias: Upstream Flows - YubaFeatherConfluence
+  alias: Yuba-Feather Confluence
   bpart: C_YUB002
   pathname: /CALSIM/C_YUB002/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 C_YUB006:
-  alias: null
+  alias: Yuba River at Marysville
   bpart: C_YUB006
   pathname: /CALSIM/C_YUB006/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Flow
+  type: Upstream Flows
 D408:
   alias: Delta - CCWD
   bpart: D408
@@ -930,12 +930,12 @@ D_LWSTN_ADD:
   table_display: wy
   type: Channel
 D_LWSTN_CCT011:
-  alias: Other - Trinity Export
+  alias: Trinity Export
   bpart: D_LWSTN_CCT011
   pathname: /CALSIM/D_LWSTN_CCT011/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Upstream Flows
 D_LWSTN_IMPORT:
   alias: Other - Trinity Export Ops x
   bpart: D_LWSTN_IMPORT
@@ -1565,3 +1565,17 @@ C_WSB031:
   table_convert: cfs_taf
   table_display: wy
   type: Channel
+DELTAINFLOWFORNDOI:
+  alias: Delta Inflow
+  bpart: DELTAINFLOWFORNDOI
+  pathname: /CALSIM/DELTAINFLOWFORNDOI/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delta
+#DeltaExportforNDOI:
+#  alias: Total Delta Exports (for NDOI)
+#  bpart: DeltaExportforNDOI
+#  pathname: /CALSIM/DeltaExportforNDOI/.*//.*/.*/
+#  table_convert: cfs_taf
+#  table_display: wyupdate var descriptions
+#  type: Delta

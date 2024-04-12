@@ -26,6 +26,20 @@ with open('constants/vars.yaml', 'r') as file:
 df = pd.read_csv('data/temp.csv', index_col=0, parse_dates=True)
 
 exp_tbl = make_summary_df(scen_aliases,df,var_dict,bparts=[
+    'C_LWSTN',
+    'D_LWSTN_CCT011',
+    'C_WKYTN',
+    'C_KSWCK',
+    'C_SAC097',
+    'C_FTR059',
+    'C_FTR003',
+    'C_YUB006',
+    'C_SAC083',
+    'C_NTOMA',
+    'C_AMR004',
+#   '----'
+    'DELTAINFLOWFORNDOI',
+#    '----'
     'C_CAA003',
     'C_CAA003_SWP',
     'C_CAA003_CVP',
@@ -33,16 +47,17 @@ exp_tbl = make_summary_df(scen_aliases,df,var_dict,bparts=[
     'C_DMC000',
     'C_DMC000_CVP',
     'C_DMC000_WTS',
-    #'----',
+#    '----',
     'SWP_TA_TOTAL',
     'SWP_IN_TOTAL',
-    'SWP_CO_TOTAL'])
+    'SWP_CO_TOTAL',
+    'CVPTOTALDEL'])
 
 # Determine the table order
 # Descriptive stuff goes first
 table_order = [{"name": 'Type', "id": 'type'},
                {"name": 'Description', "id": 'description'},
-               {"name": 'B-Part', "id": 'index'}]
+               {"name": 'B-Part', "id": 'bpart'}]
 
 # Scenarios go next
 table_order.extend([{"name": s, "id": s, "type": "numeric","format": { "specifier": ",.0f"}} 

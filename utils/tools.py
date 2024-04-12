@@ -156,8 +156,14 @@ def make_summary_df(scenlist,df,var_dict,start_yr=1922,end_yr=2021,
             (df_tbl[scenlist[1]].sub(df_tbl[scenlist[0]], fill_value = 0))
             .div(df_tbl[scenlist[0]],fill_value = 0),
         2)*100
-    df_tbl.reset_index(inplace=True)
+
+    print(df_tbl)
+    df_tbl.reset_index(inplace=True, names = "bpart")
+    #df_tbl.loc[df_tbl.shape[0]] = None
+    #df_tbl.loc[df_tbl.shape[0]-1,"bpart"]= "----"
+
     return df_tbl
+    
 
 def generate_yaml_file(varlist, filename):
     """
