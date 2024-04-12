@@ -68,7 +68,7 @@ def load_data_mult(scenarios, var_dict, date_map)->None:
     df = pd.concat(appended_data)
     df = pd.merge(df,date_map, left_index=True, right_index=True)
     df.to_csv('temp.csv')
-    print(df)
+    #print(df)
     return
 
 def make_ressum_df(df:pd.DataFrame,var_dict,start_yr=1922,end_yr=2021,
@@ -157,7 +157,7 @@ def make_summary_df(scenlist,df,var_dict,start_yr=1922,end_yr=2021,
             .div(df_tbl[scenlist[0]],fill_value = 0),
         2)*100
 
-    print(df_tbl)
+    #print(df_tbl)
     df_tbl.reset_index(inplace=True, names = "bpart")
     #df_tbl.loc[df_tbl.shape[0]] = None
     #df_tbl.loc[df_tbl.shape[0]-1,"bpart"]= "----"

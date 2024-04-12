@@ -33,7 +33,7 @@ scenarios = (scenario for scenario in [s1,s2,s3,s4,s5] if scenario.active==1)
 scen_aliases = []
 for s in scenarios:
     scen_aliases.append(s.alias)
-print(scen_aliases)
+#print(scen_aliases)
 
 #load_data_mult(scenarios,var_dict,date_map)
 

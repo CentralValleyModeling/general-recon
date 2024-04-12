@@ -13,8 +13,8 @@ from utils.tools import (make_summary_df, month_map, load_data_mult,
                    make_ressum_df, month_list, convert_cm_nums,
                    wyt_list, convert_wyt_nums, cfs_taf)
 
-from pages.study_selection import scenarios, scen_aliases
-
+from pages.study_selection import scenarios#, scen_aliases
+scen_aliases = ['Hist', 'AdjHist', 'CC50', 'CC75', 'CC95']
 register_page(
     __name__,
     name='Drilldown',
@@ -205,7 +205,6 @@ def layout():
 
 # CALLBACKS Start Here
 
-
 # Return B Part based on alias search
 @callback(
     Output(component_id='b-part', component_property='value'),
@@ -232,20 +231,16 @@ def update_timeseries(b_part):
     Input(component_id='b-part', component_property='value'),
     Input(component_id='monthchecklist-exc', component_property='value')
 )
-def update_exceedance(scenarios,b_part,monthchecklist):
+def update_exceedance(b_part,monthchecklist):
     df2 = pd.DataFrame()
     df0 = df.loc[df['icm'].isin(convert_cm_nums(monthchecklist))]
-    for scenario in scenarios:
-        #print(scenario[1])
-        df1 = df0.loc[df0['Scenario']==scenario[1],b_part]
-        #print(df1)
+    for scenario in scen_aliases:
+        df1 = df0.loc[df0['Scenario']==scenario,b_part]
         df1 = df1.sort_values()
         df1 = df1.reset_index(drop=True)
-        df2[scenario[1]]=df1
+        df2[scenario]=df1
     fig = px.line(df2)
-
     return fig
-
 
 # Annual Exceedance Plot
 @callback(
@@ -254,29 +249,23 @@ def update_exceedance(scenarios,b_part,monthchecklist):
     Input(component_id='monthchecklist-exc', component_property='value'),
     Input(component_id='yearwindow', component_property='value')
 )
-def update_exceedance(scenarios,b_part,monthchecklist,yearwindow):
+def update_exceedance(b_part,monthchecklist,yearwindow):
     if yearwindow=="Calendar Year":
         yw='icy'
     else:
         yw='iwy'
-    
-    print(yw)
+
     df2 = pd.DataFrame()
     df0 = df.loc[df['icm'].isin(convert_cm_nums(monthchecklist))]
     cfs_taf(df0,var_dict)
     df0 = df0.groupby(['Scenario',yw]).sum()
-    print(df0)
-    for scenario in scenarios:
-        df1 = df0.loc[df0.index.get_level_values(0)==scenario[1],b_part]
+    for scenario in scen_aliases:
+        df1 = df0.loc[df0.index.get_level_values(0)==scenario,b_part]
         df1 = df1.sort_values()
         df1 = df1.reset_index(drop=True)
-        df2[scenario[1]]=df1
+        df2[scenario]=df1
     fig = px.line(df2)
-    print(df2)
-
     return fig
-
-
 
 # Monthly Bar Plot
 @callback(
