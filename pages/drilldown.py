@@ -13,8 +13,8 @@ from utils.tools import (make_summary_df, month_map, load_data_mult,
                    make_ressum_df, month_list, convert_cm_nums,
                    wyt_list, convert_wyt_nums, cfs_taf)
 
-from pages.study_selection import scenarios#, scen_aliases
-scen_aliases = ['Hist', 'AdjHist', 'CC50', 'CC75', 'CC95']
+from pages.study_selection import scenarios, scen_aliases
+#scen_aliases = ['Hist', 'AdjHist', 'CC50', 'CC75', 'CC95']
 register_page(
     __name__,
     name='Drilldown',
@@ -39,7 +39,7 @@ df = pd.read_csv('data/temp.csv', index_col=0, parse_dates=True)
 
 # DataFrames for the summary tables
 df_tbl = make_summary_df(scen_aliases,df,var_dict)
-df_tbl_res = make_ressum_df(df,var_dict)
+df_tbl_res = make_ressum_df(scen_aliases,df,var_dict)
 
 
 # Layout Starts Here
@@ -329,7 +329,7 @@ def update_table(slider_yr_range,monthchecklist):
 def update_table2(slider_yr_range,monthradio):
     monthradio=[month_map[monthradio]]
 
-    df_tbl = make_ressum_df(df,var_dict,
+    df_tbl = make_ressum_df(scen_aliases,df,var_dict,
                              start_yr=slider_yr_range[0],end_yr=slider_yr_range[1],
                              monthfilter=monthradio)
     data=df_tbl.to_dict(orient='records')

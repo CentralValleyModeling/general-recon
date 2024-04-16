@@ -72,7 +72,7 @@ def load_data_mult(scenarios, var_dict, date_map)->None:
     #print(df)
     return
 
-def make_ressum_df(df:pd.DataFrame,var_dict,start_yr=1922,end_yr=2021,
+def make_ressum_df(scenlist,df:pd.DataFrame,var_dict,start_yr=1922,end_yr=2021,
                     monthfilter=monthfilter)->pd.DataFrame:
         df1 = df.loc[(df['icm'].isin(monthfilter)) &
                 (df['iwy']>=start_yr) &(df['iwy']<=end_yr)
@@ -93,8 +93,8 @@ def make_ressum_df(df:pd.DataFrame,var_dict,start_yr=1922,end_yr=2021,
         df_tbl.drop(['icy','icm','iwy','iwm','cfs_taf'],axis=1,inplace=True)
 
         df_tbl = df_tbl.T
-        df_tbl['diff']=df_tbl['CC50']-df_tbl['Hist']
-        df_tbl['perdiff'] = round((df_tbl['CC50']-df_tbl['Hist'])/df_tbl['Hist'],2)*100
+        df_tbl['diff']=df_tbl[scenlist[1]]-df_tbl[scenlist[0]]
+        df_tbl['perdiff'] = round((df_tbl[scenlist[1]]-df_tbl[scenlist[0]])/df_tbl[scenlist[0]],2)*100
         df_tbl.reset_index(inplace=True)
         return df_tbl
 
