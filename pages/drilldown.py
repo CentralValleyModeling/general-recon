@@ -13,8 +13,9 @@ from utils.tools import (make_summary_df, month_map, load_data_mult,
                    make_ressum_df, month_list, convert_cm_nums,
                    wyt_list, convert_wyt_nums, cfs_taf)
 
-from pages.study_selection import scenarios, scen_aliases
-#scen_aliases = ['Hist', 'AdjHist', 'CC50', 'CC75', 'CC95']
+from pages.study_selection import scenarios, scen_aliases, scen_dict
+
+
 register_page(
     __name__,
     name='Drilldown',
@@ -23,7 +24,7 @@ register_page(
 )
 
 cs3_icon_path = 'assets/cs3_icon_draft.png'
-
+date_map = pd.read_csv('constants/date_map.csv', index_col=0, parse_dates=True)
 with open('constants/vars.yaml', 'r') as file:
     var_dict = yaml.safe_load(file)
 
@@ -67,8 +68,8 @@ def layout():
                         'margin': '10px'
                     }
                 ),
-                html.Button('Load', id='btn-load-study-1', n_clicks=0),
-                html.Div(id='dummy-div',children=[])
+                #html.Button('Load', id='btn-load-study-1', n_clicks=0),
+                #html.Div(id='dummy-div',children=[])
             ],
             width=6
         ),
@@ -164,7 +165,7 @@ def layout():
                         id='slider-yr-range'),
         html.Div(id='output-container-range-slider'),
 
-        html.Button('Load', id='btn-refresh-tbl', n_clicks=0),
+        #html.Button('Load', id='btn-refresh-tbl', n_clicks=0),
         dcc.Markdown("**Reservoir Summary Tables (Single Month)**"),
         dash_table.DataTable(
             id='sum_tbl_res',
@@ -341,3 +342,12 @@ def update_table2(slider_yr_range,monthradio):
 )
 def update_table(value):
     return value[0],str('-'),value[1]
+@callback(
+    Output('container-button-basic', 'children'),
+    Input('submit-val', 'n_clicks'),
+    prevent_initial_call=True
+)
+def load(n_clicks):
+    load_data_mult(scen_dict,var_dict,date_map)
+    print("hello")
+    return

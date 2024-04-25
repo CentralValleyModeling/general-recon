@@ -38,18 +38,18 @@ def convert_wyt_nums(wytchecklist)->list:
         wytfilter.append(wyt_map[v])
     return wytfilter
 
-def load_data_mult(scenarios, var_dict, date_map)->None:
+def load_data_mult(scen_dict, var_dict, date_map)->None:
     """
     # Load data from the selected DSS files into a .csv
     """
-    print(date_map)
+    print(scen_dict)
     dfi = pd.DataFrame()
     df = pd.DataFrame()
     appended_data = []
 
-    for scenario in scenarios:
-        print(scenario.pathname,scenario.alias)
-        with pdss.DSS(scenario.pathname) as dss:
+    for s in scen_dict:
+        print(s,scen_dict[s])
+        with pdss.DSS(scen_dict[s]) as dss:
   
             # Loop to read all paths into DataFrame
             for var in var_dict:
@@ -58,7 +58,7 @@ def load_data_mult(scenarios, var_dict, date_map)->None:
                 print (pn)
 
                 for regular_time_series in dss.read_multiple_rts(path_i):
-                    dfi['Scenario'] = scenario.alias
+                    dfi['Scenario'] = s
                     dfi[regular_time_series.path.b] = regular_time_series.to_frame()
         
         # Make a list of the DataFrames associated with each DV file

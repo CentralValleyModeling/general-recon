@@ -11,29 +11,7 @@ def create_navbar():
                         html.I(className="fa-brands fa-github"),  # Font Awesome Icon
                         " "  # Text beside icon
                     ],
-                    href="[YOUR GITHUB PROFILE URL]",
-                    target="_blank"
-                )
-
-            ),
-            dbc.NavItem(
-                dbc.NavLink(
-                    [
-                        html.I(className="fa-brands fa-medium"),  # Font Awesome Icon
-                        " "  # Text beside icon
-                    ],
-                    href="[YOUR MEDIUM PROFILE URL]",
-                    target="_blank"
-                )
-
-            ),
-            dbc.NavItem(
-                dbc.NavLink(
-                    [
-                        html.I(className="fa-brands fa-linkedin"),  # Font Awesome Icon
-                        " "  # Text beside icon
-                    ],
-                    href="[YOUR LINKEDIN PROFILE URL]",
+                    href="https://github.com/CentralValleyModeling",
                     target="_blank"
                 )
 

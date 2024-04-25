@@ -1,7 +1,9 @@
 import dash
-from dash import html, dcc
+from dash import html, dcc, Input, Output, callback
 import dash_bootstrap_components as dbc
 from navbar import create_navbar
+from utils.tools import load_data_mult
+#from pages.study_selection import scenarios, var_dict, date_map
 
 # Toggle the themes at [dbc.themes.LUX]
 # The full list of available themes is:
@@ -14,7 +16,7 @@ from navbar import create_navbar
 NAVBAR = create_navbar()
 # To use Font Awesome Icons
 FA621 = "https://use.fontawesome.com/releases/v6.2.1/css/all.css"
-APP_TITLE = "First Dash App"
+APP_TITLE = "CalSim 3 Results Dashboard"
 
 app = dash.Dash(
     __name__,
@@ -64,6 +66,8 @@ app.layout = dcc.Loading(  # <- Wrap App with Loading Component
 )
 
 server = app.server
+
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)
