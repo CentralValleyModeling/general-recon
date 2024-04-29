@@ -9,7 +9,7 @@ from utils.tools import (make_summary_df, month_map, load_data_mult,
                    make_ressum_df, month_list, convert_cm_nums,
                    wyt_list, convert_wyt_nums, cfs_taf)
 
-from pages.study_selection import scenarios, scen_aliases, var_dict
+from pages.study_selection import scen_aliases, var_dict
 
 
 

@@ -7,14 +7,17 @@ import numpy as np
 import yaml
 from dash import Dash, html, dcc, Input, Output, callback, dash_table, register_page, State
 import plotly.express as px
+from pages.study_selection import scen_dict
+
+
 #import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
 
 from utils.tools import (make_summary_df, month_map, load_data_mult, 
                    make_ressum_df, month_list, convert_cm_nums,
-                   wyt_list, convert_wyt_nums, cfs_taf)
+                   wyt_list, convert_wyt_nums, cfs_taf,list_files)
 
-from pages.study_selection import scenarios, scen_aliases, scen_dict
+from pages.study_selection import scen_aliases, scen_dict
 
 
 register_page(
@@ -31,7 +34,7 @@ with open('constants/vars.yaml', 'r') as file:
 
 bparts = []
 aliases = []
-file_list = []
+
 
 for var in var_dict:
     bparts.append(var)
@@ -344,46 +347,140 @@ def update_table2(slider_yr_range,monthradio):
 )
 def update_table(value):
     return value[0],str('-'),value[1]
+
+
+#@callback(
+#    Output('container-button-basic', 'children'),
+#    Input('submit-val', 'n_clicks'),
+#    prevent_initial_call=True
+#)
+#def load(n_clicks):
+#    load_data_mult(scen_dict,var_dict,date_map)
+#    return
+
+
 @callback(
-    Output('container-button-basic', 'children'),
-    Input('submit-val', 'n_clicks'),
+    Output('container-button-basic2', 'children'),
+    Input('output-ledger', 'n_clicks'),
     prevent_initial_call=True
 )
 def load(n_clicks):
     load_data_mult(scen_dict,var_dict,date_map)
-    print("hello")
-    return
-@callback(
-    Output('file-checklist', 'options'),
-    [Input('upload-data', 'filename'), 
-     Input('clear-button', 'n_clicks')],
-    [State('file-checklist', 'options')]
-)
+    print(scen_dict)
+    return "Loading"
+
+# Callback to populate the ledger
 @callback(
     Output('file-table', 'data'),
-    [Input('upload-data', 'filename'), 
-     Input('clear-button', 'n_clicks')],
-    [State('file-table', 'data')]
+    Input('populate-table','n_clicks')
 )
-def update_or_clear_table(filenames, n_clicks_clear, existing_data):
-    ctx = dash.callback_context
+def populate_table(n_clicks):
+    scenarios = list_files('uploads')
+    for s in scenarios:
+        new_entries = [{'pathname':scenarios[s],'filename': s, 'alias': ''} for s in scenarios]
+    
+    return new_entries
 
-    if not ctx.triggered:
-        # No input has been triggered, do nothing
-        return existing_data
+@callback(
+    Output('table-update-output','children'),
+    Input('file-table','data')
+)
+def display_updated_data(full_scen_table):
+    if full_scen_table is None:
+        return "No data in the table."
+    else:
+        pass
 
-    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
+    for s in full_scen_table:
+        if (s['alias']!=''):
+            scen_dict[s['alias']]=s['pathname']
+    print(scen_dict)
+    return str(full_scen_table)
 
-    if triggered_id == 'upload-data':
-        # Handling file uploads
-        if filenames:
-            if isinstance(filenames, list):
-                file_list.extend(filenames)  # Add new filenames to the list
-            else:
-                file_list.append(filenames)  # Add a single filename to the list
-        return [{'filename': filename} for filename in file_list]
 
-    elif triggered_id == 'clear-button':
-        # Handling clear button click
-        file_list.clear()  # Clear the global list of filenames
-        return []
+#@callback(
+#    Output('file-table', 'data'),
+#    [Input('upload-data', 'filename'),
+#     Input('clear-button', 'n_clicks')],
+#    [State('file-table', 'data')]
+#)
+#def update_or_clear_table(filenames, n_clicks_clear, existing_data):
+#    ctx = dash.callback_context
+#
+#    if not ctx.triggered:
+#        # No input has been triggered, do nothing
+#        return existing_data
+#
+#    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
+#
+#    if triggered_id == 'upload-data':
+#        # Handling file uploads
+#        if filenames:
+#            if not isinstance(filenames, list):
+#                filenames = [filenames]  # Ensure filenames are in list form
+#            new_entries = [{'filename': filename, 'alias': ''} for filename in filenames if filename not in {row['filename'] for row in existing_data}]
+#            file_data.extend(new_entries)  # Add new entries to the global file_data
+#            return file_data
+#
+#    elif triggered_id == 'clear-button':
+#        # Handling clear button click
+#        file_data.clear()  # Clear the global file_data
+#        return []
+#
+#    return existing_data
+
+#@callback(
+#    Output('table-update-output','children'),
+#    Input('file-table','data')
+#)
+#def display_updated_data(updated_rows):
+#    if updated_rows is None:
+#        return "No data in the table."
+#    else:
+#        # You can process the data as needed, here we just print it
+#        return str(updated_rows)
+
+
+
+#def parse_contents(contents, filename, date):
+#    content_type, content_string = contents.split(',')
+#    decoded = base64.b64decode(content_string)
+#    try:
+#        if 'text' in content_type:
+#            # Assume that the user uploaded a text file
+#            return html.Div([
+#                html.H5(filename),
+#                html.P(f"Last modified: {str(date)}"),
+#                html.Pre(decoded.decode('utf-8'))
+#            ])
+#        elif 'image' in content_type:
+#            # Assume that the user uploaded an image
+#            return html.Div([
+#                html.H5(filename),
+#                html.P(f"Last modified: {str(date)}"),
+#                html.Img(src=contents)
+#            ])
+#        else:
+#            return html.Div([
+#                'Unsupported file type: {}'.format(content_type)
+#            ])
+#    except Exception as e:
+#        return html.Div([
+#            'There was an error processing this file.'
+#        ])
+
+
+
+#@callback(
+#    Output('output-data-upload', 'children'),
+#    Input('upload-data', 'contents'),
+#    State('upload-data', 'filename'),
+#    State('upload-data', 'last_modified')
+#)
+#def update_output(list_of_contents, list_of_names, list_of_dates):
+#    print(list_of_contents,list_of_names)
+#    #if list_of_contents is not None:
+#    #    children = [
+#    #        parse_contents(c, n, d) for c, n, d in zip(list_of_contents, list_of_names, list_of_dates)
+#    #    ]
+#    return #children

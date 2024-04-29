@@ -1,6 +1,7 @@
 import pandas as pd
 import pandss as pdss
 import yaml
+import os
 
 
 # Constants
@@ -236,3 +237,24 @@ def remove_duplicates(data):
             seen[key] = value
             unique_data[key] = value
     return unique_data
+
+def list_files(directory):
+    """
+    List all files in a directory including those within nested folders.
+    
+    Args:
+    - directory (str): The path to the directory to list files from.
+    
+    Returns:
+    - list: A list of file paths
+    """
+    file_paths = {}  # List to store all file paths
+    # Traverse directory tree
+    for root, directories, files in os.walk(directory):
+        for filename in files:
+            filepath = os.path.join(root, filename)
+            parts = filename.split('\\')
+            #print(filename.split('.')[-1])
+            if filename.split('.')[-1] == "dss":
+                file_paths[parts[-1]] = filepath
+    return file_paths

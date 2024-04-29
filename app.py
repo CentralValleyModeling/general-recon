@@ -3,6 +3,8 @@ from dash import html, dcc, Input, Output, callback
 import dash_bootstrap_components as dbc
 from navbar import create_navbar
 from utils.tools import load_data_mult
+import dash_uploader as du
+
 #from pages.study_selection import scenarios, var_dict, date_map
 
 # Toggle the themes at [dbc.themes.LUX]
@@ -28,6 +30,8 @@ app = dash.Dash(
     title=APP_TITLE,
     use_pages=True,  # New in Dash 2.7 - Allows us to register pages
 )
+
+du.configure_upload(app, 'uploads')
 
 # To use if you're planning on using Google Analytics
 app.index_string = f'''
