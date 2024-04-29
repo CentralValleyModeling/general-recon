@@ -1,4 +1,4 @@
-from dash import html, register_page, dcc, callback, Input, Output
+from dash import html, register_page, dcc, callback, Input, Output, dash_table
 import dash_bootstrap_components as dbc
 
 from collections import namedtuple
@@ -38,13 +38,23 @@ with open('constants/vars.yaml', 'r') as file:
 # s3 = Scenario('lto_analysis/LTO_Study11a.14.22alt_noShasPA1.dss', 'hist_S7',1)
 # s4 = Scenario('lto_analysis/LTO_Study11a.14.22alt_ShasPA.dss', 'hist_S7_ShasPA',1)
 
-s1 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1.dss', 'DCR_Hist',1)
-s2 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1_oa_1.dss', 'DCR_Hist_OA',1)
-s3 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1_oa_1_split.dss', 'DCR_Hist_OA_Split',1)
+#s1 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1.dss', 'DCR_Hist',1)
+#s2 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1_oa_1.dss', 'DCR_Hist_OA',1)
+#s3 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1_oa_1_split.dss', 'DCR_Hist_OA_Split',1)
+#s4 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1_oa_2.dss', 'OA_runflat',1)
+#s5 = Scenario('oa_analysis/cc_adapt_dv_3.0.3_runflat_hist.dss', 'OA_runflat_switch',1)
+#s6 = Scenario('oa_analysis/cc_adapt_dv_Danube_Hist_v1.3.dss', 'cca_hist',1)
+#s7 = Scenario('oa_analysis/cc_adapt_dv_Danube_Hist_v1.3_runflat.dss', 'cca_runflat',1)
+
+
+s1 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1.dss', 'DCR_hist',1)
+s2 = Scenario('oa_analysis/9.0.0_Danube_Hist_v1.1_oa_2.dss', 'DCR_hist_runflat',1)
+s3 = Scenario('oa_analysis/cc_adapt_dv_Danube_Hist_v1.3.dss', 'cca_hist',1)
+s4 = Scenario('oa_analysis/cc_adapt_dv_Danube_Hist_v1.3_runflat.dss', 'cca_runflat',1)
 
 date_map = pd.read_csv('constants/date_map.csv', index_col=0, parse_dates=True)
 
-scenarios = (scenario for scenario in [s1,s2,s3] if scenario.active==1)
+scenarios = (scenario for scenario in [s1,s2,s3,s4] if scenario.active==1)
 
 scen_aliases = []
 scen_dict={}
@@ -64,32 +74,37 @@ def layout():
         dbc.Row([
             dbc.Col(
                 [
-                    dcc.Upload(id='upload-data',
-                        children=html.Div([
-                            'Connect to SQL Database ',
-                            html.A('or Select DSS Files')
-                        ]),
+                    dcc.Upload(
+                        id='upload-data',
+                        children=html.Button('Drag and Drop or Browse DV DSS Files'),  # Text on the browse button
                         style={
                             'width': '100%',
-                            'height': '120px',
-                            'lineHeight': '120px',
+                            'height': '100px',
+                            'lineHeight': '20px',
                             'borderWidth': '1px',
                             'borderStyle': 'dashed',
                             'borderRadius': '5px',
                             'textAlign': 'center',
                             'margin': '10px'
-                        }
+                        },
+                        # Allow multiple files to be uploaded
+                        multiple=False
                     ),
-                    html.Button('Submit', id='submit-val', n_clicks=0),
-                    html.Div(id='container-button-basic',
-                        children='Enter a value and press submit'),
-                    html.Div(id='dummy-div2',children='a test')
+                    dash_table.DataTable(
+                        id='file-table',
+                        columns=[{'name': 'Filename', 'id': 'filename'}],
+                        data=[],
+                        editable=True
+                    ),
+                    html.Button('Clear List', id='clear-button', style={'margin-top': '10px'}),  # Button to clear the list
+                    html.Button('Load into CSV Family', id='submit-val', n_clicks=0),
                 ],
                 width=6
             ),
         ])
     ])
     return layout
+
 
 
 

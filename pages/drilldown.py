@@ -1,10 +1,11 @@
 # Imports
+import dash
 from collections import namedtuple
 import pandss as pdss
 import pandas as pd
 import numpy as np
 import yaml
-from dash import Dash, html, dcc, Input, Output, callback, dash_table, register_page
+from dash import Dash, html, dcc, Input, Output, callback, dash_table, register_page, State
 import plotly.express as px
 #import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
@@ -30,6 +31,7 @@ with open('constants/vars.yaml', 'r') as file:
 
 bparts = []
 aliases = []
+file_list = []
 
 for var in var_dict:
     bparts.append(var)
@@ -351,3 +353,37 @@ def load(n_clicks):
     load_data_mult(scen_dict,var_dict,date_map)
     print("hello")
     return
+@callback(
+    Output('file-checklist', 'options'),
+    [Input('upload-data', 'filename'), 
+     Input('clear-button', 'n_clicks')],
+    [State('file-checklist', 'options')]
+)
+@callback(
+    Output('file-table', 'data'),
+    [Input('upload-data', 'filename'), 
+     Input('clear-button', 'n_clicks')],
+    [State('file-table', 'data')]
+)
+def update_or_clear_table(filenames, n_clicks_clear, existing_data):
+    ctx = dash.callback_context
+
+    if not ctx.triggered:
+        # No input has been triggered, do nothing
+        return existing_data
+
+    triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
+
+    if triggered_id == 'upload-data':
+        # Handling file uploads
+        if filenames:
+            if isinstance(filenames, list):
+                file_list.extend(filenames)  # Add new filenames to the list
+            else:
+                file_list.append(filenames)  # Add a single filename to the list
+        return [{'filename': filename} for filename in file_list]
+
+    elif triggered_id == 'clear-button':
+        # Handling clear button click
+        file_list.clear()  # Clear the global list of filenames
+        return []
