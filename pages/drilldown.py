@@ -360,11 +360,16 @@ def update_table(value):
 
 
 @callback(
-    Output('container-button-basic2', 'children'),
-    Input('output-ledger', 'n_clicks'),
+    Output('dummy-div1', 'children'),
+    Input('load-studies', 'n_clicks'),
+    State('file-table','data'),
     prevent_initial_call=True
 )
-def load(n_clicks):
+def load(n_clicks,full_scen_table):
+    scen_dict={}
+    for s in full_scen_table:
+        if (s['alias'].strip()!=''):
+            scen_dict[s['alias']]=s['pathname']
     load_data_mult(scen_dict,var_dict,date_map)
     print(scen_dict)
     return "Loading"
@@ -381,6 +386,7 @@ def populate_table(n_clicks):
     
     return new_entries
 
+# Return a scenario dictionary with the aliases that user entered
 @callback(
     Output('table-update-output','children'),
     Input('file-table','data')
@@ -390,12 +396,13 @@ def display_updated_data(full_scen_table):
         return "No data in the table."
     else:
         pass
-
+        
+    scen_dict={}
     for s in full_scen_table:
-        if (s['alias']!=''):
+        if (s['alias'].strip()!=''):
             scen_dict[s['alias']]=s['pathname']
-    print(scen_dict)
-    return str(full_scen_table)
+    #print(scen_dict)
+    return #str(full_scen_table)
 
 
 #@callback(

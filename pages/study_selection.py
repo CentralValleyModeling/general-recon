@@ -23,8 +23,10 @@ with open('constants/vars.yaml', 'r') as file:
 
 def layout():
     layout = dbc.Container([
-
+        dcc.Markdown("# ![](/assets/cs3_icon_draft.png) CalSim 3 Dashboard - Study Selection"),
         dbc.Row([
+            html.Hr(),
+            dcc.Markdown("## Upload Studies to Temporary Database"),
             dbc.Col(
                 [
                     du.Upload(
@@ -42,17 +44,28 @@ def layout():
                         data=[],
                         editable=True
                     ),
+                    
                     html.Button('Refresh Table', id='populate-table', n_clicks=0),
                     html.Button('Clear List', id='clear-button', style={'margin-top': '10px'}),  # Button to clear the list
-                    html.Button('Load Studies into CSV', id='output-ledger', n_clicks=0),
-                    html.Div('test',id='container-button-basic2'),
+                    
+                    dbc.Row([
+                    dcc.Input("temp.csv", id = 'csv-name'),
+                    html.Button('Load Studies into CSV', id='load-studies', n_clicks=0),
+                    ]),
+                    
+                    html.Div('',id='dummy-div1'),
                     html.Div(id='table-update-output'),
                     html.Div(id='output-data-upload'),
-                    html.Div('this is a test', id='dummy'),
+
                 ],
                 width=6
             ),
-        ])
+        dbc.Row([
+            html.Hr(),
+            dcc.Markdown("## Retrieve Existing CSV Database"),
+
+        ]),
+    ])
     ])
     return layout
 

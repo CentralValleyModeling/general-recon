@@ -69,8 +69,7 @@ def load_data_mult(scen_dict, var_dict, date_map)->None:
     # concatenate the individual DataFrames into one big DataFrame
     df = pd.concat(appended_data)
     df = pd.merge(df,date_map, left_index=True, right_index=True)
-    df.to_csv('temp.csv')
-    #print(df)
+    df.to_csv('data/temp.csv')
     return
 
 def make_ressum_df(scenlist,df:pd.DataFrame,var_dict,start_yr=1922,end_yr=2021,

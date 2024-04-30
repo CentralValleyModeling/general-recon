@@ -6,6 +6,7 @@ channels:
   - conda-forge
 dependencies:
   - python=3.11
+  - pip
   - pandas=2.1.4
   - matplotlib=3.8.0
   - seaborn=0.12.2
@@ -24,3 +25,5 @@ dependencies:
   - tqdm=4.65.0
   - dash
   - dash-bootstrap-components==1.5.0
+  - pip:
+      - dash-uploader==0.0.6
