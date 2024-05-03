@@ -7,7 +7,7 @@ import numpy as np
 import yaml
 from dash import Dash, html, dcc, Input, Output, callback, dash_table, register_page, State
 import plotly.express as px
-from pages.study_selection import scen_dict
+from pages.study_selection import scen_dict, df
 
 
 #import plotly.graph_objects as go
@@ -40,8 +40,6 @@ for var in var_dict:
     bparts.append(var)
     aliases.append(var_dict[var]['alias'])
 
-# Temporary "database"
-df = pd.read_csv('data/temp.csv', index_col=0, parse_dates=True)
 
 # DataFrames for the summary tables
 df_tbl = make_summary_df(scen_aliases,df,var_dict)

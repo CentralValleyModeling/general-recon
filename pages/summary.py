@@ -9,7 +9,7 @@ from utils.tools import (make_summary_df, month_map, load_data_mult,
                    make_ressum_df, month_list, convert_cm_nums,
                    wyt_list, convert_wyt_nums, cfs_taf)
 
-from pages.study_selection import scen_aliases, var_dict
+from pages.study_selection import scen_aliases, var_dict, df
 
 
 
@@ -20,8 +20,6 @@ register_page(
     path='/summary'
 )
 
-
-df = pd.read_csv('data/temp.csv', index_col=0, parse_dates=True)
 
 exp_tbl = make_summary_df(scen_aliases,df,var_dict,bparts=[
     'C_LWSTN',
