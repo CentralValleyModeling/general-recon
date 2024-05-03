@@ -9,7 +9,7 @@ from utils.tools import (make_summary_df, month_map, load_data_mult,
 
 from pages.study_selection import scen_aliases, var_dict, df
 from  pages.drilldown import layout as dd
-from pages.chart_layouts import ann_bar_plot
+from pages.chart_layouts import ann_bar_plot, mon_exc_plot
 
 register_page(
     __name__,
@@ -89,29 +89,31 @@ def layout():
     layout = dbc.Container([
         dbc.Row([
             dcc.Markdown("# ![](/assets/cs3_icon_draft.png) CalSim 3 Metric Heat Map"),
+            html.Hr(),
             dcc.RangeSlider(1922, 2021, 1, value=[1922, 2021],
                 marks={i: '{}'.format(i) for i in range(1922,2021,5)},
                 pushable=False,
                 id='slider-yr-range-hm'),
+            html.Hr(),
             dbc.Col([
                 html.P("Month"),
                 dcc.Checklist(
                     options = month_list, value = month_list, inline=False,
                     id = 'monthchecklist-hm',
-                    style={'fontSize':10},
+                    style={'fontSize':11},
                     
                 ),
-            ], width={"size": 1}),
+            ], width={"size": 1},className="g-0"),
             dbc.Col([
                 html.P("Sac Valley Index"),
                 dcc.Checklist(options = wyt_list,
                     value = wyt_list,
                     inline=False,
                     id = 'wytchecklist-hm',
-                    style={'fontSize':10},
+                    style={'fontSize':11},
                     #inputStyle={"margin-right": "5px","margin-left": "30px"},
                 ),
-            ], width={"size": 1}),
+            ], width={"size": 1},className="g-0"),
 
             dbc.Col([
                 html.P("Variables Included"),
@@ -120,22 +122,25 @@ def layout():
                         options=bparts,
                         value=bparts,
                         inline=False,
-                        style={'fontSize':10},
+                        style={'fontSize':11},
                     ),
-            ], width={"size": 2}),
+            ], width={"size": 1},className="g-0"),
 
 
 
             dbc.Col([
-                dcc.Graph(id='heatmap'),
-                
+                dcc.Graph(id='heatmap',
+                    #responsive=True,
+                    #style={'height': '100%', 'width': '100%'},
+                ),
                 html.Pre(id='click-data'),      
-            ], width={"size": 8}),
-        ]),
+            ], width={"size": 9},className="g-0"),
+        ],className="g-0"),
 
         dbc.Row([
             html.Div(id='bar-plot-annual'),
-        ]),
+            html.Div(id='exc-plot-monthly'),
+        ],className="g-0"),
 
     ],
     )
@@ -162,8 +167,8 @@ def filter_heatmap(cols,slider_yr_range,monthchecklist,wytchecklist):
                             wytfilter=wytfilter,
                             bparts=bparts)
     fig = px.imshow(df_hm[cols])#,color_continuous_scale=px.colors.sequential.Viridis)
-    fig.layout.height = 500
-    fig.layout.width = 800
+    fig.layout.height = 800
+    fig.layout.width = 1000
     fig.update_traces(dict(showscale=False, 
                        coloraxis=None, 
     ))
@@ -177,13 +182,29 @@ def filter_heatmap(cols,slider_yr_range,monthchecklist,wytchecklist):
     Input('heatmap', 'clickData'),
     prevent_initial_call=True
 )
-def display_click_data(clickData):
+def show_ann_bar(clickData):
     if clickData is None:
         return 'Click on a cell'
     else:
-        # Extract the coordinates of the clicked cell
         point = clickData['points'][0]
         x = point['x']
-        #y = point['y']
         value = {var_dict[x]['alias']}
         return  ann_bar_plot(b_part=x)
+
+@callback(
+    Output('exc-plot-monthly', 'children'),
+    Input('heatmap', 'clickData'),
+    Input('monthchecklist-hm','value'),
+    prevent_initial_call=True
+)
+def show_mon_exc(clickData,monthchecklist):
+    print(monthchecklist)
+    if clickData is None:
+        return 'Click on a cell'
+    else:
+        point = clickData['points'][0]
+        x = point['x']
+        value = {var_dict[x]['alias']}
+        return  mon_exc_plot(b_part=x,monthchecklist=monthchecklist)
+    
+#mon_exc_plot(b_part="C_CAA003",monthchecklist=["Oct"])
