@@ -87,31 +87,55 @@ bparts=[
 
 def layout():
     layout = dbc.Container([
-        dcc.Markdown("# ![](/assets/cs3_icon_draft.png) CalSim 3 Metric Heat Map"),
-        dcc.RangeSlider(1922, 2021, 1, value=[1922, 2021],
+        dbc.Row([
+            dcc.Markdown("# ![](/assets/cs3_icon_draft.png) CalSim 3 Metric Heat Map"),
+            dcc.RangeSlider(1922, 2021, 1, value=[1922, 2021],
                 marks={i: '{}'.format(i) for i in range(1922,2021,5)},
                 pushable=False,
                 id='slider-yr-range-hm'),
-        dcc.Checklist(
-            options = month_list, value = month_list, inline=True,
-            id = 'monthchecklist-hm'
-        ),
-        dcc.Checklist(options = wyt_list,
-            value = wyt_list,
-            inline=True,
-            id = 'wytchecklist-hm',
-            #inputStyle={"margin-right": "5px","margin-left": "30px"},
-        ),
-        dcc.Graph(id='heatmap'),
-        html.Div(id='bar-plot-annual'),
-        html.Pre(id='click-data'),
-        html.P("Variables Included:"),
-        dcc.Checklist(
-            id='vars',
-            options=bparts,
-            value=bparts,
-            inline=True,
-        ),
+            dbc.Col([
+                html.P("Month"),
+                dcc.Checklist(
+                    options = month_list, value = month_list, inline=False,
+                    id = 'monthchecklist-hm',
+                    style={'fontSize':10},
+                    
+                ),
+            ], width={"size": 1}),
+            dbc.Col([
+                html.P("Sac Valley Index"),
+                dcc.Checklist(options = wyt_list,
+                    value = wyt_list,
+                    inline=False,
+                    id = 'wytchecklist-hm',
+                    style={'fontSize':10},
+                    #inputStyle={"margin-right": "5px","margin-left": "30px"},
+                ),
+            ], width={"size": 1}),
+
+            dbc.Col([
+                html.P("Variables Included"),
+                dcc.Checklist(
+                        id='vars',
+                        options=bparts,
+                        value=bparts,
+                        inline=False,
+                        style={'fontSize':10},
+                    ),
+            ], width={"size": 2}),
+
+
+
+            dbc.Col([
+                dcc.Graph(id='heatmap'),
+                
+                html.Pre(id='click-data'),      
+            ], width={"size": 8}),
+        ]),
+
+        dbc.Row([
+            html.Div(id='bar-plot-annual'),
+        ]),
 
     ],
     )
@@ -138,11 +162,12 @@ def filter_heatmap(cols,slider_yr_range,monthchecklist,wytchecklist):
                             wytfilter=wytfilter,
                             bparts=bparts)
     fig = px.imshow(df_hm[cols])#,color_continuous_scale=px.colors.sequential.Viridis)
-    fig.layout.height = 800
-    fig.layout.width = 1500
+    fig.layout.height = 500
+    fig.layout.width = 800
     fig.update_traces(dict(showscale=False, 
                        coloraxis=None, 
     ))
+    #fig.update_layout(paper_bgcolor="WhiteSmoke")
     #fig.color_continuous_scale="Viridis"
     #fig.color_continuous_scale=[[0, 'red'], [0.5, 'yellow'], [1, 'blue']]
     return fig

@@ -24,7 +24,7 @@ app = dash.Dash(
     __name__,
     suppress_callback_exceptions=True,
     external_stylesheets=[
-        dbc.themes.LUX,  # Dash Themes CSS
+        dbc.themes.SPACELAB,  # Dash Themes CSS
         FA621,  # Font Awesome Icons CSS
     ],
     title=APP_TITLE,
@@ -33,45 +33,14 @@ app = dash.Dash(
 
 du.configure_upload(app, 'uploads')
 
-# To use if you're planning on using Google Analytics
-app.index_string = f'''
-<!DOCTYPE html>
-<html>
-    <head>
-        {{%metas%}}
-        <title>{APP_TITLE}</title>
-        {{%favicon%}}
-        {{%css%}}
-    </head>
-    <body>
-        {{%app_entry%}}
-        <footer>
-            {{%config%}}
-            {{%scripts%}}
-            {{%renderer%}}
-        </footer>
-        
-    </body>
-</html>
-'''
-
-app.layout = dcc.Loading(  # <- Wrap App with Loading Component
-    id='loading_page_content',
-    children=[
-        html.Div(
-            [
+app.layout = html.Div([
                 NAVBAR,
-                dash.page_container
-            ]
-        )
-    ],
-    color='primary',  # <- Color of the loading spinner
-    fullscreen=True  # <- Loading Spinner should take up full screen
-)
+                dash.page_container,
+               
+            ],)
+
 
 server = app.server
-
-
 
 if __name__ == '__main__':
     app.run_server(debug=True)
