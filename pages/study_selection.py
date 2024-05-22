@@ -1,6 +1,5 @@
 from dash import html, register_page, dcc, callback, Input, Output, dash_table
 import dash_bootstrap_components as dbc
-#import dash_uploader as du
 from collections import namedtuple
 import yaml
 import pandas as pd
