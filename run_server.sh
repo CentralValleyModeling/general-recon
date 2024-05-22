@@ -18,4 +18,4 @@ cd "calsim-dash"
 ls
 
 echo "Running the application..."
-flask run -h localhost -p 80
+flask run -h 0.0.0.0 -p 80
