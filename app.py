@@ -36,6 +36,7 @@ app = dash.Dash(
 app.layout = html.Div([
                 NAVBAR,
                 dash.page_container,
+                dcc.Link(html.Button("TEST"), href='/heatmap', refresh=True),
                
             ],)
 
