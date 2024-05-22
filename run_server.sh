@@ -10,6 +10,12 @@ echo "cloning repo $1"
 git clone -b production "$git_repo_url"
 
 # Run app
-echo "Running the application..."
+echo "$PWD"
+ls
 
-flask run --host 0.0.0.0 --port 80
+echo "cd to calsim-dash"
+cd "calsim-dash"
+ls
+
+echo "Running the application..."
+flask run
