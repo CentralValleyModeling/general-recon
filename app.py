@@ -33,15 +33,25 @@ app = dash.Dash(
 
 #du.configure_upload(app, 'uploads')
 
+#app.layout = html.Div([
+#                #NAVBAR,
+#                dash.page_container,
+#                dcc.Link(html.Button("Heatmap"), href='/heatmap', refresh=True),
+#               
+#            ],)
+
 app.layout = html.Div([
-                NAVBAR,
-                dash.page_container,
-                dcc.Link(html.Button("TEST"), href='/heatmap', refresh=True),
-               
-            ],)
+    html.H1('Multi-page app with Dash Pages'),
+    html.Div([
+        html.Div(
+            dcc.Link(f"{page['name']} - {page['path']}", href=page["relative_path"])
+        ) for page in dash.page_registry.values()
+    ]),
+    dash.page_container
+])
 
-
-server = app.server
 
 if __name__ == '__main__':
     app.run_server(debug=True)
+
+
