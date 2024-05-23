@@ -7,7 +7,7 @@ import numpy as np
 import yaml
 from dash import Dash, html, dcc, Input, Output, callback, dash_table, register_page, State
 import plotly.express as px
-from pages.study_selection import scen_dict, df
+from utils.query_data import df, scen_aliases
 
 
 #import plotly.graph_objects as go
@@ -17,7 +17,6 @@ from utils.tools import (make_summary_df, month_map, load_data_mult,
                    make_ressum_df, month_list, convert_cm_nums,
                    wyt_list, convert_wyt_nums, cfs_taf,list_files)
 
-from pages.study_selection import scen_aliases, scen_dict
 
 
 register_page(

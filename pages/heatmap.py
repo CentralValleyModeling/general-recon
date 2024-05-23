@@ -7,9 +7,8 @@ from utils.tools import (make_summary_df, month_map, load_data_mult,
                    make_ressum_df, month_list, convert_cm_nums,
                    wyt_list, convert_wyt_nums, cfs_taf)
 
-from pages.study_selection import scen_aliases, var_dict, df
-from  pages.drilldown import layout as dd
-from pages.chart_layouts import ann_bar_plot, mon_exc_plot
+from utils.query_data import df, scen_aliases, var_dict
+from utils.chart_layouts import ann_bar_plot, mon_exc_plot
 
 register_page(
     __name__,

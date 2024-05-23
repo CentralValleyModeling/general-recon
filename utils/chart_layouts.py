@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.express as px
 from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
-from pages.study_selection import scen_aliases, var_dict, df
+from utils.query_data import df, scen_aliases, var_dict
 from utils.tools import convert_wyt_nums, cfs_taf, convert_cm_nums
 
 
