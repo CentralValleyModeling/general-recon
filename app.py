@@ -31,17 +31,8 @@ app = dash.Dash(
     use_pages=True,  # New in Dash 2.7 - Allows us to register pages
 )
 
-#du.configure_upload(app, 'uploads')
-
-#app.layout = html.Div([
-#                #NAVBAR,
-#                dash.page_container,
-#                dcc.Link(html.Button("Heatmap"), href='/heatmap', refresh=True),
-#               
-#            ],)
-
 app.layout = html.Div([
-    html.H1('Multi-page app with Dash Pages'),
+    html.H1('CalSim Results Dashboard'),
     html.Div([
         html.Div(
             dcc.Link(f"{page['name']} - {page['path']}", href=page["relative_path"])

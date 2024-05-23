@@ -7,7 +7,7 @@ git_repo_url="https://github.com/CentralValleyModeling/calsim-dash.git"
 
 # Clone the repo into a subfolder
 echo "cloning repo $1"
-git clone -b development "$git_repo_url" "code"
+git clone -b production "$git_repo_url" "code"
 
 # Run app
 echo "$PWD"
