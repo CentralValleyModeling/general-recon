@@ -21,8 +21,9 @@ def card_bar_plot(b_part='C_CAA003',startyr=1922,endyr=2021):
                       width = 600,
                       height = 200,
                       showlegend=False,
-                      xaxis_title='',
-                      yaxis_title='')
+                      xaxis_title='TAF/Year',
+                      yaxis_title='',
+                      xaxis_tickformat=',d')
 
     layout = html.Div([dcc.Graph(figure=fig)])
     return layout

@@ -2,6 +2,7 @@ from dash import html, register_page, dcc
 from utils.query_data import df, scen_aliases, var_dict
 import dash_bootstrap_components as dbc
 from charts.chart_layouts import ann_bar_plot, mon_exc_plot, card_bar_plot
+from pages.styles import GLOBAL_MARGIN
 
 register_page(
     __name__,
@@ -12,29 +13,39 @@ register_page(
 
 dcr_cover_path = 'assets/draft_dcr_2023_cover.png'
 
-title_text = ("""This Delivery Capability Report presents California Department of Water
-Resources (DWR) analysis of the State Water Project (SWP) system and
-provides important planning information for users of SWP water. The
-analysis provides information about how changing climate, regulatory, and
-operational considerations impact SWP delivery capability.""")
+title_text = ("""The California Department of Water Resources released the 
+              draft State Water Project Delivery Capability Report for 2023 
+              that presents a new and enhanced analysis of current and future 
+              expectations for the State Water Project water supply. The report 
+              is a key tool for water managers, including groundwater 
+              sustainability agencies, to help plan and manage future water 
+              supply and plan for climate resilience projects. The State Water 
+              Project is developing key adaptation strategies, like the Delta 
+              Conveyance Project and Forecast Informed Reservoir Operations, 
+              to ensure the water needs of California are met in the face of a 
+              changing climate and uncertainties in future regulations. If appropriate 
+              action is not taken to modernize the infrastructure and fund climate 
+              initiatives, the report signals substantial reduction in State Water 
+              Project delivery capability and reliability. Final report to be 
+              released this summer.""")
 
 tablea_text = ("""Table A Water is an exhibit to the SWP's water supply contracts. The
-maximum Table A amount is the basis for apportioning water supply and
-costs to the SWP contractors. Once the total amount of water to be delivered
-is determined for the year, all available water is allocated in proportion to
-each contractor's annual maximum SWP Table A amount. Table A water is
-given priority for delivery over other types of SWP water. Contractors have
-several options for what to do with the water that is allocated to them: use
-it, store it for later use, or transfer it to another contractor.""")
+                maximum Table A amount is the basis for apportioning water supply and
+                costs to the SWP contractors. The current combined maximum Table A amount is 4,173 TAF/year. 
+                Of the combined maximum Table A amount, 4,133 TAF/year is the SWP’s maximum
+                Table A water available for delivery from the Delta.""")
 
-a21_text = ("""Article 21 Water (so named because it is described in Article 21 of the water
-contracts) is water that SWP contractors may receive on intermittent,
-interruptible basis in addition to their Table A water, if they request it. Article
-21 water is used by many SWP contractors to help meet demands when
-allocations are less than 100 percent. The availability and delivery of Article
-21 water cannot impact the Table A allocation of the any contractor's water,
-nor can it negatively impact normal SWP operations.""")
+a21_text = ("""Article 21 Water is water that SWP contractors may receive on intermittent,
+            interruptible basis in addition to their Table A water, if they request it. Article
+            21 water is used by many SWP contractors to help meet demands when
+            allocations are less than 100 percent. The availability and delivery of Article
+            21 water cannot impact the Table A allocation of the any contractor's water,
+            nor can it negatively impact normal SWP operations.""")
 
+co_text = ("""A water supply “savings account” for SWP water that is allocated to an 
+           SWP contractor in a given year, but not used by the end of the year. 
+           Carryover water is stored in the SWP’s share of San Luis Reservoir, when 
+           space is available, for the contractor to use in the following year.""")
 class CardWidget():
     def __init__(self,title,chart=None,text=None,image=None) -> None:
         self.title = title
@@ -56,37 +67,42 @@ class CardWidget():
                     ]
                 ),
             ],
-            #style={"width": "2rem"}
+            style={"height": "30rem"}
         )
 
         return card
 
 
-ta_card = CardWidget("SWP Table A Deliveries",card_bar_plot(b_part="SWP_TA_TOTAL"))
-a21_card = CardWidget("SWP Article 21 Deliveries")
-a56_card = CardWidget("SWP Article 56 Deliveries")
-exp_card = CardWidget("Total Banks Exports")
+ta_card = CardWidget("SWP Table A Deliveries",
+                     chart=card_bar_plot(b_part="SWP_TA_TOTAL"),
+                     text=tablea_text)
+a21_card = CardWidget("SWP Article 21 Deliveries",
+                      card_bar_plot(b_part="SWP_IN_TOTAL"),
+                      text=a21_text)
+a56_card = CardWidget("SWP Carryover Deliveries",
+                      card_bar_plot(b_part="SWP_CO_TOTAL"),
+                      text=co_text)
+exp_card = CardWidget("Total Banks Exports",
+                      card_bar_plot(b_part="C_CAA003"))
 orovl_card = CardWidget("Oroville Carryover Storage")
 sluis_card = CardWidget("San Luis Storage")
 
 
 def layout():
     layout = html.Div([
-        html.H2(["Results At-A-Glance"]),
+ #       html.H2(["Results At-A-Glance"]),
         
         html.Hr(),
         #html.Div(card_bar_plot()),
 
-        html.A(title_text),
-                dbc.Row([
+        dbc.Row([
             dbc.Col([
                 html.Img(src=dcr_cover_path, height="400"),
             ],width="auto"),
             dbc.Col([
-                html.H3(["State Water Project Table A Deliveries"]),
-                html.A(tablea_text),
+                html.A(title_text),
             ]),
-        ],style={'background-color': '#F9F9F9'}),
+        ],style={'background-color': '#FFFFFF'}),
 
         html.Hr(),
 
@@ -98,26 +114,37 @@ def layout():
             dbc.Col([ 
                 a21_card.create_card(),
             ]),
+        ],
+        style={'background-color': '#FFFFFF'}
+        ),
+
+        dbc.Row([
             dbc.Col([ 
                 a56_card.create_card(),
             ]),
-        ],style={'background-color': '#F2F2F2'}),
-        dbc.Row([
             dbc.Col([ 
                 exp_card.create_card(),
             ]),
+        ],
+        style={'background-color': '#FFFFFF'}
+        ),
+
+        dbc.Row([
             dbc.Col([ 
                 orovl_card.create_card(),
             ]),
             dbc.Col([ 
                 sluis_card.create_card(),
             ]),
-        ],style={'background-color': '#F2F2F2'}),
+        ],
+        style={'background-color': '#FFFFFF'}
+        ),
         
         html.Hr(),
 
 
-        
-
-    ])
+    
+    ],
+    style=GLOBAL_MARGIN
+    )
     return layout

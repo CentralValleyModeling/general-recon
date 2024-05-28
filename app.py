@@ -39,7 +39,9 @@ app.layout = html.Div([
         ) for page in dash.page_registry.values()
     ]),
     dash.page_container
-])
+],
+style={'margin': '20px'}
+)
 
 
 server = app.server
