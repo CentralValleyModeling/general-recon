@@ -55,11 +55,11 @@ def layout():
         dbc.Col(
             [
                 "Select B-Part: ",
-                dcc.Dropdown(bparts, id='b-part',value="D_OMR027_CAA000",
+                dcc.Dropdown(bparts, id='b-part',value="C_CAA003",
                             style={'width': '100%'}
                             ),
                 "Or search by alias: ",
-                dcc.Dropdown(options=aliases, id='alias',
+                dcc.Dropdown(options=aliases, id='alias', value="Total Banks Exports",
                             style={'width': '100%'}
                             )
             ],

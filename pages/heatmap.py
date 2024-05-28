@@ -8,7 +8,7 @@ from utils.tools import (make_summary_df, month_map, load_data_mult,
                    wyt_list, convert_wyt_nums, cfs_taf)
 
 from utils.query_data import df, scen_aliases, var_dict
-from utils.chart_layouts import ann_bar_plot, mon_exc_plot
+from charts.chart_layouts import ann_bar_plot, mon_exc_plot
 
 register_page(
     __name__,

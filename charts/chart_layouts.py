@@ -6,10 +6,29 @@ from utils.query_data import df, scen_aliases, var_dict
 from utils.tools import convert_wyt_nums, cfs_taf, convert_cm_nums
 
 
+def card_bar_plot(b_part='C_CAA003',startyr=1922,endyr=2021):
+
+    df0=df.loc[df['WYT_SAC_'].isin([1,2,3,4,5,6,7,8,9,10,11,12]) &
+               df['Scenario'].isin(["Hist","AdjHist"])]
+
+    cfs_taf(df0,var_dict)
+    df1 = round(df0.groupby(['Scenario']).sum()/(endyr-startyr+1))
+    
+    #print(df1[b_part])
+    fig = px.bar(df1[b_part],text = df1[b_part],color=df1.index,orientation='h')
+    
+    fig.update_layout(barmode='relative',plot_bgcolor='white',
+                      width = 600,
+                      height = 200,
+                      showlegend=False,
+                      xaxis_title='',
+                      yaxis_title='')
+
+    layout = html.Div([dcc.Graph(figure=fig)])
+    return layout
+
 def ann_bar_plot(b_part='C_CAA003',startyr=1922,endyr=2021):
 
-    startyr=1922
-    endyr=2021
     df0=df.loc[df['WYT_SAC_'].isin([1,2,3,4,5,6,7,8,9,10,11,12])]
     
     cfs_taf(df0,var_dict)

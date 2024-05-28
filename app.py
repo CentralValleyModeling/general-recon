@@ -32,10 +32,10 @@ app = dash.Dash(
 )
 
 app.layout = html.Div([
-    html.H1('CalSim Results Console for the DCR 2023'),
-    html.Div([
-        html.Div(
-            dcc.Link(f"{page['name']} - {page['path']}", href=page["relative_path"])
+    html.H1('SWP Delivery Capability Report 2023 Results Console '),
+    dbc.Row([
+        dbc.Col(
+            dcc.Link(f"{page['name']}", href=page["relative_path"]), width="auto"
         ) for page in dash.page_registry.values()
     ]),
     dash.page_container
