@@ -3,7 +3,7 @@
 # Activate environment
 source /env/bin/activate
 
-git_repo_url="https://github.com/CentralValleyModeling/calsim-dash.git"
+git_repo_url="https://github.com/CentralValleyModeling/calsim-recon.git"
 
 # Clone the repo into a subfolder
 echo "cloning repo $1"
