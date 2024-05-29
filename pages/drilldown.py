@@ -121,61 +121,61 @@ def layout():
 
         ]),
 
-        dcc.Markdown("#### Table Controls"),
-        dcc.Markdown("End-of-Month (for Reservoirs)"),
-
-        dcc.RadioItems(
-        options = month_list,
-        value = 'Sep',
-        inline=True, id = 'monthradio'
-        ),
-
-        dcc.Markdown("Flow Average Period"),
-        dcc.Checklist(
-            options = month_list, value = month_list, inline=True,
-            id = 'monthchecklist'
-        ),
-        html.Div(id='output-container-month-checklist'),
-
+#        dcc.Markdown("#### Table Controls"),
+#        dcc.Markdown("End-of-Month (for Reservoirs)"),
+#
+#        dcc.RadioItems(
+#        options = month_list,
+#        value = 'Sep',
+#        inline=True, id = 'monthradio'
+#        ),
+#
+#        dcc.Markdown("Flow Average Period"),
+#        dcc.Checklist(
+#            options = month_list, value = month_list, inline=True,
+#            id = 'monthchecklist'
+#        ),
+#        html.Div(id='output-container-month-checklist'),
+#
         dcc.RangeSlider(1922, 2021, 1, value=[1922, 2021],
                         marks={i: '{}'.format(i) for i in range(1922,2021,5)},
                         pushable=False,
                         id='slider-yr-range'),
         html.Div(id='output-container-range-slider'),
-
-        #html.Button('Load', id='btn-refresh-tbl', n_clicks=0),
-        dcc.Markdown("**Reservoir Summary Tables (Single Month)**"),
-        dash_table.DataTable(
-            id='sum_tbl_res',
-            columns=[{"name": i, "id": i} 
-                    for i in df_tbl.columns],
-            data=df_tbl_res.to_dict(orient='records'),
-            style_header={
-                    'backgroundColor': 'rgb(200, 200, 200)',
-                    'fontWeight': 'bold'
-            },
-            style_cell={
-            'width': '{}%'.format(len(df_tbl.columns)),
-            'textOverflow': 'ellipsis',
-            'overflow': 'hidden'
-            },
-        ),
-        dcc.Markdown("**Flow Summary Tables (Average Annual)**"),
-        dash_table.DataTable(
-            id='sum_tbl',
-            columns=[{"name": i, "id": i} 
-                    for i in df_tbl.columns],
-            data=df_tbl.to_dict(orient='records'),
-            style_header={
-                    'backgroundColor': 'rgb(200, 200, 200)',
-                    'fontWeight': 'bold'
-            },
-            style_cell={
-            'width': '{}%'.format(len(df_tbl.columns)),
-            'textOverflow': 'ellipsis',
-            'overflow': 'hidden'
-            },
-        )
+#
+#        #html.Button('Load', id='btn-refresh-tbl', n_clicks=0),
+#        dcc.Markdown("**Reservoir Summary Tables (Single Month)**"),
+#        dash_table.DataTable(
+#            id='sum_tbl_res',
+#            columns=[{"name": i, "id": i} 
+#                    for i in df_tbl.columns],
+#            data=df_tbl_res.to_dict(orient='records'),
+#            style_header={
+#                    'backgroundColor': 'rgb(200, 200, 200)',
+#                    'fontWeight': 'bold'
+#            },
+#            style_cell={
+#            'width': '{}%'.format(len(df_tbl.columns)),
+#            'textOverflow': 'ellipsis',
+#            'overflow': 'hidden'
+#            },
+#        ),
+#        dcc.Markdown("**Flow Summary Tables (Average Annual)**"),
+#        dash_table.DataTable(
+#            id='sum_tbl',
+#            columns=[{"name": i, "id": i} 
+#                    for i in df_tbl.columns],
+#            data=df_tbl.to_dict(orient='records'),
+#            style_header={
+#                    'backgroundColor': 'rgb(200, 200, 200)',
+#                    'fontWeight': 'bold'
+#            },
+#            style_cell={
+#            'width': '{}%'.format(len(df_tbl.columns)),
+#            'textOverflow': 'ellipsis',
+#            'overflow': 'hidden'
+#            },
+#        )
     ],
     fluid=False
     )

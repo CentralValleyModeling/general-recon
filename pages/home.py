@@ -27,12 +27,15 @@ title_text = ("""The California Department of Water Resources released the
               action is not taken to modernize the infrastructure and fund climate 
               initiatives, the report signals substantial reduction in State Water 
               Project delivery capability and reliability. Final report to be 
-              released this summer.""")
+              released this summer.""",
+              html.Br(),
+              html.Br(),
+              """Comments and questions can be emailed to CVMsupport@water.ca.gov""")
 
 tablea_text = ("""Table A Water is an exhibit to the SWP's water supply contracts. The
                 maximum Table A amount is the basis for apportioning water supply and
                 costs to the SWP contractors. The current combined maximum Table A amount is 4,173 TAF/year. 
-                Of the combined maximum Table A amount, 4,133 TAF/year is the SWP’s maximum
+                Of the combined maximum Table A amount, 4,133 TAF/year is the SWP's maximum
                 Table A water available for delivery from the Delta.""")
 
 a21_text = ("""Article 21 Water is water that SWP contractors may receive on intermittent,
@@ -44,8 +47,9 @@ a21_text = ("""Article 21 Water is water that SWP contractors may receive on int
 
 co_text = ("""A water supply “savings account” for SWP water that is allocated to an 
            SWP contractor in a given year, but not used by the end of the year. 
-           Carryover water is stored in the SWP’s share of San Luis Reservoir, when 
+           Carryover water is stored in the SWP's share of San Luis Reservoir, when 
            space is available, for the contractor to use in the following year.""")
+
 class CardWidget():
     def __init__(self,title,chart=None,text=None,image=None) -> None:
         self.title = title
@@ -87,6 +91,26 @@ exp_card = CardWidget("Total Banks Exports",
 orovl_card = CardWidget("Oroville Carryover Storage")
 sluis_card = CardWidget("San Luis Storage")
 
+add_resources_card = dbc.Card(
+            [
+                dbc.CardBody(
+                    [
+                        html.H4("Additional Resources", className="card-title"),
+                        html.A("The DCR Report and Models", href="https://water.ca.gov/Library/Modeling-and-Analysis/Central-Valley-models-and-tools/CalSim-3/DCR",
+                               target="_blank", style={"marginTop": "10px"}),
+                        html.Br(),
+                        html.A("Central Valley Modeling GitHub", href="https://github.com/CentralValleyModeling",
+                               target="_blank", style={"marginTop": "10px"}),
+                        html.Br(),                        
+                    ]
+                ),
+            ],
+            style={"height": "400px",
+                   "width": "400px",
+                   "backgroundColor": "#f8f9fa",
+                   "border": "0"}
+        )
+
 
 def layout():
     layout = html.Div([
@@ -102,6 +126,9 @@ def layout():
             dbc.Col([
                 html.A(title_text),
             ]),
+            dbc.Col([
+                add_resources_card,
+            ],width="auto"),
         ],style={'background-color': '#FFFFFF'}),
 
         html.Hr(),
