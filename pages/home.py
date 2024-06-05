@@ -1,4 +1,4 @@
-from dash import html, register_page, dcc
+from dash import html, register_page, dcc, Input, Output, ALL, callback, callback_context
 from utils.query_data import df, scen_aliases, var_dict
 import dash_bootstrap_components as dbc
 from charts.chart_layouts import ann_bar_plot, mon_exc_plot, card_bar_plot
@@ -51,8 +51,9 @@ co_text = ("""A water supply “savings account” for SWP water that is allocat
            space is available, for the contractor to use in the following year.""")
 
 class CardWidget():
-    def __init__(self,title,chart=None,text=None,image=None) -> None:
+    def __init__(self,title,button_id,chart=None,text=None,image=None) -> None:
         self.title = title
+        self.button_id = button_id
         self.chart = chart #Div
         self.text = text
         self.image = image
@@ -67,7 +68,7 @@ class CardWidget():
                         html.H4(self.title, className="card-title"),
                         self.chart,
                         html.P(self.text, className="card-text"),
-                        dbc.Button("Explore", color="primary"),
+                        dbc.Button("Explore", id={'type': 'dynamic-btn', 'index': self.button_id}, color="primary"),
                     ]
                 ),
             ],
@@ -78,18 +79,24 @@ class CardWidget():
 
 
 ta_card = CardWidget("SWP Table A Deliveries",
+                     button_id="a_button_id",
                      chart=card_bar_plot(b_part="SWP_TA_TOTAL"),
                      text=tablea_text)
 a21_card = CardWidget("SWP Article 21 Deliveries",
-                      card_bar_plot(b_part="SWP_IN_TOTAL"),
+                      button_id="a_button_id_2",
+                      chart=card_bar_plot(b_part="SWP_IN_TOTAL"),
                       text=a21_text)
 a56_card = CardWidget("SWP Carryover Deliveries",
-                      card_bar_plot(b_part="SWP_CO_TOTAL"),
+                      button_id="a_button_id_3",
+                      chart=card_bar_plot(b_part="SWP_CO_TOTAL"),
                       text=co_text)
 exp_card = CardWidget("Total Banks Exports",
-                      card_bar_plot(b_part="C_CAA003"))
-orovl_card = CardWidget("Oroville Carryover Storage")
-sluis_card = CardWidget("San Luis Storage")
+                      button_id="a_button_id_4",
+                      chart=card_bar_plot(b_part="C_CAA003"))
+orovl_card = CardWidget("Oroville Carryover Storage",
+                        button_id="a_button_id_5",)
+sluis_card = CardWidget("San Luis Storage",
+                        button_id="a_button_id_6",)
 
 add_resources_card = dbc.Card(
             [
@@ -168,6 +175,7 @@ def layout():
         ),
         
         html.Hr(),
+        html.Div(id='output-div'),
 
 
     
@@ -175,3 +183,18 @@ def layout():
     style=GLOBAL_MARGIN
     )
     return layout
+
+# Define the generalized callback
+@callback(
+    Output('output-div', 'children'),
+    Input({'type': 'dynamic-btn', 'index': ALL}, 'n_clicks')
+)
+def update_output(n_clicks):
+    ctx = callback_context
+    if not ctx.triggered or all(click is None for click in n_clicks):
+        return "No button clicked yet."
+    else:
+        button_id = ctx.triggered[0]['prop_id'].split('.')[0]
+        button_index = eval(button_id)['index']
+        print(button_id)
+        return f"Button {button_index} clicked"
