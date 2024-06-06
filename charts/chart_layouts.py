@@ -9,7 +9,10 @@ from utils.tools import convert_wyt_nums, cfs_taf, convert_cm_nums
 def card_bar_plot(b_part='C_CAA003',startyr=1922,endyr=2021):
 
     df0=df.loc[df['WYT_SAC_'].isin([1,2,3,4,5,6,7,8,9,10,11,12]) &
-               df['Scenario'].isin(["Hist","AdjHist"])]
+               df['Scenario'].isin(["DCR_23_Adj",
+                                    "DCR_23_CC50",
+                                    "DCR_23_CC75",
+                                    "DCR_23_CC95",])]
 
     cfs_taf(df0,var_dict)
     df1 = round(df0.groupby(['Scenario']).sum()/(endyr-startyr+1))
