@@ -4,12 +4,12 @@ from collections import namedtuple
 import yaml
 import pandas as pd
 
-register_page(
-    __name__,
-    #name='Page 2',
-    top_nav=True,
-    path='/study_selection'
-)
+#register_page(
+#    __name__,
+#    #name='Page 2',
+#    top_nav=True,
+#    path='/study_selection'
+#)
 scen_dict = {} # Global variable to store scenario pathnames and aliases, as entered by user
 
 df = pd.read_csv('data/data.csv', index_col=0, parse_dates=True)

@@ -46,7 +46,9 @@ df_tbl_res = make_ressum_df(scen_aliases,df,var_dict)
 
 
 # Layout Starts Here
-def layout():
+def layout(**kwargs):
+    b = kwargs.get('type','C_CAA003')
+    print(b)
     layout = dbc.Container([
     dcc.Markdown("# ![](/assets/cs3_icon_draft.png) CalSim 3 Results Dashboard"),
     dcc.Markdown("### A General dashboard for reviewing CalSim 3 Results"),
@@ -55,11 +57,11 @@ def layout():
         dbc.Col(
             [
                 "Select B-Part: ",
-                dcc.Dropdown(bparts, id='b-part',value="C_CAA003",
+                dcc.Dropdown(bparts, id='b-part',value=b,
                             style={'width': '100%'}
                             ),
                 "Or search by alias: ",
-                dcc.Dropdown(options=aliases, id='alias', value="Total Banks Exports",
+                dcc.Dropdown(options=aliases, id='alias', value=var_dict[b]['alias'],
                             style={'width': '100%'}
                             )
             ],

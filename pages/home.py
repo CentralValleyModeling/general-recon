@@ -1,7 +1,7 @@
 from dash import html, register_page, dcc, Input, Output, ALL, callback, callback_context, page_registry
 from utils.query_data import df, scen_aliases, var_dict
 import dash_bootstrap_components as dbc
-from charts.chart_layouts import ann_bar_plot, mon_exc_plot, card_bar_plot
+from charts.chart_layouts import ann_bar_plot, card_mon_exc_plot, card_bar_plot
 from urllib.parse import urlencode, parse_qs
 from pages.styles import GLOBAL_MARGIN
 
@@ -52,10 +52,11 @@ co_text = ("""A water supply “savings account” for SWP water that is allocat
            space is available, for the contractor to use in the following year.""")
 
 class CardWidget():
-    def __init__(self,title,button_id,chart=None,text=None,image=None) -> None:
+    def __init__(self,title,button_id,button_label="Explore",chart=None,text=None,image=None) -> None:
         self.title = title
         self.button_id = button_id
-        self.chart = chart #Div
+        self.button_label = button_label
+        self.chart = chart
         self.text = text
         self.image = image
 
@@ -69,35 +70,43 @@ class CardWidget():
                         html.H4(self.title, className="card-title"),
                         self.chart,
                         html.P(self.text, className="card-text"),
-                        dbc.Button("Explore", id={'type': 'dynamic-btn', 'index': self.button_id}, color="primary"),
+                        dbc.Button(self.button_label, id={'type': 'dynamic-btn', 'index': self.button_id}, color="primary"),
                     ]
                 ),
             ],
-            style={"height": "30rem"}
+            style={"height": "35rem"}
         )
 
         return card
 
 
-ta_card = CardWidget("SWP Table A Deliveries",
+ta_card = CardWidget("Total SWP Table A Deliveries",
                      button_id="table_a_btn",
+                     button_label="View by Contractor",
                      chart=card_bar_plot(b_part="SWP_TA_TOTAL"),
                      text=tablea_text)
 a21_card = CardWidget("SWP Article 21 Deliveries",
                       button_id="a21_btn",
+                      button_label="View by Contractor",
                       chart=card_bar_plot(b_part="SWP_IN_TOTAL"),
                       text=a21_text)
 a56_card = CardWidget("SWP Carryover Deliveries",
                       button_id="a56_btn",
+                      button_label="View by Contractor",
                       chart=card_bar_plot(b_part="SWP_CO_TOTAL"),
                       text=co_text)
-exp_card = CardWidget("Total Banks Exports",
-                      button_id="a_button_id_4",
-                      chart=card_bar_plot(b_part="C_CAA003"))
-orovl_card = CardWidget("Oroville Carryover Storage",
-                        button_id="a_button_id_5",)
-sluis_card = CardWidget("San Luis Storage",
-                        button_id="a_button_id_6",)
+exp_card = CardWidget("Total Banks SWP Exports",
+                      button_id="C_CAA003_SWP",
+                      button_label="Details",
+                      chart=card_bar_plot(b_part="C_CAA003_SWP"))
+orovl_card = CardWidget("Oroville End-of-September Storage",
+                      button_id="S_OROVL",
+                      button_label="Details",
+                      chart=card_mon_exc_plot(b_part="S_OROVL",monthchecklist=['Sep']))
+sluis_card = CardWidget("San Luis SWP End-of-September Storage",
+                      button_id="S_SLUIS_SWP",
+                      button_label="Details",
+                      chart=card_mon_exc_plot(b_part="S_SLUIS_SWP",monthchecklist=['Sep']))
 
 add_resources_card = dbc.Card(
             [
@@ -208,5 +217,10 @@ def update_output(n_clicks):
         button_id = ctx.triggered[0]['prop_id'].split('.')[0]
         button_index = eval(button_id)['index']
         url_params = urlencode({'type': button_index})
-        print(f'/contractor_summary?{url_params}')
-        return f'/contractor_summary?{url_params}', True
+
+        print(button_index)
+
+        if button_index in ('C_CAA003_SWP','S_OROVL','S_SLUIS_SWP'):
+            return f'/drilldown?{url_params}', True
+        else:
+            return f'/contractor_summary?{url_params}', True

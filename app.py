@@ -18,7 +18,7 @@ from utils.tools import load_data_mult
 NAVBAR = create_navbar()
 # To use Font Awesome Icons
 FA621 = "https://use.fontawesome.com/releases/v6.2.1/css/all.css"
-APP_TITLE = "CalSim 3 Results Dashboard"
+APP_TITLE = "CalSim 3 Results Console"
 
 app = dash.Dash(
     __name__,
@@ -33,7 +33,7 @@ app = dash.Dash(
 
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
-    html.H1('SWP Delivery Capability Report 2023 Results Console '),
+    html.H1('SWP Delivery Capability Report 2023 Results Console (Beta)'),
     dbc.Row([
         dbc.Col(
             dcc.Link(f"{page['name']}", href=page["relative_path"]), width="auto"

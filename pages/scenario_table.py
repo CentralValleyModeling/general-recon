@@ -4,12 +4,12 @@ import dash_bootstrap_components as dbc
 #from .client import client
 
 
-register_page(
-    __name__,
-    name='Scenario Table',
-    top_nav=True,
-    path='/scenario_table'
-)
+#register_page(
+#    __name__,
+#    name='Scenario Table',
+#    top_nav=True,
+#    path='/scenario_table'
+#)
 
 TABLE_CELL_STYLE = {
     "minWidth": "3rem",
