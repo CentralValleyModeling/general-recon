@@ -69,7 +69,7 @@ def load_data_mult(scen_dict, var_dict, date_map)->None:
 
     # concatenate the individual DataFrames into one big DataFrame
     df = pd.concat(appended_data)
-    df.round(2)
+    df = df.round(2)
     df = pd.merge(df,date_map, left_index=True, right_index=True)
     df.to_csv('data/temp.csv')
     return

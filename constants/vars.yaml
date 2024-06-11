@@ -1761,6 +1761,195 @@ SWP_CO_VC:
   table_convert: cfs_taf
   table_display: wy
   type: Delivery - CO
+SWP_IN_ACFC:
+  alias: Alameda County FC&WCD, Zone 7
+  bpart: SWP_IN_ACFC
+  pathname: /CALSIM/SWP_IN_ACFC/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_ACWD:
+  alias: Alameda County WD
+  bpart: SWP_IN_ACWD
+  pathname: /CALSIM/SWP_IN_ACWD/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_AVEK:
+  alias: Antelope Valley-East Kern WA
+  bpart: SWP_IN_AVEK
+  pathname: /CALSIM/SWP_IN_AVEK/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_CLA:
+  alias: Crestline-Line Arrowhead WA
+  bpart: SWP_IN_CLA
+  pathname: /CALSIM/SWP_IN_CLA/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_CLWA1:
+  alias: Santa Clarita WA (San Joaquin)
+  bpart: SWP_IN_CLWA1
+  pathname: /CALSIM/SWP_IN_CLWA1/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_CLWA2:
+  alias: Santa Clarita WA (South Coast)
+  bpart: SWP_IN_CLWA2
+  pathname: /CALSIM/SWP_IN_CLWA2/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_CVWD:
+  alias: Coachella Valley WD
+  bpart: SWP_IN_CVWD
+  pathname: /CALSIM/SWP_IN_CVWD/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_DESERT:
+  alias: Desert WA
+  bpart: SWP_IN_DESERT
+  pathname: /CALSIM/SWP_IN_DESERT/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_DUDLEY:
+  alias: Dudley Ridge WD
+  bpart: SWP_IN_DUDLEY
+  pathname: /CALSIM/SWP_IN_DUDLEY/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_EMPIRE:
+  alias: Empire West Side ID
+  bpart: SWP_IN_EMPIRE
+  pathname: /CALSIM/SWP_IN_EMPIRE/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_KERN:
+  alias: Kern Counta WA
+  bpart: SWP_IN_KERN
+  pathname: /CALSIM/SWP_IN_KERN/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_KINGS:
+  alias: County of Kings
+  bpart: SWP_IN_KINGS
+  pathname: /CALSIM/SWP_IN_KINGS/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_LCID:
+  alias: Littlerock Creek ID
+  bpart: SWP_IN_LCID
+  pathname: /CALSIM/SWP_IN_LCID/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_MWA:
+  alias: Mojave WA
+  bpart: SWP_IN_MWA
+  pathname: /CALSIM/SWP_IN_MWA/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_MWD:
+  alias: Metropolitan WDSC
+  bpart: SWP_IN_MWD
+  pathname: /CALSIM/SWP_IN_MWD/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_NAPA:
+  alias: Napa County FC&WCD
+  bpart: SWP_IN_NAPA
+  pathname: /CALSIM/SWP_IN_NAPA/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_OAK:
+  alias: Oak Flat WD
+  bpart: SWP_IN_OAK
+  pathname: /CALSIM/SWP_IN_OAK/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_PWD:
+  alias: Palmdale WD
+  bpart: SWP_IN_PWD
+  pathname: /CALSIM/SWP_IN_PWD/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_SB:
+  alias: Santa Barbara County FC&WCD
+  bpart: SWP_IN_SB
+  pathname: /CALSIM/SWP_IN_SB/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_SBV:
+  alias: San Bernadino Valley MWD
+  bpart: SWP_IN_SBV
+  pathname: /CALSIM/SWP_IN_SBV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_SCV:
+  alias: Santa Clara Valley WD
+  bpart: SWP_IN_SCV
+  pathname: /CALSIM/SWP_IN_SCV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_SGP:
+  alias: San Gorgonio Pass WA
+  bpart: SWP_IN_SGP
+  pathname: /CALSIM/SWP_IN_SGP/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_SGV:
+  alias: San Gabriel Valley MWD
+  bpart: SWP_IN_SGV
+  pathname: /CALSIM/SWP_IN_SGV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_SLO:
+  alias: San Luis Obispo County FC&WCD
+  bpart: SWP_IN_SLO
+  pathname: /CALSIM/SWP_IN_SLO/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_SOLANO:
+  alias: Solano County WA
+  bpart: SWP_IN_SOLANO
+  pathname: /CALSIM/SWP_IN_SOLANO/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_TULARE:
+  alias: Tulare Lake Basin WSD
+  bpart: SWP_IN_TULARE
+  pathname: /CALSIM/SWP_IN_TULARE/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
+SWP_IN_VC:
+  alias: Ventura County FCD
+  bpart: SWP_IN_VC
+  pathname: /CALSIM/SWP_IN_VC/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: Delivery - IN
 SWP_TA_ACFC:
   alias: Alameda County FC&WCD, Zone 7
   bpart: SWP_TA_ACFC

@@ -1,7 +1,7 @@
 import pandas as pd
 import yaml
 
-df = pd.read_csv('data/temp.csv', index_col=0, parse_dates=True)
+df = pd.read_csv('data/data.csv', index_col=0, parse_dates=True)
 date_map = pd.read_csv('constants/date_map.csv', index_col=0, parse_dates=True)
 scen_aliases = df.Scenario.unique()
 

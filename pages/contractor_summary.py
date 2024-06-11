@@ -30,7 +30,7 @@ table_order = [{"name": 'Type', "id": 'type'},
 table_order.extend([{"name": s, "id": s, "type": "numeric","format": { "specifier": ",.0f"}} 
                     for s in scen_aliases if s not in['description','index','type']])
 
-typefilter_dict = {'table_a_btn':'Delivery - TA','a21_btn':'Delivery - A21','a56_btn':'Delivery - CO'}
+typefilter_dict = {'table_a_btn':'Delivery - TA','a21_btn':'Delivery - IN','a56_btn':'Delivery - CO'}
 
 def layout(**kwargs): 
     s=str(kwargs.get('type','table_a_btn'))

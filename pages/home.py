@@ -210,5 +210,3 @@ def update_output(n_clicks):
         url_params = urlencode({'type': button_index})
         print(f'/contractor_summary?{url_params}')
         return f'/contractor_summary?{url_params}', True
-
-#print(page_registry['pages.home']['relative_path'])
