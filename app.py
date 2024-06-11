@@ -32,6 +32,7 @@ app = dash.Dash(
 )
 
 app.layout = html.Div([
+    dcc.Location(id='url', refresh=False),
     html.H1('SWP Delivery Capability Report 2023 Results Console '),
     dbc.Row([
         dbc.Col(

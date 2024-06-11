@@ -1,7 +1,8 @@
-from dash import html, register_page, dcc, Input, Output, ALL, callback, callback_context
+from dash import html, register_page, dcc, Input, Output, ALL, callback, callback_context, page_registry
 from utils.query_data import df, scen_aliases, var_dict
 import dash_bootstrap_components as dbc
 from charts.chart_layouts import ann_bar_plot, mon_exc_plot, card_bar_plot
+from urllib.parse import urlencode, parse_qs
 from pages.styles import GLOBAL_MARGIN
 
 register_page(
@@ -79,15 +80,15 @@ class CardWidget():
 
 
 ta_card = CardWidget("SWP Table A Deliveries",
-                     button_id="a_button_id",
+                     button_id="table_a_btn",
                      chart=card_bar_plot(b_part="SWP_TA_TOTAL"),
                      text=tablea_text)
 a21_card = CardWidget("SWP Article 21 Deliveries",
-                      button_id="a_button_id_2",
+                      button_id="a21_btn",
                       chart=card_bar_plot(b_part="SWP_IN_TOTAL"),
                       text=a21_text)
 a56_card = CardWidget("SWP Carryover Deliveries",
-                      button_id="a_button_id_3",
+                      button_id="a56_btn",
                       chart=card_bar_plot(b_part="SWP_CO_TOTAL"),
                       text=co_text)
 exp_card = CardWidget("Total Banks Exports",
@@ -195,15 +196,19 @@ def layout():
 
 # Define the generalized callback
 @callback(
-    Output('output-div', 'children'),
+    Output('url', 'href'),
+    Output('url', 'refresh'),
     Input({'type': 'dynamic-btn', 'index': ALL}, 'n_clicks')
 )
 def update_output(n_clicks):
     ctx = callback_context
     if not ctx.triggered or all(click is None for click in n_clicks):
-        return "No button clicked yet."
+        return '/', False
     else:
         button_id = ctx.triggered[0]['prop_id'].split('.')[0]
         button_index = eval(button_id)['index']
-        print(button_id)
-        return f"Button {button_index} clicked"
+        url_params = urlencode({'type': button_index})
+        print(f'/contractor_summary?{url_params}')
+        return f'/contractor_summary?{url_params}', True
+
+#print(page_registry['pages.home']['relative_path'])

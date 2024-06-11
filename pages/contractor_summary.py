@@ -17,37 +17,8 @@ register_page(
     __name__,
     #name='Page 4',
     top_nav=True,
-    path='/summary'
+    path='/contractor_summary'
 )
-
-
-exp_tbl = make_summary_df(scen_aliases,df,var_dict,bparts=[
-    'C_LWSTN',
-    'D_LWSTN_CCT011',
-    'C_WKYTN',
-    'C_KSWCK',
-    'C_SAC097',
-    'C_FTR059',
-    'C_FTR003',
-    'C_YUB006',
-    'C_SAC083',
-    'C_NTOMA',
-    'C_AMR004',
-#   '----'
-    'DELTAINFLOWFORNDOI',
-#    '----'
-    'C_CAA003',
-    'C_CAA003_SWP',
-    'C_CAA003_CVP',
-    'C_CAA003_WTS',
-    'C_DMC000',
-    'C_DMC000_CVP',
-    'C_DMC000_WTS',
-#    '----',
-    'SWP_TA_TOTAL',
-    'SWP_IN_TOTAL',
-    'SWP_CO_TOTAL',
-    'CVPTOTALDEL'])
 
 # Determine the table order
 # Descriptive stuff goes first
@@ -59,12 +30,19 @@ table_order = [{"name": 'Type', "id": 'type'},
 table_order.extend([{"name": s, "id": s, "type": "numeric","format": { "specifier": ",.0f"}} 
                     for s in scen_aliases if s not in['description','index','type']])
 
+typefilter_dict = {'table_a_btn':'Delivery - TA','a21_btn':'Delivery - A21','a56_btn':'Delivery - CO'}
 
-def layout():
+def layout(**kwargs): 
+    s=str(kwargs.get('type','table_a_btn'))
+    typefilter = typefilter_dict[s]
+    b = []
+    for i in var_dict:
+        if var_dict[i]['type']==typefilter:
+            b.append(i)
+    exp_tbl = make_summary_df(scen_aliases,df,var_dict,bparts=b)
     layout = dbc.Container([
-        dcc.Markdown("# ![](/assets/cs3_icon_draft.png) CalSim 3 Results One Pager"),
-        dcc.Markdown("### Summary Table"),
-        
+        dcc.Markdown("# ![](/assets/cs3_icon_draft.png) CalSim 3 Summary Table"),
+    
         dbc.Row([
             dcc.Markdown("#### "),
             dash_table.DataTable(
