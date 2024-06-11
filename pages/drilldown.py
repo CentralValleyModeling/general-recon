@@ -87,7 +87,7 @@ def layout(**kwargs):
                     align="center"
                     ),
             
-            dbc.Col([dcc.Markdown("**Monthly Average**"),
+            dbc.Col([dcc.Markdown("**Monthly Average (Oct=1)**"),
                     dcc.Checklist(options = wyt_list,
                         value = wyt_list,
                         inline=True,
@@ -252,10 +252,14 @@ def update_exceedance(b_part,monthchecklist,yearwindow):
 @callback(
     Output(component_id='bar-plot', component_property='figure'),
     Input(component_id='b-part', component_property='value'),
-    Input(component_id='wytchecklist-bar', component_property='value')
+    Input(component_id='wytchecklist-bar', component_property='value'),
+    Input(component_id='slider-yr-range', component_property='value')
 )
-def update_bar(b_part,wytchecklist):
-    df0=df.loc[df['WYT_SAC_'].isin(convert_wyt_nums(wytchecklist))]
+def update_bar(b_part,wytchecklist,slider_yr_range):
+    startyr=slider_yr_range[0]
+    endyr=slider_yr_range[1]
+    df0=df.loc[df['WYT_SAC_'].isin(convert_wyt_nums(wytchecklist)) &
+              (df['iwy']>=startyr) &(df['iwy']<=endyr)]
     df1 = round(df0.groupby(['Scenario','iwm']).mean())
     df1 = df1.reindex(scen_aliases, level='Scenario')
     fig = px.bar(df1, x = df1.index.get_level_values(1), y = b_part, 
@@ -273,14 +277,16 @@ def update_bar(b_part,wytchecklist):
 def update_bar_annual(b_part,wytchecklist,slider_yr_range):
     startyr=slider_yr_range[0]
     endyr=slider_yr_range[1]
-    df0=df.loc[df['WYT_SAC_'].isin(convert_wyt_nums(wytchecklist))]
+    print(wytchecklist)
+    df1=df.loc[df['WYT_SAC_'].isin(convert_wyt_nums(wytchecklist)) &
+              (df['iwy']>=startyr) &(df['iwy']<=endyr)]
     
-    cfs_taf(df0,var_dict)
-    
-    df1 = round(df0.groupby(['Scenario']).sum()/(endyr-startyr+1))
-    df1 = df1.reindex(scen_aliases, level='Scenario')
-    fig = px.bar(df1, x = df1.index.get_level_values(0), y = b_part, 
-                 color=df1.index.get_level_values(0),text_auto=True)
+    cfs_taf(df1,var_dict)
+
+    df2 = round(df1.groupby(['Scenario']).sum()/(endyr-startyr+1))
+    df2 = df2.reindex(scen_aliases, level='Scenario')
+    fig = px.bar(df2, x = df2.index.get_level_values(0), y = b_part, 
+                 color=df2.index.get_level_values(0),text_auto=True)
     fig.update_layout(barmode='relative')
     return fig
 
