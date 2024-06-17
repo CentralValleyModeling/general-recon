@@ -262,8 +262,8 @@ def update_bar(b_part,wytchecklist,slider_yr_range):
               (df['iwy']>=startyr) &(df['iwy']<=endyr)]
     df1 = round(df0.groupby(['Scenario','iwm']).mean())
     df1 = df1.reindex(scen_aliases, level='Scenario')
-    fig = px.bar(df1, x = df1.index.get_level_values(1), y = b_part, 
-                 color=df1.index.get_level_values(0), barmode='group')
+    fig = px.line(df1, x = df1.index.get_level_values(1), y = b_part, 
+                 color=df1.index.get_level_values(0))
     return fig
 
 
