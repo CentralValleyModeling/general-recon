@@ -12,13 +12,6 @@ import pandas as pd
 #)
 scen_dict = {} # Global variable to store scenario pathnames and aliases, as entered by user
 
-df = pd.read_csv('data/data.csv', index_col=0, parse_dates=True)
-date_map = pd.read_csv('constants/date_map.csv', index_col=0, parse_dates=True)
-scen_aliases = df.Scenario.unique()
-
-with open('constants/vars.yaml', 'r') as file:
-    var_dict = yaml.safe_load(file)
-
 
 def layout():
     layout = dbc.Container([

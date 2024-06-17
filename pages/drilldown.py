@@ -7,7 +7,7 @@ import numpy as np
 import yaml
 from dash import Dash, html, dcc, Input, Output, callback, dash_table, register_page, State
 import plotly.express as px
-from utils.query_data import df, scen_aliases
+from utils.query_data import df, scen_aliases,var_dict,date_map
 
 
 #import plotly.graph_objects as go
@@ -27,13 +27,9 @@ register_page(
 )
 
 cs3_icon_path = 'assets/cs3_icon_draft.png'
-date_map = pd.read_csv('constants/date_map.csv', index_col=0, parse_dates=True)
-with open('constants/vars.yaml', 'r') as file:
-    var_dict = yaml.safe_load(file)
 
 bparts = []
 aliases = []
-
 
 for var in var_dict:
     bparts.append(var)
@@ -248,7 +244,7 @@ def update_exceedance(b_part,monthchecklist,yearwindow):
     fig = px.line(df2)
     return fig
 
-# Monthly Bar Plot
+# Monthly Average Plot
 @callback(
     Output(component_id='bar-plot', component_property='figure'),
     Input(component_id='b-part', component_property='value'),
@@ -263,7 +259,8 @@ def update_bar(b_part,wytchecklist,slider_yr_range):
     df1 = round(df0.groupby(['Scenario','iwm']).mean())
     df1 = df1.reindex(scen_aliases, level='Scenario')
     fig = px.line(df1, x = df1.index.get_level_values(1), y = b_part, 
-                 color=df1.index.get_level_values(0))
+                 color=df1.index.get_level_values(0),
+                 labels={'color':"Scenario"})
     return fig
 
 
