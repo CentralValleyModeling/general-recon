@@ -56,30 +56,30 @@ co_text = ("""A water supply “savings account” for SWP water that is allocat
 ta_card = CardWidget("Total SWP Table A Deliveries",
                      button_id="table_a_btn",
                      button_label="View by Contractor",
-                     chart=card_bar_plot(b_part="SWP_TA_TOTAL"),
+                     chart=card_bar_plot(df,b_part="SWP_TA_TOTAL"),
                      text=tablea_text)
 a21_card = CardWidget("SWP Article 21 Deliveries",
                       button_id="a21_btn",
                       button_label="View by Contractor",
-                      chart=card_bar_plot(b_part="SWP_IN_TOTAL"),
+                      chart=card_bar_plot(df,b_part="SWP_IN_TOTAL"),
                       text=a21_text)
 a56_card = CardWidget("SWP Carryover Deliveries",
                       button_id="a56_btn",
                       button_label="View by Contractor",
-                      chart=card_bar_plot(b_part="SWP_CO_TOTAL"),
+                      chart=card_bar_plot(df,b_part="SWP_CO_TOTAL"),
                       text=co_text)
 exp_card = CardWidget("Total Banks SWP Exports",
                       button_id="C_CAA003_SWP",
                       button_label="Details",
-                      chart=card_bar_plot(b_part="C_CAA003_SWP"))
+                      chart=card_bar_plot(df,b_part="C_CAA003_SWP"))
 orovl_card = CardWidget("Oroville End-of-September Storage",
                       button_id="S_OROVL",
                       button_label="Details",
-                      chart=card_mon_exc_plot(b_part="S_OROVL",monthchecklist=['Sep']))
+                      chart=card_mon_exc_plot(df,b_part="S_OROVL",monthchecklist=['Sep']))
 sluis_card = CardWidget("San Luis SWP End-of-September Storage",
                       button_id="S_SLUIS_SWP",
                       button_label="Details",
-                      chart=card_mon_exc_plot(b_part="S_SLUIS_SWP",monthchecklist=['Sep']))
+                      chart=card_mon_exc_plot(df,b_part="S_SLUIS_SWP",monthchecklist=['Sep']))
 
 add_resources_card = dbc.Card(
             [

@@ -39,5 +39,9 @@ df_sv['SAC4'] = df_sv['SAC_B'] + df_sv['OROVI'] + df_sv['SMART'] + df_sv['FOL_I'
 df_sv['SJR4'] = df_sv['N_MEL'] + df_sv['DPR_I'] + df_sv['LK_MC'] + df_sv['MILLE']
 
 df_sv['8RI'] = df_sv['SAC4'] + df_sv['SJR4']
+#df_sv['WYT_SAC_']
 
-print(df_sv)
+#print(df_sv)
+
+#df_new = pd.concat([df,df_sv],axis=1)
+#print(df_new)

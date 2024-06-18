@@ -3,18 +3,20 @@ import plotly.express as px
 from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
 from utils.query_data import df, scen_aliases, var_dict
-from utils.tools import convert_wyt_nums, cfs_taf, convert_cm_nums
+from utils.tools import convert_wyt_nums, cfs_taf, convert_cm_nums, monthfilter, month_list
 
 
 
 class CardWidget():
-    def __init__(self,title,button_id,button_label="Explore",chart=None,text=None,image=None) -> None:
+    def __init__(self,title,button_id,button_label="Explore",
+                 chart=None,text=None,image=None,height="35rem") -> None:
         self.title = title
         self.button_id = button_id
         self.button_label = button_label
         self.chart = chart
         self.text = text
         self.image = image
+        self.height = height
 
     def create_card(self):
 
@@ -26,30 +28,61 @@ class CardWidget():
                         html.H4(self.title, className="card-title"),
                         self.chart,
                         html.P(self.text, className="card-text"),
-                        dbc.Button(self.button_label, id={'type': 'dynamic-btn', 'index': self.button_id}, color="primary"),
+                        dbc.Button(self.button_label, id={'type': 'dynamic-btn', 'index': self.button_id}, color="primary") 
+                            if self.button_label is not None else None,
                     ]
                 ),
             ],
-            style={"height": "35rem"}
+            style={"height": self.height}
         )
 
         return card
 
-def card_bar_plot(b_part='C_CAA003',startyr=1922,endyr=2021):
+
+def card_mon_plot(df,b_part='C_CAA003',yaxis_title=None,
+                  startyr=1922,endyr=2021):
+
+    df1 = round(df.groupby(['Scenario','iwm']).mean())
+    df1 = df1.reindex(scen_aliases, level='Scenario')
+    fig = px.line(df1, x = df1.index.get_level_values(1), y = b_part, 
+                 color=df1.index.get_level_values(0),
+                 labels={'color':"Scenario"})
+    
+    fig.update_layout(
+        plot_bgcolor='white',
+        xaxis=dict(
+        tickmode='array',
+        tickvals= monthfilter,
+        ticktext= month_list
+        ),
+        yaxis_tickformat=',d',
+        xaxis_title="Month",
+        yaxis_title=yaxis_title if yaxis_title is not None else b_part,
+    )
+    layout = html.Div([dcc.Graph(figure=fig)])
+    return layout
+
+
+def card_bar_plot(df,b_part='C_CAA003',startyr=1922,endyr=2021):
     
     # This is VERY specific to the DCR 2021
-    df_dcr21=df.loc[df['WYT_SAC_'].isin([1,2,3,4,5]) &
-               df['Scenario'].isin(["DCR_21_Hist"])]
-    cfs_taf(df_dcr21,var_dict)
+    df_dcr21=df.loc[df['Scenario'].isin(["DCR_21_Hist"])]
+    try:
+        cfs_taf(df_dcr21,var_dict)
+    except:
+        print("Unable to convert from CFS to TAF")
     df_dcr21_ann = round(df_dcr21.groupby(['Scenario']).sum()/(2015-1922+1))
 
-    df0=df.loc[df['WYT_SAC_'].isin([1,2,3,4,5]) &
-               df['Scenario'].isin(["DCR_23_Adj",
+    df0=df.loc[df['Scenario'].isin(["DCR_23_Adj",
                                     "DCR_23_CC50",
                                     "DCR_23_CC75",
                                     "DCR_23_CC95",])]
 
-    cfs_taf(df0,var_dict)
+    try:
+        cfs_taf(df0,var_dict)
+    except:
+        print("Unable to convert from CFS to TAF")
+
     df1 = round(df0.groupby(['Scenario']).sum()/(endyr-startyr+1))
 
     df_plot = pd.concat([df_dcr21_ann,df1])
@@ -67,7 +100,7 @@ def card_bar_plot(b_part='C_CAA003',startyr=1922,endyr=2021):
     layout = html.Div([dcc.Graph(figure=fig)])
     return layout
 
-def card_mon_exc_plot(b_part,monthchecklist):
+def card_mon_exc_plot(df,b_part,monthchecklist):
     df2 = pd.DataFrame()
     df0 = df.loc[df['icm'].isin(convert_cm_nums(monthchecklist))]
     for scenario in scen_aliases:
@@ -93,9 +126,12 @@ def card_mon_exc_plot(b_part,monthchecklist):
     ])
     return layout
 
-def ann_bar_plot(b_part='C_CAA003',startyr=1922,endyr=2021):
+def ann_bar_plot(df,b_part='C_CAA003',startyr=1922,endyr=2021):
 
-    df0=df.loc[df['WYT_SAC_'].isin([1,2,3,4,5,6,7,8,9,10,11,12])]
+    try:
+        df0=df.loc[df['WYT_SAC_'].isin([1,2,3,4,5,6,7,8,9,10,11,12])]
+    except KeyError as e:
+        print(e)
     
     cfs_taf(df0,var_dict)
     
@@ -112,7 +148,7 @@ def ann_bar_plot(b_part='C_CAA003',startyr=1922,endyr=2021):
     ])
     return layout
 
-def mon_exc_plot(b_part,monthchecklist):
+def mon_exc_plot(df,b_part,monthchecklist):
     df2 = pd.DataFrame()
     df0 = df.loc[df['icm'].isin(convert_cm_nums(monthchecklist))]
     for scenario in scen_aliases:
