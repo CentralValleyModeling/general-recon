@@ -6,6 +6,35 @@ from utils.query_data import df, scen_aliases, var_dict
 from utils.tools import convert_wyt_nums, cfs_taf, convert_cm_nums
 
 
+
+class CardWidget():
+    def __init__(self,title,button_id,button_label="Explore",chart=None,text=None,image=None) -> None:
+        self.title = title
+        self.button_id = button_id
+        self.button_label = button_label
+        self.chart = chart
+        self.text = text
+        self.image = image
+
+    def create_card(self):
+
+        card = dbc.Card(
+            [
+                dbc.CardImg(src=self.image, top=True),
+                dbc.CardBody(
+                    [
+                        html.H4(self.title, className="card-title"),
+                        self.chart,
+                        html.P(self.text, className="card-text"),
+                        dbc.Button(self.button_label, id={'type': 'dynamic-btn', 'index': self.button_id}, color="primary"),
+                    ]
+                ),
+            ],
+            style={"height": "35rem"}
+        )
+
+        return card
+
 def card_bar_plot(b_part='C_CAA003',startyr=1922,endyr=2021):
     
     # This is VERY specific to the DCR 2021

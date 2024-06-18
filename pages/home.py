@@ -1,7 +1,7 @@
 from dash import html, register_page, dcc, Input, Output, ALL, callback, callback_context, page_registry
 from utils.query_data import df, scen_aliases, var_dict
 import dash_bootstrap_components as dbc
-from charts.chart_layouts import ann_bar_plot, card_mon_exc_plot, card_bar_plot
+from charts.chart_layouts import ann_bar_plot, card_mon_exc_plot, card_bar_plot, CardWidget
 from urllib.parse import urlencode, parse_qs
 from pages.styles import GLOBAL_MARGIN
 
@@ -51,33 +51,6 @@ co_text = ("""A water supply “savings account” for SWP water that is allocat
            Carryover water is stored in the SWP's share of San Luis Reservoir, when 
            space is available, for the contractor to use in the following year.""")
 
-class CardWidget():
-    def __init__(self,title,button_id,button_label="Explore",chart=None,text=None,image=None) -> None:
-        self.title = title
-        self.button_id = button_id
-        self.button_label = button_label
-        self.chart = chart
-        self.text = text
-        self.image = image
-
-    def create_card(self):
-
-        card = dbc.Card(
-            [
-                dbc.CardImg(src=self.image, top=True),
-                dbc.CardBody(
-                    [
-                        html.H4(self.title, className="card-title"),
-                        self.chart,
-                        html.P(self.text, className="card-text"),
-                        dbc.Button(self.button_label, id={'type': 'dynamic-btn', 'index': self.button_id}, color="primary"),
-                    ]
-                ),
-            ],
-            style={"height": "35rem"}
-        )
-
-        return card
 
 
 ta_card = CardWidget("Total SWP Table A Deliveries",
