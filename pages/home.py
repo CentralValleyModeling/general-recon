@@ -72,14 +72,22 @@ exp_card = CardWidget("Total Banks SWP Exports",
                       button_id="C_CAA003_SWP",
                       button_label="Details",
                       chart=card_bar_plot(df,b_part="C_CAA003_SWP"))
-orovl_card = CardWidget("Oroville End-of-September Storage",
+orovl_sep_card = CardWidget("Oroville End-of-September Storage",
                       button_id="S_OROVL",
                       button_label="Details",
                       chart=card_mon_exc_plot(df,b_part="S_OROVL",monthchecklist=['Sep']))
+orovl_may_card = CardWidget("Oroville End-of-May Storage",
+                      button_id="S_OROVL",
+                      button_label="Details",
+                      chart=card_mon_exc_plot(df,b_part="S_OROVL",monthchecklist=['May']))
 sluis_card = CardWidget("San Luis SWP End-of-September Storage",
                       button_id="S_SLUIS_SWP",
                       button_label="Details",
                       chart=card_mon_exc_plot(df,b_part="S_SLUIS_SWP",monthchecklist=['Sep']))
+swp_alloc_card = CardWidget("SWP May Allocation",
+                      button_id=None,
+                      button_label=None,
+                      chart=card_mon_exc_plot(df,b_part="PERDV_SWP_MWD1",monthchecklist=['May']))
 
 add_resources_card = dbc.Card(
             [
@@ -157,15 +165,26 @@ def layout():
 
         dbc.Row([
             dbc.Col([ 
-                orovl_card.create_card(),
+                orovl_sep_card.create_card(),
             ]),
             dbc.Col([ 
-                sluis_card.create_card(),
+                orovl_may_card.create_card(),
             ]),
         ],
         style={'background-color': '#FFFFFF'}
         ),
-        
+
+        dbc.Row([
+            dbc.Col([ 
+                sluis_card.create_card(),
+            ]),
+            dbc.Col([ 
+
+                swp_alloc_card.create_card(),
+            ]),
+        ],
+        style={'background-color': '#FFFFFF'}
+        ),        
         html.Hr(),
         html.Div(id='output-div'),
 

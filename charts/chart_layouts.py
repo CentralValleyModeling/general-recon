@@ -4,6 +4,7 @@ from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
 from utils.query_data import df, scen_aliases, var_dict
 from utils.tools import convert_wyt_nums, cfs_taf, convert_cm_nums, monthfilter, month_list
+from pages.styles import PLOT_COLORS
 
 
 
@@ -38,7 +39,6 @@ class CardWidget():
 
         return card
 
-
 def card_mon_plot(df,b_part='C_CAA003',yaxis_title=None,
                   startyr=1922,endyr=2021):
 
@@ -46,18 +46,26 @@ def card_mon_plot(df,b_part='C_CAA003',yaxis_title=None,
     df1 = df1.reindex(scen_aliases, level='Scenario')
     fig = px.line(df1, x = df1.index.get_level_values(1), y = b_part, 
                  color=df1.index.get_level_values(0),
-                 labels={'color':"Scenario"})
+                 labels={'color':"Scenario"},
+                 color_discrete_sequence=PLOT_COLORS,)
     
     fig.update_layout(
         plot_bgcolor='white',
         xaxis=dict(
         tickmode='array',
         tickvals= monthfilter,
-        ticktext= month_list
+        ticktext= month_list,
+        showgrid=True,
+        gridcolor='LightGray',
         ),
+        yaxis=dict(
+        showgrid=True,
+        gridcolor='LightGray',
+        ),        
         yaxis_tickformat=',d',
         xaxis_title="Month",
         yaxis_title=yaxis_title if yaxis_title is not None else b_part,
+        
     )
     layout = html.Div([dcc.Graph(figure=fig)])
     return layout
@@ -87,7 +95,8 @@ def card_bar_plot(df,b_part='C_CAA003',startyr=1922,endyr=2021):
 
     df_plot = pd.concat([df_dcr21_ann,df1])
 
-    fig = px.bar(df_plot[b_part],text = df_plot[b_part],color=df_plot.index,orientation='h')
+    fig = px.bar(df_plot[b_part],text = df_plot[b_part],color=df_plot.index,orientation='h',
+                 color_discrete_sequence=PLOT_COLORS,)
     
     fig.update_layout(barmode='relative',plot_bgcolor='white',
                       width = 600,
@@ -109,7 +118,8 @@ def card_mon_exc_plot(df,b_part,monthchecklist):
         df1 = df1.reset_index(drop=True)
         df2[scenario]=df1
 
-    fig = px.line(df2,labels={'variable':"Scenarios"})
+    fig = px.line(df2,labels={'variable':"Scenarios"},
+                  color_discrete_sequence=PLOT_COLORS)
 
     fig.update_layout(plot_bgcolor='white',
                       width = 600,
@@ -138,7 +148,8 @@ def ann_bar_plot(df,b_part='C_CAA003',startyr=1922,endyr=2021):
     df1 = round(df0.groupby(['Scenario']).sum()/(endyr-startyr+1))
     df1 = df1.reindex(scen_aliases, level='Scenario')
     fig = px.bar(df1, x = df1.index.get_level_values(0), y = b_part, 
-                 color=df1.index.get_level_values(0),text_auto=True)
+                 color=df1.index.get_level_values(0),text_auto=True,
+                 color_discrete_sequence=PLOT_COLORS)
     fig.update_layout(barmode='relative')
 
     layout = html.Div([
@@ -156,7 +167,8 @@ def mon_exc_plot(df,b_part,monthchecklist):
         df1 = df1.sort_values()
         df1 = df1.reset_index(drop=True)
         df2[scenario]=df1
-    fig = px.line(df2)
+    fig = px.line(df2,
+                  color_discrete_sequence=PLOT_COLORS)
 
     layout = html.Div([
         dbc.Col([dcc.Markdown("**Monthly Exceedance**"),

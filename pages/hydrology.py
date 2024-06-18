@@ -21,40 +21,44 @@ eight_ri_card_ann = CardWidget("Eight River Index",
                      height="30rem",
                      text="")
 
-sac_four_ri_card_ann = CardWidget("Sac Four River Index",
+sac_four_ri_card_ann = CardWidget("Sacramento River Runoff",
                      button_id=None,
                      button_label=None,
                      chart=card_bar_plot(df_sv,b_part="SAC4"),
                      height="30rem",
                      text="")
 
-sjr_four_ri_card_ann = CardWidget("SJR Four River Index",
+sjr_four_ri_card_ann = CardWidget("San Joaquin River Runoff",
                      button_id=None,
                      button_label=None,
                      chart=card_bar_plot(df_sv,b_part="SJR4"),
                      height="30rem",                    
                      text="")
 
-eight_ri_card_mon = CardWidget("Eight River Index - Monthly Average",
+eight_ri_card_mon = CardWidget("Eight River Index",
                      button_id=None,
                      button_label=None,
                      chart=card_mon_plot(df_sv,b_part="8RI",yaxis_title = "Eight River Index (TAF)"),
-                     height="30rem",
-                     text="")
+                     height="35rem",
+                     text="Eight River Index is the sum of Sacramento River Runoff and San Joaquin River Runoff")
 
-sac_four_ri_card_mon = CardWidget("Sacramento Four River Index - Monthly Average",
+sac_four_ri_card_mon = CardWidget("Sacramento River Runoff",
                      button_id=None,
                      button_label=None,
-                     chart=card_mon_plot(df_sv,b_part="SAC4"),
-                     height="30rem",
-                     text="")
+                     chart=card_mon_plot(df_sv,b_part="SAC4", yaxis_title = "Sacramento River Runoff (TAF)"),
+                     height="35rem",
+                     text="""Sacramento River Runoff is the sum of Sacramento River at Bend Bridge, 
+                        Feather River inflow to Lake Oroville, Yuba River at Smartville, 
+                        and American River inflow to Folsom Lake.""")
 
-sjr_four_ri_card_mon = CardWidget("San Joaquin Four River Index - Monthly Average",
+sjr_four_ri_card_mon = CardWidget("San Joaquin River Runoff",
                      button_id=None,
                      button_label=None,
-                     chart=card_mon_plot(df_sv,b_part="SJR4"),
-                     height="30rem",
-                     text="")
+                     chart=card_mon_plot(df_sv,b_part="SJR4", yaxis_title = "San Joaquin River Runoff (TAF)"),
+                     height="35rem",
+                     text="""San Joaquin River Runoff is the sum of Stanislaus River inflow to New Melones
+                        Lake, Tuolumne River inflow to New Don Pedro Reservoir, Merced River inflow
+                        to Lake McClure, and San Joaquin River inflow to Millerton Lake""")
 # Layout
 
 def layout():

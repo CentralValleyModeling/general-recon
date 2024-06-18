@@ -8,6 +8,7 @@ import yaml
 from dash import Dash, html, dcc, Input, Output, callback, dash_table, register_page, State
 import plotly.express as px
 from utils.query_data import df, scen_aliases,var_dict,date_map
+from pages.styles import PLOT_COLORS
 
 
 #import plotly.graph_objects as go
@@ -46,8 +47,8 @@ def layout(**kwargs):
     b = kwargs.get('type','C_CAA003')
     print(b)
     layout = dbc.Container([
-    dcc.Markdown("# ![](/assets/cs3_icon_draft.png) CalSim 3 Results Dashboard"),
-    dcc.Markdown("### A General dashboard for reviewing CalSim 3 Results"),
+    dcc.Markdown("# ![](/assets/cs3_icon_draft.png) CalSim 3 Variable Drilldown"),
+    #dcc.Markdown("### A General dashboard for reviewing CalSim 3 Results"),
 
     dbc.Row([
         dbc.Col(
@@ -198,7 +199,8 @@ def update_b_part(alias):
     Input(component_id='b-part', component_property='value')
 )
 def update_timeseries(b_part):
-    fig = px.line(df, x=df.index, y=b_part, color='Scenario')
+    fig = px.line(df, x=df.index, y=b_part, color='Scenario',
+                  color_discrete_sequence=PLOT_COLORS)
     #print(df)
     return fig
 
@@ -216,7 +218,8 @@ def update_exceedance(b_part,monthchecklist):
         df1 = df1.sort_values()
         df1 = df1.reset_index(drop=True)
         df2[scenario]=df1
-    fig = px.line(df2)
+    fig = px.line(df2,
+                  color_discrete_sequence=PLOT_COLORS)
     return fig
 
 # Annual Exceedance Plot
@@ -241,7 +244,8 @@ def update_exceedance(b_part,monthchecklist,yearwindow):
         df1 = df1.sort_values()
         df1 = df1.reset_index(drop=True)
         df2[scenario]=df1
-    fig = px.line(df2)
+    fig = px.line(df2,
+                  color_discrete_sequence=PLOT_COLORS)
     return fig
 
 # Monthly Average Plot
@@ -260,7 +264,8 @@ def update_bar(b_part,wytchecklist,slider_yr_range):
     df1 = df1.reindex(scen_aliases, level='Scenario')
     fig = px.line(df1, x = df1.index.get_level_values(1), y = b_part, 
                  color=df1.index.get_level_values(0),
-                 labels={'color':"Scenario"})
+                 labels={'color':"Scenario"},
+                 color_discrete_sequence=PLOT_COLORS)
     return fig
 
 
@@ -283,7 +288,8 @@ def update_bar_annual(b_part,wytchecklist,slider_yr_range):
     df2 = round(df1.groupby(['Scenario']).sum()/(endyr-startyr+1))
     df2 = df2.reindex(scen_aliases, level='Scenario')
     fig = px.bar(df2, x = df2.index.get_level_values(0), y = b_part, 
-                 color=df2.index.get_level_values(0),text_auto=True)
+                 color=df2.index.get_level_values(0),text_auto=True,
+                 color_discrete_sequence=PLOT_COLORS)
     fig.update_layout(barmode='relative')
     return fig
 
