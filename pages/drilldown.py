@@ -90,7 +90,7 @@ def layout(**kwargs):
                         inline=True,
                         id = 'wytchecklist-bar',
                         inputStyle={"margin-right": "5px","margin-left": "30px"},
-                        ),
+                    ),
                         dcc.Graph(id='bar-plot'),                 
                     ]),
         ]),

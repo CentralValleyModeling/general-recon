@@ -10,16 +10,15 @@ from pages.styles import PLOT_COLORS
 
 class CardWidget():
     def __init__(self,title,button_id,button_label="Explore",
-                 chart=None,text=None,image=None,height="35rem") -> None:
+                 chart=None,text=None,image=None) -> None:
         self.title = title
         self.button_id = button_id
         self.button_label = button_label
         self.chart = chart
         self.text = text
         self.image = image
-        self.height = height
 
-    def create_card(self):
+    def create_card(self,height="35rem",wyt=[1,2,3,4,5],startyr=1922,endyr=2021,):
 
         card = dbc.Card(
             [
@@ -34,15 +33,19 @@ class CardWidget():
                     ]
                 ),
             ],
-            style={"height": self.height}
+            style={"height": height}
         )
 
         return card
 
 def card_mon_plot(df,b_part='C_CAA003',yaxis_title=None,
-                  startyr=1922,endyr=2021):
-
-    df1 = round(df.groupby(['Scenario','iwm']).mean())
+                  startyr=1922,endyr=2021,wyt=[1,2,3,4,5]):
+    #try:
+    #    df1=df.loc[df['WYT_SAC_'].isin(wyt)]
+    #except:
+    #    print("WYT_SAC_ timeseries not found")
+    df1 = df.loc[df['WYT_SAC_'].isin(wyt)]
+    df1 = round(df1.groupby(['Scenario','iwm']).mean())
     df1 = df1.reindex(scen_aliases, level='Scenario')
     fig = px.line(df1, x = df1.index.get_level_values(1), y = b_part, 
                  color=df1.index.get_level_values(0),
@@ -71,7 +74,7 @@ def card_mon_plot(df,b_part='C_CAA003',yaxis_title=None,
     return layout
 
 
-def card_bar_plot(df,b_part='C_CAA003',startyr=1922,endyr=2021):
+def card_bar_plot(df,b_part='C_CAA003',wyt=[1,2,3,4,5],startyr=1922,endyr=2021):
     
     # This is VERY specific to the DCR 2021
     df_dcr21=df.loc[df['Scenario'].isin(["DCR_21_Hist"])]
@@ -136,10 +139,10 @@ def card_mon_exc_plot(df,b_part,monthchecklist):
     ])
     return layout
 
-def ann_bar_plot(df,b_part='C_CAA003',startyr=1922,endyr=2021):
+def ann_bar_plot(df,b_part='C_CAA003',startyr=1922,endyr=2021,wyt=[1,2,3,4,5]):
 
     try:
-        df0=df.loc[df['WYT_SAC_'].isin([1,2,3,4,5,6,7,8,9,10,11,12])]
+        df0=df.loc[df['WYT_SAC_'].isin(wyt)]
     except KeyError as e:
         print(e)
     
