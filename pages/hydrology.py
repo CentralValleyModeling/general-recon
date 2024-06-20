@@ -33,6 +33,12 @@ sjr_four_ri_card_ann = CardWidget("San Joaquin River Runoff",
                      chart=card_bar_plot(df_sv,b_part="SJR4"),               
                      text="")
 
+orov_inflow_card_ann = CardWidget("Oroville Reservoir Inflow",
+                     button_id=None,
+                     button_label=None,
+                     chart=card_bar_plot(df_sv,b_part="OROVI"),               
+                     text="")
+
 eight_ri_card_mon = CardWidget("Eight River Index",
                      button_id=None,
                      button_label=None,
@@ -55,13 +61,29 @@ sjr_four_ri_card_mon = CardWidget("San Joaquin River Runoff",
                         Lake, Tuolumne River inflow to New Don Pedro Reservoir, Merced River inflow
                         to Lake McClure, and San Joaquin River inflow to Millerton Lake""")
 
-orov_inflow_card_mon = CardWidget("Oroville Reservoir Inflow",
+orov_inflow_card_mon = CardWidget("Oroville Reservoir Inflow - All Years",
                      button_id=None,
                      button_label=None,
                      chart=card_mon_plot(df_sv,b_part="OROVI", 
-                                         wyt =[1],
+                                         wyt =[1,2,3,4,5],
                                          yaxis_title = "Oroville Reservoir Inflow (TAF)"),
-                     text="""""")
+                     text="""All Years (Sacramento Valley Index)""")
+
+orov_inflow_card_drier_mon = CardWidget("Oroville Reservoir Inflow - Drier Years",
+                     button_id=None,
+                     button_label=None,
+                     chart=card_mon_plot(df_sv,b_part="OROVI", 
+                                         wyt =[4,5],
+                                         yaxis_title = "Oroville Reservoir Inflow (TAF)"),
+                     text="""Dry and Critical years (Sacramento Valley Index)""")
+
+orov_inflow_card_wetter_mon = CardWidget("Oroville Reservoir Inflow - Wetter Years",
+                     button_id=None,
+                     button_label=None,
+                     chart=card_mon_plot(df_sv,b_part="OROVI", 
+                                         wyt =[1,2],
+                                         yaxis_title = "Oroville Reservoir Inflow (TAF)"),
+                     text="""Wet and Above Normal years (Sacramento Valley Index)""")
 # Layout
 
 def layout():
@@ -80,14 +102,22 @@ def layout():
         #),
         #html.Div(id='hydrology-range-slider-output'),
         dbc.Row([
-            dbc.Col([eight_ri_card_ann.create_card(height="30rem"),]),
-            dbc.Col([sac_four_ri_card_ann.create_card(height="30rem"),]),
-            dbc.Col([sjr_four_ri_card_ann.create_card(height="30rem"),]),
+            dbc.Col([eight_ri_card_ann.create_card(height="25rem"),]),
+            dbc.Col([sac_four_ri_card_ann.create_card(height="25rem"),]),
         ]),
+       dbc.Row([
+            dbc.Col([sjr_four_ri_card_ann.create_card(height="25rem"),]),
+            dbc.Col([orov_inflow_card_ann.create_card(height="25rem"),]),
+        ]),
+        html.Hr(),
             eight_ri_card_mon.create_card(height="35rem"),
             sac_four_ri_card_mon.create_card(height="35rem"),
             sjr_four_ri_card_mon.create_card(height="35rem"),
             orov_inflow_card_mon.create_card(height="35rem"),
+        dbc.Row([
+            dbc.Col([orov_inflow_card_drier_mon.create_card(height="35rem"),]),
+            dbc.Col([orov_inflow_card_wetter_mon.create_card(height="35rem"),]),
+        ]),
 
 
     ],

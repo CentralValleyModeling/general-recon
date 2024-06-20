@@ -7,7 +7,7 @@ import pandas as pd
 
 from utils.tools import (make_summary_df)
 
-from utils.query_data import df, scen_aliases, var_dict
+from utils.query_data import df_dv, scen_aliases, var_dict
 
 
 
@@ -42,7 +42,7 @@ def layout(**kwargs):
     for i in var_dict:
         if var_dict[i]['type']==typefilter:
             b.append(i)
-    exp_tbl = make_summary_df(scen_aliases,df,var_dict,bparts=b,start_yr=1922,end_yr=2021)
+    exp_tbl = make_summary_df(scen_aliases,df_dv,var_dict,bparts=b,start_yr=1922,end_yr=2021)
 
     layout = dbc.Container([
         dcc.Markdown("# ![](/assets/cs3_icon_draft.png) CalSim 3 Summary Table"),
@@ -81,7 +81,7 @@ layout()
     Input(component_id='slider-yr-range', component_property='value'),
 )
 def update_table(slider_yr_range):
-    df_tbl = make_summary_df(scen_aliases,df,var_dict,bparts=b,
+    df_tbl = make_summary_df(scen_aliases,df_dv,var_dict,bparts=b,
                              start_yr=slider_yr_range[0],end_yr=slider_yr_range[1])
     data=df_tbl.to_dict(orient='records')
     return data

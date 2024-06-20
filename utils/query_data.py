@@ -3,20 +3,36 @@ import yaml
 
 
 date_map = pd.read_csv('constants/date_map.csv', index_col=0, parse_dates=True)
-df = pd.read_csv('data/dv_data.csv', index_col=0, parse_dates=True)
-scen_aliases = df.Scenario.unique()
+df_dv = pd.read_csv('data/dv_data.csv', index_col=0, parse_dates=True)
+scen_aliases = df_dv.Scenario.unique()
 
 with open('constants/dvars.yaml', 'r') as file:
     var_dict = yaml.safe_load(file)
 
+# DV Derived Timeseries
+
+df_dv['SWP_TA_CO_SOD'] = df_dv['SWP_TA_TOTAL'] - df_dv['SWP_TA_FEATH'] + df_dv['SWP_CO_TOTAL'] - df_dv['SWP_CO_FEATH'] 
+
+
+var_dict['SWP_TA_CO_SOD'] = {
+    'alias': 'Total SWP Table and Carryover Delivery from the Delta',
+    'bpart': 'SWP_TA_CO_SOD',
+    'pathname': None,
+    'table_convert': 'cfs_taf',
+    'table_display': 'wy',
+    'type': 'Delivery'
+}
+
+
+#with open('constants/dvars_out.yaml', 'w') as file:
+#    yaml.safe_dump(var_dict, file)
 
 df_sv = pd.read_csv('data/sv_data.csv', index_col=0, parse_dates=True)
 with open('constants/svars.yaml', 'r') as file:
     svar_dict = yaml.safe_load(file)
 
-print(df_sv)
 
-# Derived Timeseries
+# SV Derived Timeseries
 sac_b_map = ["I_BCN010","I_BTL006","I_CLR011","I_COW014","I_CWD018","I_SCW008","I_SHSTA","I_WKYTN"]
 orovi_map = ["I_ALMNR","I_ANTLP","I_BTVLY","I_BUCKS","I_DAVIS","I_EBF001","I_FRMAN","I_GZL009","I_LGRSV","I_MFF019","I_MFF087","I_MTMDW","I_NFF029","I_OROVL","I_RVPHB","I_SFF008","I_SFF011","I_SLYCK","I_WBF006","I_WBF015","I_WBF030"]
 smart_map =["I_BOWMN","I_DER001","I_DER004","I_ENGLB","I_FRDYC","I_FRNCH","I_JKSMD","I_LCBRF","I_MFY013","I_NBLDB","I_NFY029","I_OGN005","I_SCOTF","I_SFD003","I_SFY007","I_SFY048","I_SLT009","I_SPLDG"]
@@ -40,7 +56,7 @@ df_sv['SJR4'] = df_sv['N_MEL'] + df_sv['DPR_I'] + df_sv['LK_MC'] + df_sv['MILLE'
 
 df_sv['8RI'] = df_sv['SAC4'] + df_sv['SJR4']
 
-df_sv['WYT_SAC_'] = df['WYT_SAC_']
+df_sv['WYT_SAC_'] = df_dv['WYT_SAC_']
 
 #df_sv['WYT_SAC_']
 

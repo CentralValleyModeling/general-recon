@@ -1,5 +1,5 @@
 from dash import html, register_page, dcc, Input, Output, ALL, callback, callback_context, page_registry
-from utils.query_data import df, scen_aliases, var_dict
+from utils.query_data import df_dv, scen_aliases, var_dict
 import dash_bootstrap_components as dbc
 from charts.chart_layouts import ann_bar_plot, card_mon_exc_plot, card_bar_plot, CardWidget
 from urllib.parse import urlencode, parse_qs
@@ -33,7 +33,8 @@ title_text = ("""The California Department of Water Resources released the
               html.Br(),
               """Comments and questions can be emailed to CVMsupport@water.ca.gov""")
 
-tablea_text = ("""Table A Water is an exhibit to the SWP's water supply contracts. The
+tablea_text = ("""Excluding Butte County,Yuba City, and Plumas County FCWCD.
+                Table A Water is an exhibit to the SWP's water supply contracts. The
                 maximum Table A amount is the basis for apportioning water supply and
                 costs to the SWP contractors. The current combined maximum Table A amount is 4,173 TAF/year. 
                 Of the combined maximum Table A amount, 4,133 TAF/year is the SWP's maximum
@@ -53,41 +54,41 @@ co_text = ("""A water supply “savings account” for SWP water that is allocat
 
 
 
-ta_card = CardWidget("Total SWP Table A Deliveries",
+ta_card = CardWidget("Total SWP Table A and Carryover Deliveries",
                      button_id="table_a_btn",
                      button_label="View by Contractor",
-                     chart=card_bar_plot(df,b_part="SWP_TA_TOTAL"),
+                     chart=card_bar_plot(df_dv,b_part="SWP_TA_CO_SOD"),
                      text=tablea_text)
 a21_card = CardWidget("SWP Article 21 Deliveries",
                       button_id="a21_btn",
                       button_label="View by Contractor",
-                      chart=card_bar_plot(df,b_part="SWP_IN_TOTAL"),
+                      chart=card_bar_plot(df_dv,b_part="SWP_IN_TOTAL"),
                       text=a21_text)
 a56_card = CardWidget("SWP Carryover Deliveries",
                       button_id="a56_btn",
                       button_label="View by Contractor",
-                      chart=card_bar_plot(df,b_part="SWP_CO_TOTAL"),
+                      chart=card_bar_plot(df_dv,b_part="SWP_CO_TOTAL"),
                       text=co_text)
 exp_card = CardWidget("Total Banks SWP Exports",
                       button_id="C_CAA003_SWP",
                       button_label="Details",
-                      chart=card_bar_plot(df,b_part="C_CAA003_SWP"))
+                      chart=card_bar_plot(df_dv,b_part="C_CAA003_SWP"))
 orovl_sep_card = CardWidget("Oroville End-of-September Storage",
                       button_id="S_OROVL",
                       button_label="Details",
-                      chart=card_mon_exc_plot(df,b_part="S_OROVL",monthchecklist=['Sep']))
+                      chart=card_mon_exc_plot(df_dv,b_part="S_OROVL",monthchecklist=['Sep']))
 orovl_may_card = CardWidget("Oroville End-of-May Storage",
                       button_id="S_OROVL",
                       button_label="Details",
-                      chart=card_mon_exc_plot(df,b_part="S_OROVL",monthchecklist=['May']))
+                      chart=card_mon_exc_plot(df_dv,b_part="S_OROVL",monthchecklist=['May']))
 sluis_card = CardWidget("San Luis SWP End-of-September Storage",
                       button_id="S_SLUIS_SWP",
                       button_label="Details",
-                      chart=card_mon_exc_plot(df,b_part="S_SLUIS_SWP",monthchecklist=['Sep']))
+                      chart=card_mon_exc_plot(df_dv,b_part="S_SLUIS_SWP",monthchecklist=['Sep']))
 swp_alloc_card = CardWidget("SWP May Allocation",
                       button_id=None,
                       button_label=None,
-                      chart=card_mon_exc_plot(df,b_part="PERDV_SWP_MWD1",monthchecklist=['May']))
+                      chart=card_mon_exc_plot(df_dv,b_part="PERDV_SWP_MWD1",monthchecklist=['May']))
 
 add_resources_card = dbc.Card(
             [

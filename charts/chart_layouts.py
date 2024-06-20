@@ -2,7 +2,7 @@ import pandas as pd
 import plotly.express as px
 from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
-from utils.query_data import df, scen_aliases, var_dict
+from utils.query_data import scen_aliases, var_dict
 from utils.tools import convert_wyt_nums, cfs_taf, convert_cm_nums, monthfilter, month_list
 from pages.styles import PLOT_COLORS
 
@@ -93,6 +93,11 @@ def card_bar_plot(df,b_part='C_CAA003',wyt=[1,2,3,4,5],startyr=1922,endyr=2021):
         cfs_taf(df0,var_dict)
     except:
         print("Unable to convert from CFS to TAF")
+
+    # For the last year
+
+    #df_annual = df0.groupby(['icy']).sum()
+    #print(df_annual)
 
     df1 = round(df0.groupby(['Scenario']).sum()/(endyr-startyr+1))
 

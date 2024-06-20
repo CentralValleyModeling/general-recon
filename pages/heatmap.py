@@ -7,7 +7,7 @@ from utils.tools import (make_summary_df, month_map, load_data_mult,
                    make_ressum_df, month_list, convert_cm_nums,
                    wyt_list, convert_wyt_nums, cfs_taf)
 
-from utils.query_data import df, scen_aliases, var_dict
+from utils.query_data import df_dv, scen_aliases, var_dict
 from charts.chart_layouts import ann_bar_plot, mon_exc_plot
 
 register_page(
@@ -15,7 +15,7 @@ register_page(
     top_nav=True,
     path='/heatmap'
 )
-print(df)
+print(df_dv)
 # Make dataframe for heatmap
 def make_heatmap_df(scen_aliases,df,var_dict,start_yr=1922,end_yr=2021,
                     monthfilter=[1,2,3,4,5,6,7,8,9,10,11,12],wytfilter=[1,2,3,4,5],bparts=None):
@@ -160,7 +160,7 @@ def filter_heatmap(cols,slider_yr_range,monthchecklist,wytchecklist):
     print(wytchecklist)
     monthfilter=convert_cm_nums(monthchecklist)
     wytfilter=convert_wyt_nums(wytchecklist)
-    df_hm = make_heatmap_df(scen_aliases,df,var_dict,
+    df_hm = make_heatmap_df(scen_aliases,df_dv,var_dict,
                             start_yr=start_yr,end_yr=end_yr,
                             monthfilter=monthfilter,
                             wytfilter=wytfilter,

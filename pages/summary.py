@@ -9,7 +9,7 @@ from utils.tools import (make_summary_df, month_map, load_data_mult,
                    make_ressum_df, month_list, convert_cm_nums,
                    wyt_list, convert_wyt_nums, cfs_taf)
 
-from utils.query_data import df, scen_aliases, var_dict
+from utils.query_data import df_dv, scen_aliases, var_dict
 
 
 
@@ -21,7 +21,7 @@ register_page(
 )
 
 
-exp_tbl = make_summary_df(scen_aliases,df,var_dict,bparts=[
+exp_tbl = make_summary_df(scen_aliases,df_dv,var_dict,bparts=[
     'C_LWSTN',
     'D_LWSTN_CCT011',
     'C_WKYTN',

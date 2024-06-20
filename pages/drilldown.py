@@ -7,7 +7,7 @@ import numpy as np
 import yaml
 from dash import Dash, html, dcc, Input, Output, callback, dash_table, register_page, State
 import plotly.express as px
-from utils.query_data import df, scen_aliases,var_dict,date_map
+from utils.query_data import df_dv, scen_aliases,var_dict,date_map
 from pages.styles import PLOT_COLORS
 
 
@@ -38,8 +38,8 @@ for var in var_dict:
 
 
 # DataFrames for the summary tables
-df_tbl = make_summary_df(scen_aliases,df,var_dict)
-df_tbl_res = make_ressum_df(scen_aliases,df,var_dict)
+df_tbl = make_summary_df(scen_aliases,df_dv,var_dict)
+df_tbl_res = make_ressum_df(scen_aliases,df_dv,var_dict)
 
 
 # Layout Starts Here
@@ -199,7 +199,7 @@ def update_b_part(alias):
     Input(component_id='b-part', component_property='value')
 )
 def update_timeseries(b_part):
-    fig = px.line(df, x=df.index, y=b_part, color='Scenario',
+    fig = px.line(df_dv, x=df_dv.index, y=b_part, color='Scenario',
                   color_discrete_sequence=PLOT_COLORS)
     #print(df)
     return fig
@@ -212,7 +212,7 @@ def update_timeseries(b_part):
 )
 def update_exceedance(b_part,monthchecklist):
     df2 = pd.DataFrame()
-    df0 = df.loc[df['icm'].isin(convert_cm_nums(monthchecklist))]
+    df0 = df_dv.loc[df_dv['icm'].isin(convert_cm_nums(monthchecklist))]
     for scenario in scen_aliases:
         df1 = df0.loc[df0['Scenario']==scenario,b_part]
         df1 = df1.sort_values()
@@ -236,7 +236,7 @@ def update_exceedance(b_part,monthchecklist,yearwindow):
         yw='iwy'
 
     df2 = pd.DataFrame()
-    df0 = df.loc[df['icm'].isin(convert_cm_nums(monthchecklist))]
+    df0 = df_dv.loc[df_dv['icm'].isin(convert_cm_nums(monthchecklist))]
     cfs_taf(df0,var_dict)
     df0 = df0.groupby(['Scenario',yw]).sum()
     for scenario in scen_aliases:
@@ -258,8 +258,8 @@ def update_exceedance(b_part,monthchecklist,yearwindow):
 def update_bar(b_part,wytchecklist,slider_yr_range):
     startyr=slider_yr_range[0]
     endyr=slider_yr_range[1]
-    df0=df.loc[df['WYT_SAC_'].isin(convert_wyt_nums(wytchecklist)) &
-              (df['iwy']>=startyr) &(df['iwy']<=endyr)]
+    df0=df_dv.loc[df_dv['WYT_SAC_'].isin(convert_wyt_nums(wytchecklist)) &
+              (df_dv['iwy']>=startyr) &(df_dv['iwy']<=endyr)]
     df1 = round(df0.groupby(['Scenario','iwm']).mean())
     df1 = df1.reindex(scen_aliases, level='Scenario')
     fig = px.line(df1, x = df1.index.get_level_values(1), y = b_part, 
@@ -280,8 +280,8 @@ def update_bar_annual(b_part,wytchecklist,slider_yr_range):
     startyr=slider_yr_range[0]
     endyr=slider_yr_range[1]
     print(wytchecklist)
-    df1=df.loc[df['WYT_SAC_'].isin(convert_wyt_nums(wytchecklist)) &
-              (df['iwy']>=startyr) &(df['iwy']<=endyr)]
+    df1=df_dv.loc[df_dv['WYT_SAC_'].isin(convert_wyt_nums(wytchecklist)) &
+              (df_dv['iwy']>=startyr) &(df_dv['iwy']<=endyr)]
     
     cfs_taf(df1,var_dict)
 
@@ -304,7 +304,7 @@ def update_table(slider_yr_range,monthchecklist):
     for v in monthchecklist:
         monthfilter.append(month_map[v])
 
-    df_tbl = make_summary_df(scen_aliases,df,var_dict,
+    df_tbl = make_summary_df(scen_aliases,df_dv,var_dict,
                              start_yr=slider_yr_range[0],end_yr=slider_yr_range[1],
                              monthfilter=monthfilter)
     data=df_tbl.to_dict(orient='records')
@@ -319,7 +319,7 @@ def update_table(slider_yr_range,monthchecklist):
 def update_table2(slider_yr_range,monthradio):
     monthradio=[month_map[monthradio]]
 
-    df_tbl = make_ressum_df(scen_aliases,df,var_dict,
+    df_tbl = make_ressum_df(scen_aliases,df_dv,var_dict,
                              start_yr=slider_yr_range[0],end_yr=slider_yr_range[1],
                              monthfilter=monthradio)
     data=df_tbl.to_dict(orient='records')
