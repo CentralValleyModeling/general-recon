@@ -74,20 +74,25 @@ def card_mon_plot(df,b_part='C_CAA003',yaxis_title=None,
     return layout
 
 
-def card_bar_plot(df,b_part='C_CAA003',wyt=[1,2,3,4,5],startyr=1922,endyr=2021):
+def card_bar_plot_wy(df,b_part='C_CAA003',wyt=[1,2,3,4,5],startyr=1922,endyr=2021):
     
     # This is VERY specific to the DCR 2021
-    df_dcr21=df.loc[df['Scenario'].isin(["DCR_21_Hist"])]
+    df_dcr21=df.loc[(df['Scenario'].isin(["DCR_21_Hist"])) & (df['icy'] >=startyr)]
     try:
         cfs_taf(df_dcr21,var_dict)
     except:
         print("Unable to convert from CFS to TAF")
+
     df_dcr21_ann = round(df_dcr21.groupby(['Scenario']).sum()/(2015-1922+1))
+
+
+
 
     df0=df.loc[df['Scenario'].isin(["DCR_23_Adj",
                                     "DCR_23_CC50",
                                     "DCR_23_CC75",
-                                    "DCR_23_CC95",])]
+                                    "DCR_23_CC95",])
+                                    & (df['icy'] >=startyr)]
 
     try:
         cfs_taf(df0,var_dict)

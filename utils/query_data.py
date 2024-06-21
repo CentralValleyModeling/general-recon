@@ -3,6 +3,7 @@ import yaml
 
 
 date_map = pd.read_csv('constants/date_map.csv', index_col=0, parse_dates=True)
+df_dv_orig = pd.read_csv('data/dv_data.csv', index_col=0, parse_dates=True)
 df_dv = pd.read_csv('data/dv_data.csv', index_col=0, parse_dates=True)
 scen_aliases = df_dv.Scenario.unique()
 
@@ -23,9 +24,45 @@ var_dict['SWP_TA_CO_SOD'] = {
     'type': 'Delivery'
 }
 
+# Special logic for the DCR:
+# The DCR reports calendar year average of 1921 - 2021, but the full range of data does not exist for CY 2021
+# This logic extends the dataset by three months by averaging the last nine months of data
+# Consistent with how the DCR excel report tool does it 
+df_dv_extended = pd.DataFrame()
+for s in df_dv['Scenario'].unique():
+    if s=='DCR_21_Hist':
+        start_date_1 = '2015-01-31 23:59:59'
+        end_date_1 = '2015-09-30 23:59:59'
+        new_date_range = pd.date_range(start='2015-10-31 23:59:59', end='2015-12-31 23:59:59', freq='ME')
+    else:
+        start_date_1 = '2021-01-31 23:59:59'
+        end_date_1 = '2021-09-30 23:59:59'
+        new_date_range = pd.date_range(start='2021-10-31 23:59:59', end='2021-12-31 23:59:59', freq='ME')
 
-#with open('constants/dvars_out.yaml', 'w') as file:
-#    yaml.safe_dump(var_dict, file)
+    scenario_df=pd.DataFrame()
+    lastpartialyear=pd.DataFrame()
+    date_range = pd.date_range(start='2021-01-31 23:59:59', end='2021-09-30 23:59:59', freq='ME')
+
+    scenario_df=df_dv.loc[df_dv['Scenario']==s]
+    scenario_df.index = pd.to_datetime(scenario_df.index)
+
+    lastpartialyear = scenario_df.loc[(scenario_df.index >= start_date_1) & (scenario_df.index <= end_date_1)]
+    # This is the average of the last nine months:
+    lastpartialyearavg = lastpartialyear.groupby(['Scenario']).mean()
+
+
+    extended_df = pd.concat([lastpartialyearavg]*len(new_date_range), ignore_index=True)
+    extended_df['Scenario']=s
+    extended_df.index = new_date_range
+    scenario_df = pd.concat([scenario_df,extended_df])
+    df_dv_extended = pd.concat([df_dv_extended,scenario_df])
+df_dv_extended.update(date_map)
+
+df_dv=pd.DataFrame(df_dv_extended)
+#print(df_dv['icy'])
+
+
+
 
 df_sv = pd.read_csv('data/sv_data.csv', index_col=0, parse_dates=True)
 with open('constants/svars.yaml', 'r') as file:
@@ -56,11 +93,4 @@ df_sv['SJR4'] = df_sv['N_MEL'] + df_sv['DPR_I'] + df_sv['LK_MC'] + df_sv['MILLE'
 
 df_sv['8RI'] = df_sv['SAC4'] + df_sv['SJR4']
 
-df_sv['WYT_SAC_'] = df_dv['WYT_SAC_']
-
-#df_sv['WYT_SAC_']
-
-#print(df_sv)
-
-#df_new = pd.concat([df,df_sv],axis=1)
-#print(df_new)
+df_sv['WYT_SAC_'] = df_dv_orig['WYT_SAC_']
