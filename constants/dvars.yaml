@@ -1406,7 +1406,8 @@ VI_EC_MONTH:
   table_display: wy
   type: Channel
 WYT_SAC_:
-  alias: WYT_SAC_
+  alias: Sacramento Valley Index (SVI) WYT Classification
+  bpart: WYT_SAC_
   pathname: /CALSIM/WYT_SAC_/.*//.*/.*/
   table_convert: orig
   table_display: 5
