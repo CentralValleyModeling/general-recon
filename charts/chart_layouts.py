@@ -55,11 +55,11 @@ def card_mon_plot(df,b_part='C_CAA003',yaxis_title=None,
     fig.update_layout(
         plot_bgcolor='white',
         xaxis=dict(
-        tickmode='array',
-        tickvals= monthfilter,
-        ticktext= month_list,
-        showgrid=True,
-        gridcolor='LightGray',
+            tickmode='array',
+            tickvals= monthfilter,
+            ticktext= month_list,
+            showgrid=True,
+            gridcolor='LightGray',
         ),
         yaxis=dict(
         showgrid=True,
@@ -74,7 +74,7 @@ def card_mon_plot(df,b_part='C_CAA003',yaxis_title=None,
     return layout
 
 
-def card_bar_plot_wy(df,b_part='C_CAA003',wyt=[1,2,3,4,5],startyr=1922,endyr=2021):
+def card_bar_plot_cy(df,b_part='C_CAA003',wyt=[1,2,3,4,5],startyr=1922,endyr=2021):
     
     # This is VERY specific to the DCR 2021
     df_dcr21=df.loc[(df['Scenario'].isin(["DCR_21_Hist"])) & (df['icy'] >=startyr)]

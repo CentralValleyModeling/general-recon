@@ -1,6 +1,6 @@
 from dash import html, register_page, dcc, Input, Output, ALL, callback, callback_context, page_registry
 import dash_bootstrap_components as dbc
-from charts.chart_layouts import ann_bar_plot, card_mon_exc_plot, card_bar_plot_wy, card_mon_plot, CardWidget
+from charts.chart_layouts import ann_bar_plot, card_mon_exc_plot, card_bar_plot_cy, card_mon_plot, CardWidget
 from urllib.parse import urlencode, parse_qs
 from pages.styles import GLOBAL_MARGIN
 from utils.query_data import df_sv, scen_aliases, var_dict
@@ -18,25 +18,25 @@ register_page(
 eight_ri_card_ann = CardWidget("Eight River Index",
                      button_id=None,
                      button_label=None,
-                     chart=card_bar_plot_wy(df_sv,b_part="8RI"),
+                     chart=card_bar_plot_cy(df_sv,b_part="8RI"),
                      text="")
 
 sac_four_ri_card_ann = CardWidget("Sacramento River Runoff",
                      button_id=None,
                      button_label=None,
-                     chart=card_bar_plot_wy(df_sv,b_part="SAC4"),
+                     chart=card_bar_plot_cy(df_sv,b_part="SAC4"),
                      text="")
 
 sjr_four_ri_card_ann = CardWidget("San Joaquin River Runoff",
                      button_id=None,
                      button_label=None,
-                     chart=card_bar_plot_wy(df_sv,b_part="SJR4"),               
+                     chart=card_bar_plot_cy(df_sv,b_part="SJR4"),               
                      text="")
 
 orov_inflow_card_ann = CardWidget("Oroville Reservoir Inflow",
                      button_id=None,
                      button_label=None,
-                     chart=card_bar_plot_wy(df_sv,b_part="OROVI"),               
+                     chart=card_bar_plot_cy(df_sv,b_part="OROVI"),               
                      text="")
 
 eight_ri_card_mon = CardWidget("Eight River Index",

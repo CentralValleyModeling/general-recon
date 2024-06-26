@@ -1,7 +1,7 @@
 from dash import html, register_page, dcc, Input, Output, ALL, callback, callback_context, page_registry
 from utils.query_data import df_dv, scen_aliases, var_dict
 import dash_bootstrap_components as dbc
-from charts.chart_layouts import ann_bar_plot, card_mon_exc_plot, card_bar_plot_wy, CardWidget
+from charts.chart_layouts import ann_bar_plot, card_mon_exc_plot, card_bar_plot_cy, CardWidget
 from urllib.parse import urlencode, parse_qs
 from pages.styles import GLOBAL_MARGIN
 
@@ -57,22 +57,22 @@ co_text = ("""A water supply “savings account” for SWP water that is allocat
 ta_card = CardWidget("Total SWP Table A and Carryover Deliveries",
                      button_id="table_a_btn",
                      button_label="View by Contractor",
-                     chart=card_bar_plot_wy(df_dv,b_part="SWP_TA_CO_SOD"),
+                     chart=card_bar_plot_cy(df_dv,b_part="SWP_TA_CO_SOD"),
                      text=tablea_text)
 a21_card = CardWidget("SWP Article 21 Deliveries",
                       button_id="a21_btn",
                       button_label="View by Contractor",
-                      chart=card_bar_plot_wy(df_dv,b_part="SWP_IN_TOTAL"),
+                      chart=card_bar_plot_cy(df_dv,b_part="SWP_IN_TOTAL"),
                       text=a21_text)
 a56_card = CardWidget("SWP Carryover Deliveries",
                       button_id="a56_btn",
                       button_label="View by Contractor",
-                      chart=card_bar_plot_wy(df_dv,b_part="SWP_CO_TOTAL"),
+                      chart=card_bar_plot_cy(df_dv,b_part="SWP_CO_TOTAL"),
                       text=co_text)
 exp_card = CardWidget("Total Banks SWP Exports",
                       button_id="C_CAA003_SWP",
                       button_label="Details",
-                      chart=card_bar_plot_wy(df_dv,b_part="C_CAA003_SWP"))
+                      chart=card_bar_plot_cy(df_dv,b_part="C_CAA003_SWP"))
 orovl_sep_card = CardWidget("Oroville End-of-September Storage",
                       button_id="S_OROVL",
                       button_label="Details",

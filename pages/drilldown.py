@@ -266,6 +266,8 @@ def update_bar(b_part,wytchecklist,slider_yr_range):
                  color=df1.index.get_level_values(0),
                  labels={'color':"Scenario"},
                  color_discrete_sequence=PLOT_COLORS)
+    
+    
     return fig
 
 
