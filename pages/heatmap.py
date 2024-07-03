@@ -15,7 +15,6 @@ register_page(
     top_nav=True,
     path='/heatmap'
 )
-print(df_dv)
 # Make dataframe for heatmap
 def make_heatmap_df(scen_aliases,df,var_dict,start_yr=1922,end_yr=2021,
                     monthfilter=[1,2,3,4,5,6,7,8,9,10,11,12],wytfilter=[1,2,3,4,5],bparts=None):

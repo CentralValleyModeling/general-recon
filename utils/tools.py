@@ -3,6 +3,7 @@ import pandss as pdss
 import yaml
 import os
 import csv
+pd.options.mode.chained_assignment = None
 
 
 # Constants
