@@ -135,8 +135,8 @@ def layout():
         ],className="g-0"),
 
         dbc.Row([
-            html.Div(id='bar-plot-annual'),
-            html.Div(id='exc-plot-monthly'),
+            dcc.Graph(id='bar-plot-annual-hm'),
+            dcc.Graph(id='exc-plot-monthly-hm'),
         ],className="g-0"),
 
     ],
@@ -175,33 +175,33 @@ def filter_heatmap(cols,slider_yr_range,monthchecklist,wytchecklist):
     return fig
 
 @callback(
-    Output('bar-plot-annual', 'children'),
+    Output('bar-plot-annual-hm', 'figure'),
     Input('heatmap', 'clickData'),
     prevent_initial_call=True
 )
 def show_ann_bar(clickData):
-    if clickData is None:
-        return 'Click on a cell'
-    else:
-        point = clickData['points'][0]
-        x = point['x']
-        value = {var_dict[x]['alias']}
-        return  ann_bar_plot(df_dv,b_part=x)
+#    if clickData is None:
+#        return 'Click on a cell'
+#    else:
+    point = clickData['points'][0]
+    x = point['x']
+    value = {var_dict[x]['alias']}
+    return  ann_bar_plot(df_dv,b_part=x)
 
 @callback(
-    Output('exc-plot-monthly', 'children'),
+    Output('exc-plot-monthly-hm', 'figure'),
     Input('heatmap', 'clickData'),
     Input('monthchecklist-hm','value'),
     prevent_initial_call=True
 )
 def show_mon_exc(clickData,monthchecklist):
-    print(monthchecklist)
-    if clickData is None:
-        return 'Click on a cell'
-    else:
-        point = clickData['points'][0]
-        x = point['x']
-        value = {var_dict[x]['alias']}
-        return  mon_exc_plot(df_dv,b_part=x,monthchecklist=monthchecklist)
+#    print(monthchecklist)
+#    if clickData is None:
+#        return 'Click on a cell'
+#    else:
+    point = clickData['points'][0]
+    x = point['x']
+    value = {var_dict[x]['alias']}
+    return  mon_exc_plot(df_dv,b_part=x,monthchecklist=monthchecklist)
     
 #mon_exc_plot(b_part="C_CAA003",monthchecklist=["Oct"])

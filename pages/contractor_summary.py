@@ -48,7 +48,7 @@ def layout(**kwargs):
     exp_tbl = make_summary_df(scen_aliases,df_dv,var_dict,bparts=b,start_yr=1922,end_yr=2021)
 
     layout = dbc.Container([
-        dcc.Markdown("# ![](/assets/cs3_icon_draft.png) CalSim 3 Summary Table"),
+        #dcc.Markdown("# ![](/assets/cs3_icon_draft.png) CalSim 3 Summary Table"),
         dcc.RangeSlider(1922, 2021, 1, value=[1922, 2015],
                         marks={i: '{}'.format(i) for i in range(1922,2021,5)},
                         pushable=False,

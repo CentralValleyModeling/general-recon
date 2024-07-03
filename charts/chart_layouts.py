@@ -162,14 +162,11 @@ def ann_bar_plot(df,b_part='C_CAA003',startyr=1922,endyr=2021,wyt=[1,2,3,4,5]):
     fig = px.bar(df1, x = df1.index.get_level_values(0), y = b_part, 
                  color=df1.index.get_level_values(0),text_auto=True,
                  color_discrete_sequence=PLOT_COLORS)
-    fig.update_layout(barmode='relative')
-
-    layout = html.Div([
-        dbc.Col([dcc.Markdown("**Annual Average**"),
-            dcc.Graph(figure=fig),
-        ]),
-    ])
-    return layout
+    fig.update_layout(barmode='relative',
+                      plot_bgcolor='white',)
+    #fig.update_xaxes(gridcolor='LightGrey')
+    fig.update_yaxes(gridcolor='LightGrey')
+    return fig
 
 def mon_exc_plot(df,b_part,monthchecklist):
     df2 = pd.DataFrame()
@@ -180,14 +177,18 @@ def mon_exc_plot(df,b_part,monthchecklist):
         df1 = df1.reset_index(drop=True)
         df2[scenario]=df1
     fig = px.line(df2,
-                  color_discrete_sequence=PLOT_COLORS)
-
-    layout = html.Div([
-        dbc.Col([dcc.Markdown("**Monthly Exceedance**"),
-            dcc.Graph(figure=fig),
-        ]),
-    ])
-    return layout
+                  color_discrete_sequence=PLOT_COLORS,
+                  labels={'variable':"Scenario"})
+    fig.update_layout(
+                title=f"Monthly Non-Exceedance Chart for {b_part}",
+                plot_bgcolor='white',
+                showlegend=True,
+                xaxis_title='Non-Exceedance Percentage',
+                yaxis_title='',
+                xaxis_tickformat=',d',)
+    fig.update_xaxes(gridcolor='LightGrey')
+    fig.update_yaxes(gridcolor='LightGrey')
+    return fig
 
 def ann_exc_plot(df,b_part,monthchecklist,yearwindow):
     if yearwindow=="Calendar Year":
@@ -213,4 +214,6 @@ def ann_exc_plot(df,b_part,monthchecklist,yearwindow):
                     xaxis_title='Non-Exceedance Percentage',
                     yaxis_title='',
                     xaxis_tickformat=',d')
+    fig.update_xaxes(gridcolor='LightGrey') #griddash='dot', minor_griddash="dot")
+    fig.update_yaxes(gridcolor='LightGrey') #griddash='dot', minor_griddash="dot")
     return fig
