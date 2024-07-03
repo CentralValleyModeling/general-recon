@@ -4,9 +4,8 @@ import plotly.express as px
 import dash_bootstrap_components as dbc
 import yaml
 import pandas as pd
-
-from utils.tools import (make_summary_df,common_pers)
-
+from charts.chart_layouts import ann_exc_plot
+from utils.tools import (make_summary_df,common_pers,month_list)
 from utils.query_data import df_dv, scen_aliases, var_dict
 
 
@@ -37,6 +36,7 @@ opt = [{"label":k,"value":v} for k,v in common_pers.items()]
 
 def layout(**kwargs): 
     global b
+    global exp_tbl
     b = []
     s=str(kwargs.get('type','table_a_btn'))
     typefilter = typefilter_dict[s]
@@ -75,7 +75,8 @@ def layout(**kwargs):
                 'textAlign': 'left',
                 },
             ),
-        ])
+            dcc.Graph(id='dummy4')]),
+       
     ])
     return layout
 layout()
@@ -91,7 +92,7 @@ def update_table(slider_yr_range):
                              start_yr=slider_yr_range[0],end_yr=slider_yr_range[1])
     data=df_tbl.to_dict(orient='records')
     return data
-
+# Write out the range slider selections
 @callback(
     Output(component_id='output-container-range-slider_2', component_property='children'),
     Input(component_id='slider-yr-range', component_property='value')
@@ -99,6 +100,7 @@ def update_table(slider_yr_range):
 def update_table(value):
     return str('Average Period: '),value[0],str('-'),value[1]
 
+# Update range slider with common period selection
 @callback(
     Output(component_id='slider-yr-range', component_property='value'),
     Input(component_id='dropdown_common_pers_csum', component_property='value')
@@ -108,3 +110,18 @@ def slider(dropdown_val):
     startyr = int(dropdown_val.split('-')[0])
     endyr = int(dropdown_val.split('-')[-1])
     return startyr,endyr
+
+# Return plot for selected contractor
+@callback(
+    Output(component_id='dummy4', component_property='figure'),
+    Input('exp_tbl', 'active_cell'),
+    prevent_initial_call=True
+)
+def show_contractor_data(clickData):
+    if clickData is None:
+        return 'Click on a cell'
+    else:
+        b = exp_tbl.loc[clickData['row']]['bpart']
+        print(b)
+        fig = ann_exc_plot(df_dv,b,monthchecklist=month_list,yearwindow="Calendar Year")
+        return fig

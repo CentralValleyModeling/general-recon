@@ -13,7 +13,7 @@ import dash_bootstrap_components as dbc
 from utils.tools import (make_summary_df, month_map, load_data_mult, 
                    make_ressum_df, month_list, convert_cm_nums,
                    wyt_list, convert_wyt_nums, cfs_taf,list_files)
-
+from charts.chart_layouts import ann_exc_plot
 
 
 register_page(
@@ -226,22 +226,7 @@ def update_exceedance(b_part,monthchecklist):
     Input(component_id='yearwindow', component_property='value')
 )
 def update_exceedance(b_part,monthchecklist,yearwindow):
-    if yearwindow=="Calendar Year":
-        yw='icy'
-    else:
-        yw='iwy'
-
-    df2 = pd.DataFrame()
-    df0 = df_dv.loc[df_dv['icm'].isin(convert_cm_nums(monthchecklist))]
-    cfs_taf(df0,var_dict)
-    df0 = df0.groupby(['Scenario',yw]).sum()
-    for scenario in scen_aliases:
-        df1 = df0.loc[df0.index.get_level_values(0)==scenario,b_part]
-        df1 = df1.sort_values()
-        df1 = df1.reset_index(drop=True)
-        df2[scenario]=df1
-    fig = px.line(df2,
-                  color_discrete_sequence=PLOT_COLORS)
+    fig = ann_exc_plot(df_dv,b_part,monthchecklist,yearwindow)
     return fig
 
 # Monthly Average Plot

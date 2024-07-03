@@ -3,9 +3,8 @@ from dash import Dash, html, dcc, Input, Output, callback, dash_table, register_
 import dash_bootstrap_components as dbc
 import pandas as pd
 
-from utils.tools import (make_summary_df, month_map, load_data_mult, 
-                   make_ressum_df, month_list, convert_cm_nums,
-                   wyt_list, convert_wyt_nums, cfs_taf)
+from utils.tools import (month_list, convert_cm_nums,
+                   wyt_list, convert_wyt_nums)
 
 from utils.query_data import df_dv, scen_aliases, var_dict
 from charts.chart_layouts import ann_bar_plot, mon_exc_plot
@@ -187,7 +186,7 @@ def show_ann_bar(clickData):
         point = clickData['points'][0]
         x = point['x']
         value = {var_dict[x]['alias']}
-        return  ann_bar_plot(b_part=x)
+        return  ann_bar_plot(df_dv,b_part=x)
 
 @callback(
     Output('exc-plot-monthly', 'children'),
@@ -203,6 +202,6 @@ def show_mon_exc(clickData,monthchecklist):
         point = clickData['points'][0]
         x = point['x']
         value = {var_dict[x]['alias']}
-        return  mon_exc_plot(b_part=x,monthchecklist=monthchecklist)
+        return  mon_exc_plot(df_dv,b_part=x,monthchecklist=monthchecklist)
     
 #mon_exc_plot(b_part="C_CAA003",monthchecklist=["Oct"])
