@@ -22,6 +22,15 @@ wyt_map = {'Wet':1,'Above Normal':2,'Below Normal':3,
 wyt_list = ['Wet', 'Above Normal', 'Below Normal',
             'Dry', 'Critical']
 
+common_pers = {'Single Dry Year (1977)'      :[1977],
+               'Two-Year Drought (1976-1977)':[1976,1977],
+               'Single Dry Year (2014)'      :[2014],
+               'Two-Year Drought (2014-2015)':[2014,2015],
+               'Six Year Drought (1987-1992)':[1987,1988,1989,1990,1991,1992],
+               'Six Year Drought (1929-1934)':[1929,1930,1931,1932,1933,1934]}
+
+#print(common_pers.keys())
+
 def convert_cm_nums(monthchecklist)->list:
     '''
     Converts calendar month strings to calendar month numbers

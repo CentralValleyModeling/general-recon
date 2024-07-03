@@ -3,8 +3,9 @@ import plotly.express as px
 from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
 from utils.query_data import scen_aliases, var_dict
-from utils.tools import convert_wyt_nums, cfs_taf, convert_cm_nums, monthfilter, month_list
 from pages.styles import PLOT_COLORS
+from utils.tools import (convert_wyt_nums, cfs_taf, convert_cm_nums,
+                         monthfilter, month_list,wyt_list,common_pers)
 
 
 
@@ -30,6 +31,7 @@ class CardWidget():
                         html.P(self.text, className="card-text"),
                         dbc.Button(self.button_label, id={'type': 'dynamic-btn', 'index': self.button_id}, color="primary") 
                             if self.button_label is not None else None,
+                        #dcc.Dropdown(options = common_pers,id='dropdown_common_pers'),
                     ]
                 ),
             ],
@@ -84,9 +86,6 @@ def card_bar_plot_cy(df,b_part='C_CAA003',wyt=[1,2,3,4,5],startyr=1922,endyr=202
         print("Unable to convert from CFS to TAF")
 
     df_dcr21_ann = round(df_dcr21.groupby(['Scenario']).sum()/(2015-1922+1))
-
-
-
 
     df0=df.loc[df['Scenario'].isin(["DCR_23_Adj",
                                     "DCR_23_CC50",

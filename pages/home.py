@@ -57,7 +57,7 @@ co_text = ("""A water supply “savings account” for SWP water that is allocat
 ta_card = CardWidget("Total SWP Table A and Carryover Deliveries",
                      button_id="table_a_btn",
                      button_label="View by Contractor",
-                     chart=card_bar_plot_cy(df_dv,b_part="SWP_TA_CO_SOD"),
+                     chart=card_bar_plot_cy(df_dv,b_part="SWP_TA_CO_SOD",wyt=[1,2,3,4,5],startyr=1922,endyr=2021),
                      text=tablea_text)
 a21_card = CardWidget("SWP Article 21 Deliveries",
                       button_id="a21_btn",

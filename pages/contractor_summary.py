@@ -5,7 +5,7 @@ import dash_bootstrap_components as dbc
 import yaml
 import pandas as pd
 
-from utils.tools import (make_summary_df)
+from utils.tools import (make_summary_df,common_pers)
 
 from utils.query_data import df_dv, scen_aliases, var_dict
 
@@ -50,6 +50,7 @@ def layout(**kwargs):
                         marks={i: '{}'.format(i) for i in range(1922,2021,5)},
                         pushable=False,
                         id='slider-yr-range'),
+        dcc.Dropdown(options = common_pers,id='dropdown_common_pers_csum', placeholder="Select the Averaging Period (Years)"),
         html.Div(id='output-container-range-slider_2'),
         dbc.Row([
             dcc.Markdown("#### "),
@@ -92,3 +93,12 @@ def update_table(slider_yr_range):
 )
 def update_table(value):
     return str('Average Period: '),value[0],str('-'),value[1]
+
+@callback(
+    Output(component_id='slider-yr-range', component_property='value'),
+    Input(component_id='dropdown_common_pers_csum', component_property='value')
+)
+def slider(dropdown_val):
+    startyr = common_pers[dropdown_val][0]
+    endyr = common_pers[dropdown_val][-1]
+    return startyr,endyr

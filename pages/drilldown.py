@@ -9,11 +9,7 @@ from dash import Dash, html, dcc, Input, Output, callback, dash_table, register_
 import plotly.express as px
 from utils.query_data import df_dv, scen_aliases,var_dict,date_map
 from pages.styles import PLOT_COLORS
-
-
-#import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
-
 from utils.tools import (make_summary_df, month_map, load_data_mult, 
                    make_ressum_df, month_list, convert_cm_nums,
                    wyt_list, convert_wyt_nums, cfs_taf,list_files)
