@@ -32,6 +32,9 @@ table_order.extend([{"name": s, "id": s, "type": "numeric","format": { "specifie
 
 typefilter_dict = {'table_a_btn':'Delivery - TA','a21_btn':'Delivery - IN','a56_btn':'Delivery - CO'}
 
+opt = [{"label":k,"value":v} for k,v in common_pers.items()]
+#print(opt)
+
 def layout(**kwargs): 
     global b
     b = []
@@ -50,7 +53,9 @@ def layout(**kwargs):
                         marks={i: '{}'.format(i) for i in range(1922,2021,5)},
                         pushable=False,
                         id='slider-yr-range'),
-        dcc.Dropdown(options = common_pers,id='dropdown_common_pers_csum', placeholder="Select the Averaging Period (Years)"),
+        dcc.Dropdown(options = opt,
+                     id='dropdown_common_pers_csum',
+                     placeholder="Select the Averaging Period (Years)"),
         html.Div(id='output-container-range-slider_2'),
         dbc.Row([
             dcc.Markdown("#### "),
@@ -99,6 +104,7 @@ def update_table(value):
     Input(component_id='dropdown_common_pers_csum', component_property='value')
 )
 def slider(dropdown_val):
-    startyr = common_pers[dropdown_val][0]
-    endyr = common_pers[dropdown_val][-1]
+
+    startyr = int(dropdown_val.split('-')[0])
+    endyr = int(dropdown_val.split('-')[-1])
     return startyr,endyr
