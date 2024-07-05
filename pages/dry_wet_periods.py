@@ -12,7 +12,7 @@ register_page(
     path='/dry_wet_periods'
 )
 
-#afig=ta_dry_wet_barplot(df_dv,common_pers,bpart="SWP_TA_CO_SOD",scens=scen_aliases)
+afig=ta_dry_wet_barplot(df_dv,common_pers,bpart="SWP_TA_CO_SOD",scens=scen_aliases)
 
 def layout():
     layout = dbc.Container([

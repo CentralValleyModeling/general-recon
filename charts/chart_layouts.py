@@ -82,7 +82,7 @@ def card_bar_plot_cy(df,b_part='C_CAA003',wyt=[1,2,3,4,5],startyr=1922,endyr=202
     # This is VERY specific to the DCR 2021
     df_dcr21=df.loc[(df['Scenario'].isin(["DCR_21_Hist"])) & (df['icy'] >=startyr)]
     try:
-        cfs_taf(df_dcr21,var_dict)
+        df_dcr21=cfs_taf(df_dcr21,var_dict)
     except:
         print("Unable to convert from CFS to TAF")
 
@@ -95,7 +95,7 @@ def card_bar_plot_cy(df,b_part='C_CAA003',wyt=[1,2,3,4,5],startyr=1922,endyr=202
                                     & (df['icy'] >=startyr)]
 
     try:
-        cfs_taf(df0,var_dict)
+        df0=cfs_taf(df0,var_dict)
     except:
         print("Unable to convert from CFS to TAF")
 
@@ -156,7 +156,7 @@ def ann_bar_plot(df,b_part='C_CAA003',startyr=1922,endyr=2021,wyt=[1,2,3,4,5]):
     except KeyError as e:
         print(e)
     
-    cfs_taf(df0,var_dict)
+    df0=cfs_taf(df0,var_dict)
     
     df1 = round(df0.groupby(['Scenario']).sum()/(endyr-startyr+1))
     df1 = df1.reindex(scen_aliases, level='Scenario')
@@ -199,7 +199,7 @@ def ann_exc_plot(df,b_part,monthchecklist,yearwindow):
 
     df2 = pd.DataFrame()
     df0 = df.loc[df['icm'].isin(convert_cm_nums(monthchecklist))]
-    cfs_taf(df0,var_dict)
+    df0=cfs_taf(df0,var_dict)
 
     df0 = df0.groupby(['Scenario',yw]).sum()
 
@@ -224,7 +224,7 @@ def ann_exc_plot(df,b_part,monthchecklist,yearwindow):
 def distplot(df,b_part):
     df2 = pd.DataFrame()
     df0 = df
-    cfs_taf(df0,var_dict)
+    df0=cfs_taf(df0,var_dict)
     df0 = df0.groupby(['Scenario','iwy']).sum()
 
     for scenario in scen_aliases:
@@ -237,7 +237,7 @@ def distplot(df,b_part):
 
 def ta_dry_wet_barplot(df,common_pers,bpart="SWP_TA_CO_SOD",scens=["DCR_21_Hist"],ta_tot=4133):    
     df1=pd.DataFrame()
-    df0=cfs_taf(df,var_dict)
+    df=cfs_taf(df,var_dict)
     l ={"scenario":[],"period":[],'avg':[],'pct':[]}
     l_df=pd.DataFrame()
     for s in scens:
@@ -246,7 +246,7 @@ def ta_dry_wet_barplot(df,common_pers,bpart="SWP_TA_CO_SOD",scens=["DCR_21_Hist"
                 continue
             startyr = int(common_pers[c].split('-')[0])
             endyr = int(common_pers[c].split('-')[-1])
-            df1=df0.loc[df0["Scenario"]==s,[bpart,'icy']]
+            df1=df.loc[df["Scenario"]==s,[bpart,'icy']]
             df2 = df1.loc[df1['icy'].between(startyr,endyr)]
             v = round(df2[bpart].sum()/(endyr-startyr+1),0)
             l['scenario'].append(s)

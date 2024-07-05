@@ -123,15 +123,15 @@ def make_ressum_df(scenlist,df:pd.DataFrame,var_dict,start_yr=1922,end_yr=2021,
         return df_tbl
 
 def cfs_taf(df:pd.DataFrame,var_dict:dict)->pd.DataFrame:
-    #df_convert = pd.DataFrame(df)
+    df_convert = pd.DataFrame(df)
     for var in var_dict:
         b = var
         if var_dict[var]['table_convert']=='cfs_taf':
             #print(f'converted {b} to TAF')
-            df[b]=df[b]*df['cfs_taf']
+            df_convert[b]=df_convert[b]*df['cfs_taf']
         else:
             continue
-    return df
+    return df_convert
 
 def make_summary_df(scenlist,df,var_dict,start_yr=1922,end_yr=2021,
                     monthfilter=monthfilter,bparts=None):
