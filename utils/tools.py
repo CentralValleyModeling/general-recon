@@ -3,7 +3,7 @@ import pandss as pdss
 import yaml
 import os
 import csv
-pd.options.mode.chained_assignment = None
+#pd.options.mode.chained_assignment = None
 
 
 # Constants
@@ -123,6 +123,7 @@ def make_ressum_df(scenlist,df:pd.DataFrame,var_dict,start_yr=1922,end_yr=2021,
         return df_tbl
 
 def cfs_taf(df:pd.DataFrame,var_dict:dict)->pd.DataFrame:
+    #df_convert = pd.DataFrame(df)
     for var in var_dict:
         b = var
         if var_dict[var]['table_convert']=='cfs_taf':

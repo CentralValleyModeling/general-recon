@@ -1,10 +1,8 @@
-from dash import html, register_page, dcc, Input, Output, ALL, callback, callback_context, page_registry
+from dash import html, register_page
 import dash_bootstrap_components as dbc
-from charts.chart_layouts import ann_bar_plot, card_mon_exc_plot, card_bar_plot_cy, card_mon_plot, CardWidget
-from urllib.parse import urlencode, parse_qs
+from charts.chart_layouts import card_bar_plot_cy, card_mon_plot, CardWidget
 from pages.styles import GLOBAL_MARGIN
-from utils.query_data import df_sv, scen_aliases, var_dict
-from utils.tools import wyt_list
+from utils.query_data import df_sv
 
 register_page(
     __name__,

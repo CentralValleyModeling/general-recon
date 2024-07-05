@@ -32,7 +32,6 @@ table_order.extend([{"name": s, "id": s, "type": "numeric","format": { "specifie
 typefilter_dict = {'table_a_btn':'Delivery - TA','a21_btn':'Delivery - IN','a56_btn':'Delivery - CO'}
 
 opt = [{"label":k,"value":v} for k,v in common_pers.items()]
-#print(opt)
 
 def layout(**kwargs): 
     global b
@@ -122,6 +121,6 @@ def show_contractor_data(clickData):
         return 'Click on a cell'
     else:
         b = exp_tbl.loc[clickData['row']]['bpart']
-        print(b)
+        #print(b)
         fig = ann_exc_plot(df_dv,b,monthchecklist=month_list,yearwindow="Calendar Year")
         return fig

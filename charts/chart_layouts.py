@@ -1,5 +1,6 @@
 import pandas as pd
 import plotly.express as px
+#import plotly.figure_factory as ff
 from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
 from utils.query_data import scen_aliases, var_dict
@@ -199,7 +200,9 @@ def ann_exc_plot(df,b_part,monthchecklist,yearwindow):
     df2 = pd.DataFrame()
     df0 = df.loc[df['icm'].isin(convert_cm_nums(monthchecklist))]
     cfs_taf(df0,var_dict)
+
     df0 = df0.groupby(['Scenario',yw]).sum()
+
     for scenario in scen_aliases:
         df1 = df0.loc[df0.index.get_level_values(0)==scenario,b_part]
         df1 = df1.sort_values()
@@ -216,4 +219,56 @@ def ann_exc_plot(df,b_part,monthchecklist,yearwindow):
                     xaxis_tickformat=',d')
     fig.update_xaxes(gridcolor='LightGrey') #griddash='dot', minor_griddash="dot")
     fig.update_yaxes(gridcolor='LightGrey') #griddash='dot', minor_griddash="dot")
+    return fig
+
+def distplot(df,b_part):
+    df2 = pd.DataFrame()
+    df0 = df
+    cfs_taf(df0,var_dict)
+    df0 = df0.groupby(['Scenario','iwy']).sum()
+
+    for scenario in scen_aliases:
+        df1 = df0.loc[df0.index.get_level_values(0)==scenario,b_part]
+        df1 = df1.reset_index(drop=True)
+        df2[scenario]=df1
+
+    fig = px.histogram(df2,marginal="box",color_discrete_sequence=PLOT_COLORS,barmode="relative")
+    return fig
+
+def ta_dry_wet_barplot(df,common_pers,bpart="SWP_TA_CO_SOD",scens=["DCR_21_Hist"],ta_tot=4133):    
+    df1=pd.DataFrame()
+    df0=cfs_taf(df,var_dict)
+    l ={"scenario":[],"period":[],'avg':[],'pct':[]}
+    l_df=pd.DataFrame()
+    for s in scens:
+        for c in common_pers:
+            if c in list(common_pers.keys())[:2]:
+                continue
+            startyr = int(common_pers[c].split('-')[0])
+            endyr = int(common_pers[c].split('-')[-1])
+            df1=df0.loc[df0["Scenario"]==s,[bpart,'icy']]
+            df2 = df1.loc[df1['icy'].between(startyr,endyr)]
+            v = round(df2[bpart].sum()/(endyr-startyr+1),0)
+            l['scenario'].append(s)
+            l['period'].append(c)
+            l['avg'].append(v)
+            l['pct'].append(round((v/ta_tot),2))
+    l_df=pd.DataFrame(l)
+    #print(l_df)
+    fig = px.bar(l_df,x='period',y='pct',
+                    text='pct',
+                    color='scenario',
+                    barmode='group',
+                    color_discrete_sequence=PLOT_COLORS,
+                    hover_data={'avg':True})
+    fig.update_layout(yaxis_tickformat = '.0%',
+                        xaxis_title='Sub Periods',
+                        yaxis_title='Percent',
+                        yaxis = dict(tickmode='array',
+                                    tickvals=[i/100 for i in range(0, 101, 10)],
+                                    ticktext=[f'{i}%' for i in range(0, 101, 10)])
+    )
+    fig.update_traces(textposition='outside')
+
+    
     return fig
