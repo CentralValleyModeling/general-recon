@@ -235,24 +235,23 @@ def distplot(df,b_part):
     fig = px.histogram(df2,marginal="box",color_discrete_sequence=PLOT_COLORS,barmode="relative")
     return fig
 
-def ta_dry_wet_barplot(df,common_pers,bpart="SWP_TA_CO_SOD",scens=["DCR_21_Hist"],ta_tot=4133):    
+def ta_dry_wet_barplot(df,common_pers,bpart="SWP_TA_CO_SOD",scens=None,ta_tot=4133,perlist=None):    
     df1=pd.DataFrame()
     df=cfs_taf(df,var_dict)
     l ={"scenario":[],"period":[],'avg':[],'pct':[]}
     l_df=pd.DataFrame()
     for s in scens:
         for c in common_pers:
-            if c in list(common_pers.keys())[:2]:
-                continue
-            startyr = int(common_pers[c].split('-')[0])
-            endyr = int(common_pers[c].split('-')[-1])
-            df1=df.loc[df["Scenario"]==s,[bpart,'icy']]
-            df2 = df1.loc[df1['icy'].between(startyr,endyr)]
-            v = round(df2[bpart].sum()/(endyr-startyr+1),0)
-            l['scenario'].append(s)
-            l['period'].append(c)
-            l['avg'].append(v)
-            l['pct'].append(round((v/ta_tot),2))
+            if c in perlist:
+                startyr = int(common_pers[c].split('-')[0])
+                endyr = int(common_pers[c].split('-')[-1])
+                df1=df.loc[df["Scenario"]==s,[bpart,'icy']]
+                df2 = df1.loc[df1['icy'].between(startyr,endyr)]
+                v = round(df2[bpart].sum()/(endyr-startyr+1),0)
+                l['scenario'].append(s)
+                l['period'].append(c)
+                l['avg'].append(v)
+                l['pct'].append(round((v/ta_tot),2))
     l_df=pd.DataFrame(l)
     #print(l_df)
     fig = px.bar(l_df,x='period',y='pct',
@@ -260,13 +259,17 @@ def ta_dry_wet_barplot(df,common_pers,bpart="SWP_TA_CO_SOD",scens=["DCR_21_Hist"
                     color='scenario',
                     barmode='group',
                     color_discrete_sequence=PLOT_COLORS,
-                    hover_data={'avg':True})
+                    hover_data={'avg':True},
+                    range_y = [0,1])
+    
     fig.update_layout(yaxis_tickformat = '.0%',
-                        xaxis_title='Sub Periods',
-                        yaxis_title='Percent',
+                        xaxis_title='',
+                        yaxis_title='Percent Allocation',
                         yaxis = dict(tickmode='array',
                                     tickvals=[i/100 for i in range(0, 101, 10)],
-                                    ticktext=[f'{i}%' for i in range(0, 101, 10)])
+                                    ticktext=[f'{i}%' for i in range(0, 101, 10)]),
+                      width = 1200,
+                      height = 600,
     )
     fig.update_traces(textposition='outside')
 
