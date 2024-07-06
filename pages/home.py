@@ -122,11 +122,7 @@ add_resources_card = dbc.Card(
 
 def layout():
     layout = html.Div([
- #       html.H2(["Results At-A-Glance"]),
-        
         html.Hr(),
-        #html.Div(card_bar_plot()),
-
         dbc.Row([
             dbc.Col([
                 html.Img(src=dcr_cover_path, height="400"),
