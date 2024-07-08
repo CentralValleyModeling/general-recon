@@ -238,7 +238,7 @@ def distplot(df,b_part):
 def ta_dry_wet_barplot(df,common_pers,bpart="SWP_TA_CO_SOD",scens=None,ta_tot=4133,perlist=None):    
     df1=pd.DataFrame()
     df=cfs_taf(df,var_dict)
-    l ={"scenario":[],"period":[],'avg':[],'pct':[]}
+    l ={"scenario":[],"period":[],'avg':[],'pct':[],'label':[]}
     l_df=pd.DataFrame()
     for s in scens:
         for c in common_pers:
@@ -252,10 +252,11 @@ def ta_dry_wet_barplot(df,common_pers,bpart="SWP_TA_CO_SOD",scens=None,ta_tot=41
                 l['period'].append(c)
                 l['avg'].append(v)
                 l['pct'].append(round((v/ta_tot),2))
+                l['label'].append(f'{round((v/ta_tot)*100)}%')
     l_df=pd.DataFrame(l)
     #print(l_df)
     fig = px.bar(l_df,x='period',y='pct',
-                    text='pct',
+                    text='label',
                     color='scenario',
                     barmode='group',
                     color_discrete_sequence=PLOT_COLORS,
@@ -264,7 +265,7 @@ def ta_dry_wet_barplot(df,common_pers,bpart="SWP_TA_CO_SOD",scens=None,ta_tot=41
     
     fig.update_layout(yaxis_tickformat = '.0%',
                         xaxis_title='',
-                        yaxis_title='Percent Allocation',
+                        yaxis_title='Table A Percent Allocation',
                         yaxis = dict(tickmode='array',
                                     tickvals=[i/100 for i in range(0, 101, 10)],
                                     ticktext=[f'{i}%' for i in range(0, 101, 10)]),
