@@ -57,6 +57,8 @@ co_text = ("""A water supply “savings account” for SWP water that is allocat
 ta_card = CardWidget("Total SWP Table A and Carryover Deliveries",
                      button_id="table_a_btn",
                      button_label="View by Contractor",
+                     button_id2="ta_wet_dry",
+                     button_label2="Wet and Dry Periods",
                      chart=card_bar_plot_cy(df_dv,b_part="SWP_TA_CO_SOD",wyt=[1,2,3,4,5],startyr=1922,endyr=2021),
                      text=tablea_text)
 a21_card = CardWidget("SWP Article 21 Deliveries",
@@ -192,13 +194,13 @@ def layout():
     )
     return layout
 
-# Define the generalized callback
+# Define the generalized callback for the first button in the card
 @callback(
     Output('url', 'href'),
     Output('url', 'refresh'),
     Input({'type': 'dynamic-btn', 'index': ALL}, 'n_clicks')
 )
-def update_output(n_clicks):
+def button_1_action(n_clicks):
     ctx = callback_context
     if not ctx.triggered or all(click is None for click in n_clicks):
         return '/', False
@@ -209,6 +211,9 @@ def update_output(n_clicks):
 
         print(button_index)
 
+        if button_index == 'ta_wet_dry':
+            return f'/dry_wet_periods', True
+        
         if button_index in ('C_CAA003_SWP','S_OROVL','S_SLUIS_SWP'):
             return f'/drilldown?{url_params}', True
         else:

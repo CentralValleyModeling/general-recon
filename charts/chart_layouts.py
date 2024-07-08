@@ -9,13 +9,15 @@ from utils.tools import (convert_wyt_nums, cfs_taf, convert_cm_nums,
                          monthfilter, month_list,wyt_list,common_pers)
 
 
-
+#ToDo use dictionaries to allow arbitrary number of buttons
 class CardWidget():
-    def __init__(self,title,button_id,button_label="Explore",
+    def __init__(self,title,button_id,button_label="Explore",button_id2='placeholder',button_label2=None,
                  chart=None,text=None,image=None) -> None:
         self.title = title
         self.button_id = button_id
         self.button_label = button_label
+        self.button_id2 = button_id2
+        self.button_label2 = button_label2
         self.chart = chart
         self.text = text
         self.image = image
@@ -30,9 +32,12 @@ class CardWidget():
                         html.H4(self.title, className="card-title"),
                         self.chart,
                         html.P(self.text, className="card-text"),
-                        dbc.Button(self.button_label, id={'type': 'dynamic-btn', 'index': self.button_id}, color="primary") 
-                            if self.button_label is not None else None,
-                        #dcc.Dropdown(options = common_pers,id='dropdown_common_pers'),
+                        dbc.Col([
+                            dbc.Button(self.button_label, id={'type': 'dynamic-btn', 'index': self.button_id}, color="primary") 
+                                if self.button_label is not None else None,
+                            dbc.Button(self.button_label2, id={'type': 'dynamic-btn', 'index': self.button_id2}, color="primary") 
+                                if self.button_label2 is not None else None,
+                        ])
                     ]
                 ),
             ],
