@@ -19,8 +19,6 @@ register_page(
     path='/drilldown'
 )
 
-cs3_icon_path = 'assets/cs3_icon_draft.png'
-
 bparts = []
 aliases = []
 
@@ -262,7 +260,7 @@ def update_bar_annual(b_part,wytchecklist,slider_yr_range):
     df1=df_dv.loc[df_dv['WYT_SAC_'].isin(convert_wyt_nums(wytchecklist)) &
               (df_dv['iwy']>=startyr) &(df_dv['iwy']<=endyr)]
     
-    cfs_taf(df1,var_dict)
+    df1=cfs_taf(df1,var_dict)
 
     df2 = round(df1.groupby(['Scenario']).sum()/(endyr-startyr+1))
     df2 = df2.reindex(scen_aliases, level='Scenario')
