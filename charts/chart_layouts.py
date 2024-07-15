@@ -205,34 +205,54 @@ def mon_exc_plot(df,b_part,monthchecklist):
     return fig
 
 def ann_exc_plot(df,b_part,monthchecklist,yearwindow):
+    series_container = []
     if yearwindow=="Calendar Year":
         yw='icy'
     else:
         yw='iwy'
 
-    df2 = pd.DataFrame()
     df0 = df.loc[df['icm'].isin(convert_cm_nums(monthchecklist))]
     df0=cfs_taf(df0,var_dict)
-
     df0 = df0.groupby(['Scenario',yw]).sum()
 
     for scenario in scen_aliases:
-        df1 = df0.loc[df0.index.get_level_values(0)==scenario,b_part]
-        df1 = df1.sort_values()
-        df1 = df1.reset_index(drop=True)
-        df2[scenario]=df1
-    fig = px.line(df2,
-                  color_discrete_sequence=PLOT_COLORS)
-    fig.update_layout(
-                    title=f"Non-Exceedance Chart for {b_part}, ({yearwindow})",
-                    plot_bgcolor='white',
-                    showlegend=True,
-                    xaxis_title='Non-Exceedance Percentage',
-                    yaxis_title='',
-                    xaxis_tickformat=',d')
-    fig.update_xaxes(gridcolor='LightGrey') #griddash='dot', minor_griddash="dot")
-    fig.update_yaxes(gridcolor='LightGrey') #griddash='dot', minor_griddash="dot")
-    return fig
+        series_i = df0.loc[df0.index.get_level_values(0)==scenario,b_part]
+        series_i = series_i.sort_values()
+        series_i = series_i.reset_index(drop=True)
+        series_i.rename(scenario, inplace=True)
+        series_container.append(series_i)
+
+    df3 = pd.concat(series_container,axis=1)
+    fig1 = go.Figure()
+
+    for i, column in enumerate(df3.columns):
+        series_sorted = df3[column].dropna()
+        exceedance_prob = (series_sorted.index + 1) / len(series_sorted) * 100
+
+        fig1.add_trace(go.Scatter(
+            x=exceedance_prob,
+            y=series_sorted,
+            mode='lines',
+            name=column,
+            line=dict(color=PLOT_COLORS[i % len(PLOT_COLORS)])     
+        ))
+
+    fig1.update_layout(
+        plot_bgcolor='white',
+        xaxis_title='Non Exceedance Probability (%)',
+        xaxis_tickformat=',d',
+        yaxis_title='',
+        legend_title='Scenario',
+        showlegend=True,
+        xaxis=dict(
+            gridcolor='LightGrey'
+        ),
+        yaxis=dict(
+            gridcolor='LightGrey'
+        )
+    )
+
+    return fig1
 
 def distplot(df,b_part):
     df2 = pd.DataFrame()

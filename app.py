@@ -44,10 +44,6 @@ app.layout = html.Div([
 style={'margin': '20px'}
 )
 
-#print(app)
-
-
-
 server = app.server
 
 if __name__ == '__main__':
