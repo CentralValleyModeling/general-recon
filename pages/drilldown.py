@@ -9,7 +9,7 @@ import dash_bootstrap_components as dbc
 from utils.tools import (make_summary_df, month_map, load_data_mult, 
                    make_ressum_df, month_list, convert_cm_nums,
                    wyt_list, convert_wyt_nums, cfs_taf,list_files)
-from charts.chart_layouts import ann_exc_plot
+from charts.chart_layouts import ann_exc_plot,mon_exc_plot
 
 
 register_page(
@@ -201,15 +201,7 @@ def update_timeseries(b_part):
     Input(component_id='monthchecklist-exc', component_property='value')
 )
 def update_exceedance(b_part,monthchecklist):
-    df2 = pd.DataFrame()
-    df0 = df_dv.loc[df_dv['icm'].isin(convert_cm_nums(monthchecklist))]
-    for scenario in scen_aliases:
-        df1 = df0.loc[df0['Scenario']==scenario,b_part]
-        df1 = df1.sort_values()
-        df1 = df1.reset_index(drop=True)
-        df2[scenario]=df1
-    fig = px.line(df2,
-                  color_discrete_sequence=PLOT_COLORS)
+    fig=mon_exc_plot(df_dv,b_part,monthchecklist)
     return fig
 
 # Annual Exceedance Plot

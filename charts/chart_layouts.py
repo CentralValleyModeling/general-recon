@@ -128,44 +128,15 @@ def card_bar_plot_cy(df,b_part='C_CAA003',wyt=[1,2,3,4,5],startyr=1922,endyr=202
     return layout
 
 def card_mon_exc_plot(df,b_part,monthchecklist):
-    series_container = []
-    # Filter the calendar months
-    df0 = df.loc[df['icm'].isin(convert_cm_nums(monthchecklist))]
-    for scenario in scen_aliases:
-        series_i = df0.loc[df0['Scenario']==scenario,b_part]
-        series_i = series_i.sort_values()
-        series_i = series_i.reset_index(drop=True)
-        series_i.rename(scenario, inplace=True)
-        series_container.append(series_i)
-
-    df3 = pd.concat(series_container,axis=1)
-    fig3 = go.Figure()
-
-    for i, column in enumerate(df3.columns):
-        series_sorted = df3[column].dropna()
-        exceedance_prob = (series_sorted.index + 1) / len(series_sorted) * 100
-
-        fig3.add_trace(go.Scatter(
-            x=exceedance_prob,
-            y=series_sorted,
-            mode='lines',
-            name=column,
-            line=dict(color=PLOT_COLORS[i % len(PLOT_COLORS)])     
-        ))
-
-    fig3.update_layout(
-        plot_bgcolor='white',
-        xaxis_title='Non Exceedance Probability (%)',
-        yaxis_title='',
-        legend_title='Scenarios',
-        showlegend=True,
+    fig=mon_exc_plot(df,b_part,monthchecklist)
+    fig.update_layout(
         width = 800,
         height = 400,
     )
     
     layout = html.Div([
         dbc.Col([dcc.Markdown("**Monthly Non-Exceedance Probability**"),
-            dcc.Graph(figure=fig3),
+            dcc.Graph(figure=fig),
         ]),
     ])
     return layout
@@ -191,26 +162,46 @@ def ann_bar_plot(df,b_part='C_CAA003',startyr=1922,endyr=2021,wyt=[1,2,3,4,5]):
     return fig
 
 def mon_exc_plot(df,b_part,monthchecklist):
-    df2 = pd.DataFrame()
+    series_container = []
+    # Filter the calendar months
     df0 = df.loc[df['icm'].isin(convert_cm_nums(monthchecklist))]
     for scenario in scen_aliases:
-        df1 = df0.loc[df0['Scenario']==scenario,b_part]
-        df1 = df1.sort_values()
-        df1 = df1.reset_index(drop=True)
-        df2[scenario]=df1
-    
-    fig = px.line(df2,
-                  color_discrete_sequence=PLOT_COLORS,
-                  labels={'variable':"Scenario"})
+        series_i = df0.loc[df0['Scenario']==scenario,b_part]
+        series_i = series_i.sort_values()
+        series_i = series_i.reset_index(drop=True)
+        series_i.rename(scenario, inplace=True)
+        series_container.append(series_i)
+
+    df3 = pd.concat(series_container,axis=1)
+    fig = go.Figure()
+
+    for i, column in enumerate(df3.columns):
+        series_sorted = df3[column].dropna()
+        exceedance_prob = (series_sorted.index + 1) / len(series_sorted) * 100
+
+        fig.add_trace(go.Scatter(
+            x=exceedance_prob,
+            y=series_sorted,
+            mode='lines',
+            name=column,
+            line=dict(color=PLOT_COLORS[i % len(PLOT_COLORS)])     
+        ))
+
     fig.update_layout(
-                title=f"Monthly Non-Exceedance Chart for {b_part}",
-                plot_bgcolor='white',
-                showlegend=True,
-                xaxis_title='Non-Exceedance Percentage',
-                yaxis_title='',
-                xaxis_tickformat=',d',)
-    fig.update_xaxes(gridcolor='LightGrey')
-    fig.update_yaxes(gridcolor='LightGrey')
+        plot_bgcolor='white',
+        xaxis_title='Non Exceedance Probability (%)',
+        xaxis_tickformat=',d',
+        yaxis_title='',
+        legend_title='Scenario',
+        showlegend=True,
+        xaxis=dict(
+            gridcolor='LightGrey'
+        ),
+        yaxis=dict(
+            gridcolor='LightGrey'
+        )
+    )
+    
     return fig
 
 def ann_exc_plot(df,b_part,monthchecklist,yearwindow):
