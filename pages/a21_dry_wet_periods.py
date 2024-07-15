@@ -1,15 +1,15 @@
 from dash import register_page, dcc
 import dash_bootstrap_components as dbc
-from charts.chart_layouts import ta_dry_wet_barplot
+from charts.chart_layouts import a21_dry_wet_barplot
 from pages.styles import GLOBAL_MARGIN
 from utils.query_data import df_dv, scen_aliases
 from utils.tools import (common_pers)
 
 register_page(
     __name__,
-    name='TA Dry and Wet Periods',
+    name='A21 Dry and Wet Periods',
     top_nav=True,
-    path='/dry_wet_periods'
+    path='/a21_dry_wet_periods'
 )
 
 
@@ -29,17 +29,17 @@ wetpers = ['Single Wet Year (1983)',
            'Ten Year Wet Sequence (1978-1987)',
            'Single Wet Year (2017)']
 
-dry_pers=ta_dry_wet_barplot(df_dv,common_pers,bpart="SWP_TA_CO_SOD",scens=scen_aliases,perlist=drypers)
-wet_pers=ta_dry_wet_barplot(df_dv,common_pers,bpart="SWP_TA_CO_SOD",scens=scen_aliases,perlist=wetpers)
+dry_pers=a21_dry_wet_barplot(df_dv,common_pers,bpart="SWP_IN_TOTAL",scens=scen_aliases,perlist=drypers)
+wet_pers=a21_dry_wet_barplot(df_dv,common_pers,bpart="SWP_IN_TOTAL",scens=scen_aliases,perlist=wetpers)
 
 def layout():
     layout = dbc.Container([
         dbc.Row([
-                dcc.Markdown("### Table A allocation during dry periods"),
-                dcc.Markdown("Estimated Dry-Period Deliveries of SWP Table A Water, Excluding Butte County, Yuba City, and Plumas County FCWCD (Existing Conditions, in TAF/year) and Percent of Maximum SWP Table A Amount, 4,133 TAF/year."),
+                dcc.Markdown("### Article 21 Deliveries during dry periods"),
+                #dcc.Markdown("Estimated Dry-Period Deliveries of SWP Table A Water, Excluding Butte County, Yuba City, and Plumas County FCWCD (Existing Conditions, in TAF/year) and Percent of Maximum SWP Table A Amount, 4,133 TAF/year."),
                 dcc.Graph(figure=dry_pers),
-                dcc.Markdown("### Table A allocation during wet periods"),
-                dcc.Markdown("Estimated Wet-Period Deliveries of SWP Table A Water, Excluding Butte County, Yuba City, and Plumas County FCWCD (Existing Conditions, in TAF/year) and Percent of Maximum SWP Table A Amount, 4,133 TAF/year."),
+                dcc.Markdown("### Article 21 Deliveries during wet periods"),
+                #dcc.Markdown("Estimated Wet-Period Deliveries of SWP Table A Water, Excluding Butte County, Yuba City, and Plumas County FCWCD (Existing Conditions, in TAF/year) and Percent of Maximum SWP Table A Amount, 4,133 TAF/year."),
                 dcc.Graph(figure=wet_pers)
         ])
     ])

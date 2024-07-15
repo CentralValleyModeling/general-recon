@@ -33,6 +33,7 @@ common_pers = {
                'Six Year Drought (1929-1934)':"1929-1934",
                'Single Wet Year (1983)':"1983",
                'Single Wet Year (1998)':"1998",
+                'Single Wet Year (2006)':"2006",
                'Two Year Wet Sequence (1982-1983)':"1982-1983",
                'Four Year Wet Sequence (1980-1983)':"1980-1983",  
                'Six Year Wet Sequence (1978-1983)':"1978-1983",
