@@ -9,11 +9,13 @@ from utils.tools import (month_list, convert_cm_nums,
 from utils.query_data import df_dv, scen_aliases, var_dict
 from charts.chart_layouts import ann_bar_plot, mon_exc_plot
 
-register_page(
-    __name__,
-    top_nav=True,
-    path='/heatmap'
-)
+#Remove heatmap
+#register_page(
+#    __name__,
+#    top_nav=True,
+#    path='/heatmap'
+#)
+
 # Make dataframe for heatmap
 def make_heatmap_df(scen_aliases,df,var_dict,start_yr=1922,end_yr=2021,
                     monthfilter=[1,2,3,4,5,6,7,8,9,10,11,12],wytfilter=[1,2,3,4,5],bparts=None):
