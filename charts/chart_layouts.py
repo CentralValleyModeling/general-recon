@@ -1,6 +1,6 @@
 import pandas as pd
 import plotly.express as px
-#import plotly.figure_factory as ff
+import plotly.graph_objects as go
 from dash import dcc, html, Input, Output
 import dash_bootstrap_components as dbc
 from utils.query_data import scen_aliases, var_dict
@@ -128,28 +128,44 @@ def card_bar_plot_cy(df,b_part='C_CAA003',wyt=[1,2,3,4,5],startyr=1922,endyr=202
     return layout
 
 def card_mon_exc_plot(df,b_part,monthchecklist):
-    df2 = pd.DataFrame()
+    series_container = []
+    # Filter the calendar months
     df0 = df.loc[df['icm'].isin(convert_cm_nums(monthchecklist))]
     for scenario in scen_aliases:
-        df1 = df0.loc[df0['Scenario']==scenario,b_part]
-        df1 = df1.sort_values()
-        df1 = df1.reset_index(drop=True)
-        df2[scenario]=df1
+        series_i = df0.loc[df0['Scenario']==scenario,b_part]
+        series_i = series_i.sort_values()
+        series_i = series_i.reset_index(drop=True)
+        series_i.rename(scenario, inplace=True)
+        series_container.append(series_i)
 
-    fig = px.line(df2,labels={'variable':"Scenarios"},
-                  color_discrete_sequence=PLOT_COLORS)
+    df3 = pd.concat(series_container,axis=1)
+    fig3 = go.Figure()
 
-    fig.update_layout(plot_bgcolor='white',
-                      width = 600,
-                      height = 400,
-                      showlegend=True,
-                      xaxis_title='Non-Exceedance Percentage',
-                      yaxis_title='',
-                      xaxis_tickformat=',d')
+    for i, column in enumerate(df3.columns):
+        series_sorted = df3[column].dropna()
+        exceedance_prob = (series_sorted.index + 1) / len(series_sorted) * 100
 
+        fig3.add_trace(go.Scatter(
+            x=exceedance_prob,
+            y=series_sorted,
+            mode='lines',
+            name=column,
+            line=dict(color=PLOT_COLORS[i % len(PLOT_COLORS)])     
+        ))
+
+    fig3.update_layout(
+        plot_bgcolor='white',
+        xaxis_title='Non Exceedance Probability (%)',
+        yaxis_title='',
+        legend_title='Scenarios',
+        showlegend=True,
+        width = 800,
+        height = 400,
+    )
+    
     layout = html.Div([
-        dbc.Col([dcc.Markdown("**Monthly Exceedance**"),
-            dcc.Graph(figure=fig),
+        dbc.Col([dcc.Markdown("**Monthly Non-Exceedance Probability**"),
+            dcc.Graph(figure=fig3),
         ]),
     ])
     return layout
@@ -182,6 +198,7 @@ def mon_exc_plot(df,b_part,monthchecklist):
         df1 = df1.sort_values()
         df1 = df1.reset_index(drop=True)
         df2[scenario]=df1
+    
     fig = px.line(df2,
                   color_discrete_sequence=PLOT_COLORS,
                   labels={'variable':"Scenario"})
@@ -274,6 +291,45 @@ def ta_dry_wet_barplot(df,common_pers,bpart="SWP_TA_CO_SOD",scens=None,ta_tot=41
                         yaxis = dict(tickmode='array',
                                     tickvals=[i/100 for i in range(0, 101, 10)],
                                     ticktext=[f'{i}%' for i in range(0, 101, 10)]),
+                      width = 1200,
+                      height = 600,
+    )
+    fig.update_traces(textposition='outside')
+
+    
+    return fig
+
+def a21_dry_wet_barplot(df,common_pers,bpart="SWP_IN_TOTAL",scens=None,perlist=None):    
+    df1=pd.DataFrame()
+    df=cfs_taf(df,var_dict)
+    l ={"scenario":[],"period":[],'avg':[]}
+    l_df=pd.DataFrame()
+    for s in scens:
+        for c in common_pers:
+            if c in perlist:
+                startyr = int(common_pers[c].split('-')[0])
+                endyr = int(common_pers[c].split('-')[-1])
+                df1=df.loc[df["Scenario"]==s,[bpart,'icy']]
+                df2 = df1.loc[df1['icy'].between(startyr,endyr)]
+                v = round(df2[bpart].sum()/(endyr-startyr+1),0)
+                l['scenario'].append(s)
+                l['period'].append(c)
+                l['avg'].append(v)
+    l_df=pd.DataFrame(l)
+    #print(l_df)
+    fig = px.bar(l_df,x='period',y='avg',
+                    text='avg',
+                    color='scenario',
+                    barmode='group',
+                    color_discrete_sequence=PLOT_COLORS,
+                    hover_data={'avg':True})
+    
+    fig.update_layout(yaxis_tickformat = ',d',
+                        xaxis_title='',
+                        yaxis_title='Article 21 Deliveries (TAF/year)',
+                        #yaxis = dict(tickmode='array',
+                        #            tickvals=[i/100 for i in range(0, 101, 10)],
+                        #            ticktext=[f'{i}%' for i in range(0, 101, 10)]),
                       width = 1200,
                       height = 600,
     )
