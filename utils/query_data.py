@@ -13,11 +13,21 @@ with open('constants/dvars.yaml', 'r') as file:
 # DV Derived Timeseries
 
 df_dv['SWP_TA_CO_SOD'] = df_dv['SWP_TA_TOTAL'] - df_dv['SWP_TA_FEATH'] + df_dv['SWP_CO_TOTAL'] - df_dv['SWP_CO_FEATH'] 
+df_dv['SWP_CO_SOD'] = df_dv['SWP_CO_TOTAL'] - df_dv['SWP_CO_FEATH'] 
 
 
 var_dict['SWP_TA_CO_SOD'] = {
     'alias': 'Total SWP Table and Carryover Delivery from the Delta',
     'bpart': 'SWP_TA_CO_SOD',
+    'pathname': None,
+    'table_convert': 'cfs_taf',
+    'table_display': 'wy',
+    'type': 'Delivery'
+}
+
+var_dict['SWP_CO_SOD'] = {
+    'alias': 'Total Carryover Delivery from the Delta',
+    'bpart': 'SWP_CO_SOD',
     'pathname': None,
     'table_convert': 'cfs_taf',
     'table_display': 'wy',
