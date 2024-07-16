@@ -66,6 +66,7 @@ table_order = [
     {"name": "Type", "id": "type"},
     {"name": "Description", "id": "description"},
     {"name": "B-Part", "id": "bpart"},
+    {"name": "Year Type", "id": "year"},
 ]
 
 # Scenarios go next

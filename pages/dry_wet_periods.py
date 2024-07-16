@@ -46,12 +46,18 @@ def layout():
                 [
                     dcc.Markdown("### Table A allocation during dry periods"),
                     dcc.Markdown(
-                        "Estimated Dry-Period Deliveries of SWP Table A Water, Excluding Butte County, Yuba City, and Plumas County FCWCD (Existing Conditions, in TAF/year) and Percent of Maximum SWP Table A Amount, 4,133 TAF/year."
+                        "Estimated Dry-Period Deliveries of SWP Table A Water, "
+                        + "Excluding Butte County, Yuba City, and Plumas County FCWCD "
+                        + "(Existing Conditions, in TAF / Contract Year) and Percent "
+                        + "of Maximum SWP Table A Amount, 4,133 TAF/year."
                     ),
                     dcc.Graph(figure=dry_pers),
                     dcc.Markdown("### Table A allocation during wet periods"),
                     dcc.Markdown(
-                        "Estimated Wet-Period Deliveries of SWP Table A Water, Excluding Butte County, Yuba City, and Plumas County FCWCD (Existing Conditions, in TAF/year) and Percent of Maximum SWP Table A Amount, 4,133 TAF/year."
+                        "Estimated Wet-Period Deliveries of SWP Table A Water, "
+                        + "Excluding Butte County, Yuba City, and Plumas County FCWCD "
+                        + "(Existing Conditions, in TAF / Contract Year) and Percent "
+                        + "of Maximum SWP Table A Amount, 4,133 TAF/year."
                     ),
                     dcc.Graph(figure=wet_pers),
                 ]
