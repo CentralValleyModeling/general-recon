@@ -127,11 +127,15 @@ def update_table(slider_yr_range):
 # Write out the range slider selections
 @callback(
     Output(
-        component_id="output-container-range-slider_2", component_property="children"
+        component_id="output-container-range-slider_2",
+        component_property="children",
     ),
-    Input(component_id="slider-yr-range", component_property="value"),
+    Input(
+        component_id="slider-yr-range",
+        component_property="value",
+    ),
 )
-def update_table(value):
+def read_slider(value) -> tuple:
     return str("Average Period: "), value[0], str("-"), value[1]
 
 
@@ -141,7 +145,6 @@ def update_table(value):
     Input(component_id="dropdown_common_pers_csum", component_property="value"),
 )
 def slider(dropdown_val):
-
     startyr = int(dropdown_val.split("-")[0])
     endyr = int(dropdown_val.split("-")[-1])
     return startyr, endyr
