@@ -61,7 +61,7 @@ a21_text = """Article 21 Water is water that SWP contractors may receive on inte
             21 water cannot impact the Table A allocation of the any contractor's water,
             nor can it negatively impact normal SWP operations."""
 
-co_text = ("""Excluding Butte County,Yuba City, and Plumas County FCWCD.
+co_text = """Excluding Butte County,Yuba City, and Plumas County FCWCD.
            A water supply “savings account” for SWP water that is allocated to an 
            SWP contractor in a given year, but not used by the end of the year. 
            Carryover water is stored in the SWP's share of San Luis Reservoir, when 
@@ -90,7 +90,7 @@ a56_card = CardWidget(
     "SWP Carryover Deliveries",
     button_id="a56_btn",
     button_label="View by Contractor",
-    chart=card_bar_plot_cy(df_dv, b_part="SWP_CO_TOTAL"),
+    chart=card_bar_plot_cy(df_dv, b_part="SWP_CO_SOD"),
     text=co_text,
 )
 exp_card = CardWidget(
