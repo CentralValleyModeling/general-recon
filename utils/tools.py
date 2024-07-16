@@ -187,8 +187,6 @@ def make_summary_df(
     ]
     columns_to_drop = [col for col in df1.columns if "S_" in col]
     df1 = df1.drop(columns=columns_to_drop)
-
-    # print(var_dict)
     # Do Conversions
     for var in var_dict:
         if var_dict[var]["table_convert"] == "cfs_taf":
@@ -202,9 +200,6 @@ def make_summary_df(
     # Time slicing is done; drop the index columns
     df_tbl.drop(["icy", "icm", "iwy", "iwm", "cfs_taf"], axis=1, inplace=True)
 
-    # df_tbl = df_tbl.reindex(df_tbl.index.values.tolist()+['BLANK'])
-    # df_tbl["----"] = 0#pd.NA
-    # print(df_tbl)
     # Filter B-Parts, if user-specified
     if bparts is not None:
         df1 = df_tbl.loc[:, bparts]
@@ -216,11 +211,14 @@ def make_summary_df(
     for key in var_dict:
         alias_dict[key] = var_dict[key]["alias"]
         type_dict[key] = var_dict[key]["type"]
-
     df_tbl = df_tbl.T
+    # Add index columns
     df_tbl["description"] = df_tbl.index.map(alias_dict)
     df_tbl["type"] = df_tbl.index.map(type_dict)
-
+    df_tbl["year"] = "Water Year"
+    contract_mask = df_tbl["type"].str.lower().isin(("delivery",))
+    df_tbl.loc[contract_mask, "year"] = "Contract Year"
+    # Calculate tables
     df_tbl["diff"] = df_tbl[scenlist[1]].sub(
         df_tbl[scenlist[0]],
         fill_value=0,
@@ -240,11 +238,7 @@ def make_summary_df(
         )
         * 100
     )
-
-    # print(df_tbl)
     df_tbl.reset_index(inplace=True, names="bpart")
-    # df_tbl.loc[df_tbl.shape[0]] = None
-    # df_tbl.loc[df_tbl.shape[0]-1,"bpart"]= "----"
 
     return df_tbl
 

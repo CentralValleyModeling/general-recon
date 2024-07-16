@@ -186,7 +186,7 @@ def card_bar_plot_cy(
         # width=600,
         height=300,
         showlegend=False,
-        xaxis_title="TAF/Year",
+        xaxis_title="TAF/Calendar Year",
         yaxis_title="",
         xaxis_tickformat=",d",
     )
@@ -440,7 +440,7 @@ def a21_dry_wet_barplot(
     fig.update_layout(
         yaxis_tickformat=",d",
         xaxis_title="",
-        yaxis_title="Article 21 Deliveries (TAF/year)",
+        yaxis_title="Article 21 Deliveries (TAF/Contract Year)",
         # yaxis = dict(tickmode='array',
         #            tickvals=[i/100 for i in range(0, 101, 10)],
         #            ticktext=[f'{i}%' for i in range(0, 101, 10)]),

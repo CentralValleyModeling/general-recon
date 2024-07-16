@@ -73,7 +73,7 @@ def layout(**kwargs):
             dcc.Dropdown(
                 options=opt,
                 id="dropdown_common_pers_csum",
-                placeholder="Select the Averaging Period (Years)",
+                placeholder="Select the Averaging Period (Contract Years)",
             ),
             html.Div(id="output-container-range-slider_2"),
             dbc.Row(
