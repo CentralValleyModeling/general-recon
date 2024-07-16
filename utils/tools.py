@@ -1,5 +1,6 @@
 import csv
 import os
+from typing import Any, Iterable
 
 import pandas as pd
 import pandss as pdss
@@ -68,7 +69,7 @@ common_pers = {
 # print(opt)
 
 
-def convert_cm_nums(monthchecklist) -> list:
+def convert_cm_nums(monthchecklist: Iterable[str]) -> list[str]:
     """
     Converts calendar month strings to calendar month numbers
     Jan=1, etc.
@@ -79,7 +80,7 @@ def convert_cm_nums(monthchecklist) -> list:
     return monthfilter
 
 
-def convert_wyt_nums(wytchecklist) -> list:
+def convert_wyt_nums(wytchecklist: Iterable[str]) -> list[str]:
     """
     Converts WYT strings to numbers: Wet = 1, etc.
     """
@@ -89,7 +90,7 @@ def convert_wyt_nums(wytchecklist) -> list:
     return wytfilter
 
 
-def load_data_mult(scen_dict, var_dict, date_map) -> None:
+def load_data_mult(scen_dict: dict[str, Any], var_dict: dict, date_map) -> None:
     """
     # Load data from the selected DSS files into a .csv
     """
@@ -121,11 +122,10 @@ def load_data_mult(scen_dict, var_dict, date_map) -> None:
     df = df.round(2)
     df = pd.merge(df, date_map, left_index=True, right_index=True)
     df.to_csv("data/temp.csv")
-    return
 
 
 def make_ressum_df(
-    scenlist,
+    scenlist: Iterable[int],
     df: pd.DataFrame,
     var_dict,
     start_yr=1922,
@@ -173,22 +173,20 @@ def cfs_taf(df: pd.DataFrame, var_dict: dict) -> pd.DataFrame:
 
 
 def make_summary_df(
-    scenlist,
-    df,
-    var_dict,
-    start_yr=1922,
-    end_yr=2021,
-    monthfilter=monthfilter,
+    scenlist: list[int],
+    df: pd.DataFrame,
+    var_dict: dict,
+    start_yr: int = 1922,
+    end_yr: int = 2021,
+    monthfilter: Iterable[int] = monthfilter,
     bparts=None,
-):
+) -> pd.DataFrame:
 
     df1 = df.loc[
         (df["icm"].isin(monthfilter)) & (df["iwy"] >= start_yr) & (df["iwy"] <= end_yr)
     ]
     columns_to_drop = [col for col in df1.columns if "S_" in col]
     df1 = df1.drop(columns=columns_to_drop)
-
-    # print(var_dict)
     # Do Conversions
     for var in var_dict:
         if var_dict[var]["table_convert"] == "cfs_taf":
@@ -202,11 +200,8 @@ def make_summary_df(
     # Time slicing is done; drop the index columns
     df_tbl.drop(["icy", "icm", "iwy", "iwm", "cfs_taf"], axis=1, inplace=True)
 
-    # df_tbl = df_tbl.reindex(df_tbl.index.values.tolist()+['BLANK'])
-    # df_tbl["----"] = 0#pd.NA
-    # print(df_tbl)
     # Filter B-Parts, if user-specified
-    if bparts != None:
+    if bparts is not None:
         df1 = df_tbl.loc[:, bparts]
         df_tbl = df1
 
@@ -216,31 +211,39 @@ def make_summary_df(
     for key in var_dict:
         alias_dict[key] = var_dict[key]["alias"]
         type_dict[key] = var_dict[key]["type"]
-
     df_tbl = df_tbl.T
+    # Add index columns
     df_tbl["description"] = df_tbl.index.map(alias_dict)
     df_tbl["type"] = df_tbl.index.map(type_dict)
-
-    df_tbl["diff"] = df_tbl[scenlist[1]].sub(df_tbl[scenlist[0]], fill_value=0)
+    df_tbl["year"] = "Water Year"
+    contract_mask = df_tbl["type"].str.lower().isin(("delivery",))
+    df_tbl.loc[contract_mask, "year"] = "Contract Year"
+    # Calculate tables
+    df_tbl["diff"] = df_tbl[scenlist[1]].sub(
+        df_tbl[scenlist[0]],
+        fill_value=0,
+    )
     df_tbl["perdiff"] = (
         round(
-            (df_tbl[scenlist[1]].sub(df_tbl[scenlist[0]], fill_value=0)).div(
-                df_tbl[scenlist[0]], fill_value=0
+            df_tbl[scenlist[1]]
+            .sub(
+                df_tbl[scenlist[0]],
+                fill_value=0,
+            )
+            .div(
+                df_tbl[scenlist[0]],
+                fill_value=0,
             ),
             2,
         )
         * 100
     )
-
-    # print(df_tbl)
     df_tbl.reset_index(inplace=True, names="bpart")
-    # df_tbl.loc[df_tbl.shape[0]] = None
-    # df_tbl.loc[df_tbl.shape[0]-1,"bpart"]= "----"
 
     return df_tbl
 
 
-def generate_yaml_file(varlist, filename):
+def generate_yaml_file(varlist: list, filename: str) -> None:
     """
     Generate a YAML file with given data.
 
@@ -265,7 +268,7 @@ def generate_yaml_file(varlist, filename):
     print(f"YAML file '{filename}' generated successfully.")
 
 
-def read_csv_into_list(filename):
+def read_csv_into_list(filename: str) -> list[list[str]]:
     data = []
     with open(filename, "r", newline="") as file:
         reader = csv.reader(file, delimiter=",")
@@ -274,7 +277,7 @@ def read_csv_into_list(filename):
     return data
 
 
-def remove_duplicates_from_yaml(filename):
+def remove_duplicates_from_yaml(filename: str) -> None:
     """
     Remove duplicate entries from a YAML file.
 
@@ -292,7 +295,7 @@ def remove_duplicates_from_yaml(filename):
         yaml.dump(unique_data, file)
 
 
-def remove_duplicates(data):
+def remove_duplicates(data: dict) -> dict:
     """
     Remove duplicate entries with the same top-level keys from a nested dictionary.
 
@@ -312,10 +315,10 @@ def remove_duplicates(data):
             # Add the first occurrence of the key
             seen[key] = value
             unique_data[key] = value
-    return unique_data
+    return unique_data  # TODO: 2024-07-15 explore if this is the fastest implementation
 
 
-def list_files(directory):
+def list_files(directory: str) -> dict[str, str]:
     """
     List all files in a directory including those within nested folders.
 
@@ -323,8 +326,9 @@ def list_files(directory):
     - directory (str): The path to the directory to list files from.
 
     Returns:
-    - list: A list of file paths
+    - dict: A dictionary of file paths
     """
+    # TODO: 2024-07-15 Replace this with pathlib objects
     file_paths = {}  # List to store all file paths
     # Traverse directory tree
     for root, directories, files in os.walk(directory):

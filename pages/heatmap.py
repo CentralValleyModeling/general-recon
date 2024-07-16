@@ -162,7 +162,10 @@ def layout():
                             dcc.Graph(
                                 id="heatmap",
                                 # responsive=True,
-                                # style={'height': '100%', 'width': '100%'},
+                                style={
+                                    "height": "100%",
+                                    # 'width': '100%',
+                                },
                             ),
                             html.Pre(id="click-data"),
                         ],

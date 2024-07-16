@@ -2,7 +2,7 @@ import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from dash import Input, Output, dcc, html
+from dash import dcc, html
 
 from pages.styles import PLOT_COLORS
 from utils.query_data import scen_aliases, var_dict
@@ -48,7 +48,8 @@ class CardWidget:
     ):
 
         card = dbc.Card(
-            [
+            class_name="m-2",
+            children=[
                 dbc.CardImg(src=self.image, top=True),
                 dbc.CardBody(
                     [
@@ -56,7 +57,7 @@ class CardWidget:
                         self.chart,
                         html.P(self.text, className="card-text"),
                         dbc.Col(
-                            [
+                            children=[
                                 (
                                     dbc.Button(
                                         self.button_label,
@@ -65,6 +66,7 @@ class CardWidget:
                                             "index": self.button_id,
                                         },
                                         color="primary",
+                                        class_name="me-3",
                                     )
                                     if self.button_label is not None
                                     else None
@@ -81,12 +83,12 @@ class CardWidget:
                                     if self.button_label2 is not None
                                     else None
                                 ),
-                            ]
+                            ],
                         ),
                     ]
                 ),
             ],
-            style={"height": height},
+            # style={"height": height},
         )
 
         return card
@@ -138,18 +140,21 @@ def card_mon_plot(
 
 
 def card_bar_plot_cy(
-    df, b_part="C_CAA003", wyt=[1, 2, 3, 4, 5], startyr=1922, endyr=2021
+    df: pd.DataFrame,
+    b_part: str = "C_CAA003",
+    wyt: list[int] = None,
+    startyr: int = 1922,
+    endyr: int = 2021,
 ):
-
+    if wyt is None:
+        wyt = [1, 2, 3, 4, 5]
     # This is VERY specific to the DCR 2021
     df_dcr21 = df.loc[(df["Scenario"].isin(["DCR_21_Hist"])) & (df["icy"] >= startyr)]
     try:
         df_dcr21 = cfs_taf(df_dcr21, var_dict)
-    except:
+    except Exception:
         print("Unable to convert from CFS to TAF")
-
     df_dcr21_ann = round(df_dcr21.groupby(["Scenario"]).sum() / (2015 - 1922 + 1))
-
     df0 = df.loc[
         df["Scenario"].isin(
             [
@@ -161,21 +166,13 @@ def card_bar_plot_cy(
         )
         & (df["icy"] >= startyr)
     ]
-
     try:
         df0 = cfs_taf(df0, var_dict)
-    except:
+    except Exception:
         print("Unable to convert from CFS to TAF")
-
     # For the last year
-
-    # df_annual = df0.groupby(['icy']).sum()
-    # print(df_annual)
-
     df1 = round(df0.groupby(["Scenario"]).sum() / (endyr - startyr + 1))
-
     df_plot = pd.concat([df_dcr21_ann, df1])
-
     fig = px.bar(
         df_plot[b_part],
         text=df_plot[b_part],
@@ -183,26 +180,25 @@ def card_bar_plot_cy(
         orientation="h",
         color_discrete_sequence=PLOT_COLORS,
     )
-
     fig.update_layout(
         barmode="relative",
         plot_bgcolor="white",
-        width=600,
+        # width=600,
         height=300,
         showlegend=False,
-        xaxis_title="TAF/Year",
+        xaxis_title="TAF/Calendar Year",
         yaxis_title="",
         xaxis_tickformat=",d",
     )
-
     layout = html.Div([dcc.Graph(figure=fig)])
+
     return layout
 
 
 def card_mon_exc_plot(df, b_part, monthchecklist):
     fig = mon_exc_plot(df, b_part, monthchecklist)
     fig.update_layout(
-        width=800,
+        # width=800,
         height=400,
     )
 
@@ -398,7 +394,7 @@ def ta_dry_wet_barplot(
             tickvals=[i / 100 for i in range(0, 101, 10)],
             ticktext=[f"{i}%" for i in range(0, 101, 10)],
         ),
-        width=1200,
+        # width=1200,
         height=600,
     )
     fig.update_traces(textposition="outside")
@@ -407,7 +403,11 @@ def ta_dry_wet_barplot(
 
 
 def a21_dry_wet_barplot(
-    df, common_pers, bpart="SWP_IN_TOTAL", scens=None, perlist=None
+    df,
+    common_pers,
+    bpart="SWP_IN_TOTAL",
+    scens=None,
+    perlist=None,
 ):
     df1 = pd.DataFrame()
     df = cfs_taf(df, var_dict)
@@ -440,13 +440,15 @@ def a21_dry_wet_barplot(
     fig.update_layout(
         yaxis_tickformat=",d",
         xaxis_title="",
-        yaxis_title="Article 21 Deliveries (TAF/year)",
+        yaxis_title="Article 21 Deliveries (TAF/Contract Year)",
         # yaxis = dict(tickmode='array',
         #            tickvals=[i/100 for i in range(0, 101, 10)],
         #            ticktext=[f'{i}%' for i in range(0, 101, 10)]),
-        width=1200,
+        # width=1200,
         height=600,
     )
     fig.update_traces(textposition="outside")
+
+    fig.layout.autosize = True
 
     return fig
