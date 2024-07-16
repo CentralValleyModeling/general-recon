@@ -1,15 +1,16 @@
-from dash import html, register_page, dcc, callback, Input, Output, dash_table
-#from csrs import Scenario
+# from csrs import Scenario
 import dash_bootstrap_components as dbc
-#from .client import client
+from dash import Input, Output, callback, dash_table, dcc, html, register_page
+
+# from .client import client
 
 
-#register_page(
+# register_page(
 #    __name__,
 #    name='Scenario Table',
 #    top_nav=True,
 #    path='/scenario_table'
-#)
+# )
 
 TABLE_CELL_STYLE = {
     "minWidth": "3rem",
@@ -30,15 +31,15 @@ WIDGET_STYLE = {
     "backgroundColor": "light grey",
 }
 
+
 def layout(**kwargs):
     return html.Div(
         id="scenario-list",
-        children=[
-            dcc.Markdown("Placeholder for csrs stuff")
-        ],
+        children=[dcc.Markdown("Placeholder for csrs stuff")],
     )
 
-#class ScenarioTableWidget(html.Div):
+
+# class ScenarioTableWidget(html.Div):
 #    def __init__(self, scenarios: list[Scenario], *args, **kwargs):
 #        kwargs["id"] = kwargs.get("id", "widget-scenario-table")
 #        kwargs["style"] = kwargs.get("style", WIDGET_STYLE)
@@ -69,7 +70,7 @@ def layout(**kwargs):
 #        ]
 #
 #
-#def layout(**kwargs):
+# def layout(**kwargs):
 #    return html.Div(
 #        id="scenario-list",
 #        children=[
