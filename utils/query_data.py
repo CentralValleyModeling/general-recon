@@ -18,7 +18,6 @@ df_dv["SWP_TA_CO_SOD"] = (
     - df_dv["SWP_CO_FEATH"]
 )
 
-
 var_dict["SWP_TA_CO_SOD"] = {
     "alias": "Total SWP Table and Carryover Delivery from the Delta",
     "bpart": "SWP_TA_CO_SOD",
@@ -74,11 +73,9 @@ df_dv_extended.update(date_map)
 df_dv = pd.DataFrame(df_dv_extended)
 # print(df_dv['icy'])
 
-
 df_sv = pd.read_csv("data/sv_data.csv", index_col=0, parse_dates=True)
 with open("constants/svars.yaml", "r") as file:
     svar_dict = yaml.safe_load(file)
-
 
 # SV Derived Timeseries
 sac_b_map = [

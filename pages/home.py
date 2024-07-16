@@ -1,26 +1,11 @@
-from urllib.parse import parse_qs, urlencode
+from urllib.parse import urlencode
 
 import dash_bootstrap_components as dbc
-from dash import (
-    ALL,
-    Input,
-    Output,
-    callback,
-    callback_context,
-    dcc,
-    html,
-    page_registry,
-    register_page,
-)
+from dash import ALL, Input, Output, callback, callback_context, html, register_page
 
-from charts.chart_layouts import (
-    CardWidget,
-    ann_bar_plot,
-    card_bar_plot_cy,
-    card_mon_exc_plot,
-)
+from charts.chart_layouts import CardWidget, card_bar_plot_cy, card_mon_exc_plot
 from pages.styles import GLOBAL_MARGIN
-from utils.query_data import df_dv, scen_aliases, var_dict
+from utils.query_data import df_dv
 
 register_page(__name__, name="Home", top_nav=True, path="/")
 
@@ -74,7 +59,11 @@ ta_card = CardWidget(
     button_id2="ta_wet_dry",
     button_label2="Wet and Dry Periods",
     chart=card_bar_plot_cy(
-        df_dv, b_part="SWP_TA_CO_SOD", wyt=[1, 2, 3, 4, 5], startyr=1922, endyr=2021
+        df_dv,
+        b_part="SWP_TA_CO_SOD",
+        wyt=[1, 2, 3, 4, 5],
+        startyr=1922,
+        endyr=2021,
     ),
     text=tablea_text,
 )
@@ -163,8 +152,8 @@ add_resources_card = dbc.Card(
         ),
     ],
     style={
-        "height": "400px",
-        "width": "400px",
+        # "height": "400px",
+        # "width": "400px",
         "backgroundColor": "#f8f9fa",
         "border": "0",
     },
@@ -178,90 +167,106 @@ def layout():
             dbc.Row(
                 [
                     dbc.Col(
-                        [
-                            html.Img(src=dcr_cover_path, height="400"),
+                        class_name="col-md-3 d-none d-lg-block my-1",  # Image goes away
+                        children=[
+                            html.Img(
+                                src=dcr_cover_path,
+                                className="img-fluid",
+                            ),
                         ],
-                        width="auto",
                     ),
                     dbc.Col(
-                        [
+                        class_name="col-md-6 my-1",
+                        children=[
                             html.A(title_text),
-                        ]
+                        ],
                     ),
                     dbc.Col(
-                        [
+                        class_name="col-md my-1",
+                        children=[
                             add_resources_card,
                         ],
-                        width="auto",
                     ),
                 ],
                 style={"background-color": "#FFFFFF"},
             ),
             html.Hr(),
-            dbc.Row(
-                [
-                    dbc.Col(
-                        [
-                            ta_card.create_card(),
-                        ]
+            dbc.Col(
+                children=[
+                    dbc.Row(
+                        children=[
+                            dbc.Col(
+                                class_name="col-md",
+                                children=[
+                                    ta_card.create_card(),
+                                ],
+                            ),
+                            dbc.Col(
+                                class_name="col-md",
+                                children=[
+                                    a21_card.create_card(),
+                                ],
+                            ),
+                        ],
+                        style={"background-color": "#FFFFFF"},
                     ),
-                    dbc.Col(
-                        [
-                            a21_card.create_card(),
-                        ]
+                    dbc.Row(
+                        children=[
+                            dbc.Col(
+                                class_name="col-md",
+                                children=[
+                                    a56_card.create_card(),
+                                ],
+                            ),
+                            dbc.Col(
+                                class_name="col-md",
+                                children=[
+                                    exp_card.create_card(),
+                                ],
+                            ),
+                        ],
+                        style={"background-color": "#FFFFFF"},
                     ),
-                ],
-                style={"background-color": "#FFFFFF"},
-            ),
-            dbc.Row(
-                [
-                    dbc.Col(
-                        [
-                            a56_card.create_card(),
-                        ]
+                    dbc.Row(
+                        children=[
+                            dbc.Col(
+                                class_name="col-md",
+                                children=[
+                                    orovl_sep_card.create_card(),
+                                ],
+                            ),
+                            dbc.Col(
+                                class_name="col-md",
+                                children=[
+                                    orovl_may_card.create_card(),
+                                ],
+                            ),
+                        ],
+                        style={"background-color": "#FFFFFF"},
                     ),
-                    dbc.Col(
-                        [
-                            exp_card.create_card(),
-                        ]
+                    dbc.Row(
+                        children=[
+                            dbc.Col(
+                                class_name="col-md",
+                                children=[
+                                    sluis_card.create_card(),
+                                ],
+                            ),
+                            dbc.Col(
+                                class_name="col-md",
+                                children=[
+                                    swp_alloc_card.create_card(),
+                                ],
+                            ),
+                        ],
+                        style={"background-color": "#FFFFFF"},
                     ),
-                ],
-                style={"background-color": "#FFFFFF"},
-            ),
-            dbc.Row(
-                [
-                    dbc.Col(
-                        [
-                            orovl_sep_card.create_card(),
-                        ]
-                    ),
-                    dbc.Col(
-                        [
-                            orovl_may_card.create_card(),
-                        ]
-                    ),
-                ],
-                style={"background-color": "#FFFFFF"},
-            ),
-            dbc.Row(
-                [
-                    dbc.Col(
-                        [
-                            sluis_card.create_card(),
-                        ]
-                    ),
-                    dbc.Col(
-                        [
-                            swp_alloc_card.create_card(),
-                        ]
-                    ),
-                ],
-                style={"background-color": "#FFFFFF"},
+                ]
             ),
             html.Hr(),
             html.Div(id="output-div"),
         ],
-        style=GLOBAL_MARGIN,
+        # style=GLOBAL_MARGIN,
     )
     return layout
 
