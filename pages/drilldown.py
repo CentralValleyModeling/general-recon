@@ -68,10 +68,42 @@ def layout(**kwargs):
             ),
             html.Br(),
             html.Div(id="my-output"),
-            dcc.Markdown("**Timeseries**"),
-            dcc.Graph(id="timeseries-plot"),
-            dcc.Markdown("**Annual Timeseries**"),
-            dcc.Graph(id="annual-timeseries-plot"),
+            dbc.Row(
+                [
+                    dcc.Markdown("**Timeseries**"),
+                    dcc.Graph(id="timeseries-plot"),
+                ]
+            ),
+            dbc.Row(
+                [
+                    dcc.Markdown("**Annual Timeseries**"),
+                    dbc.Col(
+                        [
+                            html.P(
+                                "Select Year Type for Annual Timeseries Plot",
+                                className="text-muted mt-1 m-0",
+                            ),
+                            dcc.Dropdown(
+                                options=["Calendar Year", "Water Year"],
+                                id="year-type-annual-timeseries",
+                                style={"width": "50%"},
+                                value="Water Year",
+                            ),
+                            html.P(
+                                "Select Aggregation Method for Annual Timeseries Plot",
+                                className="text-muted mt-1 m-0",
+                            ),
+                            dcc.Dropdown(
+                                options=["Mean", "Max", "Min", "Sum"],
+                                id="agg-annual-timeseries",
+                                style={"width": "50%"},
+                                value="Mean",
+                            ),
+                        ]
+                    ),
+                    dcc.Graph(id="annual-timeseries-plot"),
+                ]
+            ),
             dbc.Row(
                 [
                     dbc.Col(
@@ -185,22 +217,37 @@ def update_timeseries(b_part):
     return fig
 
 
-# Timeseries Plot
+# Annual Timeseries Plot
 @callback(
     Output(component_id="annual-timeseries-plot", component_property="figure"),
     Input(component_id="b-part", component_property="value"),
+    Input(component_id="year-type-annual-timeseries", component_property="value"),
+    Input(component_id="agg-annual-timeseries", component_property="value"),
 )
-def update_timeseries(b_part):
+def update_annual_timeseries(
+    b_part,
+    year_type: str = "Calendar Year",
+    agg_method: str = "Mean",
+):
+    offsets = {
+        "Calendar Year": 1,
+        "Water Year": 10,
+    }
     df_agg = (
         df_dv.loc[:, [b_part, "Scenario"]]
         .groupby("Scenario")
-        .resample(rule=pd.offsets.YearBegin())
-        .agg("mean")
+        .resample(rule=pd.offsets.YearBegin(month=offsets[year_type]))
+        .agg({b_part: [agg_method.lower(), "count"]})
+        .reset_index()
     )
-    print(df_agg)
+    df_agg.columns = ["-".join(c).strip("- ") for c in df_agg.columns]
+    count = df_agg[f"{b_part}-count"]
+    df_agg[year_type] = df_agg["Date"]
+    df_agg[b_part] = df_agg[f"{b_part}-{agg_method.lower()}"]  # Clean name of agg
+    df_agg = df_agg.loc[count == 12, :]  # Filter to only show full years of data
     fig = px.line(
         df_agg,
-        x=df_dv.index,
+        x=year_type,
         y=b_part,
         color="Scenario",
         color_discrete_sequence=PLOT_COLORS,
