@@ -4,7 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from dash import dcc, html
 
-from data import CHART_REGISTRY
+from data import create_download_button
 from pages.styles import PLOT_COLORS
 from utils.query_data import scen_aliases, var_dict
 from utils.tools import cfs_taf, convert_cm_nums, month_list, monthfilter
@@ -45,13 +45,7 @@ class CardWidget:
         register_download: str | None = None,
     ):
         if register_download:
-            download_button = dbc.Button(
-                "Download Data",
-                id=register_download,
-                rel="noopener",
-                target="_blank",
-            )
-            CHART_REGISTRY[register_download] = lambda *_: self.chart
+            download_button = create_download_button(register_download, self.chart)
         else:
             download_button = None
         card = dbc.Card(
