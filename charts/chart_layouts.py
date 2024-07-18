@@ -42,10 +42,10 @@ class CardWidget:
         wyt=[1, 2, 3, 4, 5],
         startyr=1922,
         endyr=2021,
-        register_download: str | None = None,
+        registry_id: str | None = None,
     ):
-        if register_download:
-            download_button = create_download_button(register_download, self.chart)
+        if registry_id:
+            download_button = create_download_button(registry_id, self.chart)
         else:
             download_button = None
         card = dbc.Card(

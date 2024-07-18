@@ -2,8 +2,8 @@ from typing import Callable
 
 import dash_bootstrap_components as dbc
 import pandas as pd
-from dash import Input, Output, callback, callback_context, dcc, html, no_update
-from plotly.graph_objects import Figure
+from dash import callback_context, dcc, html, no_update
+from plotly.graph_objects import Bar, Figure, Scatter
 
 CHART_REGISTRY: dict[str, Callable[[], html.Div]] = {
     # key: value
@@ -27,7 +27,9 @@ def create_download_button(
     return btn
 
 
-def find_figure_in_div(obj: html.Div) -> Figure | None:
+def find_figure_in_div(obj: html.Div | Figure) -> Figure | None:
+    if isinstance(obj, Figure):
+        return obj
     for o in obj.children:
         if isinstance(o, Figure):
             return o
@@ -40,30 +42,30 @@ def find_figure_in_div(obj: html.Div) -> Figure | None:
     return None  # Nothing found
 
 
+def _create_dataframe_from_lines(data: Scatter) -> pd.DataFrame:
+    df = pd.DataFrame(data={data.name: data.y, "X": data.x})
+    return df.set_index("X")
+
+
+def _create_dataframe_from_bar(data: Bar) -> pd.DataFrame:
+    df = pd.DataFrame(data={data.legendgroup: data.y, "X": data.x})
+    return df.set_index("X")
+
+
 def create_dataframe_from_fig(fig: Figure) -> pd.DataFrame:
     frames = list()
     for data in fig.data:
-        if data["mode"] == "lines":
-            df = pd.DataFrame(
-                data={data["name"]: data["y"], "X": data["x"]},
-            )
-            df = df.set_index("X")
-            frames.append(df)
+        if isinstance(data, Scatter):
+            df = _create_dataframe_from_lines(data)
+        elif isinstance(data, Bar):
+            df = _create_dataframe_from_bar(data)
         else:
-            raise NotImplementedError(
-                f"figure trace mode not supported: {data['mode']}"
-            )
+            raise NotImplementedError(f"trace type not supported: {type(data)}")
+        frames.append(df)
+
     return pd.concat(frames, axis=1, join="outer").sort_index()
 
 
-@callback(
-    Output("download-response", "data"),
-    Input("oroville-sept-exceedance", "n_clicks"),
-    Input("oroville-may-exceedance", "n_clicks"),
-    Input("sluis-exceedance", "n_clicks"),
-    Input("swp-alloc-exceedance", "n_clicks"),
-    prevent_initial_call=True,
-)
 def universal_data_download(*args):
     _id = callback_context.triggered_id
     if _id not in CHART_REGISTRY:

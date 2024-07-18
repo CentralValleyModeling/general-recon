@@ -13,7 +13,7 @@ from dash import (
 )
 
 from charts.chart_layouts import CardWidget, card_bar_plot_cy, card_mon_exc_plot
-from data import load_markdown
+from data import load_markdown, universal_data_download
 from utils.query_data import df_dv
 
 register_page(__name__, name="Home", top_nav=True, path="/", title="Results Console")
@@ -121,16 +121,9 @@ add_resources_card = dbc.Card(
                     target="_blank",
                     style={"marginTop": "10px"},
                 ),
-                html.Br(),
             ]
         ),
     ],
-    style={
-        # "height": "400px",
-        # "width": "400px",
-        "backgroundColor": "#f8f9fa",
-        "border": "0",
-    },
 )
 
 
@@ -139,6 +132,7 @@ def layout():
         id="home-container",
         class_name="my-3",
         children=[
+            dcc.Download(id="download-response-home"),
             dbc.Row(
                 id="home-introduction",
                 children=[
@@ -162,7 +156,6 @@ def layout():
                         ],
                     ),
                 ],
-                # style={"background-color": "#FFFFFF"},
             ),
             html.Hr(),
             dbc.Col(
@@ -200,7 +193,7 @@ def layout():
                                 class_name="col-md-6",
                                 children=[
                                     orovl_sep_card.create_card(
-                                        register_download="oroville-sept-exceedance",
+                                        registry_id="oroville-sept-exceedance",
                                     )
                                 ],
                             ),
@@ -208,7 +201,7 @@ def layout():
                                 class_name="col-md-6",
                                 children=[
                                     orovl_may_card.create_card(
-                                        register_download="oroville-may-exceedance",
+                                        registry_id="oroville-may-exceedance",
                                     )
                                 ],
                             ),
@@ -221,7 +214,7 @@ def layout():
                                 class_name="col-md-6",
                                 children=[
                                     sluis_card.create_card(
-                                        register_download="sluis-exceedance",
+                                        registry_id="sluis-exceedance",
                                     )
                                 ],
                             ),
@@ -229,19 +222,12 @@ def layout():
                                 class_name="col-md-6",
                                 children=[
                                     swp_alloc_card.create_card(
-                                        register_download="swp-alloc-exceedance"
+                                        registry_id="swp-alloc-exceedance"
                                     )
                                 ],
                             ),
                         ],
                     ),
-                ],
-                # style={"background-color": "#FFFFFF"},
-            ),
-            html.Div(
-                id="output-div",
-                children=[
-                    dcc.Download(id="download-response"),
                 ],
             ),
         ],
@@ -273,3 +259,15 @@ def button_1_action(n_clicks):
             return f"/drilldown?{url_params}", True
         else:
             return f"/contractor_summary?{url_params}", True
+
+
+@callback(
+    Output("download-response-home", "data"),
+    Input("oroville-sept-exceedance", "n_clicks"),
+    Input("oroville-may-exceedance", "n_clicks"),
+    Input("sluis-exceedance", "n_clicks"),
+    Input("swp-alloc-exceedance", "n_clicks"),
+    prevent_initial_call=True,
+)
+def home_data_download(*args):
+    return universal_data_download()
