@@ -108,7 +108,10 @@ def layout(**kwargs):
                         },
                     ),
                     graph_div,
-                    create_download_button(DWNLD_BUTTON_ID, graph_div),
+                    html.Div(
+                        className="m-3",
+                        children=create_download_button(DWNLD_BUTTON_ID, graph_div),
+                    ),
                 ]
             ),
         ]
