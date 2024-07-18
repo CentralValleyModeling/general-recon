@@ -5,7 +5,13 @@ from charts.chart_layouts import CardWidget, card_bar_plot_cy, card_mon_plot
 from pages.styles import GLOBAL_MARGIN
 from utils.query_data import df_sv
 
-register_page(__name__, name="Hydrology", top_nav=True, path="/hydrology")
+register_page(
+    __name__,
+    name="Hydrology",
+    top_nav=True,
+    path="/hydrology",
+    order=1,
+)
 
 # Cards
 

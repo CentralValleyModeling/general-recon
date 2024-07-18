@@ -8,9 +8,10 @@ from utils.tools import common_pers
 
 register_page(
     __name__,
-    name="A21 Dry and Wet Periods",
+    name="Article 21",
     top_nav=True,
     path="/a21_dry_wet_periods",
+    order=3,
 )
 DWNLD_DRY_ID = "article-21-dry-years"
 DWNLD_WET_ID = "article-21-wet-years"

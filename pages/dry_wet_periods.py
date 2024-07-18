@@ -7,7 +7,11 @@ from utils.query_data import df_dv, scen_aliases
 from utils.tools import common_pers
 
 register_page(
-    __name__, name="TA Dry and Wet Periods", top_nav=True, path="/dry_wet_periods"
+    __name__,
+    name="Table A",
+    top_nav=True,
+    path="/dry_wet_periods",
+    order=2,
 )
 
 

@@ -43,7 +43,6 @@ app = dash.Dash(
     ],
     title=APP_TITLE,
     use_pages=True,
-    # pages_folder="pages"
 )
 
 pages = [

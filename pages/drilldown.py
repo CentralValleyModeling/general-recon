@@ -22,7 +22,13 @@ from utils.tools import (
     wyt_list,
 )
 
-register_page(__name__, name="Drilldown", top_nav=True, path="/drilldown")
+register_page(
+    __name__,
+    name="Drilldown",
+    top_nav=True,
+    path="/drilldown",
+    order=6,
+)
 
 bparts = []
 aliases = []

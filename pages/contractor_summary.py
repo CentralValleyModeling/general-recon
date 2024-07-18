@@ -20,9 +20,10 @@ from utils.tools import common_pers, make_summary_df, month_list
 
 register_page(
     __name__,
-    # name='Page 4',
+    name="Contractor Summary",
     top_nav=True,
     path="/contractor_summary",
+    order=5,
 )
 
 b = []
