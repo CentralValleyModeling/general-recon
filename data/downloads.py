@@ -30,12 +30,14 @@ def create_download_button(
 def find_figure_in_div(obj: html.Div | Figure) -> Figure | None:
     if isinstance(obj, Figure):
         return obj
-    for o in obj.children:
-        if isinstance(o, Figure):
-            return o
-        elif isinstance(o, dcc.Graph):
-            return o.figure
-        elif hasattr(o, "children"):
+    elif isinstance(obj, dcc.Graph):
+        if hasattr(obj, "figure"):
+            return obj.figure
+        else:
+            print(obj)
+            raise ValueError(obj)
+    elif hasattr(obj, "children"):
+        for o in obj.children:
             fig = find_figure_in_div(o)
             if fig is not None:
                 return fig
@@ -66,7 +68,7 @@ def create_dataframe_from_fig(fig: Figure) -> pd.DataFrame:
     return pd.concat(frames, axis=1, join="outer").sort_index()
 
 
-def universal_data_download(*args):
+def universal_data_download(csv_name: str | None = None, *args):
     _id = callback_context.triggered_id
     if _id not in CHART_REGISTRY:
         print(f"Button(id={_id}) is not registered in the CHART_REGISTRY")
@@ -74,7 +76,12 @@ def universal_data_download(*args):
     div = CHART_REGISTRY[_id]()
     fig = find_figure_in_div(div)
     if fig is None:
-        print(f"Could not find a Figure in Div for Button(id={_id})")
+        print(f"Could not find a Figure in {div} for Button(id={_id})")
         return no_update
     df = create_dataframe_from_fig(fig)
-    return dcc.send_data_frame(df.to_csv, f"{_id}.csv")
+    if csv_name is None:
+        csv_name = f"{_id}.csv"
+
+    o = dcc.send_data_frame(df.to_csv, csv_name)
+    print(o)
+    return o

@@ -319,11 +319,19 @@ def ann_exc_plot(df, b_part, monthchecklist, yearwindow):
     for i, column in enumerate(df3.columns):
         series_sorted = df3[column].dropna()
         exceedance_prob = (series_sorted.index + 1) / len(series_sorted) * 100
+        # linearly interpolate the line above so we get 100 points, from 1-100
+        df = pd.DataFrame(data={"y": series_sorted, "x": exceedance_prob})
+        integer_index = df["x"].round(decimals=0).astype(int)
+        # This step should really be an interpolation using scipy.interp1d, but it works
+        # with the dependencies that we have right now
+        # TODO: 2024-07-18 Consider updating to an interpolation method
+        df = df.groupby(integer_index).mean()
+        df = df.reindex(index=range(1, 101, 1)).ffill()
 
         fig1.add_trace(
             go.Scatter(
-                x=exceedance_prob,
-                y=series_sorted,
+                x=df.index,
+                y=df["y"],
                 mode="lines",
                 name=column,
                 line=dict(color=PLOT_COLORS[i % len(PLOT_COLORS)]),
