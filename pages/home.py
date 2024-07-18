@@ -9,7 +9,7 @@ from utils.query_data import df_dv
 
 register_page(__name__, name="Home", top_nav=True, path="/")
 
-dcr_cover_path = "assets/draft_dcr_2023_cover.png"
+dcr_cover_path = "assets/final_dcr_2023_cover.png"
 
 title_text = (
     """Welcome to the Delivery Capability Report Results Console (ReCon), an 
