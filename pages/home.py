@@ -19,7 +19,7 @@ from charts.chart_layouts import CardWidget, card_bar_plot_cy, card_mon_exc_plot
 from data import CHART_REGISTRY, load_markdown
 from utils.query_data import df_dv
 
-register_page(__name__, name="Home", top_nav=True, path="/")
+register_page(__name__, name="Home", top_nav=True, path="/", title="Results Console")
 
 dcr_cover_path = "assets/final_dcr_2023_cover.png"
 
