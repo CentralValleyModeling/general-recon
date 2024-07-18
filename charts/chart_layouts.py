@@ -57,7 +57,11 @@ class CardWidget:
                     [
                         html.H4(self.title, className="card-title"),
                         self.chart,
-                        html.P(self.text, className="card-text"),
+                        (
+                            html.P(self.text, className="card-text")
+                            if isinstance(self.text, str)
+                            else self.text  # If str, render, otherwise use as is
+                        ),
                         dbc.Col(
                             children=[
                                 (

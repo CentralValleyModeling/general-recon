@@ -72,7 +72,8 @@ def layout(**kwargs):
     graph_div = dcc.Graph(id="contractor-exceedance-graph")
 
     layout = dbc.Container(
-        [
+        class_name="m-2",
+        children=[
             dcc.Download(id="download-response-contractor"),
             # dcc.Markdown("# ![](/assets/cs3_icon_draft.png) CalSim 3 Summary Table"),
             dcc.RangeSlider(
@@ -115,7 +116,7 @@ def layout(**kwargs):
                     ),
                 ]
             ),
-        ]
+        ],
     )
     return layout
 

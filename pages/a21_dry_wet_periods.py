@@ -73,10 +73,11 @@ def layout():
         class_name="m-3",
     )
     layout = dbc.Container(
-        [
+        class_name="m-2",
+        children=[
             dcc.Download(id="download-response-article-21"),
             dbc.Col([dry_div, wet_div]),
-        ]
+        ],
     )
     return layout
 

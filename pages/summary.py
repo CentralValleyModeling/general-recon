@@ -82,7 +82,8 @@ table_order.extend(
 
 def layout():
     layout = dbc.Container(
-        [
+        class_name="m-2",
+        children=[
             dcc.Markdown("### Summary Table"),
             dbc.Row(
                 [
@@ -105,7 +106,7 @@ def layout():
                     ),
                 ]
             ),
-        ]
+        ],
     )
     return layout
 
