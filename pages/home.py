@@ -1,7 +1,6 @@
 from urllib.parse import urlencode
 
 import dash_bootstrap_components as dbc
-import pandas as pd
 from dash import (
     ALL,
     Input,
@@ -10,13 +9,11 @@ from dash import (
     callback_context,
     dcc,
     html,
-    no_update,
     register_page,
 )
-from plotly.graph_objects import Figure
 
 from charts.chart_layouts import CardWidget, card_bar_plot_cy, card_mon_exc_plot
-from data import CHART_REGISTRY, load_markdown
+from data import load_markdown
 from utils.query_data import df_dv
 
 register_page(__name__, name="Home", top_nav=True, path="/", title="Results Console")
@@ -276,54 +273,3 @@ def button_1_action(n_clicks):
             return f"/drilldown?{url_params}", True
         else:
             return f"/contractor_summary?{url_params}", True
-
-
-def find_figure_in_div(obj: html.Div) -> Figure | None:
-    for o in obj.children:
-        if isinstance(o, Figure):
-            return o
-        elif isinstance(o, dcc.Graph):
-            return o.figure
-        elif hasattr(o, "children"):
-            fig = find_figure_in_div(o)
-            if fig is not None:
-                return fig
-    return None  # Nothing found
-
-
-def create_dataframe_from_fig(fig: Figure) -> pd.DataFrame:
-    frames = list()
-    for data in fig.data:
-        if data["mode"] == "lines":
-            df = pd.DataFrame(
-                data={data["name"]: data["y"], "X": data["x"]},
-            )
-            df = df.set_index("X")
-            frames.append(df)
-        else:
-            raise NotImplementedError(
-                f"figure trace mode not supported: {data['mode']}"
-            )
-    return pd.concat(frames, axis=1, join="outer").sort_index()
-
-
-@callback(
-    Output("download-response", "data"),
-    Input("oroville-sept-exceedance", "n_clicks"),
-    Input("oroville-may-exceedance", "n_clicks"),
-    Input("sluis-exceedance", "n_clicks"),
-    Input("swp-alloc-exceedance", "n_clicks"),
-    prevent_initial_call=True,
-)
-def universal_data_download(*args):
-    _id = callback_context.triggered_id
-    if _id not in CHART_REGISTRY:
-        print(f"Button(id={_id}) is not registered in the CHART_REGISTRY")
-        return no_update
-    div = CHART_REGISTRY[_id]()
-    fig = find_figure_in_div(div)
-    if fig is None:
-        print(f"Could not find a Figure in Div for Button(id={_id})")
-        return no_update
-    df = create_dataframe_from_fig(fig)
-    return dcc.send_data_frame(df.to_csv, f"{_id}.csv")
