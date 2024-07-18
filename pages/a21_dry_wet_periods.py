@@ -14,6 +14,20 @@ register_page(
 )
 
 
+title_a21_dry_wet_text = (
+    """This page shows Article 21 deliveries during select dry and wet periods
+      included in the DCR 2023 Main Report.
+      Article 21 Water is water that SWP contractors may receive on intermittent,
+      interruptible basis in addition to their Table A water, if they request it.
+      Article 21 water is used by many SWP contractors to help meet demands when
+      allocations are less than 100 percent. The availability and delivery
+      of Article 21 water cannot impact the Table A allocation of the any
+      contractor's water, nor can it negatively impact normal SWP operations.""",
+    html.Br(),
+    html.Br(),
+)
+
+
 def layout():
     drypers = [
         "Six Year Drought (1929-1934)",
@@ -49,19 +63,26 @@ def layout():
         perlist=wetpers,
     )
 
+    a21_text = dbc.Row(
+        [
+            html.A(title_a21_dry_wet_text),
+        ],
+        class_name="m-3",
+    )
+
     dry_div = dbc.Row(
         [
-            html.H3("Article 21 Deliveries during dry periods"),
+            html.H3("Article 21 Deliveries - Dry Periods"),
             dcc.Graph(figure=dry_pers),
         ],
         class_name="m-3",
     )
     wet_div = dbc.Row(
         [
-            html.H3("Article 21 Deliveries during wet periods"),
+            html.H3("Article 21 Deliveries - Wet Periods"),
             dcc.Graph(figure=wet_pers),
         ],
         class_name="m-3",
     )
-    layout = dbc.Container([dbc.Col([dry_div, wet_div])])
+    layout = dbc.Container([dbc.Col([a21_text, dry_div, wet_div])])
     return layout
