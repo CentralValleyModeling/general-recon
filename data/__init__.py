@@ -1,8 +1,13 @@
 from pathlib import Path
+from typing import Callable
 
-from dash import dcc
+from dash import dcc, html
 
 DATA_DIR = Path(__file__).parent
+CHART_REGISTRY: dict[str, Callable[[], html.Div]] = {
+    # key: value
+    # component-id: callable that returns a plotly.graph_objects.Figure
+}
 
 
 def load_markdown(
