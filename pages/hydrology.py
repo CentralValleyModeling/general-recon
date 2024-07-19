@@ -130,6 +130,7 @@ def layout():
             dbc.Col(
                 [
                     html.H3(["Hydrology Comparison"]),
+                    html.A(hydrology_text),
                     dbc.Row(
                         [
                             dbc.Col(eight_ri_card_ann.create_card(height="25rem")),
