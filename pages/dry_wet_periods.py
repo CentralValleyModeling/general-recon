@@ -73,6 +73,12 @@ def layout():
             dbc.Row(
                 class_name="my-2",
                 children=[
+                    load_markdown("page_text/table-a-percent-max.md"),
+                ],
+            ),
+            dbc.Row(
+                class_name="my-2",
+                children=[
                     load_markdown("page_text/table-a-dry.md"),
                     dcc.Graph(figure=dry_pers),
                     html.Div(
