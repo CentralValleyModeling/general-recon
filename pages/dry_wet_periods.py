@@ -1,13 +1,17 @@
 import dash_bootstrap_components as dbc
-from dash import dcc, html, register_page
+from dash import Input, Output, callback, dcc, html, register_page
 
 from charts.chart_layouts import ta_dry_wet_barplot
-from pages.styles import GLOBAL_MARGIN
+from data import create_download_button, load_markdown, universal_data_download
 from utils.query_data import df_dv, scen_aliases
 from utils.tools import common_pers
 
 register_page(
-    __name__, name="TA Dry and Wet Periods", top_nav=True, path="/dry_wet_periods"
+    __name__,
+    name="Table A",
+    top_nav=True,
+    path="/dry_wet_periods",
+    order=2,
 )
 
 title_ta_dry_wet_text = (
@@ -29,7 +33,6 @@ drypers = [
 wetpers = [
     "Single Wet Year (1983)",
     "Single Wet Year (1998)",
-    #'Single Wet Year (2006)',
     "Two Year Wet Sequence (1982-1983)",
     "Four Year Wet Sequence (1980-1983)",
     "Six Year Wet Sequence (1978-1983)",
@@ -44,35 +47,67 @@ ta_periods_text = dbc.Row(
 )
 
 dry_pers = ta_dry_wet_barplot(
-    df_dv, common_pers, bpart="SWP_TA_CO_SOD", scens=scen_aliases, perlist=drypers
+    df_dv,
+    common_pers,
+    bpart="SWP_TA_CO_SOD",
+    scens=scen_aliases,
+    perlist=drypers,
 )
 wet_pers = ta_dry_wet_barplot(
-    df_dv, common_pers, bpart="SWP_TA_CO_SOD", scens=scen_aliases, perlist=wetpers
+    df_dv,
+    common_pers,
+    bpart="SWP_TA_CO_SOD",
+    scens=scen_aliases,
+    perlist=wetpers,
 )
+
+DWNLD_DRY_ID = "table-a-dry-years"
+DWNLD_WET_ID = "table-a-wet-years"
 
 
 def layout():
     layout = dbc.Container(
-        [
+        class_name="m-2",
+        children=[
+            dcc.Download(id="download-response-table-a"),
             dbc.Row(
-                [   
-                    html.A(title_ta_dry_wet_text),
-                    dcc.Markdown("### Table A % of Maximum Table A Amount - Dry Periods"),
-                    dcc.Markdown(
-                        "Estimated Dry-Period Percent of Maximum SWP, "
-                        + "Table A Amount, 4,133 TAF/year, "
-                        + "excluding Butte County, Yuba City, and Plumas County FCWCD."
-                    ),
+                class_name="my-2",
+                children=[
+                    load_markdown("page_text/table-a-dry.md"),
                     dcc.Graph(figure=dry_pers),
-                    dcc.Markdown("### Table A % of Maximum Table A Amount - Wet Periods"),
-                    dcc.Markdown(
-                        "Estimated Wet-Period Percent of Maximum SWP, "
-                        + "Table A Amount, 4,133 TAF/year, "
-                        + "excluding Butte County, Yuba City, and Plumas County FCWCD."
+                    html.Div(
+                        create_download_button(
+                            DWNLD_DRY_ID,
+                            dry_pers,
+                            button_text="Download Dry Period Data",
+                        )
                     ),
+                ],
+            ),
+            dbc.Row(
+                class_name="my-2",
+                children=[
+                    load_markdown("page_text/table-a-wet.md"),
                     dcc.Graph(figure=wet_pers),
-                ]
-            )
-        ]
+                    html.Div(
+                        create_download_button(
+                            DWNLD_WET_ID,
+                            wet_pers,
+                            button_text="Download Wet Period Data",
+                        )
+                    ),
+                ],
+            ),
+        ],
     )
     return layout
+
+
+@callback(
+    Output("download-response-table-a", "data"),
+    Input(DWNLD_DRY_ID, "n_clicks"),
+    Input(DWNLD_WET_ID, "n_clicks"),
+    prevent_initial_call=True,
+)
+def home_data_download(*args):
+    return universal_data_download()

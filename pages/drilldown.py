@@ -13,7 +13,13 @@ from utils.tools import (cfs_taf, convert_cm_nums, convert_wyt_nums,
                          list_files, load_data_mult, make_ressum_df,
                          make_summary_df, month_list, month_map, wyt_list)
 
-register_page(__name__, name="Drilldown", top_nav=True, path="/drilldown")
+register_page(
+    __name__,
+    name="Drilldown",
+    top_nav=True,
+    path="/drilldown",
+    order=6,
+)
 
 drilldown_text = (
     """This page allows users to view various plots and metrics on a timeseries.
@@ -52,13 +58,12 @@ def layout(**kwargs):
     b = kwargs.get("type", "C_CAA003")
     print(b)
     layout = dbc.Container(
-        [
-            dcc.Markdown(
-                "# ![](/assets/cs3_icon_draft.png) CalSim 3 Variable Drilldown"
-            ),
-            html.A(drilldown_text),
+        class_name="m-2",
+        children=[
             dbc.Row(
                 [
+                    html.H3("Drilldown"),
+                    html.A(drilldown_text),
                     dbc.Col(
                         [
                             "Select B-Part: ",
