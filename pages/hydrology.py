@@ -9,12 +9,25 @@ register_page(__name__, name="Hydrology", top_nav=True, path="/hydrology")
 
 # Cards
 
+hydrology_text = (
+    """This page provides annual and monthly averages for four hydrologic metrics:
+     Eight River Index, Sacramento River Runoff, San Joaquin River Runoff,
+      and Oroville reservoir inflow.""",
+    html.Br(),
+    html.Br(),
+    """Additional monthly average plots are provided for Oroville reservoir inflow.
+    One is inflow during drier years (Dry and Critical Sac Valley Index)
+    and the other is inflow during wetter years (Wet and Above Normal).""",
+    html.Br(),
+    html.Br(),
+)
+
 eight_ri_card_ann = CardWidget(
     "Eight River Index",
     button_id=None,
     button_label=None,
     chart=card_bar_plot_cy(df_sv, b_part="8RI"),
-    text="",
+    text="Eight River Index is the sum of Sacramento River Runoff and San Joaquin River Runoff",
 )
 
 sac_four_ri_card_ann = CardWidget(
@@ -22,15 +35,18 @@ sac_four_ri_card_ann = CardWidget(
     button_id=None,
     button_label=None,
     chart=card_bar_plot_cy(df_sv, b_part="SAC4"),
-    text="",
-)
+    text="""Sacramento River Runoff is the sum of Sacramento River at Bend Bridge, 
+                        Feather River inflow to Lake Oroville, Yuba River at Smartville, 
+                        and American River inflow to Folsom Lake.""",)
 
 sjr_four_ri_card_ann = CardWidget(
     "San Joaquin River Runoff",
     button_id=None,
     button_label=None,
     chart=card_bar_plot_cy(df_sv, b_part="SJR4"),
-    text="",
+    text="""San Joaquin River Runoff is the sum of Stanislaus River inflow to New Melones
+                        Lake, Tuolumne River inflow to New Don Pedro Reservoir, Merced River inflow
+                        to Lake McClure, and San Joaquin River inflow to Millerton Lake""",
 )
 
 orov_inflow_card_ann = CardWidget(
@@ -46,7 +62,7 @@ eight_ri_card_mon = CardWidget(
     button_id=None,
     button_label=None,
     chart=card_mon_plot(df_sv, b_part="8RI", yaxis_title="Eight River Index (TAF)"),
-    text="Eight River Index is the sum of Sacramento River Runoff and San Joaquin River Runoff",
+    text="",
 )
 
 sac_four_ri_card_mon = CardWidget(
@@ -56,9 +72,7 @@ sac_four_ri_card_mon = CardWidget(
     chart=card_mon_plot(
         df_sv, b_part="SAC4", yaxis_title="Sacramento River Runoff (TAF)"
     ),
-    text="""Sacramento River Runoff is the sum of Sacramento River at Bend Bridge, 
-                        Feather River inflow to Lake Oroville, Yuba River at Smartville, 
-                        and American River inflow to Folsom Lake.""",
+    text="",
 )
 
 sjr_four_ri_card_mon = CardWidget(
@@ -68,9 +82,7 @@ sjr_four_ri_card_mon = CardWidget(
     chart=card_mon_plot(
         df_sv, b_part="SJR4", yaxis_title="San Joaquin River Runoff (TAF)"
     ),
-    text="""San Joaquin River Runoff is the sum of Stanislaus River inflow to New Melones
-                        Lake, Tuolumne River inflow to New Don Pedro Reservoir, Merced River inflow
-                        to Lake McClure, and San Joaquin River inflow to Millerton Lake""",
+    text="",
 )
 
 orov_inflow_card_mon = CardWidget(
@@ -124,6 +136,7 @@ def layout():
             #        inputStyle={"margin-right": "5px","margin-left": "30px"},
             # ),
             # html.Div(id='hydrology-range-slider-output'),
+            html.A(hydrology_text),
             dbc.Row(
                 [
                     dbc.Col(
