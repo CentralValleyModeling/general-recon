@@ -62,7 +62,7 @@ def layout(**kwargs):
         children=[
             dbc.Row(
                 [
-                    html.H3("Drilldown"),
+                    html.H1("Drilldown"),
                     html.A(drilldown_text),
                     dbc.Col(
                         [

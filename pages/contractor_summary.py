@@ -79,7 +79,7 @@ def layout(**kwargs):
         class_name="m-2",
         children=[
             dcc.Download(id="download-response-contractor"),
-            html.H2(["Contractor Summary"]),
+            html.H1(["Contractor Summary"]),
             html.A(contractor_summary_text),
             # dcc.Markdown("# ![](/assets/cs3_icon_draft.png) CalSim 3 Summary Table"),
             dcc.RangeSlider(

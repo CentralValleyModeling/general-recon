@@ -73,7 +73,7 @@ def layout():
 
     a21_text = dbc.Row(
         [
-            html.H1("Article 21 Deliveries during Dry and Wet Periods"),
+            html.H1("Article 21 Deliveries - Dry and Wet Periods"),
             html.A(title_a21_dry_wet_text),            
         ],
         class_name="m-3",

@@ -129,7 +129,7 @@ def layout():
             dcc.Download(id="download-response-hydrology"),
             dbc.Col(
                 [
-                    html.H3(["Hydrology Comparison"]),
+                    html.H1(["Hydrology Comparison"]),
                     html.A(hydrology_text),
                     dbc.Row(
                         [
