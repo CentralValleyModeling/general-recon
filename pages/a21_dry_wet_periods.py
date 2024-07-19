@@ -71,9 +71,17 @@ def layout():
 
     button_download_wet = create_download_button(DWNLD_WET_ID, wet_pers)
 
+    a21_text = dbc.Row(
+        [
+            html.H1("Article 21 Deliveries during Dry and Wet Periods"),
+            html.A(title_a21_dry_wet_text),            
+        ],
+        class_name="m-3",
+    )
+
     dry_div = dbc.Row(
         [
-            html.H3("Article 21 Deliveries - Dry Periods"),
+            html.H3("Dry Periods"),
             dcc.Graph(figure=dry_pers),
             button_download_dry,
         ],
@@ -81,7 +89,7 @@ def layout():
     )
     wet_div = dbc.Row(
         [
-            html.H3("Article 21 Deliveries - Wet Periods"),
+            html.H3("Wet Periods"),
             dcc.Graph(figure=wet_pers),
             button_download_wet,
         ],
@@ -91,7 +99,7 @@ def layout():
         class_name="m-2",
         children=[
             dcc.Download(id="download-response-article-21"),
-            dbc.Col([dry_div, wet_div]),
+            dbc.Col([a21_text, dry_div, wet_div]),
         ],
     )
     return layout
