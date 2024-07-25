@@ -35,29 +35,27 @@ ta_card = CardWidget(
     button_id2="ta_wet_dry",
     button_label2="Wet and Dry Periods",
     popover_label="table-a-info",
-    popover_content=load_markdown("page_text/card-table-a.md"),
-    chart=card_bar_plot_cy(
-        df_dv,
-        b_part="SWP_TA_CO_SOD",
-        wyt=[1, 2, 3, 4, 5],
-        startyr=1922,
-        endyr=2021,
-    ),
-    text=load_markdown("page_text/card-table-a.md"),
+    popover_content=load_markdown("page_text/info-table-a.md"),
+    chart=card_bar_plot_cy(df_dv, b_part="SWP_TA_CO_SOD"),
+    text=None,
 )
 a21_card = CardWidget(
     "SWP Article 21 Deliveries",
     button_id="a21_btn",
     button_label="View by Contractor",
+    popover_label="a21-info",
+    popover_content=load_markdown("page_text/info-article-21.md"),
     chart=card_bar_plot_cy(df_dv, b_part="SWP_IN_TOTAL"),
-    text=load_markdown("page_text/card-article-21.md"),
+    text=None,
 )
 a56_card = CardWidget(
     "SWP Carryover Deliveries",
     button_id="a56_btn",
     button_label="View by Contractor",
+    popover_label="a56-info",
+    popover_content=load_markdown("page_text/info-carryover.md"),
     chart=card_bar_plot_cy(df_dv, b_part="SWP_CO_SOD"),
-    text=load_markdown("page_text/card-carryover.md"),
+    text=None,
 )
 exp_card = CardWidget(
     "Total Banks SWP Exports",

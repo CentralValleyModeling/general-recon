@@ -10,11 +10,10 @@ from utils.query_data import scen_aliases, var_dict
 from utils.tools import cfs_taf, convert_cm_nums, month_list, monthfilter
 
 
+INFO_ICON = html.I(className='fa fa-info-circle', style=dict(display='inline-block'))
+
+
 # ToDo use dictionaries to allow arbitrary number of buttons
-
-info_icon = html.I(className='fa fa-info-circle', style=dict(display='inline-block'))
-
-
 class CardWidget:
     def __init__(
         self,
@@ -23,8 +22,8 @@ class CardWidget:
         button_label="Explore",
         button_id2="placeholder",
         button_label2: str | None = None,
-        popover_label="Test",
-        popover_content="test content",
+        popover_label: str | None = None,
+        popover_content: str | None = None,
         chart: html.Div = None,
         text=None,
         image=None,
@@ -68,11 +67,11 @@ class CardWidget:
                                 style={"display": "inline-block"}),
                         (
                             dbc.Button(
-                                info_icon,
+                                INFO_ICON,
                                 id=self.popover_label,
                                 color="link",
                             )
-                            if self.button_label2 is not None
+                            if self.popover_label is not None
                             else None
                         ),
                         self.chart,
