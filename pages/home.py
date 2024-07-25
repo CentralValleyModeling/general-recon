@@ -34,6 +34,8 @@ ta_card = CardWidget(
     button_label="View Table A by Contractor",
     button_id2="ta_wet_dry",
     button_label2="Wet and Dry Periods",
+    popover_label="table-a-info",
+    popover_content=load_markdown("page_text/card-table-a.md"),
     chart=card_bar_plot_cy(
         df_dv,
         b_part="SWP_TA_CO_SOD",

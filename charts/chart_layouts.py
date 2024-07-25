@@ -11,6 +11,10 @@ from utils.tools import cfs_taf, convert_cm_nums, month_list, monthfilter
 
 
 # ToDo use dictionaries to allow arbitrary number of buttons
+
+info_icon = html.I(className='fa fa-info-circle', style=dict(display='inline-block'))
+
+
 class CardWidget:
     def __init__(
         self,
@@ -19,6 +23,8 @@ class CardWidget:
         button_label="Explore",
         button_id2="placeholder",
         button_label2: str | None = None,
+        popover_label="Test",
+        popover_content="test content",
         chart: html.Div = None,
         text=None,
         image=None,
@@ -32,6 +38,8 @@ class CardWidget:
         self.button_label = button_label
         self.button_id2 = button_id2
         self.button_label2 = button_label2
+        self.popover_label = popover_label
+        self.popover_content = popover_content
         self.chart = chart
         self.text = text
         self.image = image
@@ -55,7 +63,18 @@ class CardWidget:
                 dbc.CardImg(src=self.image, top=True) if self.image else None,
                 dbc.CardBody(
                     [
-                        html.H4(self.title, className="card-title"),
+
+                        html.H4(self.title, className="card-title",
+                                style={"display": "inline-block"}),
+                        (
+                            dbc.Button(
+                                info_icon,
+                                id=self.popover_label,
+                                color="link",
+                            )
+                            if self.button_label2 is not None
+                            else None
+                        ),
                         self.chart,
                         (
                             html.P(self.text, className="card-text")
@@ -85,9 +104,21 @@ class CardWidget:
                                             "index": self.button_id2,
                                         },
                                         color="primary",
+                                        class_name="me-3",
                                     )
                                     if self.button_label2 is not None
                                     else None
+                                ),
+
+                                (
+                                    dbc.Popover(
+                                        dbc.PopoverBody(self.popover_content),
+                                        target=self.popover_label,
+                                        trigger="hover"
+                                    )
+                                    if self.popover_label is not None
+                                    else None
+
                                 ),
                                 (download_button),
                             ],
