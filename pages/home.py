@@ -61,6 +61,8 @@ exp_card = CardWidget(
     "Total Banks SWP Exports",
     button_id="C_CAA003_SWP",
     button_label="Details",
+    popover_label="exp-info",
+    popover_content=load_markdown("page_text/info-swp-exports.md"),
     chart=card_bar_plot_cy(df_dv, b_part="C_CAA003_SWP"),
 )
 orovl_sep_card = CardWidget(
