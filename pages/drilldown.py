@@ -9,9 +9,18 @@ from dash import Input, Output, State, callback, dcc, html, register_page
 from charts.chart_layouts import ann_exc_plot, mon_exc_plot
 from pages.styles import PLOT_COLORS
 from utils.query_data import date_map, df_dv, scen_aliases, var_dict
-from utils.tools import (cfs_taf, convert_cm_nums, convert_wyt_nums,
-                         list_files, load_data_mult, make_ressum_df,
-                         make_summary_df, month_list, month_map, wyt_list)
+from utils.tools import (
+    cfs_taf,
+    convert_cm_nums,
+    convert_wyt_nums,
+    list_files,
+    load_data_mult,
+    make_ressum_df,
+    make_summary_df,
+    month_list,
+    month_map,
+    wyt_list,
+)
 
 register_page(
     __name__,
@@ -58,7 +67,7 @@ def layout(**kwargs):
     b = kwargs.get("type", "C_CAA003")
     print(b)
     layout = dbc.Container(
-        class_name="m-2",
+        class_name="my-3",
         children=[
             dbc.Row(
                 [

@@ -1,7 +1,16 @@
 # import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
-from dash import (Input, Output, State, callback, dash_table, dcc, html,
-                  no_update, register_page)
+from dash import (
+    Input,
+    Output,
+    State,
+    callback,
+    dash_table,
+    dcc,
+    html,
+    no_update,
+    register_page,
+)
 
 from charts.chart_layouts import ann_exc_plot
 from data import create_download_button, universal_data_download
@@ -76,7 +85,7 @@ def layout(**kwargs):
     graph_div = dcc.Graph(id="contractor-exceedance-graph")
 
     layout = dbc.Container(
-        class_name="m-2",
+        class_name="my-y",
         children=[
             dcc.Download(id="download-response-contractor"),
             html.H1(["Contractor Summary"]),
