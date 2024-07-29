@@ -80,7 +80,8 @@ def layout(**kwargs):
         if var_dict[i]["type"] == typefilter:
             b.append(i)
     exp_tbl = make_summary_df(
-        scen_aliases, df_dv, var_dict, bparts=b, start_yr=1922, end_yr=2021
+        scen_aliases, df_dv, var_dict, bparts=b,
+        yrkind='icy', start_yr=1922, end_yr=2021
     )
     graph_div = dcc.Graph(id="contractor-exceedance-graph")
 
@@ -147,6 +148,7 @@ def update_table(slider_yr_range):
         df_dv,
         var_dict,
         bparts=b,
+        yrkind='icy',
         start_yr=slider_yr_range[0],
         end_yr=slider_yr_range[1],
     )
