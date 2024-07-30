@@ -12,7 +12,7 @@ from dash import (
     register_page,
 )
 
-from charts.chart_layouts import ann_exc_plot
+from charts.chart_layouts import ann_exc_plot, distplot
 from data import create_download_button, universal_data_download
 from data.downloads import CHART_REGISTRY
 from utils.query_data import df_dv, scen_aliases, var_dict
@@ -84,6 +84,7 @@ def layout(**kwargs):
         yrkind='icy', start_yr=1922, end_yr=2021
     )
     graph_div = dcc.Graph(id="contractor-exceedance-graph")
+    distplot_div = dcc.Graph(id="contractor-dist-plot")
 
     layout = dbc.Container(
         class_name="my-y",
@@ -130,6 +131,7 @@ def layout(**kwargs):
                         className="m-3",
                         children=create_download_button(DWNLD_BUTTON_ID, graph_div),
                     ),
+                    distplot_div,
                 ]
             ),
         ],
@@ -195,9 +197,27 @@ def show_contractor_data(click_data):
             b,
             monthchecklist=month_list,
             yearwindow="Calendar Year",
+            title=b,
         )
         # We need to re-register the figure when it's updated
         CHART_REGISTRY[DWNLD_BUTTON_ID] = lambda *_: fig
+        return fig
+
+
+@callback(
+    Output("contractor-dist-plot", "figure"),
+    Input("exp_tbl", "active_cell"),
+    prevent_initial_call=True,
+)
+def show_contractor_distplot(click_data):
+    if click_data is None:
+        return "Click on a cell"
+    else:
+        b = exp_tbl.loc[click_data["row"]]["bpart"]
+        fig = distplot(df_dv, b,
+                       xlabel="Annual Average (TAF/yr)",
+                       ylabel="Count",
+                       title=b)
         return fig
 
 
