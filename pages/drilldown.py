@@ -11,13 +11,13 @@ from pages.styles import PLOT_COLORS
 from utils.query_data import date_map, df_dv, scen_aliases, var_dict
 from utils.tools import (
     cfs_taf,
-    convert_cm_nums,
     convert_wyt_nums,
     list_files,
     load_data_mult,
     make_ressum_df,
     make_summary_df,
     month_list,
+    monthfilter,
     month_map,
     wyt_list,
 )
@@ -150,7 +150,7 @@ def layout(**kwargs):
                     ),
                     dbc.Col(
                         [
-                            dcc.Markdown("**Monthly Average (Oct=1)**"),
+                            dcc.Markdown("**Monthly Average**"),
                             dcc.Checklist(
                                 options=wyt_list,
                                 value=wyt_list,
@@ -238,7 +238,11 @@ def update_timeseries(b_part):
         color="Scenario",
         color_discrete_sequence=PLOT_COLORS,
     )
-    # print(df)
+    fig.update_layout(
+        plot_bgcolor="white",
+        xaxis=dict(gridcolor="LightGray"),
+        yaxis=dict(gridcolor="LightGray"),
+    )
     return fig
 
 
@@ -277,7 +281,11 @@ def update_annual_timeseries(
         color="Scenario",
         color_discrete_sequence=PLOT_COLORS,
     )
-    # print(df)
+    fig.update_layout(
+        plot_bgcolor="white",
+        xaxis=dict(gridcolor="LightGray"),
+        yaxis=dict(gridcolor="LightGray"),
+    )
     return fig
 
 
@@ -311,7 +319,7 @@ def update_exceedance(b_part, monthchecklist, yearwindow):
     Input(component_id="wytchecklist-bar", component_property="value"),
     Input(component_id="slider-yr-range", component_property="value"),
 )
-def update_bar(b_part, wytchecklist, slider_yr_range):
+def update_monthly(b_part, wytchecklist, slider_yr_range):
     startyr = slider_yr_range[0]
     endyr = slider_yr_range[1]
     df0 = df_dv.loc[
@@ -328,6 +336,22 @@ def update_bar(b_part, wytchecklist, slider_yr_range):
         color=df1.index.get_level_values(0),
         labels={"color": "Scenario"},
         color_discrete_sequence=PLOT_COLORS,
+    )
+    fig.update_layout(
+        plot_bgcolor="white",
+        xaxis=dict(
+            tickmode="array",
+            tickvals=monthfilter,
+            ticktext=month_list,
+            showgrid=True,
+            gridcolor="LightGray",
+        ),
+        yaxis=dict(
+            showgrid=True,
+            gridcolor="LightGray",
+        ),
+        yaxis_tickformat=",d",
+        xaxis_title="Month"
     )
 
     return fig
@@ -362,7 +386,10 @@ def update_bar_annual(b_part, wytchecklist, slider_yr_range):
         text_auto=True,
         color_discrete_sequence=PLOT_COLORS,
     )
-    fig.update_layout(barmode="relative")
+    fig.update_layout(
+        barmode="relative",
+        plot_bgcolor="white"
+    )
     return fig
 
 
