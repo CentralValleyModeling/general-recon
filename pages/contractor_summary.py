@@ -29,7 +29,7 @@ register_page(
 contractor_summary_text = (
     """This page shows the long-term SWP Table A deliveries average
      from Contract Year 1922-2021. There is an exceedance probability plot below.
-     To view the exceedance probability plot for a contractor,
+     To view the exceedance probability plot and histogram for a contractor,
      click on any of the B-Part variables.""",
     html.Br(),
     html.Br(),
