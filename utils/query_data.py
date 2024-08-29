@@ -54,18 +54,11 @@ var_dict["SWP_CO_SOD"] = {
 # Consistent with how the DCR excel report tool does it
 df_dv_extended = pd.DataFrame()
 for s in df_dv["Scenario"].unique():
-    if s == "DCR_21_Hist":
-        start_date_1 = "2015-01-31 23:59:59"
-        end_date_1 = "2015-09-30 23:59:59"
-        new_date_range = pd.date_range(
-            start="2015-10-31 23:59:59", end="2015-12-31 23:59:59", freq="ME"
-        )
-    else:
-        start_date_1 = "2021-01-31 23:59:59"
-        end_date_1 = "2021-09-30 23:59:59"
-        new_date_range = pd.date_range(
-            start="2021-10-31 23:59:59", end="2021-12-31 23:59:59", freq="ME"
-        )
+    start_date_1 = "2021-01-31 23:59:59"
+    end_date_1 = "2021-09-30 23:59:59"
+    new_date_range = pd.date_range(
+        start="2021-10-31 23:59:59", end="2021-12-31 23:59:59", freq="ME"
+    )
 
     scenario_df = pd.DataFrame()
     lastpartialyear = pd.DataFrame()
@@ -92,7 +85,8 @@ for s in df_dv["Scenario"].unique():
 df_dv_extended.update(date_map)
 
 df_dv = pd.DataFrame(df_dv_extended)
-# print(df_dv['icy'])
+
+#print(df_dv)
 
 df_sv = pd.read_csv("data/sv_data.csv", index_col=0, parse_dates=True)
 with open("constants/svars.yaml", "r") as file:

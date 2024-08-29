@@ -142,30 +142,7 @@ def layout():
         class_name="my-3",
         children=[
             dcc.Download(id="download-response-home"),
-            dbc.Row(
-                id="home-introduction",
-                children=[
-                    dbc.Col(
-                        id="dcr-cover-image",
-                        class_name="col-md-3 d-none d-lg-block my-1",  # Image goes away
-                        children=[
-                            html.Img(src=dcr_cover_path, className="img-fluid"),
-                        ],
-                    ),
-                    dbc.Col(
-                        id="home-introduction-text",
-                        class_name="col-md-6 my-1",
-                        children=[load_markdown("page_text/site-introduction.md")],
-                    ),
-                    dbc.Col(
-                        id="home-introduction-links",
-                        class_name="col-md",
-                        children=[
-                            add_resources_card,
-                        ],
-                    ),
-                ],
-            ),
+            dbc.Row(),
             html.Hr(),
             dbc.Col(
                 id="home-cards",

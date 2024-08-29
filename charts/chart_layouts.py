@@ -185,23 +185,9 @@ def card_bar_plot_cy(
 ):
     if wyt is None:
         wyt = [1, 2, 3, 4, 5]
-    # This is VERY specific to the DCR 2021
-    df_dcr21 = df.loc[(df["Scenario"].isin(["DCR_21_Hist"])) & (df["icy"] >= startyr)]
-    try:
-        df_dcr21 = cfs_taf(df_dcr21, var_dict)
-    except Exception:
-        print(f"Unable to convert from CFS to TAF for {b_part}")
-    df_dcr21_ann = round(df_dcr21.groupby(["Scenario"]).sum() / (2015 - 1922 + 1))
+
     df0 = df.loc[
-        df["Scenario"].isin(
-            [
-                "DCR_23_Adj",
-                "DCR_23_CC50",
-                "DCR_23_CC75",
-                "DCR_23_CC95",
-            ]
-        )
-        & (df["icy"] >= startyr)
+        (df["icy"] >= startyr)
     ]
     try:
         df0 = cfs_taf(df0, var_dict)
@@ -209,7 +195,7 @@ def card_bar_plot_cy(
         print(f"Unable to convert from CFS to TAF for {b_part}")
     # For the last year
     df1 = round(df0.groupby(["Scenario"]).sum() / (endyr - startyr + 1))
-    df_plot = pd.concat([df_dcr21_ann, df1])
+    df_plot = df1
     fig = px.bar(
         df_plot[b_part],
         text=df_plot[b_part],

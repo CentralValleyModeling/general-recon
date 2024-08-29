@@ -51,7 +51,7 @@ pages = [
 ]
 
 navbar = dbc.NavbarSimple(
-    brand=ReconNavbarBrand("SWP DCR 2023 Recon"),
+    brand=ReconNavbarBrand("General CS3 ReCon"),
     children=pages,
     color="light",
     dark=False,
