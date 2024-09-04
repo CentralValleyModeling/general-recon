@@ -1070,35 +1070,35 @@ NDOI:
   table_display: wy
   type: Channel
 NDOI_ADD:
-  alias: Delta - Excess Outflow (NDOI)
+  alias: Delta - Additional Delta Outflow (NDOI)
   bpart: NDOI_ADD
   pathname: /CALSIM/NDOI_ADD/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
 NDOI_ADD_ANN:
-  alias: Delta - Excess Outflow ANN (NDOI)
+  alias: Delta - Additional Outflow for ANN (NDOI)
   bpart: NDOI_ADD_ANN
   pathname: /CALSIM/NDOI_ADD_ANN/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
 NDOI_ADD_CVP:
-  alias: Delta - Excess Outflow CVP (NDOI)
+  alias: Delta - Additional Outflow for CVP (NDOI)
   bpart: NDOI_ADD_CVP
   pathname: /CALSIM/NDOI_ADD_CVP/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
 NDOI_ADD_SWP:
-  alias: Delta - Excess Outflow SWP (NDOI)
+  alias: Delta - Additional Outflow for SWP (NDOI)
   bpart: NDOI_ADD_SWP
   pathname: /CALSIM/NDOI_ADD_SWP/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
 NDOI_MIN:
-  alias: Delta - Required Delta Outflow
+  alias: Delta - Required Delta Outflow for NDO and X2
   bpart: NDOI_MIN
   pathname: /CALSIM/NDOI_MIN/.*//.*/.*/
   table_convert: cfs_taf
@@ -1194,21 +1194,35 @@ SHORT_CVP_TOT_N:
   pathname: /CALSIM/SHORT_CVP_TOT_N/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Shortage
 SHORT_CVP_TOT_S:
   alias: Delivery - SHORT_CVP_TOT_S
   bpart: SHORT_CVP_TOT_S
   pathname: /CALSIM/SHORT_CVP_TOT_S/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: Shortage
 SHORT_SWP_TOTA:
-  alias: Other - SHORT_SWP_TOTAL
+  alias: Other - SHORT_SWP_TOTAL (Cumulative)
   bpart: SHORT_SWP_TOTA
   pathname: /CALSIM/SHORT_SWP_TOTA/.*//.*/.*/
   table_convert: cfs_taf
-  table_display: wy
-  type: Channel
+  table_display: 12
+  type: Shortage
+SHORT_SWP_TOT_S:
+  alias: Other - SWP South of Delta Shortage (Cumulative)
+  bpart: SHORT_SWP_TOT_S
+  pathname: /CALSIM/SHORT_SWP_TOT_S/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: 12
+  type: Shortage
+SHORT_SWP_TOT_N:
+  alias: Other - SWP North of Delta Shortage (Cumulative)
+  bpart: SHORT_SWP_TOT_N
+  pathname: /CALSIM/SHORT_SWP_TOT_N/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: 12
+  type: Shortage
 SP_SAC066_YBP020:
   alias: Upstream Flows - Sacramento Weir spills
   bpart: SP_SAC066_YBP020

@@ -90,7 +90,8 @@ def convert_wyt_nums(wytchecklist: Iterable[str]) -> list[str]:
     return wytfilter
 
 
-def load_data_mult(scen_dict: dict[str, Any], var_dict: dict, date_map) -> None:
+def load_data_mult(scen_dict: dict[str, Any], var_dict: dict, date_map,
+                   outfile="temp.csv") -> None:
     """
     # Load data from the selected DSS files into a .csv
     """
@@ -121,7 +122,7 @@ def load_data_mult(scen_dict: dict[str, Any], var_dict: dict, date_map) -> None:
     df = pd.concat(appended_data)
     df = df.round(2)
     df = pd.merge(df, date_map, left_index=True, right_index=True)
-    df.to_csv("data/temp.csv")
+    df.to_csv(f"data/{outfile}")
 
 
 def make_ressum_df(
