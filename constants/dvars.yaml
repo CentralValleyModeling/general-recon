@@ -1398,6 +1398,13 @@ S_WKYTN:
   table_convert: orig
   table_display: 9
   type: Reservoir Storage
+S_LOSVQ:
+  alias: Storage - Los Vaqueros Reservoir
+  bpart: S_LOSVQ
+  pathname: /CALSIM/S_LOSVQ/.*//.*/.*/
+  table_convert: orig
+  table_display: 9
+  type: Reservoir Storage
 UNUSED_TOTALDV:
   alias: Delivery - SWP_UNUSED_TA_TOTAL
   bpart: UNUSED_TOTALDV

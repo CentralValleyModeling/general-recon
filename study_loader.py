@@ -42,4 +42,4 @@ print(scen_dict_sv)
 load_data_mult(scen_dict_dv, var_dict_dv, date_map, "dv_data.csv")
 
 # Load SV
-load_data_mult(scen_dict_sv, var_dict_sv, date_map, "sv_data.csv")
+#load_data_mult(scen_dict_sv, var_dict_sv, date_map, "sv_data.csv")

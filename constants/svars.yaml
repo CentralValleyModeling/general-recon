@@ -1413,3 +1413,185 @@ I_WLF013:
   table_convert: cfs_taf
   table_display: wy
   type: SV - Inflow
+CT_BENDBRIDGE_SV:
+  alias: CT_BENDBRIDGE_SV
+  bpart: CT_BENDBRIDGE_SV
+  pathname: /CALSIM/CT_BENDBRIDGE_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_BUTTECITY_SV:
+  alias: CT_BUTTECITY_SV
+  bpart: CT_BUTTECITY_SV
+  pathname: /CALSIM/CT_BUTTECITY_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_COLUSA_SV:
+  alias: CT_COLUSA_SV
+  bpart: CT_COLUSA_SV
+  pathname: /CALSIM/CT_COLUSA_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_DAVIS_SV:
+  alias: CT_DAVIS_SV
+  bpart: CT_DAVIS_SV
+  pathname: /CALSIM/CT_DAVIS_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_FAIROAKS_SV:
+  alias: CT_FAIROAKS_SV
+  bpart: CT_FAIROAKS_SV
+  pathname: /CALSIM/CT_FAIROAKS_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_FREEPORT_SV:
+  alias: CT_FREEPORT_SV
+  bpart: CT_FREEPORT_SV
+  pathname: /CALSIM/CT_FREEPORT_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_GRAVELLYFORD_SV:
+  alias: CT_GRAVELLYFORD_SV
+  bpart: CT_GRAVELLYFORD_SV
+  pathname: /CALSIM/CT_GRAVELLYFORD_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_MELON_SV:
+  alias: CT_MELON_SV
+  bpart: CT_MELON_SV
+  pathname: /CALSIM/CT_MELON_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_MERCED_SV:
+  alias: CT_MERCED_SV
+  bpart: CT_MERCED_SV
+  pathname: /CALSIM/CT_MERCED_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_MODESTO_SV:
+  alias: CT_MODESTO_SV
+  bpart: CT_MODESTO_SV
+  pathname: /CALSIM/CT_MODESTO_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_MUDSLOUGH_SV:
+  alias: CT_MUDSLOUGH_SV
+  bpart: CT_MUDSLOUGH_SV
+  pathname: /CALSIM/CT_MUDSLOUGH_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_NICOLAUS_SV:
+  alias: CT_NICOLAUS_SV
+  bpart: CT_NICOLAUS_SV
+  pathname: /CALSIM/CT_NICOLAUS_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_OROVILLE_SV:
+  alias: CT_OROVILLE_SV
+  bpart: CT_OROVILLE_SV
+  pathname: /CALSIM/CT_OROVILLE_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_PARDE_SV:
+  alias: CT_PARDE_SV
+  bpart: CT_PARDE_SV
+  pathname: /CALSIM/CT_PARDE_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_PEDRO_SV:
+  alias: CT_PEDRO_SV
+  bpart: CT_PEDRO_SV
+  pathname: /CALSIM/CT_PEDRO_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_RIPON_SV:
+  alias: CT_RIPON_SV
+  bpart: CT_RIPON_SV
+  pathname: /CALSIM/CT_RIPON_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_SACSLOUGH_SV:
+  alias: CT_SACSLOUGH_SV
+  bpart: CT_SACSLOUGH_SV
+  pathname: /CALSIM/CT_SACSLOUGH_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_SALTSLOUGH_SV:
+  alias: CT_SALTSLOUGH_SV
+  bpart: CT_SALTSLOUGH_SV
+  pathname: /CALSIM/CT_SALTSLOUGH_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_SMARTVILLE_SV:
+  alias: CT_SMARTVILLE_SV
+  bpart: CT_SMARTVILLE_SV
+  pathname: /CALSIM/CT_SMARTVILLE_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_STEVINSON_SV:
+  alias: CT_STEVINSON_SV
+  bpart: CT_STEVINSON_SV
+  pathname: /CALSIM/CT_STEVINSON_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_VERNALIS_SV:
+  alias: CT_VERNALIS_SV
+  bpart: CT_VERNALIS_SV
+  pathname: /CALSIM/CT_VERNALIS_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_VERONA_SV:
+  alias: CT_VERONA_SV
+  bpart: CT_VERONA_SV
+  pathname: /CALSIM/CT_VERONA_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_WHEATLAND_SV:
+  alias: CT_WHEATLAND_SV
+  bpart: CT_WHEATLAND_SV
+  pathname: /CALSIM/CT_WHEATLAND_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_WILKINSSL_SV:
+  alias: CT_WILKINSSL_SV
+  bpart: CT_WILKINSSL_SV
+  pathname: /CALSIM/CT_WILKINSSL_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_WOODLAND_SV:
+  alias: CT_WOODLAND_SV
+  bpart: CT_WOODLAND_SV
+  pathname: /CALSIM/CT_WOODLAND_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
+CT_YOLO_SV:
+  alias: CT_YOLO_SV
+  bpart: CT_YOLO_SV
+  pathname: /CALSIM/CT_YOLO_SV/.*//.*/.*/
+  table_convert: cfs_taf
+  table_display: wy
+  type: SV - Closure Term
