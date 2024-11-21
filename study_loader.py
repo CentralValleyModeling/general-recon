@@ -2,7 +2,8 @@ from collections import namedtuple
 
 import pandas as pd
 import yaml
-from utils.tools import load_data_mult
+from utils import list_files, load_data_mult
+from pathlib import Path
 
 # Scenario management
 Study = namedtuple("Scenario", ["dv_path", "sv_path", "alias", "active"])
@@ -11,6 +12,15 @@ with open("constants/dvars.yaml", "r") as file:
     var_dict_dv = yaml.safe_load(file)
 with open("constants/svars.yaml", "r") as file:
     var_dict_sv = yaml.safe_load(file)
+with open("study_ledger.yaml", "r") as file:
+    study_ledger = yaml.safe_load(file)
+
+
+
+
+
+print(list_files(Path(r'C:\jobs\20240426_CCA\20240920_models')))
+
 
 s1 = Study(r"C:\Users\ycheng\Desktop\ClimateAdaptation\ReCon\2043-50CC\20240807\CCA1_v3.6.x__Baseline_LU100_SLR0_20240806.dss",
            r"C:\Users\ycheng\Desktop\ClimateAdaptation\ReCon\2043-50CC\20240807\CCA_SV_Danube_Adj_v1.9.dss",
@@ -51,7 +61,7 @@ print(scen_dict_dv)
 print(scen_dict_sv)
 
 # Load DV
-load_data_mult(scen_dict_dv, var_dict_dv, date_map, "dv_data.csv")
+#load_data_mult(scen_dict_dv, var_dict_dv, date_map, "dv_data.csv")
 
 # Load SV
-load_data_mult(scen_dict_sv, var_dict_sv, date_map, "sv_data.csv")
+#load_data_mult(scen_dict_sv, var_dict_sv, date_map, "sv_data.csv")

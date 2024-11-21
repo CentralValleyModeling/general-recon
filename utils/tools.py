@@ -1,6 +1,7 @@
 import csv
 import os
 from typing import Any, Iterable
+from pathlib import Path
 
 import pandas as pd
 import pandss as pdss
@@ -324,24 +325,32 @@ def remove_duplicates(data: dict) -> dict:
     return unique_data  # TODO: 2024-07-15 explore if this is the fastest implementation
 
 
-def list_files(directory: str) -> dict[str, str]:
+def list_files(directory_path):
     """
-    List all files in a directory including those within nested folders.
+    List all the pathnames of files in the specified directory.
 
-    Args:
-    - directory (str): The path to the directory to list files from.
+    Parameters:
+    directory_path (str): The path to the directory.
 
     Returns:
-    - dict: A dictionary of file paths
+    list: A list of full pathnames of the files in the directory.
     """
-    # TODO: 2024-07-15 Replace this with pathlib objects
-    file_paths = {}  # List to store all file paths
-    # Traverse directory tree
-    for root, directories, files in os.walk(directory):
-        for filename in files:
-            filepath = os.path.join(root, filename)
-            parts = filename.split("\\")
-            # print(filename.split('.')[-1])
-            if filename.split(".")[-1] == "dss":
-                file_paths[parts[-1]] = filepath
-    return file_paths
+    try:
+        # Convert the directory path to a Path object
+        directory = Path(directory_path)
+        
+        if not directory.exists():
+            print(f"The directory '{directory_path}' does not exist.")
+            return []
+
+        if not directory.is_dir():
+            print(f"The path '{directory_path}' is not a directory.")
+            return []
+
+        # Get all file paths in the directory
+        files = [str(file) for file in directory.iterdir() if file.is_file()]
+        return files
+    except PermissionError:
+        print(f"Permission denied to access the directory '{directory_path}'.")
+        return []
+
