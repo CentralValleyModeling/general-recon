@@ -6,13 +6,13 @@ from data import create_download_button, universal_data_download
 from utils.query_data import df_dv, scen_aliases
 from utils.tools import common_pers
 
-register_page(
-    __name__,
-    name="Article 21",
-    top_nav=True,
-    path="/a21_dry_wet_periods",
-    order=3,
-)
+#register_page(
+#    __name__,
+#    name="Article 21",
+#    top_nav=True,
+#    path="/a21_dry_wet_periods",
+#    order=3,
+#)
 
 
 title_a21_dry_wet_text = (

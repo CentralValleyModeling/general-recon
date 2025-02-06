@@ -6,7 +6,7 @@ from utils import list_files, load_data_mult, load_data
 from pathlib import Path
 
 # Scenario management
-Study = namedtuple("Scenario", ["dv_path", "sv_path", "alias", "assumptions", "climate", "active"])
+Study = namedtuple("Scenario", ["dv_path", "sv_path", "alias", "assumptions", "climate", "color"])
 
 
 
@@ -33,7 +33,4 @@ studies = [
 
 date_map = pd.read_csv("constants/date_map.csv", index_col=0, parse_dates=True)
 
-load_data(studies, var_dict_dv, date_map, "dv_data_test.csv")
-
-# Load SV
-#load_data_mult(scen_dict_sv, var_dict_sv, date_map, "sv_data.csv")
+#load_data(studies, var_dict_dv, date_map, "dv", "dv_data_test.csv")

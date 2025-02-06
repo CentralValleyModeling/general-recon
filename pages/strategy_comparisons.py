@@ -4,13 +4,13 @@ from utils.query_data import df_dv, scen_aliases, var_dict
 from utils.tools import make_summary_df
 
 
-register_page(
-    __name__,
-    name="Strategy Comparisons",
-    top_nav=True,
-    path="/strategy_comparisons",
-    order=4,
-)
+#register_page(
+#    __name__,
+#    name="Strategy Comparisons",
+#    top_nav=True,
+#    path="/strategy_comparisons",
+#    order=4,
+#)
 
 summary_text = (
     """This page provides annual averages (water year) for key system variables. """,

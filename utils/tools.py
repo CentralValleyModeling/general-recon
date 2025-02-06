@@ -126,7 +126,7 @@ def load_data_mult(scen_dict: dict[str, Any], var_dict: dict, date_map,
     df.to_csv(f"data/{outfile}")
 
 
-def load_data(studies, var_dict: dict, date_map,
+def load_data(studies, var_dict: dict, date_map,kind:str,
                    outfile="temp.csv") -> None:
     """
     # Load data from the selected DSS files into a .csv
@@ -137,20 +137,24 @@ def load_data(studies, var_dict: dict, date_map,
     appended_data = []
 
     for s in studies:
-        if (s.active == 1):
-            with pdss.DSS(s.dv_path) as dss:
+        if (kind == 'dv'):
+            pn = pdss.DSS(s.dv_path)
+        elif (kind == 'sv'):
+            pn = pdss.DSS(s.sv_path)
+      
+        with pn as dss:
 
-                # Loop to read all paths into DataFrame
-                for var in var_dict:
-                    pn = var_dict[var]["pathname"]
-                    path_i = pdss.DatasetPath.from_str(pn)
-                    print(pn)
+            # Loop to read all paths into DataFrame
+            for var in var_dict:
+                pn = var_dict[var]["pathname"]
+                path_i = pdss.DatasetPath.from_str(pn)
+                print(pn)
 
-                    for regular_time_series in dss.read_multiple_rts(path_i):
-                        dfi["Scenario"] = s.alias
-                        dfi["Assumption"] = s.assumptions
-                        dfi["Climate"] = s.climate
-                        dfi[regular_time_series.path.b] = regular_time_series.to_frame()
+                for regular_time_series in dss.read_multiple_rts(path_i):
+                    dfi["Scenario"] = s.alias
+                    dfi["Assumption"] = s.assumptions
+                    dfi["Climate"] = s.climate
+                    dfi[regular_time_series.path.b] = regular_time_series.to_frame()
 
         # Make a list of the DataFrames associated with each DV file
         appended_data.append(dfi)
@@ -184,7 +188,7 @@ def make_ressum_df(
         except KeyError:
             continue
 
-    df_tbl = round(df1.groupby(["Scenario"]).sum() / (end_yr - start_yr + 1))
+    df_tbl = round(df1.groupby(["Scenario"]).sum(numeric_only=True) / (end_yr - start_yr + 1))
 
     # Drop the index columns
     df_tbl.drop(["icy", "icm", "iwy", "iwm", "cfs_taf"], axis=1, inplace=True)
@@ -237,7 +241,7 @@ def make_summary_df(
             continue
 
     # Annual Average
-    df_tbl = round(df1.groupby(["Scenario"]).sum() / (end_yr - start_yr + 1))
+    df_tbl = round(df1.groupby(["Scenario"]).sum(numeric_only=True) / (end_yr - start_yr + 1))
 
     # Time slicing is done; drop the index columns
     df_tbl.drop(["icy", "icm", "iwy", "iwm", "cfs_taf"], axis=1, inplace=True)

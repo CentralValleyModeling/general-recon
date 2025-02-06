@@ -44,7 +44,7 @@ def make_heatmap_df(
             continue
 
     # Annual Average
-    df_tbl = round(df1.groupby(["Scenario"]).sum() / (end_yr - start_yr + 1))
+    df_tbl = round(df1.groupby(["Scenario"]).sum(numeric_only=True) / (end_yr - start_yr + 1))
 
     df_tbl = (df_tbl - df_tbl.iloc[0]) / df_tbl.iloc[0]
     df_tbl = df_tbl[df_tbl.index.isin(scen_aliases)]
