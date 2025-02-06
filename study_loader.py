@@ -19,18 +19,30 @@ with open("study_ledger.yaml", "r") as file:
 
 studies = [
     Study(r"dss_files\CCA1_v3.7.0__Baseline_LU100_SLR0_20241219",
-          r"dss_files\CS3_2022MED_03102024_L2020A_LTO_NAA_SV.dss",
+          "",
           "CCA0", "Current_Infrastructure", "Existing_Climate", 1),
 
     Study(r"dss_files\CCA1_v3.7.0__Baseline_LU100_SLR0_20241219",
-          r"dss_files\CS3_2022MED_03102024_L2020A_LTO_NAA_SV.dss",
+          "",
           "CCA1", "Degradation", "2043_CC50", 1),
 
     Study(r"dss_files\CCA4_v3.7.0__2043_50CC_LU100_SLR15_20241220.dss",
-          r"dss_files\CS3_2022MED_03102024_L2020A_LTO_NAA_SV.dss",
-          "CCA4", "Maintain", "2043_CC50", 1)
+          "",
+          "CCA4", "Maintain", "2043_CC50", 1),
+
+    Study(r"dss_files\CCA4_v3.7.0__2043_50CC_LU100_SLR15_20241220.dss",
+          "",
+          "CCA8", "FIRO", "2043_CC50", 1),  
+
+    Study(r"dss_files\CCA4_v3.7.0__2043_50CC_LU100_SLR15_20241220.dss",
+          "",
+          "CCA10", "SOD Storage", "2043_CC50", 1),
+
+    Study(r"dss_files\CCA4_v3.7.0__2043_50CC_LU100_SLR15_20241220.dss",
+          "",
+          "CCA12", "Combo", "2043_CC50", 1),
 ]
 
 date_map = pd.read_csv("constants/date_map.csv", index_col=0, parse_dates=True)
 
-#load_data(studies, var_dict_dv, date_map, "dv", "dv_data_test.csv")
+load_data(studies, var_dict_dv, date_map, "dv", "dv_data.csv")

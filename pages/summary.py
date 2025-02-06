@@ -25,17 +25,6 @@ exp_tbl = make_summary_df(
     df_dv,
     var_dict,
     bparts=[
-        "C_LWSTN",
-        "D_LWSTN_CCT011",
-        "C_WKYTN",
-        "C_KSWCK",
-        "C_SAC097",
-        "C_FTR059",
-        "C_FTR003",
-        "C_YUB006",
-        "C_SAC083",
-        "C_NTOMA",
-        "C_AMR004",
         #   '----'
         "DELTAINFLOWFORNDOI",
         #    '----'
