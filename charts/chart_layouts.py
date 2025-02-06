@@ -218,6 +218,90 @@ def card_bar_plot_cy(
     return layout
 
 
+def card_bar_plot_wy_vert(
+    df: pd.DataFrame,
+    b_part: str = "C_CAA003",
+    wyt: list[int] = None,
+    startyr: int = 1922,
+    endyr: int = 2021,
+):
+    if wyt is None:
+        wyt = [1, 2, 3, 4, 5]
+
+    df0 = df.loc[
+        (df["iwy"] >= startyr)
+    ]
+    try:
+        df0 = cfs_taf(df0, var_dict)
+    except Exception:
+        print(f"Unable to convert from CFS to TAF for {b_part}")
+    # For the last year
+    df1 = round(df0.groupby(["Scenario"]).sum() / (endyr - startyr + 1))
+    df_plot = df1
+    fig = px.bar(
+        df_plot[b_part],
+        text=df_plot[b_part],
+        color=df_plot.index,
+        orientation="v",
+        color_discrete_sequence=PLOT_COLORS,
+    )
+    fig.update_layout(
+        barmode="relative",
+        plot_bgcolor="white",
+        # width=600,
+        # height=300,
+        showlegend=False,
+        xaxis_title="TAF/Water Year",
+        yaxis_title="",
+        xaxis_tickformat=",d",
+    )
+    layout = html.Div([dcc.Graph(figure=fig)])
+
+    return layout
+
+
+def card_bar_plot_ledger(
+    df: pd.DataFrame,
+    metric: str = "SOD Table A Deliveries",
+    wyt: list[int] = None,
+    startyr: int = 1922,
+    endyr: int = 2021,
+):
+    if wyt is None:
+        wyt = [1, 2, 3, 4, 5]
+
+    df0 = df.loc[
+        (df["iwy"] >= startyr)
+    ]
+    try:
+        df0 = cfs_taf(df0, var_dict)
+    except Exception:
+        print(f"Unable to convert from CFS to TAF for {b_part}")
+    # For the last year
+    df1 = round(df0.groupby(["Scenario"]).sum() / (endyr - startyr + 1))
+    df_plot = df1
+    fig = px.bar(
+        df_plot[b_part],
+        text=df_plot[b_part],
+        color=df_plot.index,
+        orientation="v",
+        color_discrete_sequence=PLOT_COLORS,
+    )
+    fig.update_layout(
+        barmode="relative",
+        plot_bgcolor="white",
+        # width=600,
+        # height=300,
+        showlegend=False,
+        xaxis_title="TAF/Water Year",
+        yaxis_title="",
+        xaxis_tickformat=",d",
+    )
+    layout = html.Div([dcc.Graph(figure=fig)])
+
+    return layout
+
+
 def card_mon_exc_plot(df, b_part, monthchecklist):
     fig = mon_exc_plot(df, b_part, monthchecklist)
     fig.update_layout(

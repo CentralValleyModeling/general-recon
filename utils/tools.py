@@ -112,8 +112,45 @@ def load_data_mult(scen_dict: dict[str, Any], var_dict: dict, date_map,
                 print(pn)
 
                 for regular_time_series in dss.read_multiple_rts(path_i):
-                    dfi["Scenario"] = s
+                    dfi["Scenario"] = s[1]
                     dfi[regular_time_series.path.b] = regular_time_series.to_frame()
+
+        # Make a list of the DataFrames associated with each DV file
+        appended_data.append(dfi)
+        dfi = pd.DataFrame()
+
+    # concatenate the individual DataFrames into one big DataFrame
+    df = pd.concat(appended_data)
+    df = df.round(2)
+    df = pd.merge(df, date_map, left_index=True, right_index=True)
+    df.to_csv(f"data/{outfile}")
+
+
+def load_data(studies, var_dict: dict, date_map,
+                   outfile="temp.csv") -> None:
+    """
+    # Load data from the selected DSS files into a .csv
+    """
+
+    dfi = pd.DataFrame()
+    df = pd.DataFrame()
+    appended_data = []
+
+    for s in studies:
+        if (s.active == 1):
+            with pdss.DSS(s.dv_path) as dss:
+
+                # Loop to read all paths into DataFrame
+                for var in var_dict:
+                    pn = var_dict[var]["pathname"]
+                    path_i = pdss.DatasetPath.from_str(pn)
+                    print(pn)
+
+                    for regular_time_series in dss.read_multiple_rts(path_i):
+                        dfi["Scenario"] = s.alias
+                        dfi["Assumption"] = s.assumptions
+                        dfi["Climate"] = s.climate
+                        dfi[regular_time_series.path.b] = regular_time_series.to_frame()
 
         # Make a list of the DataFrames associated with each DV file
         appended_data.append(dfi)

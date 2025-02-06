@@ -51,7 +51,7 @@ pages = [
 ]
 
 navbar = dbc.NavbarSimple(
-    brand=ReconNavbarBrand("General CS3 ReCon"),
+    brand=ReconNavbarBrand("SWP Climate Adaptation Plan"),
     children=pages,
     color="light",
     dark=False,

@@ -4,6 +4,7 @@ import yaml
 date_map = pd.read_csv("constants/date_map.csv", index_col=0, parse_dates=True)
 df_dv_orig = pd.read_csv("data/dv_data.csv", index_col=0, parse_dates=True)
 df_dv = pd.read_csv("data/dv_data.csv", index_col=0, parse_dates=True)
+#df_ledger = pd.read_csv("data/_ledger.csv", index_col=0, parse_dates=True)
 scen_aliases = df_dv.Scenario.unique()
 
 with open("constants/dvars.yaml", "r") as file:
@@ -97,6 +98,8 @@ for s in df_dv["Scenario"].unique():
 df_dv_extended.update(date_map)
 
 df_dv = pd.DataFrame(df_dv_extended)
+
+#print(df_ledger)
 
 #print(df_dv)
 
