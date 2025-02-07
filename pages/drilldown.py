@@ -327,7 +327,7 @@ def update_monthly(b_part, wytchecklist, slider_yr_range):
         & (df_dv["iwy"] >= startyr)
         & (df_dv["iwy"] <= endyr)
     ]
-    df1 = round(df0.groupby(["Scenario", "iwm"]).mean())
+    df1 = round(df0.groupby(["Scenario", "iwm"]).mean(numeric_only=True))
     df1 = df1.reindex(scen_aliases, level="Scenario")
     fig = px.line(
         df1,
@@ -376,7 +376,7 @@ def update_bar_annual(b_part, wytchecklist, slider_yr_range):
 
     df1 = cfs_taf(df1, var_dict)
 
-    df2 = round(df1.groupby(["Scenario"]).sum() / (endyr - startyr + 1))
+    df2 = round(df1.groupby(["Scenario"]).sum(numeric_only=True) / (endyr - startyr + 1))
     df2 = df2.reindex(scen_aliases, level="Scenario")
     fig = px.bar(
         df2,

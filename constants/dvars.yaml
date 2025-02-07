@@ -1,59 +1,3 @@
-BD_EC_MONTH:
-  alias: Salinity - BD EC
-  bpart: BD_EC_MONTH
-  pathname: /CALSIM/BD_EC_MONTH/.*//.*/.*/
-  table_convert: null
-  table_display: wy
-  type: EC
-CI_EC_MONTH:
-  alias: Salinity - CI EC
-  bpart: CI_EC_MONTH
-  pathname: /CALSIM/CI_EC_MONTH/.*//.*/.*/
-  table_convert: null
-  table_display: wy
-  type: Channel
-CO_AVAILABLE_DV:
-  alias: Delivery - SWP CO available
-  bpart: CO_AVAILABLE_DV
-  pathname: /CALSIM/CO_AVAILABLE_DV/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-CO_EC_MONTH:
-  alias: Salinity - CO EC
-  bpart: CO_EC_MONTH
-  pathname: /CALSIM/CO_EC_MONTH/.*//.*/.*/
-  table_convert: null
-  table_display: wy
-  type: Salinity
-CO_EST_DV:
-  alias: Delivery - SWP CO est
-  bpart: CO_EST_DV
-  pathname: /CALSIM/CO_EST_DV/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Delivery
-CO_FINAL_DV:
-  alias: Delivery - SWP CO final
-  bpart: CO_FINAL_DV
-  pathname: /CALSIM/CO_FINAL_DV/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Delivery
-CT_VERONA:
-  alias: Upstream Flows - Verona Closure Term
-  bpart: CT_VERONA
-  pathname: /CALSIM/CT_VERONA/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Closure Term
-CVPRULECV:
-  alias: Storage - SL CVP Rule curve
-  bpart: CVPRuleCv
-  pathname: /CALSIM/CVPRuleCv/.*//.*/.*/
-  table_convert: null
-  table_display: wy
-  type: Rule
 CVPTOTALDEL:
   alias: Delivery - CVP Delivery SOD
   bpart: CVPTOTALDEL
@@ -61,13 +5,6 @@ CVPTOTALDEL:
   table_convert: cfs_taf
   table_display: wy
   type: Delivery
-C_AMR004:
-  alias: American River at H-Street
-  bpart: C_AMR004
-  pathname: /CALSIM/C_AMR004/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Upstream Flows
 C_CAA003:
   alias: Total Banks Exports
   bpart: C_CAA003
@@ -86,34 +23,6 @@ C_CAA003_CVP:
   alias: Banks CVP Exports
   bpart: C_CAA003_CVP
   pathname: /CALSIM/C_CAA003_CVP/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Export
-C_CAA003_CVPDED:
-  alias: Other - Banks Export CVP Dedicated
-  bpart: C_CAA003_CVPDED
-  pathname: /CALSIM/C_CAA003_CVPDED/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Export
-C_CAA003_CVPWHL:
-  alias: Other - Banks Export JPOD
-  bpart: C_CAA003_CVPWHL
-  pathname: /CALSIM/C_CAA003_CVPWHL/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Export
-C_CAA003_EXP1:
-  alias: Other - Banks Export State Share
-  bpart: C_CAA003_EXP1
-  pathname: /CALSIM/C_CAA003_EXP1/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Export
-C_CAA003_EXP2:
-  alias: Other - Banks Export Fed Share
-  bpart: C_CAA003_EXP2
-  pathname: /CALSIM/C_CAA003_EXP2/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Export
@@ -152,321 +61,6 @@ C_CAA003_WTS:
   table_convert: cfs_taf
   table_display: wy
   type: Export
-C_CAA005:
-  alias: C_CAA005
-  bpart: C_CAA005
-  pathname: /CALSIM/C_CAA005/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA006:
-  alias: C_CAA006
-  bpart: C_CAA006
-  pathname: /CALSIM/C_CAA006/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA009:
-  alias: C_CAA009
-  bpart: C_CAA009
-  pathname: /CALSIM/C_CAA009/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA012:
-  alias: C_CAA012
-  bpart: C_CAA012
-  pathname: /CALSIM/C_CAA012/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA024:
-  alias: C_CAA024
-  bpart: C_CAA024
-  pathname: /CALSIM/C_CAA024/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA046:
-  alias: C_CAA046
-  bpart: C_CAA046
-  pathname: /CALSIM/C_CAA046/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA051:
-  alias: C_CAA051
-  bpart: C_CAA051
-  pathname: /CALSIM/C_CAA051/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA066:
-  alias: C_CAA066
-  bpart: C_CAA066
-  pathname: /CALSIM/C_CAA066/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA067:
-  alias: C_CAA067
-  bpart: C_CAA067
-  pathname: /CALSIM/C_CAA067/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA069:
-  alias: C_CAA069
-  bpart: C_CAA069
-  pathname: /CALSIM/C_CAA069/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA071:
-  alias: C_CAA071
-  bpart: C_CAA071
-  pathname: /CALSIM/C_CAA071/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA087:
-  alias: Dos Amigos Pumping Plant
-  bpart: C_CAA087
-  pathname: /CALSIM/C_CAA087/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA087_CVP:
-  alias: Dos Amigos Pumping Plant (CVP)
-  bpart: C_CAA087_CVP
-  pathname: /CALSIM/C_CAA087_CVP/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Delivery
-C_CAA087_SWP:
-  alias: Dos Amigos Pumping Plant (SWP)
-  bpart: C_CAA087_SWP
-  pathname: /CALSIM/C_CAA087_SWP/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Delivery
-C_CAA095:
-  alias: C_CAA095
-  bpart: C_CAA095
-  pathname: /CALSIM/C_CAA095/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA109:
-  alias: C_CAA109
-  bpart: C_CAA109
-  pathname: /CALSIM/C_CAA109/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA143:
-  alias: C_CAA143
-  bpart: C_CAA143
-  pathname: /CALSIM/C_CAA143/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA155:
-  alias: C_CAA155
-  bpart: C_CAA155
-  pathname: /CALSIM/C_CAA155/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA156:
-  alias: C_CAA156
-  bpart: C_CAA156
-  pathname: /CALSIM/C_CAA156/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA165:
-  alias: C_CAA165
-  bpart: C_CAA165
-  pathname: /CALSIM/C_CAA165/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA172:
-  alias: C_CAA172
-  bpart: C_CAA172
-  pathname: /CALSIM/C_CAA172/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA173:
-  alias: C_CAA173
-  bpart: C_CAA173
-  pathname: /CALSIM/C_CAA173/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA181:
-  alias: C_CAA181
-  bpart: C_CAA181
-  pathname: /CALSIM/C_CAA181/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA183:
-  alias: C_CAA183
-  bpart: C_CAA183
-  pathname: /CALSIM/C_CAA183/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA184:
-  alias: C_CAA184
-  bpart: C_CAA184
-  pathname: /CALSIM/C_CAA184/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA185:
-  alias: C_CAA185
-  bpart: C_CAA185
-  pathname: /CALSIM/C_CAA185/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA194:
-  alias: C_CAA194
-  bpart: C_CAA194
-  pathname: /CALSIM/C_CAA194/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA207:
-  alias: C_CAA207
-  bpart: C_CAA207
-  pathname: /CALSIM/C_CAA207/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA210:
-  alias: C_CAA210
-  bpart: C_CAA210
-  pathname: /CALSIM/C_CAA210/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA220:
-  alias: C_CAA220
-  bpart: C_CAA220
-  pathname: /CALSIM/C_CAA220/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA238:
-  alias: C_CAA238
-  bpart: C_CAA238
-  pathname: /CALSIM/C_CAA238/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA239:
-  alias: C_CAA239
-  bpart: C_CAA239
-  pathname: /CALSIM/C_CAA239/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA240:
-  alias: C_CAA240
-  bpart: C_CAA240
-  pathname: /CALSIM/C_CAA240/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA241:
-  alias: C_CAA241
-  bpart: C_CAA241
-  pathname: /CALSIM/C_CAA241/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA242:
-  alias: C_CAA242
-  bpart: C_CAA242
-  pathname: /CALSIM/C_CAA242/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA245:
-  alias: Buena Vista Pumping Plant
-  bpart: C_CAA245
-  pathname: /CALSIM/C_CAA245/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA262:
-  alias: C_CAA262
-  bpart: C_CAA262
-  pathname: /CALSIM/C_CAA262/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA278:
-  alias: Wheeler Ridge Pumping Plant
-  bpart: C_CAA278
-  pathname: /CALSIM/C_CAA278/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA279:
-  alias: C_CAA279
-  bpart: C_CAA279
-  pathname: /CALSIM/C_CAA279/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA280:
-  alias: Chrisman Pumping Plant
-  bpart: C_CAA280
-  pathname: /CALSIM/C_CAA280/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA293:
-  alias: Edmondston Pumping Plant
-  bpart: C_CAA293
-  pathname: /CALSIM/C_CAA293/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CAA305:
-  alias: C_CAA305
-  bpart: C_CAA305
-  pathname: /CALSIM/C_CAA305/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CLR011:
-  alias: Upstream Flows - Release-ClearCreek
-  bpart: C_CLR011
-  pathname: /CALSIM/C_CLR011/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_CLV004:
-  alias: Calaveras River
-  bpart: C_CLV004
-  pathname: /CALSIM/C_CLV004/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Delta Inflow
-C_CSL004B:
-  alias: Delta - North Bay Aqueduct
-  bpart: C_CSL004B
-  pathname: /CALSIM/C_CSL004B/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
 C_DMC000:
   alias: Total Jones Exports
   bpart: C_DMC000
@@ -478,20 +72,6 @@ C_DMC000_CVP:
   alias: Jones CVP Exports
   bpart: C_DMC000_CVP
   pathname: /CALSIM/C_DMC000_CVP/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Export
-C_DMC000_EXP1:
-  alias: Other - Jones Export Fed Share
-  bpart: C_DMC000_EXP1
-  pathname: /CALSIM/C_DMC000_EXP1/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Export
-C_DMC000_EXP2:
-  alias: Other - Jones Export State Share
-  bpart: C_DMC000_EXP2
-  pathname: /CALSIM/C_DMC000_EXP2/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Export
@@ -509,132 +89,6 @@ C_DMC000_TD:
   table_convert: cfs_taf
   table_display: wy
   type: Export
-C_DMC000_WTS:
-  alias: Jones Export WTS
-  bpart: C_DMC000_WTS
-  pathname: /CALSIM/C_DMC000_WTS/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Export
-C_DMC116:
-  alias: Other - DMC inflow to MendotaPool
-  bpart: C_DMC116
-  pathname: /CALSIM/C_DMC116/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_ESB361:
-  alias: Pearblossom Pumping Plant
-  bpart: C_ESB361
-  pathname: /CALSIM/C_ESB361/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Delivery
-C_ESB406:
-  alias: Mojave Siphon Powerplant
-  bpart: C_ESB406
-  pathname: /CALSIM/C_ESB406/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Delivery
-C_FTR003:
-  alias: Feather Mouth
-  bpart: C_FTR003
-  pathname: /CALSIM/C_FTR003/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Upstream Flows
-C_FTR031:
-  alias: Upstream Flows - FeatherYubaConfluence
-  bpart: C_FTR031
-  pathname: /CALSIM/C_FTR031/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_FTR059:
-  alias: Feather below Thermalito
-  bpart: C_FTR059
-  pathname: /CALSIM/C_FTR059/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Upstream Flows
-C_FTR068:
-  alias: Upstream Flows - FeatherLowFlow
-  bpart: C_FTR068
-  pathname: /CALSIM/C_FTR068/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_KSWCK:
-  alias: Release - Sacramento at Keswick
-  bpart: C_KSWCK
-  pathname: /CALSIM/C_KSWCK/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Upstream Flows
-C_LWSTN:
-  alias: Trinity Release
-  bpart: C_LWSTN
-  pathname: /CALSIM/C_LWSTN/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Upstream Flows
-C_MCD021:
-  alias: Upstream Flows - MercedMouth
-  bpart: C_MCD021
-  pathname: /CALSIM/C_MCD021/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_MCLRE:
-  alias: Upstream Flows - Release-NewDonPedro
-  bpart: C_MCLRE
-  pathname: /CALSIM/C_MCLRE/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_MDOTA:
-  alias: Upstream Flows - Release-MendotaPool
-  bpart: C_MDOTA
-  pathname: /CALSIM/C_MDOTA/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_MELON:
-  alias: Upstream Flows - Release-NewMelones
-  bpart: C_MELON
-  pathname: /CALSIM/C_MELON/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_MLRTN:
-  alias: Upstream Flows - Release-Friant
-  bpart: C_MLRTN
-  pathname: /CALSIM/C_MLRTN/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_MOK019:
-  alias: Mokelumne River
-  bpart: C_MOK019
-  pathname: /CALSIM/C_MOK019/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Delta Inflow
-C_MOK022:
-  alias: Upstream Flows - Mokelumne Flow
-  bpart: C_MOK022
-  pathname: /CALSIM/C_MOK022/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_NTOMA:
-  alias: Release-American Nimbus
-  bpart: C_NTOMA
-  pathname: /CALSIM/C_NTOMA/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Upstream Flows
 C_OMR014:
   alias: Old and Middle River flow
   bpart: C_OMR014
@@ -642,20 +96,6 @@ C_OMR014:
   table_convert: cfs_taf
   table_display: wy
   type: Delta
-C_OROVL:
-  alias: Upstream Flows - Release-Oroville
-  bpart: C_OROVL
-  pathname: /CALSIM/C_OROVL/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_PEDRO:
-  alias: Upstream Flows - Release-McClure
-  bpart: C_PEDRO
-  pathname: /CALSIM/C_PEDRO/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
 C_SAC000:
   alias: Total Delta Outflow
   bpart: C_SAC000
@@ -723,83 +163,6 @@ C_SAC240:
   alias: Sac R. Flow at RedBluff
   bpart: C_SAC240
   pathname: /CALSIM/C_SAC240/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Upstream Flows
-C_SJR013:
-  alias: SJR QWEST flows
-  bpart: C_SJR013
-  pathname: /CALSIM/C_SJR013/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Upstream Flows
-C_SJR070:
-  alias: Vernalis
-  bpart: C_SJR070
-  pathname: /CALSIM/C_SJR070/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Upstream Flows
-C_SJR075:
-  alias: SJR Upstream of Stanislaus
-  bpart: C_SJR075
-  pathname: /CALSIM/C_SJR075/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Upstream Flows
-C_SJR119:
-  alias: SJR Upstream of Merced
-  bpart: C_SJR119
-  pathname: /CALSIM/C_SJR119/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Upstream Flows
-C_STS030:
-  alias: Stanislaus Mouth
-  bpart: C_STS030
-  pathname: /CALSIM/C_STS030/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Upstream Flows
-C_STS059:
-  alias: Release-Stanislaus (Goodwin)
-  bpart: C_STS059
-  pathname: /CALSIM/C_STS059/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Upstream Flows
-C_TUO003:
-  alias: Tuolumne Mouth
-  bpart: C_TUO003
-  pathname: /CALSIM/C_TUO003/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Upstream Flows
-C_WKYTN:
-  alias: Clear Creek below Whiskeytown
-  bpart: C_WKYTN
-  pathname: /CALSIM/C_WKYTN/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Upstream Flows
-C_YBP020:
-  alias: Yolo Bypass
-  bpart: C_YBP020
-  pathname: /CALSIM/C_YBP020/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Upstream Flows
-C_YUB002:
-  alias: Yuba-Feather Confluence
-  bpart: C_YUB002
-  pathname: /CALSIM/C_YUB002/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Upstream Flows
-C_YUB006:
-  alias: Yuba River at Marysville
-  bpart: C_YUB006
-  pathname: /CALSIM/C_YUB006/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Upstream Flows
@@ -901,48 +264,6 @@ DEL_SWP_PIN:
   table_convert: cfs_taf
   table_display: wy
   type: Channel
-DXC:
-  alias: Other - DCC gate days open
-  bpart: DXC
-  pathname: /CALSIM/DXC/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-D_BKR004_NBA009_NAPA_PRJ:
-  alias: Napa via North Bay Aqueduct
-  bpart: D_BKR004_NBA009_NAPA_PRJ
-  pathname: /CALSIM/D_BKR004_NBA009_NAPA_PRJ/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Delta Export
-D_BKR004_NBA009_SCWA_PRJ:
-  alias: Solano via North Bay Aqueduct
-  bpart: D_BKR004_NBA009_SCWA_PRJ
-  pathname: /CALSIM/D_BKR004_NBA009_SCWA_PRJ/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Delta Export
-D_LWSTN_ADD:
-  alias: Other - Trinity Export Excess
-  bpart: D_LWSTN_ADD
-  pathname: /CALSIM/D_LWSTN_ADD/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-D_LWSTN_CCT011:
-  alias: Trinity Export
-  bpart: D_LWSTN_CCT011
-  pathname: /CALSIM/D_LWSTN_CCT011/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Upstream Flows
-D_LWSTN_IMPORT:
-  alias: Other - Trinity Export Ops x
-  bpart: D_LWSTN_IMPORT
-  pathname: /CALSIM/D_LWSTN_IMPORT/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
 D_OMR027_CAA000:
   alias: Delta - Banks Exports
   bpart: D_OMR027_CAA000
@@ -961,27 +282,6 @@ D_SAC030_MOK014:
   alias: Delta - DXC Flow
   bpart: D_SAC030_MOK014
   pathname: /CALSIM/D_SAC030_MOK014/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-D_SAC207_GCC007:
-  alias: Other - Hamilton City (diversion)
-  bpart: D_SAC207_GCC007
-  pathname: /CALSIM/D_SAC207_GCC007/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-D_SAC240_TCC001:
-  alias: Other - Red Bluff Diversion Dam (diversion)
-  bpart: D_SAC240_TCC001
-  pathname: /CALSIM/D_SAC240_TCC001/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-D_WKYTN_SPT003:
-  alias: Upstream Flows - Spring Creek Tunnel
-  bpart: D_WKYTN_SPT003
-  pathname: /CALSIM/D_WKYTN_SPT003/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
@@ -1006,20 +306,6 @@ EXPORTACTUALTD:
   table_convert: cfs_taf
   table_display: wy
   type: Channel
-EXPRATIO_:
-  alias: Other - EI RATIO
-  bpart: EXPRATIO_
-  pathname: /CALSIM/EXPRATIO_/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-GP_SACWBA:
-  alias: null
-  bpart: GP_SACWBA
-  pathname: /CALSIM/GP_SACWBA/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Flow
 JP_EC_MONTH:
   alias: Salinity - JP EC
   bpart: JP_EC_MONTH
@@ -1027,38 +313,10 @@ JP_EC_MONTH:
   table_convert: cfs_taf
   table_display: wy
   type: Channel
-LV_EC_MONTH:
-  alias: Salinity - LV EC
-  bpart: LV_EC_MONTH
-  pathname: /CALSIM/LV_EC_MONTH/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-MAXEXP_RPA_CVPDV:
-  alias: Other - RPA Constraint Jones
-  bpart: MAXEXP_RPA_CVPDV
-  pathname: /CALSIM/MAXEXP_RPA_CVPDV/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-MAXEXP_RPA_SWPDV:
-  alias: Other - RPA Constraint Banks
-  bpart: MAXEXP_RPA_SWPDV
-  pathname: /CALSIM/MAXEXP_RPA_SWPDV/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
 MRDO_FINALDV:
   alias: Delta - Modeled Required DO
   bpart: MRDO_FINALDV
   pathname: /CALSIM/MRDO_FINALDV/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-MR_EC_MONTH:
-  alias: Salinity - MR EC
-  bpart: MR_EC_MONTH
-  pathname: /CALSIM/MR_EC_MONTH/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
@@ -1101,13 +359,6 @@ NDOI_MIN:
   alias: Delta - Required Delta Outflow for NDO and X2
   bpart: NDOI_MIN
   pathname: /CALSIM/NDOI_MIN/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-NET_DICU:
-  alias: Other - net DICU
-  bpart: NET_DICU
-  pathname: /CALSIM/NET_DICU/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel
@@ -1235,13 +486,6 @@ SP_SAC083_YBP037:
   bpart: SP_SAC083_YBP037
   pathname: /CALSIM/SP_SAC083_YBP037/.*//.*/.*/
   table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-SWPRULECV:
-  alias: Storage - SL SWP Rule curve
-  bpart: SWPRuleCv
-  pathname: /CALSIM/SWPRuleCv/.*//.*/.*/
-  table_convert: orig
   table_display: wy
   type: Channel
 SWP_CO_FEATH:
@@ -1405,27 +649,6 @@ S_LOSVQ:
   table_convert: orig
   table_display: 9
   type: Reservoir Storage
-UNUSED_TOTALDV:
-  alias: Delivery - SWP_UNUSED_TA_TOTAL
-  bpart: UNUSED_TOTALDV
-  pathname: /CALSIM/UNUSED_TOTALDV/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-VARDELTARDV:
-  alias: Delivery - SWP Var Demand Deltar
-  bpart: VARDELTARDV
-  pathname: /CALSIM/VARDELTARDV/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-VI_EC_MONTH:
-  alias: Salinity - VI EC
-  bpart: VI_EC_MONTH
-  pathname: /CALSIM/VI_EC_MONTH/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
 WYT_SAC_:
   alias: Sacramento Valley Index (SVI) WYT Classification
   bpart: WYT_SAC_
@@ -1438,153 +661,6 @@ X2_PRV:
   bpart: X2_PRV
   pathname: /CALSIM/X2_PRV/.*//.*/.*/
   table_convert: orig
-  table_display: wy
-  type: Channel
-C_ESB306:
-  alias: 'SWP Alamo Powerplant               '
-  bpart: C_ESB306
-  pathname: /CALSIM/C_ESB306/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_ESB324:
-  alias: 'SWP Reach 19-22A  Avek Wa          '
-  bpart: C_ESB324
-  pathname: /CALSIM/C_ESB324/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_ESB347:
-  alias: 'SWP Reach 20A-20B  Palmdale WD     '
-  bpart: C_ESB347
-  pathname: /CALSIM/C_ESB347/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_ESB355:
-  alias: 'SWP Reach 21  Littlerock Cr Id     '
-  bpart: C_ESB355
-  pathname: /CALSIM/C_ESB355/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_ESB361:
-  alias: Pearblossom PP & Reach 17-21 Losses
-  bpart: C_ESB361
-  pathname: /CALSIM/C_ESB361/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_ESB403:
-  alias: 'SWP Reach 22B-23  Mojave Wa        '
-  bpart: C_ESB403
-  pathname: /CALSIM/C_ESB403/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_ESB406:
-  alias: 'Mojave PWP & Reach 22A-23 Losses   '
-  bpart: C_ESB406
-  pathname: /CALSIM/C_ESB406/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_ESB407:
-  alias: 'SWP Reach 26A Coachella Valley WD  '
-  bpart: C_ESB407
-  pathname: /CALSIM/C_ESB407/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_ESB408:
-  alias: 'SWP Reach 26A  Desert Wa           '
-  bpart: C_ESB408
-  pathname: /CALSIM/C_ESB408/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_ESB413:
-  alias: 'SWP Reach 26  MWD                  '
-  bpart: C_ESB413
-  pathname: /CALSIM/C_ESB413/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_ESB414:
-  alias: 'SWP Reach 26A  San Bernardino      '
-  bpart: C_ESB414
-  pathname: /CALSIM/C_ESB414/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_ESB415:
-  alias: 'SWP Reach 26  San Gabriel Valley   '
-  bpart: C_ESB415
-  pathname: /CALSIM/C_ESB415/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_ESB420:
-  alias: 'SWP Reach 26 San Gorgonio Pass Wa  '
-  bpart: C_ESB420
-  pathname: /CALSIM/C_ESB420/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_ESB425:
-  alias: 'SWP Reach 24-28  Rec + Losses      '
-  bpart: C_ESB425
-  pathname: /CALSIM/C_ESB425/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_ESB433:
-  alias: 'SWP Reach 28G-28H  MWD              '
-  bpart: C_ESB433
-  pathname: /CALSIM/C_ESB433/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_WSB001:
-  alias: 'SWP OSO Power Plant                '
-  bpart: C_WSB001
-  pathname: /CALSIM/C_WSB001/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_WSB006:
-  alias: 'SWP Reach 29A-29F Losses           '
-  bpart: C_WSB006
-  pathname: /CALSIM/C_WSB006/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_WSB014:
-  alias: 'SWP Warne PWP & Reach 29A-F Losses '
-  bpart: C_WSB014
-  pathname: /CALSIM/C_WSB014/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_WSB026:
-  alias: ' Castaic PWP & Reach 29H-29J Losses'
-  bpart: C_WSB026
-  pathname: /CALSIM/C_WSB026/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_WSB027:
-  alias: ' SWP Reach 30  Rec + Losses        '
-  bpart: C_WSB027
-  pathname: /CALSIM/C_WSB027/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-C_WSB031:
-  alias: ' SWP Reach 30  MWD                 '
-  bpart: C_WSB031
-  pathname: /CALSIM/C_WSB031/.*//.*/.*/
-  table_convert: cfs_taf
   table_display: wy
   type: Channel
 DELTAINFLOWFORNDOI:

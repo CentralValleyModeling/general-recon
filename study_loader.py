@@ -2,56 +2,123 @@ from collections import namedtuple
 
 import pandas as pd
 import yaml
-from utils.tools import load_data_mult
+from utils import list_files, load_data_mult, load_data
+from pathlib import Path
 
 # Scenario management
-Study = namedtuple("Scenario", ["dv_path", "sv_path", "alias", "active"])
+Study = namedtuple("Scenario", ["dv_path", "sv_path", "alias", "assumptions", "climate", "color"])
+
+
 
 with open("constants/dvars.yaml", "r") as file:
     var_dict_dv = yaml.safe_load(file)
 with open("constants/svars.yaml", "r") as file:
     var_dict_sv = yaml.safe_load(file)
+with open("study_ledger.yaml", "r") as file:
+    study_ledger = yaml.safe_load(file)
 
-s1 = Study(r"C:\Users\ycheng\Desktop\ClimateAdaptation\ReCon\2043-50CC\20240807\CCA1_v3.6.x__Baseline_LU100_SLR0_20240806.dss",
-           r"C:\Users\ycheng\Desktop\ClimateAdaptation\ReCon\2043-50CC\20240807\CCA_SV_Danube_Adj_v1.9.dss",
-           "CCA1_HistAdj", 1)
+studies = [
 
-s2 = Study(r"C:\Users\ycheng\Desktop\ClimateAdaptation\ReCon\2043-50CC\20240807\CCA4_v3.6.x__2043_50CC_LU100_SLR15_20240806.dss",
-           r"C:\Users\ycheng\Desktop\ClimateAdaptation\ReCon\2043-50CC\20240807\DCR2023_SV_Danube_2043_cc50_v1.9.dss",
-           "CCA4_2043_50CC", 1)
+    Study(r"dss_files\CCA1_v3.7.0__Baseline_LU100_SLR0_20241219",
+          "",
+          "CCA1", "Baseline", "Historical", 1),
 
-s3 = Study(r"C:\Users\ycheng\Desktop\ClimateAdaptation\ReCon\2043-50CC\20240807\CCA6_v3.6.x_A_2043_50CC_LU100_SLR15_20240806.dss",
-           r"C:\Users\ycheng\Desktop\ClimateAdaptation\ReCon\2043-50CC\20240807\DCR2023_SV_Danube_2043_cc50_v1.9.dss",
-           "CCA6_2043_50CC", 1)
 
-s4 = Study(r"C:\Users\ycheng\Desktop\ClimateAdaptation\ReCon\2043-50CC\20240807\CCA8_v3.6.x_D_2043_50CC_LU100_SLR15_20240806.dss",
-           r"C:\Users\ycheng\Desktop\ClimateAdaptation\ReCon\2043-50CC\20240807\DCR2023_SV_Danube_2043_cc50_v1.9.dss",
-           "CCA8_2043_50CC", 1)
+# ---------------------------------2043 CC50--------------------------------------
+    Study(r"dss_files\CCA2_v3.7.0_BE_2043_50CC_LU100_SLR15_20241218.dss",
+          "",
+          "CCA2", "Degradation", "2043_CC50", 1),
 
-s5 = Study(r"C:\Users\ycheng\Desktop\ClimateAdaptation\ReCon\2043-50CC\20240807\CCA10_v3.6.x_C_2043_50CC_LU100_SLR15_20240806.dss",
-           r"C:\Users\ycheng\Desktop\ClimateAdaptation\ReCon\2043-50CC\20240807\DCR2023_SV_Danube_2043_cc50_v1.9.dss",
-           "CCA10_2043_50CC", 1)
+    Study(r"dss_files\CCA4_v3.7.0__2043_50CC_LU100_SLR15_20241220.dss",
+          "",
+          "CCA4", "Maintain", "2043_CC50", 1),
 
-s6 = Study(r"C:\Users\ycheng\Desktop\ClimateAdaptation\ReCon\2043-50CC\20240807\CCA12_v3.6.x_ACD_2043_50CC_LU100_SLR15_20240806.dss",
-           r"C:\Users\ycheng\Desktop\ClimateAdaptation\ReCon\2043-50CC\20240807\DCR2023_SV_Danube_2043_cc50_v1.9.dss",
-           "CCA12_2043_50CC", 1)
+    Study(r"dss_files\CCA6_v3.7.0_A_2043_50CC_LU100_SLR15_20241227.dss",
+          "",
+          "CCA6", "DCP", "2043_CC50", 1),
+
+    Study(r"dss_files\CCA8_v3.7.0_D_2043_50CC_LU100_SLR15_20241223.dss",
+          "",
+          "CCA8", "FIRO", "2043_CC50", 1),  
+
+    Study(r"dss_files\CCA10_v3.7.0_C_2043_50CC_LU100_SLR15_20241226.dss",
+          "",
+          "CCA10", "SOD Storage", "2043_CC50", 1),
+
+    Study(r"dss_files\CCA12_v3.7.0_ACD_2043_50CC_LU100_SLR15_20241226.dss",
+          "",
+          "CCA12", "Combo", "2043_CC50", 1),
+
+
+# ---------------------------------2043 CC95--------------------------------------
+    Study(r"dss_files\CCA3_v3.7.0_BE_2043_95CC_LU100_SLR30_20241220.dss",
+          "",
+          "CCA3", "Degradation", "2043_CC95", 1),
+
+    Study(r"dss_files\CCA5_v3.7.0__2043_95CC_LU100_SLR30_20241227.dss",
+          "",
+          "CCA5", "Maintain", "2043_CC95", 1),
+
+    Study(r"dss_files\CCA7_v3.7.0_A_2043_95CC_LU100_SLR30_20241222.dss",
+          "",
+          "CCA7", "DCP", "2043_CC95", 1),
+
+    Study(r"dss_files\CCA9_v3.7.0_D_2043_95CC_LU100_SLR30_20241223.dss",
+          "",
+          "CCA9", "FIRO", "2043_CC95", 1),  
+
+    Study(r"dss_files\CCA11_v3.7.0_C_2043_95CC_LU100_SLR30_20241226.dss",
+          "",
+          "CCA11", "SOD Storage", "2043_CC95", 1),
+
+    Study(r"dss_files\CCA13_v3.7.0_ACD_2043_95CC_LU100_SLR30_20241226.dss",
+          "",
+          "CCA13", "Combo", "2043_CC95", 1),
+
+# ---------------------------------2085 CC50--------------------------------------
+    Study(r"dss_files\CCA16_v3.7.0_G_2085_50CC_LU50_SLR55_20241219.dss",
+          "",
+          "CCA16", "Maintain", "2085_CC50", 1),
+
+    Study(r"dss_files\CCA18_v3.7.0_AG_2085_50CC_LU50_SLR55_20241223.dss",
+          "",
+          "CCA18", "DCP", "2085_CC50", 1),
+
+    Study(r"dss_files\CCA20_v3.7.0_DG_2085_50CC_LU50_SLR55_20241224.dss",
+          "",
+          "CCA20", "FIRO", "2085_CC50", 1),  
+
+    Study(r"dss_files\CCA22_v3.7.0_CG_2085_50CC_LU50_SLR55_20241224.dss",
+          "",
+          "CCA22", "SOD Storage", "2085_CC50", 1),
+
+    Study(r"dss_files\CCA24_v3.7.0_ACDG_2085_50CC_LU50_SLR55_20241222.dss",
+          "",
+          "CCA24", "Combo", "2085_CC50", 1),
+
+
+# ---------------------------------2085 CC75--------------------------------------
+    Study(r"dss_files\CCA17_v3.7.0_G_2085_75CC_LU50_SLR105_20241223.dss",
+          "",
+          "CCA17", "Maintain", "2085_CC75", 1),
+
+    Study(r"dss_files\CCA19_v3.7.0_AG_2085_75CC_LU50_SLR105_20241223.dss",
+          "",
+          "CCA19", "DCP", "2085_CC75", 1),
+
+    Study(r"dss_files\CCA21_v3.7.0_DG_2085_75CC_LU50_SLR105_20241224.dss",
+          "",
+          "CCA21", "FIRO", "2085_CC75", 1),  
+
+    Study(r"dss_files\CCA23_v3.7.0_CG_2085_75CC_LU50_SLR105_20241225.dss",
+          "",
+          "CCA23", "SOD Storage", "2085_CC75", 1),
+
+    Study(r"dss_files\CCA25_v3.7.0_ACDG_2085_75CC_LU50_SLR105_20241223.dss",
+          "",
+          "CCA25", "Combo", "2085_CC75", 1),
+]
 
 date_map = pd.read_csv("constants/date_map.csv", index_col=0, parse_dates=True)
 
-studies = (s for s in [s1, s2, s3, s4, s5, s6] if s.active == 1)
-
-scen_dict_dv = {}
-scen_dict_sv = {}
-for s in studies:
-    if s.active == 1:
-        scen_dict_dv[s.alias] = s.dv_path
-        scen_dict_sv[s.alias] = s.sv_path
-
-print(scen_dict_dv)
-print(scen_dict_sv)
-
-# Load DV
-load_data_mult(scen_dict_dv, var_dict_dv, date_map, "dv_data.csv")
-
-# Load SV
-load_data_mult(scen_dict_sv, var_dict_sv, date_map, "sv_data.csv")
+load_data(studies, var_dict_dv, date_map, "dv", "dv_data.csv")

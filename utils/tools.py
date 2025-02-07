@@ -1,6 +1,7 @@
 import csv
 import os
 from typing import Any, Iterable
+from pathlib import Path
 
 import pandas as pd
 import pandss as pdss
@@ -111,7 +112,48 @@ def load_data_mult(scen_dict: dict[str, Any], var_dict: dict, date_map,
                 print(pn)
 
                 for regular_time_series in dss.read_multiple_rts(path_i):
-                    dfi["Scenario"] = s
+                    dfi["Scenario"] = s[1]
+                    dfi[regular_time_series.path.b] = regular_time_series.to_frame()
+
+        # Make a list of the DataFrames associated with each DV file
+        appended_data.append(dfi)
+        dfi = pd.DataFrame()
+
+    # concatenate the individual DataFrames into one big DataFrame
+    df = pd.concat(appended_data)
+    df = df.round(2)
+    df = pd.merge(df, date_map, left_index=True, right_index=True)
+    df.to_csv(f"data/{outfile}")
+
+
+def load_data(studies, var_dict: dict, date_map,kind:str,
+                   outfile="temp.csv") -> None:
+    """
+    # Load data from the selected DSS files into a .csv
+    """
+
+    dfi = pd.DataFrame()
+    df = pd.DataFrame()
+    appended_data = []
+
+    for s in studies:
+        if (kind == 'dv'):
+            pn = pdss.DSS(s.dv_path)
+        elif (kind == 'sv'):
+            pn = pdss.DSS(s.sv_path)
+      
+        with pn as dss:
+
+            # Loop to read all paths into DataFrame
+            for var in var_dict:
+                pn = var_dict[var]["pathname"]
+                path_i = pdss.DatasetPath.from_str(pn)
+                print(pn)
+
+                for regular_time_series in dss.read_multiple_rts(path_i):
+                    dfi["Scenario"] = s.alias
+                    dfi["Assumption"] = s.assumptions
+                    dfi["Climate"] = s.climate
                     dfi[regular_time_series.path.b] = regular_time_series.to_frame()
 
         # Make a list of the DataFrames associated with each DV file
@@ -146,7 +188,7 @@ def make_ressum_df(
         except KeyError:
             continue
 
-    df_tbl = round(df1.groupby(["Scenario"]).sum() / (end_yr - start_yr + 1))
+    df_tbl = round(df1.groupby(["Scenario"]).sum(numeric_only=True) / (end_yr - start_yr + 1))
 
     # Drop the index columns
     df_tbl.drop(["icy", "icm", "iwy", "iwm", "cfs_taf"], axis=1, inplace=True)
@@ -199,7 +241,7 @@ def make_summary_df(
             continue
 
     # Annual Average
-    df_tbl = round(df1.groupby(["Scenario"]).sum() / (end_yr - start_yr + 1))
+    df_tbl = round(df1.groupby(["Scenario"]).sum(numeric_only=True) / (end_yr - start_yr + 1))
 
     # Time slicing is done; drop the index columns
     df_tbl.drop(["icy", "icm", "iwy", "iwm", "cfs_taf"], axis=1, inplace=True)
@@ -324,24 +366,32 @@ def remove_duplicates(data: dict) -> dict:
     return unique_data  # TODO: 2024-07-15 explore if this is the fastest implementation
 
 
-def list_files(directory: str) -> dict[str, str]:
+def list_files(directory_path):
     """
-    List all files in a directory including those within nested folders.
+    List all the pathnames of files in the specified directory.
 
-    Args:
-    - directory (str): The path to the directory to list files from.
+    Parameters:
+    directory_path (str): The path to the directory.
 
     Returns:
-    - dict: A dictionary of file paths
+    list: A list of full pathnames of the files in the directory.
     """
-    # TODO: 2024-07-15 Replace this with pathlib objects
-    file_paths = {}  # List to store all file paths
-    # Traverse directory tree
-    for root, directories, files in os.walk(directory):
-        for filename in files:
-            filepath = os.path.join(root, filename)
-            parts = filename.split("\\")
-            # print(filename.split('.')[-1])
-            if filename.split(".")[-1] == "dss":
-                file_paths[parts[-1]] = filepath
-    return file_paths
+    try:
+        # Convert the directory path to a Path object
+        directory = Path(directory_path)
+        
+        if not directory.exists():
+            print(f"The directory '{directory_path}' does not exist.")
+            return []
+
+        if not directory.is_dir():
+            print(f"The path '{directory_path}' is not a directory.")
+            return []
+
+        # Get all file paths in the directory
+        files = [str(file) for file in directory.iterdir() if file.is_file()]
+        return files
+    except PermissionError:
+        print(f"Permission denied to access the directory '{directory_path}'.")
+        return []
+

@@ -3,7 +3,7 @@ import dash_bootstrap_components as dbc
 from dash import dcc, html
 
 FA621 = "https://use.fontawesome.com/releases/v6.2.1/css/all.css"
-APP_TITLE = "SWP Delivery Capability Report 2023 Results Console (ReCon)"
+APP_TITLE = "SWP Climate Adaptation Plan Dashboard"
 CS3_ICON = "assets/cs3_icon_draft.png"
 
 
@@ -51,7 +51,7 @@ pages = [
 ]
 
 navbar = dbc.NavbarSimple(
-    brand=ReconNavbarBrand("General CS3 ReCon"),
+    brand=ReconNavbarBrand("SWP Climate Adaptation Plan"),
     children=pages,
     color="light",
     dark=False,

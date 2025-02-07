@@ -144,7 +144,7 @@ def card_mon_plot(
     # except:
     #    print("WYT_SAC_ timeseries not found")
     df1 = df.loc[df["WYT_SAC_"].isin(wyt)]
-    df1 = round(df1.groupby(["Scenario", "iwm"]).mean())
+    df1 = round(df1.groupby(["Scenario", "iwm"]).mean(numeric_only=True))
     df1 = df1.reindex(scen_aliases, level="Scenario")
     fig = px.line(
         df1,
@@ -194,7 +194,7 @@ def card_bar_plot_cy(
     except Exception:
         print(f"Unable to convert from CFS to TAF for {b_part}")
     # For the last year
-    df1 = round(df0.groupby(["Scenario"]).sum() / (endyr - startyr + 1))
+    df1 = round(df0.groupby(["Scenario"]).sum(numeric_only=True) / (endyr - startyr + 1))
     df_plot = df1
     fig = px.bar(
         df_plot[b_part],
@@ -211,6 +211,93 @@ def card_bar_plot_cy(
         showlegend=False,
         xaxis_title="TAF/Calendar Year",
         yaxis_title="",
+        xaxis_tickformat=",d",
+    )
+    layout = html.Div([dcc.Graph(figure=fig)])
+
+    return layout
+
+
+def card_bar_plot_wy_vert(
+    df: pd.DataFrame,
+    b_part: str = "C_CAA003",
+    wyt: list[int] = None,
+    startyr: int = 1922,
+    endyr: int = 2021,
+):
+    if wyt is None:
+        wyt = [1, 2, 3, 4, 5]
+
+    df0 = df.loc[
+        (df["iwy"] >= startyr)
+    ]
+    try:
+        df0 = cfs_taf(df0, var_dict)
+    except Exception:
+        print(f"Unable to convert from CFS to TAF for {b_part}")
+
+    
+    df2 = round(df0.groupby(["Scenario","Climate","Assumption"]).sum(numeric_only=True) / (endyr - startyr + 1))
+    df2 = df2.reset_index()
+    df_plot = df2
+
+    df_plot["Climate"] = df_plot["Climate"].astype(str)
+    df_plot["Assumption"] = df_plot["Assumption"].astype(str)
+
+    climate_order = ["Historical",
+                     "2043_CC50",
+                     "2043_CC95",
+                     "2085_CC50",
+                     "2085_CC75"
+    ]
+
+    assumption_order = [
+        "Baseline",
+        "Maintain",
+        "Degradation",
+        "FIRO",
+        "SOD Storage",
+        "DCP",
+        "Combo"
+    ]
+
+    custom_colors = {
+        "Baseline": "#4d4d4d",
+        "Maintain": "#999999",
+        "Degradation": "#ff6c66",
+        "FIRO": "#55b4eb",
+        "SOD Storage": "#0072b1",
+        "DCP": "#003759",
+        "Combo": "#039d73"
+    }
+
+    df_plot["Climate"] = pd.Categorical(df_plot["Climate"], categories=climate_order, ordered=True)
+    df_plot["Assumption"] = pd.Categorical(df_plot["Assumption"],
+                                           categories=assumption_order, ordered=True)
+    
+    df_plot = df_plot.sort_values(["Climate", "Assumption"])
+
+    fig = px.bar(
+        df_plot,
+        x="Climate",
+        y=b_part,
+        color="Assumption",
+        barmode="group",
+        orientation="v",
+        hover_data=["Scenario"],
+        color_discrete_map=custom_colors,
+        text_auto=True
+
+    )
+    fig.update_layout(
+        plot_bgcolor="white",
+        showlegend=True,
+        #xaxis=dict(
+        #    categoryorder="array", 
+        #    categoryarray=["Historical", "2043_CC50", "2043_CC95"]
+        #),
+        xaxis_title="Climate",
+        yaxis_title="TAF/Water Year",
         xaxis_tickformat=",d",
     )
     layout = html.Div([dcc.Graph(figure=fig)])
@@ -247,7 +334,7 @@ def ann_bar_plot(df, b_part="C_CAA003", startyr=1922, endyr=2021, wyt=[1, 2, 3, 
 
     df0 = cfs_taf(df0, var_dict)
 
-    df1 = round(df0.groupby(["Scenario"]).sum() / (endyr - startyr + 1))
+    df1 = round(df0.groupby(["Scenario"]).sum(numeric_only=True) / (endyr - startyr + 1))
     df1 = df1.reindex(scen_aliases, level="Scenario")
     fig = px.bar(
         df1,
@@ -289,7 +376,7 @@ def mon_exc_plot(df, b_part, monthchecklist):
         # This step should really be an interpolation using scipy.interp1d, but it works
         # with the dependencies that we have right now
         # TODO: 2024-07-18 Consider updating to an interpolation method
-        df = df.groupby(integer_index).mean()
+        df = df.groupby(integer_index).mean(numeric_only=True)
         df = df.reindex(index=range(1, 101, 1)).ffill()
         fig.add_trace(
             go.Scatter(
@@ -329,7 +416,7 @@ def ann_exc_plot(df,
 
     df0 = df.loc[df["icm"].isin(convert_cm_nums(monthchecklist))]
     df0 = cfs_taf(df0, var_dict)
-    df0 = df0.groupby(["Scenario", yw]).sum()
+    df0 = df0.groupby(["Scenario", yw]).sum(numeric_only=True)
 
     for scenario in scen_aliases:
         series_i = df0.loc[df0.index.get_level_values(0) == scenario, b_part]
@@ -350,7 +437,7 @@ def ann_exc_plot(df,
         # This step should really be an interpolation using scipy.interp1d, but it works
         # with the dependencies that we have right now
         # TODO: 2024-07-18 Consider updating to an interpolation method
-        df = df.groupby(integer_index).mean()
+        df = df.groupby(integer_index).mean(numeric_only=True)
         df = df.reindex(index=range(1, 101, 1)).ffill()
 
         fig1.add_trace(
@@ -388,7 +475,7 @@ def distplot(
     df2 = pd.DataFrame()
     df0 = df
     df0 = cfs_taf(df0, var_dict)
-    df0 = df0.groupby(["Scenario", "iwy"]).sum()
+    df0 = df0.groupby(["Scenario", "iwy"]).sum(numeric_only=True)
 
     for scenario in scen_aliases:
         df1 = df0.loc[df0.index.get_level_values(0) == scenario, b_part]

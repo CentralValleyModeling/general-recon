@@ -16,14 +16,14 @@ from charts.chart_layouts import CardWidget, card_bar_plot_cy, card_mon_exc_plot
 from data import load_markdown, universal_data_download
 from utils.query_data import df_dv
 
-register_page(
-    __name__,
-    name="Home",
-    top_nav=True,
-    path="/",
-    title="Results Console",
-    order=0,
-)
+#register_page(
+#    __name__,
+#    name="Home",
+#    top_nav=True,
+#    path="/",
+#    title="Results Console",
+#    order=0,
+#)
 
 dcr_cover_path = "assets/final_dcr_2023_cover.png"
 
