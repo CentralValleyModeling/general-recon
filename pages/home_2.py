@@ -30,19 +30,6 @@ register_page(
     order=0,
 )
 
-dcr_cover_path = "assets/final_dcr_2023_cover.png"
-
-ta_card = CardWidget(
-    "Total SWP Table A and Carryover Deliveries",
-    button_id="table_a_btn",
-    button_label="View Table A by Contractor",
-    button_id2="ta_wet_dry",
-    button_label2="Wet and Dry Periods",
-    popover_label="table-a-info",
-    popover_content=load_markdown("page_text/info-table-a.md"),
-    chart=card_bar_plot_cy(df_dv, b_part="SWP_TA_CO_SOD"),
-    text=None,
-)
 exp_card = CardWidget(
     "Total Banks SWP Exports",
     button_id="C_CAA003_SWP",
@@ -52,6 +39,14 @@ exp_card = CardWidget(
     chart=card_bar_plot_wy_vert(df_dv, b_part="C_CAA003_SWP"),
 )
 
+ta_card = CardWidget(
+    "SWP Table A Deliveries",
+    button_id="C_CAA003_SWP",
+    button_label="Details",
+    popover_label="ta-info",
+    popover_content=load_markdown("page_text/info-table-a.md"),
+    chart=card_bar_plot_wy_vert(df_dv, b_part="SWP_TA_CO_SOD"),
+)
 
 def layout():
     layout = dbc.Container(
@@ -70,6 +65,14 @@ def layout():
                         children=[
                             dbc.Col(
                                 class_name="col-md-12", children=[exp_card.create_card()]
+                            ),
+                        ],
+                    ),
+                    dbc.Row(
+                        id="home-cards-row-0",
+                        children=[
+                            dbc.Col(
+                                class_name="col-md-12", children=[ta_card.create_card()]
                             ),
                         ],
                     ),

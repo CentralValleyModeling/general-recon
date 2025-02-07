@@ -246,7 +246,9 @@ def card_bar_plot_wy_vert(
 
     climate_order = ["Historical",
                      "2043_CC50",
-                     "2043_CC95"
+                     "2043_CC95",
+                     "2085_CC50",
+                     "2085_CC75"
     ]
 
     assumption_order = [
@@ -284,6 +286,7 @@ def card_bar_plot_wy_vert(
         orientation="v",
         hover_data=["Scenario"],
         color_discrete_map=custom_colors,
+        text_auto=True
 
     )
     fig.update_layout(
@@ -294,7 +297,7 @@ def card_bar_plot_wy_vert(
         #    categoryarray=["Historical", "2043_CC50", "2043_CC95"]
         #),
         xaxis_title="Climate",
-        yaxis_title="TAF/Year",
+        yaxis_title="TAF/Water Year",
         xaxis_tickformat=",d",
     )
     layout = html.Div([dcc.Graph(figure=fig)])

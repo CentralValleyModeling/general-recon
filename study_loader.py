@@ -24,7 +24,7 @@ studies = [
           "CCA1", "Baseline", "Historical", 1),
 
 
-
+# ---------------------------------2043 CC50--------------------------------------
     Study(r"dss_files\CCA2_v3.7.0_BE_2043_50CC_LU100_SLR15_20241218.dss",
           "",
           "CCA2", "Degradation", "2043_CC50", 1),
@@ -50,7 +50,7 @@ studies = [
           "CCA12", "Combo", "2043_CC50", 1),
 
 
-
+# ---------------------------------2043 CC95--------------------------------------
     Study(r"dss_files\CCA3_v3.7.0_BE_2043_95CC_LU100_SLR30_20241220.dss",
           "",
           "CCA3", "Degradation", "2043_CC95", 1),
@@ -74,6 +74,49 @@ studies = [
     Study(r"dss_files\CCA13_v3.7.0_ACD_2043_95CC_LU100_SLR30_20241226.dss",
           "",
           "CCA13", "Combo", "2043_CC95", 1),
+
+# ---------------------------------2085 CC50--------------------------------------
+    Study(r"dss_files\CCA16_v3.7.0_G_2085_50CC_LU50_SLR55_20241219.dss",
+          "",
+          "CCA16", "Maintain", "2085_CC50", 1),
+
+    Study(r"dss_files\CCA18_v3.7.0_AG_2085_50CC_LU50_SLR55_20241223.dss",
+          "",
+          "CCA18", "DCP", "2085_CC50", 1),
+
+    Study(r"dss_files\CCA20_v3.7.0_DG_2085_50CC_LU50_SLR55_20241224.dss",
+          "",
+          "CCA20", "FIRO", "2085_CC50", 1),  
+
+    Study(r"dss_files\CCA22_v3.7.0_CG_2085_50CC_LU50_SLR55_20241224.dss",
+          "",
+          "CCA22", "SOD Storage", "2085_CC50", 1),
+
+    Study(r"dss_files\CCA24_v3.7.0_ACDG_2085_50CC_LU50_SLR55_20241222.dss",
+          "",
+          "CCA24", "Combo", "2085_CC50", 1),
+
+
+# ---------------------------------2085 CC75--------------------------------------
+    Study(r"dss_files\CCA17_v3.7.0_G_2085_75CC_LU50_SLR105_20241223.dss",
+          "",
+          "CCA17", "Maintain", "2085_CC75", 1),
+
+    Study(r"dss_files\CCA19_v3.7.0_AG_2085_75CC_LU50_SLR105_20241223.dss",
+          "",
+          "CCA19", "DCP", "2085_CC75", 1),
+
+    Study(r"dss_files\CCA21_v3.7.0_DG_2085_75CC_LU50_SLR105_20241224.dss",
+          "",
+          "CCA21", "FIRO", "2085_CC75", 1),  
+
+    Study(r"dss_files\CCA23_v3.7.0_CG_2085_75CC_LU50_SLR105_20241225.dss",
+          "",
+          "CCA23", "SOD Storage", "2085_CC75", 1),
+
+    Study(r"dss_files\CCA25_v3.7.0_ACDG_2085_75CC_LU50_SLR105_20241223.dss",
+          "",
+          "CCA25", "Combo", "2085_CC75", 1),
 ]
 
 date_map = pd.read_csv("constants/date_map.csv", index_col=0, parse_dates=True)
