@@ -235,17 +235,45 @@ def card_bar_plot_wy_vert(
         df0 = cfs_taf(df0, var_dict)
     except Exception:
         print(f"Unable to convert from CFS to TAF for {b_part}")
-    # For the last year
-    df1 = round(df0.groupby(["Scenario"]).sum(numeric_only=True) / (endyr - startyr + 1))
+
     
     df2 = round(df0.groupby(["Scenario","Climate","Assumption"]).sum(numeric_only=True) / (endyr - startyr + 1))
-    print (df2)
     df2 = df2.reset_index()
-    print(df2)
     df_plot = df2
+
     df_plot["Climate"] = df_plot["Climate"].astype(str)
     df_plot["Assumption"] = df_plot["Assumption"].astype(str)
 
+    climate_order = ["Historical",
+                     "2043_CC50",
+                     "2043_CC95"
+    ]
+
+    assumption_order = [
+        "Baseline",
+        "Maintain",
+        "Degradation",
+        "FIRO",
+        "SOD Storage",
+        "DCP",
+        "Combo"
+    ]
+
+    custom_colors = {
+        "Baseline": "#4d4d4d",
+        "Maintain": "#999999",
+        "Degradation": "#ff6c66",
+        "FIRO": "#55b4eb",
+        "SOD Storage": "#0072b1",
+        "DCP": "#003759",
+        "Combo": "#039d73"
+    }
+
+    df_plot["Climate"] = pd.Categorical(df_plot["Climate"], categories=climate_order, ordered=True)
+    df_plot["Assumption"] = pd.Categorical(df_plot["Assumption"],
+                                           categories=assumption_order, ordered=True)
+    
+    df_plot = df_plot.sort_values(["Climate", "Assumption"])
 
     fig = px.bar(
         df_plot,
@@ -254,55 +282,19 @@ def card_bar_plot_wy_vert(
         color="Assumption",
         barmode="group",
         orientation="v",
+        hover_data=["Scenario"],
+        color_discrete_map=custom_colors,
 
     )
     fig.update_layout(
         plot_bgcolor="white",
-        showlegend=False,
-        xaxis_title="TAF/Water Year",
-        yaxis_title="",
-        xaxis_tickformat=",d",
-    )
-    layout = html.Div([dcc.Graph(figure=fig)])
-
-    return layout
-
-
-def card_bar_plot_ledger(
-    df: pd.DataFrame,
-    metric: str = "SOD Table A Deliveries",
-    wyt: list[int] = None,
-    startyr: int = 1922,
-    endyr: int = 2021,
-):
-    if wyt is None:
-        wyt = [1, 2, 3, 4, 5]
-
-    df0 = df.loc[
-        (df["iwy"] >= startyr)
-    ]
-    try:
-        df0 = cfs_taf(df0, var_dict)
-    except Exception:
-        print(f"Unable to convert from CFS to TAF for {b_part}")
-    # For the last year
-    df1 = round(df0.groupby(["Scenario"]).sum(numeric_only=True) / (endyr - startyr + 1))
-    df_plot = df1
-    fig = px.bar(
-        df_plot[b_part],
-        text=df_plot[b_part],
-        color=df_plot.index,
-        orientation="v",
-        color_discrete_sequence=PLOT_COLORS,
-    )
-    fig.update_layout(
-        barmode="relative",
-        plot_bgcolor="white",
-        # width=600,
-        # height=300,
-        showlegend=False,
-        xaxis_title="TAF/Water Year",
-        yaxis_title="",
+        showlegend=True,
+        #xaxis=dict(
+        #    categoryorder="array", 
+        #    categoryarray=["Historical", "2043_CC50", "2043_CC95"]
+        #),
+        xaxis_title="Climate",
+        yaxis_title="TAF/Year",
         xaxis_tickformat=",d",
     )
     layout = html.Div([dcc.Graph(figure=fig)])

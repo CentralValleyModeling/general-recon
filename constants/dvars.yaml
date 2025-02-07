@@ -26,34 +26,6 @@ C_CAA003_CVP:
   table_convert: cfs_taf
   table_display: wy
   type: Export
-C_CAA003_CVPDED:
-  alias: Other - Banks Export CVP Dedicated
-  bpart: C_CAA003_CVPDED
-  pathname: /CALSIM/C_CAA003_CVPDED/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Export
-C_CAA003_CVPWHL:
-  alias: Other - Banks Export JPOD
-  bpart: C_CAA003_CVPWHL
-  pathname: /CALSIM/C_CAA003_CVPWHL/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Export
-C_CAA003_EXP1:
-  alias: Other - Banks Export State Share
-  bpart: C_CAA003_EXP1
-  pathname: /CALSIM/C_CAA003_EXP1/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Export
-C_CAA003_EXP2:
-  alias: Other - Banks Export Fed Share
-  bpart: C_CAA003_EXP2
-  pathname: /CALSIM/C_CAA003_EXP2/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Export
 C_CAA003_IF:
   alias: Other - Banks PP North Delta
   bpart: C_CAA003_IF
@@ -89,13 +61,6 @@ C_CAA003_WTS:
   table_convert: cfs_taf
   table_display: wy
   type: Export
-C_CSL004B:
-  alias: Delta - North Bay Aqueduct
-  bpart: C_CSL004B
-  pathname: /CALSIM/C_CSL004B/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
 C_DMC000:
   alias: Total Jones Exports
   bpart: C_DMC000
@@ -110,20 +75,6 @@ C_DMC000_CVP:
   table_convert: cfs_taf
   table_display: wy
   type: Export
-C_DMC000_EXP1:
-  alias: Other - Jones Export Fed Share
-  bpart: C_DMC000_EXP1
-  pathname: /CALSIM/C_DMC000_EXP1/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Export
-C_DMC000_EXP2:
-  alias: Other - Jones Export State Share
-  bpart: C_DMC000_EXP2
-  pathname: /CALSIM/C_DMC000_EXP2/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Export
 C_DMC000_IF:
   alias: Other - Jones PP North Delta
   bpart: C_DMC000_IF
@@ -135,13 +86,6 @@ C_DMC000_TD:
   alias: Other - Jones PP Through Delta
   bpart: C_DMC000_TD
   pathname: /CALSIM/C_DMC000_TD/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Export
-C_DMC000_WTS:
-  alias: Jones Export WTS
-  bpart: C_DMC000_WTS
-  pathname: /CALSIM/C_DMC000_WTS/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Export
@@ -366,13 +310,6 @@ JP_EC_MONTH:
   alias: Salinity - JP EC
   bpart: JP_EC_MONTH
   pathname: /CALSIM/JP_EC_MONTH/.*//.*/.*/
-  table_convert: cfs_taf
-  table_display: wy
-  type: Channel
-LV_EC_MONTH:
-  alias: Salinity - LV EC
-  bpart: LV_EC_MONTH
-  pathname: /CALSIM/LV_EC_MONTH/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
   type: Channel

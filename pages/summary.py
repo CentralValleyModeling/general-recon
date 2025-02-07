@@ -32,11 +32,8 @@ exp_tbl = make_summary_df(
         #
         "C_CAA003",
         "C_CAA003_SWP",
-        "C_CAA003_CVP",
-        "C_CAA003_WTS",
         "C_DMC000",
         "C_DMC000_CVP",
-        "C_DMC000_WTS",
         #    '----',
         "SWP_TA_TOTAL",
         "SWP_IN_TOTAL",

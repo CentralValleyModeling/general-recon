@@ -33,6 +33,10 @@ studies = [
           "",
           "CCA4", "Maintain", "2043_CC50", 1),
 
+    Study(r"dss_files\CCA6_v3.7.0_A_2043_50CC_LU100_SLR15_20241227.dss",
+          "",
+          "CCA6", "DCP", "2043_CC50", 1),
+
     Study(r"dss_files\CCA8_v3.7.0_D_2043_50CC_LU100_SLR15_20241223.dss",
           "",
           "CCA8", "FIRO", "2043_CC50", 1),  
