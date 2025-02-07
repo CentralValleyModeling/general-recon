@@ -7,7 +7,7 @@ df_dv = pd.read_csv("data/dv_data.csv", index_col=0, parse_dates=True)
 #df_dv = df_dv.apply(pd.to_numeric, errors='coerce')
 #df_dv["Scenario"] = df_dv["Scenario"].astype(str)
 scen_aliases = df_dv.Scenario.unique()
-print(df_dv)
+#print(df_dv)
 
 with open("constants/dvars.yaml", "r") as file:
     var_dict = yaml.safe_load(file)

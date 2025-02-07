@@ -237,19 +237,27 @@ def card_bar_plot_wy_vert(
         print(f"Unable to convert from CFS to TAF for {b_part}")
     # For the last year
     df1 = round(df0.groupby(["Scenario"]).sum(numeric_only=True) / (endyr - startyr + 1))
-    df_plot = df1
+    
+    df2 = round(df0.groupby(["Scenario","Climate","Assumption"]).sum(numeric_only=True) / (endyr - startyr + 1))
+    print (df2)
+    df2 = df2.reset_index()
+    print(df2)
+    df_plot = df2
+    df_plot["Climate"] = df_plot["Climate"].astype(str)
+    df_plot["Assumption"] = df_plot["Assumption"].astype(str)
+
+
     fig = px.bar(
-        df_plot[b_part],
-        text=df_plot[b_part],
-        color=df_plot.index,
+        df_plot,
+        x="Climate",
+        y=b_part,
+        color="Assumption",
+        barmode="group",
         orientation="v",
-        color_discrete_sequence=PLOT_COLORS,
+
     )
     fig.update_layout(
-        barmode="relative",
         plot_bgcolor="white",
-        # width=600,
-        # height=300,
         showlegend=False,
         xaxis_title="TAF/Water Year",
         yaxis_title="",
