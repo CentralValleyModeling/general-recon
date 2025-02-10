@@ -15,7 +15,8 @@ from dash import (
 from charts.chart_layouts import (
     CardWidget, card_bar_plot_cy, 
     card_mon_exc_plot, 
-    card_bar_plot_wy_vert
+    card_bar_plot_wy_vert,
+    cap_scenario_card
 )
 
 from data import load_markdown, universal_data_download
@@ -30,13 +31,20 @@ register_page(
     order=0,
 )
 
+CLIMATE_ORDER = ["Historical",
+                 "2043_CC50",
+                 "2043_CC95",
+                 "2085_CC50",
+                 "2085_CC75"
+                ]
+
 exp_card = CardWidget(
     "Total Banks SWP Exports",
     button_id="C_CAA003_SWP",
     button_label="Details",
     popover_label="exp-info",
     popover_content=load_markdown("page_text/info-swp-exports.md"),
-    chart=card_bar_plot_wy_vert(df_dv, b_part="C_CAA003_SWP"),
+    charts=card_bar_plot_wy_vert(df_dv, b_part="C_CAA003_SWP", climate_order=CLIMATE_ORDER),
 )
 
 ta_card = CardWidget(
@@ -45,7 +53,23 @@ ta_card = CardWidget(
     button_label="Details",
     popover_label="ta-info",
     popover_content=load_markdown("page_text/info-table-a.md"),
-    chart=card_bar_plot_wy_vert(df_dv, b_part="SWP_TA_CO_SOD"),
+    charts=card_bar_plot_wy_vert(df_dv, b_part="SWP_TA_CO_SOD", climate_order=CLIMATE_ORDER),
+)
+
+scen_card = CardWidget(
+    "Scenario Card",
+    button_id="C_CAA003_SWP",
+    button_label="Details",
+    popover_label="exp-info",
+    popover_content=load_markdown("page_text/info-swp-exports.md"),
+    charts=cap_scenario_card(df_dv, b_part="SWP_TA_TOTAL", climate_order=CLIMATE_ORDER),
+)
+
+orovl_sep_card = CardWidget(
+    "Oroville End-of-September Storage",
+    button_id="S_OROVL",
+    button_label="Details",
+    charts=card_mon_exc_plot(df_dv, b_part="S_OROVL", monthchecklist=["Sep"]),
 )
 
 def layout():
@@ -72,7 +96,14 @@ def layout():
                         id="home-cards-row-0",
                         children=[
                             dbc.Col(
-                                class_name="col-md-12", children=[ta_card.create_card()]
+                                class_name="col-md-12", children=[scen_card.create_card()]
+                            ),
+                        ],
+                    ),                    dbc.Row(
+                        id="home-cards-row-0",
+                        children=[
+                            dbc.Col(
+                                class_name="col-md-12", children=[orovl_sep_card.create_card()]
                             ),
                         ],
                     ),

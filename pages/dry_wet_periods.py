@@ -6,13 +6,13 @@ from data import create_download_button, load_markdown, universal_data_download
 from utils.query_data import df_dv, scen_aliases
 from utils.tools import common_pers
 
-register_page(
-    __name__,
-    name="Table A",
-    top_nav=True,
-    path="/dry_wet_periods",
-    order=2,
-)
+#register_page(
+#    __name__,
+#    name="Table A",
+#    top_nav=True,
+#    path="/dry_wet_periods",
+#    order=2,
+#)
 
 title_ta_dry_wet_text = (
     """This page shows % of Maximum Table A amount during select dry and wet periods

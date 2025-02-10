@@ -24,7 +24,7 @@ class CardWidget:
         button_label2: str | None = None,
         popover_label: str | None = None,
         popover_content: str | None = None,
-        chart: html.Div = None,
+        charts: list[html.Div] = None,
         text=None,
         image=None,
         element_id: str = None,
@@ -39,7 +39,7 @@ class CardWidget:
         self.button_label2 = button_label2
         self.popover_label = popover_label
         self.popover_content = popover_content
-        self.chart = chart
+        self.charts = charts or []
         self.text = text
         self.image = image
 
@@ -55,6 +55,17 @@ class CardWidget:
             download_button = create_download_button(registry_id, self.chart)
         else:
             download_button = None
+
+        charts_divs = html.Div(
+            children=self.charts,
+            style={
+                "display": "flex",
+                "flex-wrap": "nowrap",  # 🔹 Prevents charts from wrapping
+                "justify-content": "space-between",  # 🔹 Distributes charts evenly
+                "width": "100%",  # 🔹 Stretches container
+            }
+        )
+
         card = dbc.Card(
             class_name="m-2",
             children=[
@@ -74,7 +85,7 @@ class CardWidget:
                             if self.popover_label is not None
                             else None
                         ),
-                        self.chart,
+                        charts_divs,
                         (
                             html.P(self.text, className="card-text")
                             if isinstance(self.text, str)
@@ -224,6 +235,7 @@ def card_bar_plot_wy_vert(
     wyt: list[int] = None,
     startyr: int = 1922,
     endyr: int = 2021,
+    climate_order = ["Historical"],
 ):
     if wyt is None:
         wyt = [1, 2, 3, 4, 5]
@@ -244,12 +256,7 @@ def card_bar_plot_wy_vert(
     df_plot["Climate"] = df_plot["Climate"].astype(str)
     df_plot["Assumption"] = df_plot["Assumption"].astype(str)
 
-    climate_order = ["Historical",
-                     "2043_CC50",
-                     "2043_CC95",
-                     "2085_CC50",
-                     "2085_CC75"
-    ]
+    
 
     assumption_order = [
         "Baseline",
@@ -292,17 +299,127 @@ def card_bar_plot_wy_vert(
     fig.update_layout(
         plot_bgcolor="white",
         showlegend=True,
-        #xaxis=dict(
-        #    categoryorder="array", 
-        #    categoryarray=["Historical", "2043_CC50", "2043_CC95"]
-        #),
         xaxis_title="Climate",
         yaxis_title="TAF/Water Year",
         xaxis_tickformat=",d",
     )
-    layout = html.Div([dcc.Graph(figure=fig)])
+
+    fig2 = px.bar(
+        df_plot,
+        x="Climate",
+        y=b_part,
+        color="Assumption",
+        barmode="group",
+        orientation="v",
+        hover_data=["Scenario"],
+        color_discrete_map=custom_colors,
+        text_auto=True
+
+    )
+    fig.update_layout(
+        plot_bgcolor="white",
+        showlegend=True,
+        xaxis_title="Climate",
+        yaxis_title="TAF/Water Year",
+        xaxis_tickformat=",d",
+    )
+
+
+
+    layout = html.Div([dcc.Graph(figure=fig)],style={"flex": "1"})
 
     return layout
+
+def cap_scenario_card(
+    df: pd.DataFrame,
+    b_part: str = "C_CAA003",
+    wyt: list[int] = None,
+    startyr: int = 1922,
+    endyr: int = 2021,
+    climate_order: list[str] = [],
+):
+
+    if wyt is None:
+        wyt = [1, 2, 3, 4, 5]
+
+    df0 = df.loc[
+        (df["iwy"] >= startyr)
+    ]
+    try:
+        df0 = cfs_taf(df0, var_dict)
+    except Exception:
+        print(f"Unable to convert from CFS to TAF for {b_part}")
+
+    
+    df2 = round(df0.groupby(["Scenario","Climate","Assumption"]).sum(numeric_only=True) / (endyr - startyr + 1))
+    df2 = df2.reset_index()
+    df_plot = df2
+
+    df_plot["Climate"] = df_plot["Climate"].astype(str)
+    df_plot["Assumption"] = df_plot["Assumption"].astype(str)
+
+    
+
+    assumption_order = [
+       "Baseline",
+       "Maintain",
+#       "Degradation",
+#       "FIRO",
+#       "SOD Storage",
+#       "DCP",
+       "Combo"
+    ]
+
+    custom_colors = {
+        "Baseline": "#4d4d4d",
+        "Maintain": "#999999",
+        "Degradation": "#ff6c66",
+        "FIRO": "#55b4eb",
+        "SOD Storage": "#0072b1",
+        "DCP": "#003759",
+        "Combo": "#039d73"
+    }
+
+    df_plot["Climate"] = pd.Categorical(df_plot["Climate"], 
+                                        categories=climate_order[::-1],
+                                        ordered=True)
+    df_plot["Assumption"] = pd.Categorical(df_plot["Assumption"],
+                                           categories=assumption_order[::-1],
+                                           ordered=True)
+    
+    df_plot = df_plot.sort_values(["Climate", "Assumption"])
+
+    fig = px.bar(
+        df_plot,
+        x=b_part,
+        y="Climate",
+        color="Assumption",
+        barmode="group",
+        orientation="h",
+        hover_data=["Scenario"],
+        color_discrete_map=custom_colors,
+        text_auto=True
+
+    )
+    fig.update_layout(
+        title = b_part,
+        plot_bgcolor="white",
+        showlegend=True,
+        xaxis=dict(
+            categoryorder="array", 
+            categoryarray=climate_order
+        ),
+        xaxis_title="Climate",
+        yaxis_title="TAF/Water Year",
+        xaxis_tickformat=",d",
+        bargap=0.15,
+        bargroupgap=0.05
+    )
+    layout = html.Div([dcc.Graph(figure=fig)], style={"flex": "1"})
+
+    return layout
+
+
 
 
 def card_mon_exc_plot(df, b_part, monthchecklist):
@@ -353,16 +470,18 @@ def ann_bar_plot(df, b_part="C_CAA003", startyr=1922, endyr=2021, wyt=[1, 2, 3, 
     return fig
 
 
-def mon_exc_plot(df, b_part, monthchecklist):
+def mon_exc_plot(df, b_part, monthchecklist,climate_order=["Historical"]):
     series_container = []
     # Filter the calendar months
     df0 = df.loc[df["icm"].isin(convert_cm_nums(monthchecklist))]
-    for scenario in scen_aliases:
-        series_i = df0.loc[df0["Scenario"] == scenario, b_part]
-        series_i = series_i.sort_values()
-        series_i = series_i.reset_index(drop=True)
-        series_i.rename(scenario, inplace=True)
-        series_container.append(series_i)
+    print(df0)
+    for climate in climate_order:
+        for scenario in scen_aliases:
+            series_i = df0.loc[df0["Climate"] == climate, b_part]
+            series_i = series_i.sort_values()
+            series_i = series_i.reset_index(drop=True)
+            series_i.rename(scenario, inplace=True)
+            series_container.append(series_i)
 
     df3 = pd.concat(series_container, axis=1)
     fig = go.Figure()
