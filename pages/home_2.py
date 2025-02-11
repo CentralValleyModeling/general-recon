@@ -43,7 +43,7 @@ exp_card = CardWidget(
     button_id="EXPORTACTUALTDIF",
     button_label="Drilldown",
     popover_label="exp-info",
-    popover_content=load_markdown("page_text/info-swp-exports.md"),
+    popover_content=load_markdown("page_text/info-total-exports.md"),
     charts=card_bar_plot_wy_vert(df_dv, b_part="EXPORTACTUALTDIF", climate_order=CLIMATE_ORDER),
 )
 
@@ -60,8 +60,8 @@ ndoi_card = CardWidget(
     "Total Delta Outflow (TAF/year)",
     button_id="NDOI",
     button_label="Drilldown",
-    popover_label="ta-info",
-    popover_content=load_markdown("page_text/info-table-a.md"),
+    popover_label="ndoi-info",
+    popover_content=load_markdown("page_text/info-ndoi.md"),
     charts=card_bar_plot_wy_vert(df_dv, b_part="NDOI", climate_order=CLIMATE_ORDER),
 )
 
@@ -93,14 +93,14 @@ def layout():
                 id="home-cards",
                 className="d-grid gap-2",
                 children=[
-                    dbc.Row(
-                        id="home-cards-row-0",
-                        children=[
-                            dbc.Col(
-                                class_name="col-md-12", children=[exp_card.create_card()]
-                            ),
-                        ],
-                    ),
+#                    dbc.Row(
+#                        id="home-cards-row-0",
+#                        children=[
+#                            dbc.Col(
+#                                class_name="col-md-12", children=[exp_card.create_card()]
+#                            ),
+#                        ],
+#                    ),
                     dbc.Row(
                         id="home-cards-row-0",
                         children=[
