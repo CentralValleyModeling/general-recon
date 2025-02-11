@@ -475,11 +475,11 @@ def mon_exc_plot(df, b_part, monthchecklist):
     series_container = []
     # Filter the calendar months
     df0 = df.loc[df["icm"].isin(convert_cm_nums(monthchecklist))]
-    for scenario in scen_aliases:
-        series_i = df0.loc[df0["Scenario"] == scenario, b_part]
+    for assumption in ASSUMPTION_ORDER:
+        series_i = df0.loc[df0["Assumption"] == assumption, b_part]
         series_i = series_i.sort_values()
         series_i = series_i.reset_index(drop=True)
-        series_i.rename(scenario, inplace=True)
+        series_i.rename(assumption, inplace=True)
         series_container.append(series_i)
 
     df3 = pd.concat(series_container, axis=1)
@@ -534,13 +534,13 @@ def ann_exc_plot(df,
 
     df0 = df.loc[df["icm"].isin(convert_cm_nums(monthchecklist))]
     df0 = cfs_taf(df0, var_dict)
-    df0 = df0.groupby(["Scenario", yw]).sum(numeric_only=True)
+    df0 = df0.groupby(["Assumption", yw]).sum(numeric_only=True)
 
-    for scenario in scen_aliases:
-        series_i = df0.loc[df0.index.get_level_values(0) == scenario, b_part]
+    for assumption in ASSUMPTION_ORDER:
+        series_i = df0.loc[df0.index.get_level_values(0) == assumption, b_part]
         series_i = series_i.sort_values()
         series_i = series_i.reset_index(drop=True)
-        series_i.rename(scenario, inplace=True)
+        series_i.rename(assumption, inplace=True)
         series_container.append(series_i)
 
     df3 = pd.concat(series_container, axis=1)

@@ -255,6 +255,7 @@ def update_timeseries(b_part, climate_filter):
     )
     fig.update_layout(
         plot_bgcolor="white",
+        legend_title="Scenario",
         xaxis=dict(gridcolor="LightGray"),
         yaxis=dict(gridcolor="LightGray"),
     )
@@ -306,6 +307,7 @@ def update_annual_timeseries(
     )
     fig.update_layout(
         plot_bgcolor="white",
+        legend_title="Scenario",
         xaxis=dict(gridcolor="LightGray"),
         yaxis=dict(gridcolor="LightGray"),
     )
@@ -331,9 +333,11 @@ def update_exceedance(b_part, monthchecklist, climate_filter):
     Input(component_id="b-part", component_property="value"),
     Input(component_id="monthchecklist-exc", component_property="value"),
     Input(component_id="yearwindow", component_property="value"),
+    Input(component_id="climate-filter", component_property="value"),
 )
-def update_exceedance(b_part, monthchecklist, yearwindow):
-    fig = ann_exc_plot(df_dv, b_part, monthchecklist, yearwindow)
+def update_exceedance(b_part, monthchecklist, yearwindow, climate_filter):
+    df_plot = df_dv.loc[df_dv['Climate'] == climate_filter]
+    fig = ann_exc_plot(df_plot, b_part, monthchecklist, yearwindow)
     return fig
 
 
@@ -369,6 +373,7 @@ def update_monthly(b_part, wytchecklist, slider_yr_range, climate_filter):
     )
     fig.update_layout(
         plot_bgcolor="white",
+        legend_title="Scenario",
         xaxis=dict(
             tickmode="array",
             tickvals=monthfilter,
@@ -420,6 +425,7 @@ def update_bar_annual(b_part, wytchecklist, slider_yr_range, climate_filter):
         color_discrete_map=SCENARIO_COLORS,
     )
     fig.update_layout(
+        legend_title="Scenario",
         barmode="relative",
         plot_bgcolor="white"
     )
