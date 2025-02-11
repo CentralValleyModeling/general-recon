@@ -93,14 +93,14 @@ def layout():
                 id="home-cards",
                 className="d-grid gap-2",
                 children=[
-#                    dbc.Row(
-#                        id="home-cards-row-0",
-#                        children=[
-#                            dbc.Col(
-#                                class_name="col-md-12", children=[exp_card.create_card()]
-#                            ),
-#                        ],
-#                    ),
+                    dbc.Row(
+                        id="home-cards-row-0",
+                        children=[
+                            dbc.Col(
+                                class_name="col-md-12", children=[exp_card.create_card()]
+                            ),
+                        ],
+                    ),
                     dbc.Row(
                         id="home-cards-row-0",
                         children=[

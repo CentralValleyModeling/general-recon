@@ -23,7 +23,7 @@ df_dv["SWP_TA_CO_SOD"] = (
 
 df_dv["SWP_CO_SOD"] = df_dv["SWP_CO_TOTAL"] - df_dv["SWP_CO_FEATH"]
 
-df_dv["EXPORTACTUALTDIF"] = df_dv["EXPORTACTUALTD"] - df_dv["EXPORTACTUALIF"]
+df_dv["EXPORTACTUALTDIF"] = df_dv["EXPORTACTUALTD"] + df_dv["EXPORTACTUALIF"]
 
 var_dict["SWP_TA_CO_SOD"] = {
     "alias": "Total SWP Table and Carryover Delivery from the Delta",
