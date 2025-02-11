@@ -235,15 +235,19 @@ def card_bar_plot_wy_vert(
     df: pd.DataFrame,
     b_part: str = "C_CAA003",
     wyt: list[int] = None,
+    cm: list[int] = None,
     startyr: int = 1922,
     endyr: int = 2021,
     climate_order = ["Historical"],
 ):
     if wyt is None:
         wyt = [1, 2, 3, 4, 5]
+    if cm is None:
+        cm = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
     df0 = df.loc[
         (df["iwy"] >= startyr)
+       & (df["icm"].isin(cm))
     ]
     try:
         df0 = cfs_taf(df0, var_dict)
@@ -281,16 +285,11 @@ def card_bar_plot_wy_vert(
         legend_title="Scenario",
         showlegend=True,
         xaxis_title="Climate",
-        yaxis_title="TAF/Water Year",
         xaxis_tickformat=",d",
-    )
-
-    fig.update_layout(
-        plot_bgcolor="white",
-        showlegend=True,
-        xaxis_title="Climate",
-        yaxis_title="TAF/Water Year",
-        xaxis_tickformat=",d",
+        yaxis_title="Thousand Acre-Feet",
+        yaxis_tickformat=",",
+        yaxis_showgrid=True,
+        yaxis_gridcolor="lightgray",
     )
 
     layout = html.Div([dcc.Graph(figure=fig)],style={"flex": "1"})

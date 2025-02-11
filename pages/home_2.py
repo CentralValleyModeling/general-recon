@@ -49,7 +49,7 @@ exp_card = CardWidget(
 
 ta_card = CardWidget(
     "SWP Table A Deliveries (TAF/year)",
-    button_id="C_CAA003_SWP",
+    button_id="SWP_TA_CO_SOD",
     button_label="Drilldown",
     popover_label="ta-info",
     popover_content=load_markdown("page_text/info-table-a.md"),
@@ -65,20 +65,13 @@ ndoi_card = CardWidget(
     charts=card_bar_plot_wy_vert(df_dv, b_part="NDOI", climate_order=CLIMATE_ORDER),
 )
 
-scen_card = CardWidget(
-    "Scenario Card",
-    button_id="C_CAA003_SWP",
-    button_label="Details",
-    popover_label="exp-info",
-    popover_content=load_markdown("page_text/info-swp-exports.md"),
-    charts=cap_scenario_card(df_dv, b_part="SWP_TA_TOTAL", climate_order=CLIMATE_ORDER),
-)
-
-orovl_sep_card = CardWidget(
+orovl_sep_card_card = CardWidget(
     "Oroville End-of-September Storage",
     button_id="S_OROVL",
-    button_label="Details",
-    charts=card_mon_exc_plot(df_dv, b_part="S_OROVL", monthchecklist=["Sep"]),
+    button_label="Drilldown",
+    popover_label="orovl-info",
+    popover_content=load_markdown("page_text/info-orovl.md"),
+    charts=card_bar_plot_wy_vert(df_dv, b_part="S_OROVL", climate_order=CLIMATE_ORDER, cm=[9]),
 )
 
 def layout():
@@ -117,16 +110,41 @@ def layout():
                             ),
                         ],
                     ),
-#                    dbc.Row(
-#                        id="home-cards-row-0",
-#                        children=[
-#                            dbc.Col(
-#                                class_name="col-md-12", children=[scen_card.create_card()]
-#                            ),
-#                        ],
-#                    ),                   
+                    dbc.Row(
+                        id="home-cards-row-0",
+                        children=[
+                            dbc.Col(
+                                class_name="col-md-12", children=[orovl_sep_card_card.create_card()]
+                            ),
+                        ],
+                    ),                   
                 ],
             ),
         ],
     )
     return layout
+
+
+@callback(
+    Output("url", "href"),
+    Output("url", "refresh"),
+    Input({"type": "dynamic-btn", "index": ALL}, "n_clicks"),
+)
+def button_1_action(n_clicks):
+    ctx = callback_context
+    if not ctx.triggered or all(click is None for click in n_clicks):
+        return "/", False
+    else:
+        button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+        button_index = eval(button_id)["index"]
+        url_params = urlencode({"type": button_index})
+
+        print(button_index)
+
+        if button_index == "ta_wet_dry":
+            return "/dry_wet_periods", True
+
+        if button_index in ("EXPORTACTUALTDIF", "S_OROVL", "NDOI", "SWP_TA_CO_SOD"):
+            return f"/drilldown?{url_params}", True
+        else:
+            return f"/contractor_summary?{url_params}", True
