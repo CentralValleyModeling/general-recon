@@ -269,9 +269,12 @@ def update_annual_timeseries(
         .agg({b_part: [agg_method.lower(), "count"]})
         .reset_index()
     )
+
+    #print(df_agg)
+
     df_agg.columns = ["-".join(c).strip("- ") for c in df_agg.columns]
     count = df_agg[f"{b_part}-count"]
-    df_agg[year_type] = df_agg["Date"]
+    df_agg[year_type] = df_agg["level_1"]
     df_agg[b_part] = df_agg[f"{b_part}-{agg_method.lower()}"]  # Clean name of agg
     df_agg = df_agg.loc[count == 12, :]  # Filter to only show full years of data
     fig = px.line(

@@ -461,6 +461,8 @@ def cap_scenario_card(
 
 
 def card_mon_exc_plot(df, b_part, monthchecklist):
+    #print (df)
+
     fig = mon_exc_plot(df, b_part, monthchecklist)
     fig.update_layout(
         # width=800,
@@ -508,18 +510,16 @@ def ann_bar_plot(df, b_part="C_CAA003", startyr=1922, endyr=2021, wyt=[1, 2, 3, 
     return fig
 
 
-def mon_exc_plot(df, b_part, monthchecklist,climate_order=["Historical"]):
+def mon_exc_plot(df, b_part, monthchecklist):
     series_container = []
     # Filter the calendar months
     df0 = df.loc[df["icm"].isin(convert_cm_nums(monthchecklist))]
-    print(df0)
-    for climate in climate_order:
-        for scenario in scen_aliases:
-            series_i = df0.loc[df0["Climate"] == climate, b_part]
-            series_i = series_i.sort_values()
-            series_i = series_i.reset_index(drop=True)
-            series_i.rename(scenario, inplace=True)
-            series_container.append(series_i)
+    for scenario in scen_aliases:
+        series_i = df0.loc[df0["Scenario"] == scenario, b_part]
+        series_i = series_i.sort_values()
+        series_i = series_i.reset_index(drop=True)
+        series_i.rename(scenario, inplace=True)
+        series_container.append(series_i)
 
     df3 = pd.concat(series_container, axis=1)
     fig = go.Figure()
@@ -533,7 +533,7 @@ def mon_exc_plot(df, b_part, monthchecklist,climate_order=["Historical"]):
         # This step should really be an interpolation using scipy.interp1d, but it works
         # with the dependencies that we have right now
         # TODO: 2024-07-18 Consider updating to an interpolation method
-        df = df.groupby(integer_index).mean(numeric_only=True)
+        df = df.groupby(integer_index).mean()
         df = df.reindex(index=range(1, 101, 1)).ffill()
         fig.add_trace(
             go.Scatter(
@@ -557,7 +557,6 @@ def mon_exc_plot(df, b_part, monthchecklist,climate_order=["Historical"]):
     )
 
     return fig
-
 
 def ann_exc_plot(df,
                  b_part,

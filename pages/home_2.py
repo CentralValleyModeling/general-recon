@@ -99,14 +99,15 @@ def layout():
                                 class_name="col-md-12", children=[scen_card.create_card()]
                             ),
                         ],
-                    ),                    dbc.Row(
-                        id="home-cards-row-0",
-                        children=[
-                            dbc.Col(
-                                class_name="col-md-12", children=[orovl_sep_card.create_card()]
-                            ),
-                        ],
-                    ),
+                    ),                   
+#                    dbc.Row(
+#                        id="home-cards-row-0",
+#                        children=[
+#                            dbc.Col(
+#                                class_name="col-md-12", children=[orovl_sep_card.create_card()]
+#                            ),
+#                        ],
+#                    ),
                 ],
             ),
         ],
