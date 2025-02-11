@@ -75,6 +75,10 @@ def layout(**kwargs):
                     html.A(drilldown_text),
                     dbc.Col(
                         [
+                            "Select Climate (filter for all charts): ",
+                            dcc.Dropdown(
+                                ["2043_CC50"], id="climate-filter", value="2043_CC50", style={"width": "100%"}
+                            ),
                             "Select B-Part: ",
                             dcc.Dropdown(
                                 bparts, id="b-part", value=b, style={"width": "100%"}
@@ -229,11 +233,19 @@ def update_b_part(alias):
 @callback(
     Output(component_id="timeseries-plot", component_property="figure"),
     Input(component_id="b-part", component_property="value"),
+    Input(component_id="climate-filter", component_property="value"),
 )
-def update_timeseries(b_part):
+def update_timeseries(b_part, climate_filter):
+
+    print(df_dv)
+    print(climate_filter)
+    df_plot = df_dv.loc[df_dv['Climate']==climate_filter]
+    print(df_plot)
+
+
     fig = px.line(
-        df_dv,
-        x=df_dv.index,
+        df_plot,
+        x=df_plot.index,
         y=b_part,
         color="Scenario",
         color_discrete_sequence=PLOT_COLORS,
