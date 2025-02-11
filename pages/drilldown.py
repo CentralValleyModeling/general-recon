@@ -352,12 +352,8 @@ def update_monthly(b_part, wytchecklist, slider_yr_range, climate_filter):
         & (df_dv["Climate"] == climate_filter)
     ]
 
-    print(df0)
-
     df1 = round(df0.groupby(["Assumption", "iwm"]).mean(numeric_only=True))
-    print(df1)
     df1 = df1.reindex(ASSUMPTION_ORDER, level="Assumption")
-    print(df1)
     fig = px.line(
         df1,
         x=df1.index.get_level_values(1),
@@ -392,8 +388,9 @@ def update_monthly(b_part, wytchecklist, slider_yr_range, climate_filter):
     Input(component_id="b-part", component_property="value"),
     Input(component_id="wytchecklist-bar", component_property="value"),
     Input(component_id="slider-yr-range", component_property="value"),
+    Input(component_id="climate-filter", component_property="value"),
 )
-def update_bar_annual(b_part, wytchecklist, slider_yr_range):
+def update_bar_annual(b_part, wytchecklist, slider_yr_range, climate_filter):
     startyr = slider_yr_range[0]
     endyr = slider_yr_range[1]
     print(wytchecklist)
@@ -401,19 +398,21 @@ def update_bar_annual(b_part, wytchecklist, slider_yr_range):
         df_dv["WYT_SAC_"].isin(convert_wyt_nums(wytchecklist))
         & (df_dv["iwy"] >= startyr)
         & (df_dv["iwy"] <= endyr)
+        & (df_dv["Climate"] == climate_filter)
+
     ]
 
     df1 = cfs_taf(df1, var_dict)
 
-    df2 = round(df1.groupby(["Scenario"]).sum(numeric_only=True) / (endyr - startyr + 1))
-    df2 = df2.reindex(scen_aliases, level="Scenario")
+    df2 = round(df1.groupby(["Assumption"]).sum(numeric_only=True) / (endyr - startyr + 1))
+    df2 = df2.reindex(ASSUMPTION_ORDER, level="Assumption")
     fig = px.bar(
         df2,
         x=df2.index.get_level_values(0),
         y=b_part,
         color=df2.index.get_level_values(0),
         text_auto=True,
-        color_discrete_sequence=PLOT_COLORS,
+        color_discrete_map=SCENARIO_COLORS,
     )
     fig.update_layout(
         barmode="relative",
