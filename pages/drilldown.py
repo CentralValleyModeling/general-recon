@@ -267,25 +267,30 @@ def update_timeseries(b_part, climate_filter):
     Input(component_id="b-part", component_property="value"),
     Input(component_id="year-type-annual-timeseries", component_property="value"),
     Input(component_id="agg-annual-timeseries", component_property="value"),
+    Input(component_id="climate-filter", component_property="value"),
 )
 def update_annual_timeseries(
     b_part,
     year_type: str = "Calendar Year",
     agg_method: str = "Mean",
+    climate_filter: str = "2043_CC50"
 ):
     offsets = {
         "Calendar Year": 1,
         "Water Year": 10,
     }
+
+    df_plot = df_dv.loc[df_dv['Climate'] == climate_filter]
+
     df_agg = (
-        df_dv.loc[:, [b_part, "Scenario"]]
-        .groupby("Scenario")
+        df_plot.loc[:, [b_part, "Assumption"]]
+        .groupby("Assumption")
         .resample(rule=pd.offsets.YearBegin(month=offsets[year_type]))
         .agg({b_part: [agg_method.lower(), "count"]})
         .reset_index()
     )
 
-    #print(df_agg)
+    print(df_agg)
 
     df_agg.columns = ["-".join(c).strip("- ") for c in df_agg.columns]
     count = df_agg[f"{b_part}-count"]
@@ -296,8 +301,8 @@ def update_annual_timeseries(
         df_agg,
         x=year_type,
         y=b_part,
-        color="Scenario",
-        color_discrete_sequence=PLOT_COLORS,
+        color="Assumption",
+        color_discrete_map=SCENARIO_COLORS,
     )
     fig.update_layout(
         plot_bgcolor="white",
