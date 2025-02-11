@@ -278,24 +278,13 @@ def card_bar_plot_wy_vert(
     )
     fig.update_layout(
         plot_bgcolor="white",
+        legend_title="Scenario",
         showlegend=True,
         xaxis_title="Climate",
         yaxis_title="TAF/Water Year",
         xaxis_tickformat=",d",
     )
 
-    fig2 = px.bar(
-        df_plot,
-        x="Climate",
-        y=b_part,
-        color="Assumption",
-        barmode="group",
-        orientation="v",
-        hover_data=["Scenario"],
-        color_discrete_map=SCENARIO_COLORS,
-        text_auto=True
-
-    )
     fig.update_layout(
         plot_bgcolor="white",
         showlegend=True,
@@ -303,8 +292,6 @@ def card_bar_plot_wy_vert(
         yaxis_title="TAF/Water Year",
         xaxis_tickformat=",d",
     )
-
-
 
     layout = html.Div([dcc.Graph(figure=fig)],style={"flex": "1"})
 
