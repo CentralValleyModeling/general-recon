@@ -60,9 +60,10 @@ class CardWidget:
             children=self.charts,
             style={
                 "display": "flex",
-                "flex-wrap": "nowrap",  # 🔹 Prevents charts from wrapping
-                "justify-content": "space-between",  # 🔹 Distributes charts evenly
-                "width": "100%",  # 🔹 Stretches container
+                "flex-direction": "column",
+                "flex-wrap": "nowrap",
+                "justify-content": "space-between",
+                "width": "100%",
             }
         )
 
@@ -389,9 +390,10 @@ def cap_scenario_card(
     
     df_plot = df_plot.sort_values(["Climate", "Assumption"])
 
+#----------------------------------------------
     fig = px.bar(
         df_plot,
-        x=b_part,
+        x="NDOI",
         y="Climate",
         color="Assumption",
         barmode="group",
@@ -409,13 +411,47 @@ def cap_scenario_card(
             categoryorder="array", 
             categoryarray=climate_order
         ),
-        xaxis_title="Climate",
-        yaxis_title="TAF/Water Year",
+        xaxis_title="TAF/Water Year",
+        yaxis_title="Climate",
         xaxis_tickformat=",d",
         bargap=0.15,
         bargroupgap=0.05
     )
-    layout = html.Div([dcc.Graph(figure=fig)], style={"flex": "1"})
+ #----------------------------------------------
+
+    fig2 = px.bar(
+        df_plot,
+        x="NDOI",
+        y="Climate",
+        color="Assumption",
+        barmode="group",
+        orientation="h",
+        hover_data=["Scenario"],
+        color_discrete_map=custom_colors,
+        text_auto=True
+
+    )
+    fig2.update_layout(
+        title = "Total Delta Outflow (NDOI)",
+        plot_bgcolor="white",
+        showlegend=True,
+        xaxis=dict(
+            categoryorder="array", 
+            categoryarray=climate_order
+        ),
+        xaxis_title="TAF/Water Year",
+        yaxis_title="Climate",
+        xaxis_tickformat=",d",
+        bargap=0.15,
+        bargroupgap=0.05
+    )
+
+#----------------------------------------------
+
+
+    layout = [html.Div([dcc.Graph(figure=fig)], style={"flex": "1"}),
+              html.Div([dcc.Graph(figure=fig2)], style={"flex": "1"})
+    ]
 
     return layout
 
