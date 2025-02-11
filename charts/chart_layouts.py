@@ -45,7 +45,7 @@ class CardWidget:
 
     def create_card(
         self,
-        height="35rem",
+        height="70rem",
         wyt=[1, 2, 3, 4, 5],
         startyr=1922,
         endyr=2021,
@@ -137,7 +137,7 @@ class CardWidget:
                     ]
                 ),
             ],
-            # style={"height": height},
+            #style={"height": height},
         )
 
         return card
@@ -364,10 +364,10 @@ def cap_scenario_card(
     assumption_order = [
        "Baseline",
        "Maintain",
-#       "Degradation",
-#       "FIRO",
-#       "SOD Storage",
-#       "DCP",
+       "Degradation",
+       "FIRO",
+       "SOD Storage",
+       "DCP",
        "Combo"
     ]
 
@@ -393,7 +393,7 @@ def cap_scenario_card(
 #----------------------------------------------
     fig = px.bar(
         df_plot,
-        x="NDOI",
+        x="SWP_TA_TOTAL",
         y="Climate",
         color="Assumption",
         barmode="group",
@@ -404,7 +404,7 @@ def cap_scenario_card(
 
     )
     fig.update_layout(
-        title = b_part,
+        title = "Total Table A Deliveries",
         plot_bgcolor="white",
         showlegend=True,
         xaxis=dict(
@@ -414,7 +414,8 @@ def cap_scenario_card(
         xaxis_title="TAF/Water Year",
         yaxis_title="Climate",
         xaxis_tickformat=",d",
-        bargap=0.15,
+        height=600,
+        bargap=0.05,
         bargroupgap=0.05
     )
  #----------------------------------------------
@@ -442,7 +443,8 @@ def cap_scenario_card(
         xaxis_title="TAF/Water Year",
         yaxis_title="Climate",
         xaxis_tickformat=",d",
-        bargap=0.15,
+        height=600,
+        bargap=0.05,
         bargroupgap=0.05
     )
 
