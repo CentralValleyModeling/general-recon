@@ -7,7 +7,7 @@ import plotly.express as px
 from dash import Input, Output, State, callback, dcc, html, register_page
 
 from charts.chart_layouts import ann_exc_plot, mon_exc_plot
-from pages.styles import PLOT_COLORS
+from pages.styles import PLOT_COLORS, ASSUMPTION_ORDER, SCENARIO_COLORS
 from utils.query_data import date_map, df_dv, scen_aliases, var_dict
 from utils.tools import (
     cfs_taf,
@@ -52,6 +52,13 @@ drilldown_text = (
 bparts = []
 aliases = []
 
+CLIMATE_ORDER = ["Historical",
+                 "2043_CC50",
+                 "2043_CC95",
+                 "2085_CC50",
+                 "2085_CC75"
+                ]
+
 for var in var_dict:
     bparts.append(var)
     aliases.append(var_dict[var]["alias"])
@@ -77,7 +84,7 @@ def layout(**kwargs):
                         [
                             "Select Climate (filter for all charts): ",
                             dcc.Dropdown(
-                                ["2043_CC50"], id="climate-filter", value="2043_CC50", style={"width": "100%"}
+                                CLIMATE_ORDER, id="climate-filter", value="2043_CC50", style={"width": "100%"}
                             ),
                             "Select B-Part: ",
                             dcc.Dropdown(
@@ -236,19 +243,15 @@ def update_b_part(alias):
     Input(component_id="climate-filter", component_property="value"),
 )
 def update_timeseries(b_part, climate_filter):
-
-    print(df_dv)
-    print(climate_filter)
-    df_plot = df_dv.loc[df_dv['Climate']==climate_filter]
-    print(df_plot)
+    df_plot = df_dv.loc[df_dv['Climate'] == climate_filter]
 
 
     fig = px.line(
         df_plot,
         x=df_plot.index,
         y=b_part,
-        color="Scenario",
-        color_discrete_sequence=PLOT_COLORS,
+        color="Assumption",
+        color_discrete_map=SCENARIO_COLORS,
     )
     fig.update_layout(
         plot_bgcolor="white",
@@ -309,9 +312,11 @@ def update_annual_timeseries(
     Output(component_id="exceedance-plot", component_property="figure"),
     Input(component_id="b-part", component_property="value"),
     Input(component_id="monthchecklist-exc", component_property="value"),
+    Input(component_id="climate-filter", component_property="value"),
 )
-def update_exceedance(b_part, monthchecklist):
-    fig = mon_exc_plot(df_dv, b_part, monthchecklist)
+def update_exceedance(b_part, monthchecklist, climate_filter):
+    df_plot = df_dv.loc[df_dv['Climate'] == climate_filter]
+    fig = mon_exc_plot(df_plot, b_part, monthchecklist)
     return fig
 
 
@@ -333,24 +338,33 @@ def update_exceedance(b_part, monthchecklist, yearwindow):
     Input(component_id="b-part", component_property="value"),
     Input(component_id="wytchecklist-bar", component_property="value"),
     Input(component_id="slider-yr-range", component_property="value"),
+    Input(component_id="climate-filter", component_property="value"),
 )
-def update_monthly(b_part, wytchecklist, slider_yr_range):
+def update_monthly(b_part, wytchecklist, slider_yr_range, climate_filter):
     startyr = slider_yr_range[0]
     endyr = slider_yr_range[1]
+
+    print(df_dv)
     df0 = df_dv.loc[
         df_dv["WYT_SAC_"].isin(convert_wyt_nums(wytchecklist))
         & (df_dv["iwy"] >= startyr)
         & (df_dv["iwy"] <= endyr)
+        & (df_dv["Climate"] == climate_filter)
     ]
-    df1 = round(df0.groupby(["Scenario", "iwm"]).mean(numeric_only=True))
-    df1 = df1.reindex(scen_aliases, level="Scenario")
+
+    print(df0)
+
+    df1 = round(df0.groupby(["Assumption", "iwm"]).mean(numeric_only=True))
+    print(df1)
+    df1 = df1.reindex(ASSUMPTION_ORDER, level="Assumption")
+    print(df1)
     fig = px.line(
         df1,
         x=df1.index.get_level_values(1),
         y=b_part,
         color=df1.index.get_level_values(0),
-        labels={"color": "Scenario"},
-        color_discrete_sequence=PLOT_COLORS,
+        labels={"color": "Assumption"},
+        color_discrete_map=SCENARIO_COLORS,
     )
     fig.update_layout(
         plot_bgcolor="white",

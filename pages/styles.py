@@ -17,3 +17,23 @@ PLOT_COLORS = [
     "#FF97FF",
     "#FECB52",
 ]
+
+ASSUMPTION_ORDER = [
+    "Baseline",
+    "Maintain",
+    "Degradation",
+    "FIRO",
+    "SOD Storage",
+    "DCP",
+    "Combo"
+]
+
+SCENARIO_COLORS = {
+    "Baseline": "#4d4d4d",
+    "Maintain": "#999999",
+    "Degradation": "#ff6c66",
+    "FIRO": "#55b4eb",
+    "SOD Storage": "#0072b1",
+    "DCP": "#003759",
+    "Combo": "#039d73"
+}

@@ -5,9 +5,10 @@ import plotly.graph_objects as go
 from dash import dcc, html
 
 from data import create_download_button
-from pages.styles import PLOT_COLORS
+from pages.styles import PLOT_COLORS, SCENARIO_COLORS, ASSUMPTION_ORDER
 from utils.query_data import scen_aliases, var_dict
 from utils.tools import cfs_taf, convert_cm_nums, month_list, monthfilter
+
 
 
 INFO_ICON = html.I(className='fa fa-info-circle', style=dict(display='inline-block'))
@@ -257,31 +258,9 @@ def card_bar_plot_wy_vert(
     df_plot["Climate"] = df_plot["Climate"].astype(str)
     df_plot["Assumption"] = df_plot["Assumption"].astype(str)
 
-    
-
-    assumption_order = [
-        "Baseline",
-        "Maintain",
-        "Degradation",
-        "FIRO",
-        "SOD Storage",
-        "DCP",
-        "Combo"
-    ]
-
-    custom_colors = {
-        "Baseline": "#4d4d4d",
-        "Maintain": "#999999",
-        "Degradation": "#ff6c66",
-        "FIRO": "#55b4eb",
-        "SOD Storage": "#0072b1",
-        "DCP": "#003759",
-        "Combo": "#039d73"
-    }
-
     df_plot["Climate"] = pd.Categorical(df_plot["Climate"], categories=climate_order, ordered=True)
     df_plot["Assumption"] = pd.Categorical(df_plot["Assumption"],
-                                           categories=assumption_order, ordered=True)
+                                           categories=ASSUMPTION_ORDER, ordered=True)
     
     df_plot = df_plot.sort_values(["Climate", "Assumption"])
 
@@ -293,7 +272,7 @@ def card_bar_plot_wy_vert(
         barmode="group",
         orientation="v",
         hover_data=["Scenario"],
-        color_discrete_map=custom_colors,
+        color_discrete_map=SCENARIO_COLORS,
         text_auto=True
 
     )
@@ -313,7 +292,7 @@ def card_bar_plot_wy_vert(
         barmode="group",
         orientation="v",
         hover_data=["Scenario"],
-        color_discrete_map=custom_colors,
+        color_discrete_map=SCENARIO_COLORS,
         text_auto=True
 
     )
@@ -361,31 +340,13 @@ def cap_scenario_card(
 
     
 
-    assumption_order = [
-       "Baseline",
-       "Maintain",
-       "Degradation",
-       "FIRO",
-       "SOD Storage",
-       "DCP",
-       "Combo"
-    ]
 
-    custom_colors = {
-        "Baseline": "#4d4d4d",
-        "Maintain": "#999999",
-        "Degradation": "#ff6c66",
-        "FIRO": "#55b4eb",
-        "SOD Storage": "#0072b1",
-        "DCP": "#003759",
-        "Combo": "#039d73"
-    }
 
     df_plot["Climate"] = pd.Categorical(df_plot["Climate"], 
                                         categories=climate_order[::-1],
                                         ordered=True)
     df_plot["Assumption"] = pd.Categorical(df_plot["Assumption"],
-                                           categories=assumption_order[::-1],
+                                           categories=ASSUMPTION_ORDER[::-1],
                                            ordered=True)
     
     df_plot = df_plot.sort_values(["Climate", "Assumption"])
@@ -399,7 +360,7 @@ def cap_scenario_card(
         barmode="group",
         orientation="h",
         hover_data=["Scenario"],
-        color_discrete_map=custom_colors,
+        color_discrete_map=SCENARIO_COLORS,
         text_auto=True
 
     )
@@ -428,7 +389,7 @@ def cap_scenario_card(
         barmode="group",
         orientation="h",
         hover_data=["Scenario"],
-        color_discrete_map=custom_colors,
+        color_discrete_map=SCENARIO_COLORS,
         text_auto=True
 
     )
@@ -535,6 +496,7 @@ def mon_exc_plot(df, b_part, monthchecklist):
         # TODO: 2024-07-18 Consider updating to an interpolation method
         df = df.groupby(integer_index).mean()
         df = df.reindex(index=range(1, 101, 1)).ffill()
+        #print(df3)
         fig.add_trace(
             go.Scatter(
                 x=df.index,
