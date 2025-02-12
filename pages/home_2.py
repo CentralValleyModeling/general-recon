@@ -87,6 +87,17 @@ def layout():
                 className="d-grid gap-2",
                 children=[
                     dbc.Row(
+                        id="intro-text",
+                        children=[
+                            dbc.Col(
+                                class_name="col-md-8", children=[load_markdown("page_text/site-introduction.md")]
+                            ),
+                            dbc.Col(
+                                class_name="col-md-4", children=[html.Img(src="/assets/chrisman_pp.jpg", style={"width": "100%"})]
+                            ),
+                        ],
+                    ),
+                    dbc.Row(
                         id="home-cards-row-0",
                         children=[
                             dbc.Col(
