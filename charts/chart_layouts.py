@@ -238,7 +238,7 @@ def card_bar_plot_wy_vert(
     cm: list[int] = None,
     startyr: int = 1922,
     endyr: int = 2021,
-    climate_order = ["Historical"],
+    climate_order = [],
 ):
     if wyt is None:
         wyt = [1, 2, 3, 4, 5]
@@ -261,6 +261,10 @@ def card_bar_plot_wy_vert(
 
     df_plot["Climate"] = df_plot["Climate"].astype(str)
     df_plot["Assumption"] = df_plot["Assumption"].astype(str)
+
+    missing_categories = set(df_plot["Climate"].unique()) - set(climate_order)
+    if missing_categories:
+        print(f"Warning: These categories are in df_plot['Climate'] but missing in CLIMATE_ORDER: {missing_categories}")
 
     df_plot["Climate"] = pd.Categorical(df_plot["Climate"], categories=climate_order, ordered=True)
     df_plot["Assumption"] = pd.Categorical(df_plot["Assumption"],

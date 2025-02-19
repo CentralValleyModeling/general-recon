@@ -21,7 +21,7 @@ studies = [
 
     Study(r"dss_files\CCA1_v3.7.0__Baseline_LU100_SLR0_20241219",
           "",
-          "CCA1", "Baseline", "Historical", 1),
+          "CCA1", "Baseline", "Current", 1),
 
 
 # ---------------------------------2043 CC50--------------------------------------

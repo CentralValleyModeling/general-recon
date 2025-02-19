@@ -7,7 +7,7 @@ import plotly.express as px
 from dash import Input, Output, State, callback, dcc, html, register_page
 
 from charts.chart_layouts import ann_exc_plot, mon_exc_plot
-from pages.styles import PLOT_COLORS, ASSUMPTION_ORDER, SCENARIO_COLORS
+from pages.styles import PLOT_COLORS, ASSUMPTION_ORDER, SCENARIO_COLORS, CLIMATE_ORDER
 from utils.query_data import date_map, df_dv, scen_aliases, var_dict
 from utils.tools import (
     cfs_taf,
@@ -51,13 +51,6 @@ drilldown_text = (
 
 bparts = []
 aliases = []
-
-CLIMATE_ORDER = ["Historical",
-                 "2043_CC50",
-                 "2043_CC95",
-                 "2085_CC50",
-                 "2085_CC75"
-                ]
 
 for var in var_dict:
     bparts.append(var)

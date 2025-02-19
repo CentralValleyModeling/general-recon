@@ -13,14 +13,13 @@ from dash import (
 )
 
 from charts.chart_layouts import (
-    CardWidget, card_bar_plot_cy, 
-    card_mon_exc_plot, 
+    CardWidget,
     card_bar_plot_wy_vert,
-    cap_scenario_card
 )
 
 from data import load_markdown, universal_data_download
 from utils.query_data import df_dv
+from pages.styles import CLIMATE_ORDER
 
 register_page(
     __name__,
@@ -30,13 +29,6 @@ register_page(
     title="Results Console",
     order=0,
 )
-
-CLIMATE_ORDER = ["Historical",
-                 "2043_CC50",
-                 "2043_CC95",
-                 "2085_CC50",
-                 "2085_CC75"
-                ]
 
 exp_card = CardWidget(
     "Total Delta Exports (TAF/year)",

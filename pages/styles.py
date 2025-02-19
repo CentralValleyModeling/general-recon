@@ -37,3 +37,11 @@ SCENARIO_COLORS = {
     "DCP": "#003759",
     "Combo": "#039d73"
 }
+
+CLIMATE_ORDER = [
+    "Current",
+    "2043_CC50",
+    "2043_CC95",
+    "2085_CC50",
+    "2085_CC75"
+]
