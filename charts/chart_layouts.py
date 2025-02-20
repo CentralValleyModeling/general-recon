@@ -269,7 +269,16 @@ def card_bar_plot_wy_vert(
     df_plot["Climate"] = pd.Categorical(df_plot["Climate"], categories=climate_order, ordered=True)
     df_plot["Assumption"] = pd.Categorical(df_plot["Assumption"],
                                            categories=ASSUMPTION_ORDER, ordered=True)
+    #print(df_plot)
+    #df_plot["Percent_Change"]=df_plot[b_part]
+    #print(df_plot)
     
+
+    df_plot["ReferenceValue"] = df_plot[df_plot["Climate"] == "Current"]["C_CAA003"].values[0]  # Set "Historical" as reference
+    df_plot["PercentChange"] = ((df_plot["C_CAA003"] - df_plot["ReferenceValue"]) / df_plot["ReferenceValue"]) * 100
+    print(df_plot)
+
+
     df_plot = df_plot.sort_values(["Climate", "Assumption"])
 
     fig = px.bar(

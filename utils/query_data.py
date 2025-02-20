@@ -4,10 +4,7 @@ import yaml
 date_map = pd.read_csv("constants/date_map.csv", index_col=0, parse_dates=True)
 df_dv_orig = pd.read_csv("data/dv_data.csv", index_col=0, parse_dates=True)
 df_dv = pd.read_csv("data/dv_data.csv", index_col=0, parse_dates=True)
-#df_dv = df_dv.apply(pd.to_numeric, errors='coerce')
-#df_dv["Scenario"] = df_dv["Scenario"].astype(str)
 scen_aliases = df_dv.Scenario.unique()
-#print(df_dv)
 
 with open("constants/dvars.yaml", "r") as file:
     var_dict = yaml.safe_load(file)
@@ -17,8 +14,10 @@ with open("constants/dvars.yaml", "r") as file:
 df_dv["SWP_TA_CO_SOD"] = (
     df_dv["SWP_TA_TOTAL"]
     - df_dv["SWP_TA_FEATH"]
+    - df_dv["SWP_TA_NBAY"]
     + df_dv["SWP_CO_TOTAL"]
     - df_dv["SWP_CO_FEATH"]
+    - df_dv["SWP_CO_NBAY"]
 )
 
 df_dv["SWP_CO_SOD"] = df_dv["SWP_CO_TOTAL"] - df_dv["SWP_CO_FEATH"]
