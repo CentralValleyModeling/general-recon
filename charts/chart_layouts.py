@@ -5,14 +5,14 @@ import plotly.graph_objects as go
 from dash import dcc, html
 
 from data import create_download_button
-from pages.styles import PLOT_COLORS, SCENARIO_COLORS, ASSUMPTION_ORDER
+from pages.styles import PLOT_COLORS, SCENARIO_COLORS, ASSUMPTION_ORDER, CLIMATE_ORDER
 from utils.query_data import scen_aliases, var_dict
 from utils.tools import cfs_taf, convert_cm_nums, month_list, monthfilter
 
 
 
 INFO_ICON = html.I(className='fa fa-info-circle', style=dict(display='inline-block'))
-
+CSV_EXPORT = False
 
 # TODO use dictionaries to allow arbitrary number of buttons
 class CardWidget:
@@ -269,17 +269,15 @@ def card_bar_plot_wy_vert(
     df_plot["Climate"] = pd.Categorical(df_plot["Climate"], categories=climate_order, ordered=True)
     df_plot["Assumption"] = pd.Categorical(df_plot["Assumption"],
                                            categories=ASSUMPTION_ORDER, ordered=True)
-    #print(df_plot)
-    #df_plot["Percent_Change"]=df_plot[b_part]
-    #print(df_plot)
-    
 
     df_plot["ReferenceValue"] = df_plot[df_plot["Climate"] == "Current"]["C_CAA003"].values[0]  # Set "Historical" as reference
     df_plot["PercentChange"] = ((df_plot["C_CAA003"] - df_plot["ReferenceValue"]) / df_plot["ReferenceValue"]) * 100
-    print(df_plot)
+    #print(df_plot)
 
 
     df_plot = df_plot.sort_values(["Climate", "Assumption"])
+    if CSV_EXPORT:
+        df_plot[["Climate","Assumption",b_part]].to_csv(f'csv_export/{b_part}.csv', index=False)
 
     fig = px.bar(
         df_plot,
@@ -309,123 +307,10 @@ def card_bar_plot_wy_vert(
 
     return layout
 
-def cap_scenario_card(
-    df: pd.DataFrame,
-    b_part: str = "C_CAA003",
-    wyt: list[int] = None,
-    startyr: int = 1922,
-    endyr: int = 2021,
-    climate_order: list[str] = [],
-):
+def card_mon_exc_plot(df, b_part, monthchecklist, climate):
 
-    if wyt is None:
-        wyt = [1, 2, 3, 4, 5]
-
-    df0 = df.loc[
-        (df["iwy"] >= startyr)
-    ]
-    try:
-        df0 = cfs_taf(df0, var_dict)
-    except Exception:
-        print(f"Unable to convert from CFS to TAF for {b_part}")
-
-    
-    df2 = round(df0.groupby(["Scenario","Climate","Assumption"]).sum(numeric_only=True) / (endyr - startyr + 1))
-    df2 = df2.reset_index()
-    df_plot = df2
-
-    df_plot["Climate"] = df_plot["Climate"].astype(str)
-    df_plot["Assumption"] = df_plot["Assumption"].astype(str)
-
-    
-
-
-
-    df_plot["Climate"] = pd.Categorical(df_plot["Climate"], 
-                                        categories=climate_order[::-1],
-                                        ordered=True)
-    df_plot["Assumption"] = pd.Categorical(df_plot["Assumption"],
-                                           categories=ASSUMPTION_ORDER[::-1],
-                                           ordered=True)
-    
-    df_plot = df_plot.sort_values(["Climate", "Assumption"])
-
-#----------------------------------------------
-    fig = px.bar(
-        df_plot,
-        x="SWP_TA_TOTAL",
-        y="Climate",
-        color="Assumption",
-        barmode="group",
-        orientation="h",
-        hover_data=["Scenario"],
-        color_discrete_map=SCENARIO_COLORS,
-        text_auto=True
-
-    )
+    fig = mon_exc_plot(df, b_part, monthchecklist, climate)
     fig.update_layout(
-        title = "Total Table A Deliveries",
-        plot_bgcolor="white",
-        showlegend=True,
-        xaxis=dict(
-            categoryorder="array", 
-            categoryarray=climate_order
-        ),
-        xaxis_title="TAF/Water Year",
-        yaxis_title="Climate",
-        xaxis_tickformat=",d",
-        height=600,
-        bargap=0.05,
-        bargroupgap=0.05
-    )
- #----------------------------------------------
-
-    fig2 = px.bar(
-        df_plot,
-        x="NDOI",
-        y="Climate",
-        color="Assumption",
-        barmode="group",
-        orientation="h",
-        hover_data=["Scenario"],
-        color_discrete_map=SCENARIO_COLORS,
-        text_auto=True
-
-    )
-    fig2.update_layout(
-        title = "Total Delta Outflow (NDOI)",
-        plot_bgcolor="white",
-        showlegend=True,
-        xaxis=dict(
-            categoryorder="array", 
-            categoryarray=climate_order
-        ),
-        xaxis_title="TAF/Water Year",
-        yaxis_title="Climate",
-        xaxis_tickformat=",d",
-        height=600,
-        bargap=0.05,
-        bargroupgap=0.05
-    )
-
-#----------------------------------------------
-
-
-    layout = [html.Div([dcc.Graph(figure=fig)], style={"flex": "1"}),
-              html.Div([dcc.Graph(figure=fig2)], style={"flex": "1"})
-    ]
-
-    return layout
-
-
-
-
-def card_mon_exc_plot(df, b_part, monthchecklist):
-    #print (df)
-
-    fig = mon_exc_plot(df, b_part, monthchecklist)
-    fig.update_layout(
-        # width=800,
         height=400,
     )
 
@@ -470,10 +355,11 @@ def ann_bar_plot(df, b_part="C_CAA003", startyr=1922, endyr=2021, wyt=[1, 2, 3, 
     return fig
 
 
-def mon_exc_plot(df, b_part, monthchecklist):
+def mon_exc_plot(df, b_part, monthchecklist,climate):
     series_container = []
     # Filter the calendar months
     df0 = df.loc[df["icm"].isin(convert_cm_nums(monthchecklist))]
+
     for assumption in ASSUMPTION_ORDER:
         series_i = df0.loc[df0["Assumption"] == assumption, b_part]
         series_i = series_i.sort_values()
@@ -505,6 +391,8 @@ def mon_exc_plot(df, b_part, monthchecklist):
                 line=dict(color=PLOT_COLORS[i % len(PLOT_COLORS)]),
             )
         )
+    if CSV_EXPORT:
+        df3.to_csv(f'csv_export/ranked_{b_part}_{climate}_{monthchecklist}.csv', index=True)
 
     fig.update_layout(
         plot_bgcolor="white",

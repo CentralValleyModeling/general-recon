@@ -316,7 +316,7 @@ def update_annual_timeseries(
 )
 def update_exceedance(b_part, monthchecklist, climate_filter):
     df_plot = df_dv.loc[df_dv['Climate'] == climate_filter]
-    fig = mon_exc_plot(df_plot, b_part, monthchecklist)
+    fig = mon_exc_plot(df_plot, b_part, monthchecklist, climate_filter)
     return fig
 
 
