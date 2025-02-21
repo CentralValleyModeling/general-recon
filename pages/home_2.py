@@ -15,6 +15,7 @@ from dash import (
 from charts.chart_layouts import (
     CardWidget,
     card_bar_plot_wy_vert,
+    card_mon_exc_plot,
 )
 
 from data import load_markdown, universal_data_download
@@ -120,7 +121,7 @@ def layout():
                                 class_name="col-md-12", children=[orovl_sep_card_card.create_card()]
                             ),
                         ],
-                    ),                   
+                    ),
                 ],
             ),
         ],
