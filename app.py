@@ -55,16 +55,34 @@ navbar = dbc.NavbarSimple(
     children=pages,
     color="light",
     dark=False,
-    className="mb-0",
+    className="mb-0 flex-shrink-0",
 )
 
+# The default page_container does not allow for flexboxes to fill the vertical
+# space on a page because of a div without an id, the below code re-creates what
+# the page_container div is, and adds an "id=parent_page_content" to that node.
+# The solution was taken from the discussion below:
+# https://community.plotly.com/t/adjust-height-of-page-container/73029/3
+dash.page_container = html.Div(
+    [
+        dcc.Location(id="_pages_location", refresh="callback-nav"),
+        html.Div(id="_pages_content", disable_n_clicks=True, style={"height": "100%"}),
+        dcc.Store(id="_pages_store"),
+        html.Div(id="_pages_dummy", disable_n_clicks=True),
+    ],
+    style={"height": "100%"},
+    id="parent_page_content",
+)
 
 app.layout = html.Div(
     [
         dcc.Location(id="url", refresh=False),
         navbar,
-        dash.page_container,
+        dbc.Container(
+            dash.page_container, fluid=True, className="flex-grow-1 d-flex flex-column"
+        ),
     ],
+    className="vh-100 d-flex flex-column",
 )
 
 server = app.server
