@@ -284,7 +284,7 @@ def update_annual_timeseries(
         .reset_index()
     )
 
-    print(df_agg)
+    #print(df_agg)
 
     df_agg.columns = ["-".join(c).strip("- ") for c in df_agg.columns]
     count = df_agg[f"{b_part}-count"]
@@ -346,7 +346,7 @@ def update_monthly(b_part, wytchecklist, slider_yr_range, climate_filter):
     startyr = slider_yr_range[0]
     endyr = slider_yr_range[1]
 
-    print(df_dv)
+    #print(df_dv)
     df0 = df_dv.loc[
         df_dv["WYT_SAC_"].isin(convert_wyt_nums(wytchecklist))
         & (df_dv["iwy"] >= startyr)

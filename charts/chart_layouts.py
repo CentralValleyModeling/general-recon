@@ -270,12 +270,18 @@ def card_bar_plot_wy_vert(
     df_plot["Assumption"] = pd.Categorical(df_plot["Assumption"],
                                            categories=ASSUMPTION_ORDER, ordered=True)
 
-    df_plot["ReferenceValue"] = df_plot[df_plot["Climate"] == "Current"]["C_CAA003"].values[0]  # Set "Historical" as reference
-    df_plot["PercentChange"] = ((df_plot["C_CAA003"] - df_plot["ReferenceValue"]) / df_plot["ReferenceValue"]) * 100
-    #print(df_plot)
 
+    # Compute "Maintain" baseline for each Climate group
+    df_plot["BaselineValue"] = df_plot.groupby("Climate")[b_part].transform(
+        lambda x: x.loc[x.index[df_plot.loc[x.index, "Assumption"] == "Maintain"]].values[0] 
+        if (df_plot.loc[x.index, "Assumption"] == "Maintain").any() else None
+    )
+
+    # Compute Percent Change
+    df_plot["PercentChange"] = ((df_plot[b_part] - df_plot["BaselineValue"]) / df_plot["BaselineValue"]) * 100
 
     df_plot = df_plot.sort_values(["Climate", "Assumption"])
+    print(df_plot)
     if CSV_EXPORT:
         df_plot[["Climate","Assumption",b_part]].to_csv(f'csv_export/{b_part}.csv', index=False)
 
@@ -286,7 +292,7 @@ def card_bar_plot_wy_vert(
         color="Assumption",
         barmode="group",
         orientation="v",
-        hover_data=["Scenario"],
+        custom_data=["Scenario",b_part,"PercentChange"],
         color_discrete_map=SCENARIO_COLORS,
         text_auto=True
 
@@ -302,6 +308,12 @@ def card_bar_plot_wy_vert(
         yaxis_showgrid=True,
         yaxis_gridcolor="lightgray",
     )
+
+    fig.update_traces(
+        hovertemplate="<b>Scenario Alias:</b> %{customdata[0]}<br>" +
+                    "<b>Value:</b> %{customdata[1]:,.0f}<br>" +
+                    "<b>Change vs Maintain:</b> %{customdata[2]:.2f}%"
+)
 
     layout = html.Div([dcc.Graph(figure=fig)],style={"flex": "1"})
 
