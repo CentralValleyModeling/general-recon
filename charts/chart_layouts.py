@@ -281,7 +281,7 @@ def card_bar_plot_wy_vert(
     df_plot["PercentChange"] = ((df_plot[b_part] - df_plot["BaselineValue"]) / df_plot["BaselineValue"]) * 100
 
     df_plot = df_plot.sort_values(["Climate", "Assumption"])
-    print(df_plot)
+    #print(df_plot)
     if CSV_EXPORT:
         df_plot[["Climate","Assumption",b_part]].to_csv(f'csv_export/{b_part}.csv', index=False)
 
