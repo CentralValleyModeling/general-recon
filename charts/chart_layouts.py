@@ -1,3 +1,6 @@
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
@@ -318,6 +321,97 @@ def card_bar_plot_wy_vert(
     layout = html.Div([dcc.Graph(figure=fig)],style={"flex": "1"})
 
     return layout
+
+def card_bar_plot_orovl_CAP(
+    df: pd.DataFrame,
+    b_part: str = "C_CAA003",
+    wyt: list[int] = None,
+    cm: list[int] = None,
+    startyr: int = 1922,
+    endyr: int = 2021,
+    climate_order = [],
+):
+    if wyt is None:
+        wyt = [1, 2, 3, 4, 5]
+    if cm is None:
+        cm = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+    df0 = df.loc[
+        (df["iwy"] >= startyr)
+       & (df["icm"].isin(cm))
+    ]
+    try:
+        df0 = cfs_taf(df0, var_dict)
+    except Exception:
+        print(f"Unable to convert from CFS to TAF for {b_part}")
+
+    
+    df2 = round(df0.groupby(["Scenario","Climate","Assumption"]).sum(numeric_only=True) / (endyr - startyr + 1))
+    df2 = df2.reset_index()
+    df_plot = df2
+
+    print (df2)
+
+    df_plot["Climate"] = df_plot["Climate"].astype(str)
+    df_plot["Assumption"] = df_plot["Assumption"].astype(str)
+
+    missing_categories = set(df_plot["Climate"].unique()) - set(climate_order)
+    if missing_categories:
+        print(f"Warning: These categories are in df_plot['Climate'] but missing in CLIMATE_ORDER: {missing_categories}")
+
+    df_plot["Climate"] = pd.Categorical(df_plot["Climate"], categories=climate_order, ordered=True)
+    df_plot["Assumption"] = pd.Categorical(df_plot["Assumption"],
+                                           categories=ASSUMPTION_ORDER, ordered=True)
+
+
+    # Compute "Maintain" baseline for each Climate group
+    df_plot["BaselineValue"] = df_plot.groupby("Climate")[b_part].transform(
+        lambda x: x.loc[x.index[df_plot.loc[x.index, "Assumption"] == "Maintain"]].values[0] 
+        if (df_plot.loc[x.index, "Assumption"] == "Maintain").any() else None
+    )
+
+    # Compute Percent Change
+    df_plot["PercentChange"] = ((df_plot[b_part] - df_plot["BaselineValue"]) / df_plot["BaselineValue"]) * 100
+
+    df_plot = df_plot.sort_values(["Climate", "Assumption"])
+    #print(df_plot)
+    if CSV_EXPORT:
+        df_plot[["Climate","Assumption",b_part]].to_csv(f'csv_export/{b_part}.csv', index=False)
+
+    fig = px.bar(
+        df_plot,
+        x="Climate",
+        y=b_part,
+        color="Assumption",
+        barmode="group",
+        orientation="v",
+        custom_data=["Scenario",b_part,"PercentChange"],
+        color_discrete_map=SCENARIO_COLORS,
+        text_auto=True
+
+    )
+    fig.update_layout(
+        plot_bgcolor="white",
+        legend_title="Scenario",
+        showlegend=True,
+        xaxis_title="Climate",
+        xaxis_tickformat=",d",
+        yaxis_title="Thousand Acre-Feet",
+        yaxis_tickformat=",",
+        yaxis_showgrid=True,
+        yaxis_gridcolor="lightgray",
+    )
+
+    fig.update_traces(
+        hovertemplate="<b>Scenario Alias:</b> %{customdata[0]}<br>" +
+                    "<b>Value:</b> %{customdata[1]:,.0f}<br>" +
+                    "<b>Change vs Maintain:</b> %{customdata[2]:.2f}%"
+)
+
+    layout = html.Div([dcc.Graph(figure=fig)],style={"flex": "1"})
+
+    return layout
+
 
 def card_mon_exc_plot(df, b_part, monthchecklist, climate):
 
