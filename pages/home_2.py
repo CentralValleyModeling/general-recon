@@ -15,7 +15,7 @@ from dash import (
 from charts.chart_layouts import (
     CardWidget,
     card_bar_plot_wy_vert,
-    card_mon_exc_plot,
+    card_bar_plot_orovl_CAP,
 )
 
 from data import load_markdown, universal_data_download
@@ -58,13 +58,22 @@ ndoi_card = CardWidget(
     charts=card_bar_plot_wy_vert(df_dv, b_part="NDOI", climate_order=CLIMATE_ORDER),
 )
 
-orovl_sep_card_card = CardWidget(
-    "Oroville End-of-September Storage",
+orovl_sep_card = CardWidget(
+    "Oroville September Storage",
     button_id="S_OROVL",
     button_label="Drilldown",
     popover_label="orovl-info",
     popover_content=load_markdown("page_text/info-orovl.md"),
     charts=card_bar_plot_wy_vert(df_dv, b_part="S_OROVL", climate_order=CLIMATE_ORDER, cm=[9]),
+)
+
+orovl_sep_co_card = CardWidget(
+    "Oroville Carryover (Percent of Simulation Period Where Oroville September Storage < 1.6 MAF)",
+    button_id="S_OROVL",
+    button_label="Drilldown",
+    popover_label="orovl-co-info",
+    popover_content=load_markdown("page_text/info-orovl-co.md"),
+    charts=card_bar_plot_orovl_CAP(df_dv, b_part="S_OROVL", climate_order=CLIMATE_ORDER, cm=[9]),
 )
 
 def layout():
@@ -118,7 +127,15 @@ def layout():
                         id="home-cards-row-0",
                         children=[
                             dbc.Col(
-                                class_name="col-md-12", children=[orovl_sep_card_card.create_card()]
+                                class_name="col-md-12", children=[orovl_sep_card.create_card()]
+                            ),
+                        ],
+                    ),
+                    dbc.Row(
+                        id="home-cards-row-0",
+                        children=[
+                            dbc.Col(
+                                class_name="col-md-12", children=[orovl_sep_co_card.create_card()]
                             ),
                         ],
                     ),
