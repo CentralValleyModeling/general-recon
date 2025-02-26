@@ -59,7 +59,7 @@ ndoi_card = CardWidget(
 )
 
 orovl_sep_card = CardWidget(
-    "Oroville End-of-September Storage",
+    "Oroville September Storage",
     button_id="S_OROVL",
     button_label="Drilldown",
     popover_label="orovl-info",
@@ -68,11 +68,11 @@ orovl_sep_card = CardWidget(
 )
 
 orovl_sep_co_card = CardWidget(
-    "Oroville End-of-September Storage",
+    "Oroville Carryover (Percent of Simulation Period Where Oroville September Storage < 1.6 MAF)",
     button_id="S_OROVL",
     button_label="Drilldown",
-    popover_label="orovl-info",
-    popover_content=load_markdown("page_text/info-orovl.md"),
+    popover_label="orovl-co-info",
+    popover_content=load_markdown("page_text/info-orovl-co.md"),
     charts=card_bar_plot_orovl_CAP(df_dv, b_part="S_OROVL", climate_order=CLIMATE_ORDER, cm=[9]),
 )
 

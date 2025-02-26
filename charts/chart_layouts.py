@@ -350,7 +350,8 @@ def card_bar_plot_orovl_CAP(
     
     print(df0)
 
-    df2 = round(df0.groupby(["Scenario","Climate","Assumption"]).apply(lambda x: count_if(x[b_part], lambda y: y < 1600)))/100
+    df2 = round(df0.groupby(["Scenario","Climate","Assumption"]).apply(
+        lambda x: count_if(x[b_part], lambda y: y < 1600)))/100
     df2 = df2.reset_index()
     df2.rename(columns={0: b_part}, inplace=True)
     df_plot = df2
@@ -401,15 +402,15 @@ def card_bar_plot_orovl_CAP(
         showlegend=True,
         xaxis_title="Climate",
         xaxis_tickformat=",d",
-        yaxis_title="Thousand Acre-Feet",
-        yaxis_tickformat=",",
+        yaxis_title="Percent < 1.6 MAF",
+        yaxis_tickformat=",.0%",
         yaxis_showgrid=True,
         yaxis_gridcolor="lightgray",
     )
 
     fig.update_traces(
         hovertemplate="<b>Scenario Alias:</b> %{customdata[0]}<br>" +
-                    "<b>Value:</b> %{customdata[1]:,.0f}<br>" +
+                    "<b>Value:</b> %{customdata[1]:,.0f}<br>"
                     "<b>Change vs Maintain:</b> %{customdata[2]:.2f}%"
 )
 
