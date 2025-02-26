@@ -345,9 +345,14 @@ def card_bar_plot_orovl_CAP(
     except Exception:
         print(f"Unable to convert from CFS to TAF for {b_part}")
 
+    def count_if(series, condition):
+        return (condition(series)).sum()
     
-    df2 = round(df0.groupby(["Scenario","Climate","Assumption"]).sum(numeric_only=True) / (endyr - startyr + 1))
+    print(df0)
+
+    df2 = round(df0.groupby(["Scenario","Climate","Assumption"]).apply(lambda x: count_if(x[b_part], lambda y: y < 1600)))/100
     df2 = df2.reset_index()
+    df2.rename(columns={0: b_part}, inplace=True)
     df_plot = df2
 
     print (df2)
