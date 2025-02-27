@@ -247,8 +247,15 @@ df_sv["SJR4"] = df_sv["N_MEL"] + df_sv["DPR_I"] + df_sv["LK_MC"] + df_sv["MILLE"
 
 df_sv["8RI"] = df_sv["SAC4"] + df_sv["SJR4"]
 
-df_dv_orig = df_dv_orig.reset_index()
 df_sv["WYT_SAC_"] = df_dv_orig["WYT_SAC_"]  # add WYT back to the SV df
+
+# CAP specific stuff
+# There are only five unique WYT_SAC_ in the dv (one for each climate)
+# filter out five of the unique ones from sv_df
+
+unique_scenarios = ["CCA1", "CCA4", "CCA5", "CCA16", "CCA17"]
+df_sv = df_sv[df_sv["Scenario"].isin(unique_scenarios)]
+#print(df_sv)
 
 # Name indexes
 df_sv.index.name = "Date"

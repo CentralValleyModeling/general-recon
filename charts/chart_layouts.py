@@ -162,6 +162,7 @@ def card_mon_plot(
     df1 = df.loc[df["WYT_SAC_"].isin(wyt)]
     df1 = round(df1.groupby(["Scenario", "iwm"]).mean(numeric_only=True))
     df1 = df1.reindex(scen_aliases, level="Scenario")
+
     fig = px.line(
         df1,
         x=df1.index.get_level_values(1),
