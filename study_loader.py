@@ -122,26 +122,22 @@ dv_files = [
 
 # ---------------------------------SV FILES--------------------------------------
 sv_files = [
-    Study(r"dss_files\CCA_SV_Danube_Adj_v1.9.dss",
-          "",
+    Study("", r"dss_files\CCA_SV_Danube_Adj_v1.9.dss",
           "Current_SV", "SV", "Current", 1),
 
-    Study(r"dss_files\DCR2023_SV_Danube_2043_cc50_v1.9.dss",
-          "",
+    Study("", r"dss_files\DCR2023_SV_Danube_2043_cc50_v1.9.dss",
           "2043_CC50_SV", "SV", "2043_CC50", 1),
 
-    Study(r"dss_files\DCR2023_SV_Danube_2043_cc95_v1.9.dss",
-          "",
+    Study("", r"dss_files\DCR2023_SV_Danube_2043_cc95_v1.9.dss",
           "2043_CC95_SV", "SV", "2043_CC95", 1),
 
-    Study(r"dss_files\SV_CS3_CCA_2085_CC50_Hydrology05.24.2024_LU50",
-          "",
+    Study("", r"dss_files\SV_CS3_CCA_2085_CC50_Hydrology05.24.2024_LU50",
           "2085_CC50_SV", "SV", "2085_CC50", 1),
 
-    Study(r"dss_files\SV_CS3_CCA_2085_CC75_Hydrology06.07.2024_LU50.dss",
-          "",
-          "2085_CC75_SV", "SV", "2085_CC75", 1),  
+    Study("", r"dss_files\SV_CS3_CCA_2085_CC75_Hydrology06.07.2024_LU50.dss",
+          "2085_CC75_SV", "SV", "2085_CC75", 1), 
 ]
 date_map = pd.read_csv("constants/date_map.csv", index_col=0, parse_dates=True)
 
-load_data(dv_files, var_dict_dv, date_map, "dv", "dv_data.csv")
+#load_data(dv_files, var_dict_dv, date_map, "dv", "dv_data.csv")
+load_data(sv_files, var_dict_sv, date_map, "sv", "sv_data.csv")

@@ -56,7 +56,7 @@ class CardWidget:
         registry_id: str | None = None,
     ):
         if registry_id:
-            download_button = create_download_button(registry_id, self.chart)
+            download_button = create_download_button(registry_id, self.charts)
         else:
             download_button = None
 
