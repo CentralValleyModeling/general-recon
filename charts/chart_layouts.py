@@ -295,7 +295,7 @@ def card_bar_plot_wy_vert(
         color="Assumption",
         barmode="group",
         orientation="v",
-        custom_data=["Scenario",b_part,"PercentChange"],
+        custom_data=["Assumption","Scenario",b_part,"PercentChange","Climate"],
         color_discrete_map=SCENARIO_COLORS,
         text_auto=True
 
@@ -313,9 +313,12 @@ def card_bar_plot_wy_vert(
     )
 
     fig.update_traces(
-        hovertemplate="<b>Scenario Alias:</b> %{customdata[0]}<br>" +
-                    "<b>Value:</b> %{customdata[1]:,.0f}<br>" +
-                    "<b>Change vs Maintain:</b> %{customdata[2]:.2f}%"
+        hovertemplate=
+                    "<b>Scenario:</b> %{customdata[0]}<br>" +
+                    "<b>Scenario Alias:</b> %{customdata[1]}<br>" +
+                    "<b>Value:</b> %{customdata[2]:,.0f}<br>" +
+                    "<b>Change vs Maintain:</b> %{customdata[3]:.2f}% <br>" + 
+                    "<b>Climate:</b> %{customdata[4]}"
 )
 
     layout = html.Div([dcc.Graph(figure=fig)],style={"flex": "1"})
@@ -356,8 +359,6 @@ def card_bar_plot_orovl_CAP(
     df2.rename(columns={0: b_part}, inplace=True)
     df_plot = df2
 
-    print (df2)
-
     df_plot["Climate"] = df_plot["Climate"].astype(str)
     df_plot["Assumption"] = df_plot["Assumption"].astype(str)
 
@@ -391,7 +392,7 @@ def card_bar_plot_orovl_CAP(
         color="Assumption",
         barmode="group",
         orientation="v",
-        custom_data=["Scenario",b_part,"PercentChange"],
+        custom_data=["Assumption","Scenario",b_part,"PercentChange","Climate"],
         color_discrete_map=SCENARIO_COLORS,
         text_auto=True
 
@@ -409,9 +410,12 @@ def card_bar_plot_orovl_CAP(
     )
 
     fig.update_traces(
-        hovertemplate="<b>Scenario Alias:</b> %{customdata[0]}<br>" +
-                    "<b>Value:</b> %{customdata[1]:,.0f}<br>"
-                    "<b>Change vs Maintain:</b> %{customdata[2]:.2f}%"
+        hovertemplate=
+                    "<b>Scenario:</b> %{customdata[0]}<br>" +
+                    "<b>Scenario Alias:</b> %{customdata[1]}<br>" +
+                    "<b>Value:</b> %{customdata[2]:,.2f}<br>" +
+                    "<b>Change vs Maintain:</b> %{customdata[3]:.2f}% <br>" + 
+                    "<b>Climate:</b> %{customdata[4]}"
 )
 
     layout = html.Div([dcc.Graph(figure=fig)],style={"flex": "1"})
