@@ -159,16 +159,16 @@ def card_mon_plot(
     #    df1=df.loc[df['WYT_SAC_'].isin(wyt)]
     # except:
     #    print("WYT_SAC_ timeseries not found")
+
     df1 = df.loc[df["WYT_SAC_"].isin(wyt)]
-    df1 = round(df1.groupby(["Scenario", "iwm"]).mean(numeric_only=True))
-    df1 = df1.reindex(scen_aliases, level="Scenario")
+    df1 = round(df1.groupby(["Climate", "iwm"]).mean(numeric_only=True))
 
     fig = px.line(
         df1,
         x=df1.index.get_level_values(1),
         y=b_part,
         color=df1.index.get_level_values(0),
-        labels={"color": "Scenario"},
+        labels={"color": "Climate"},
         color_discrete_sequence=PLOT_COLORS,
     )
 
@@ -193,26 +193,36 @@ def card_mon_plot(
     return layout
 
 
-def card_bar_plot_cy(
+def card_bar_plot(
     df: pd.DataFrame,
     b_part: str = "C_CAA003",
     wyt: list[int] = None,
     startyr: int = 1922,
     endyr: int = 2021,
+    cy_wy: str ="wy",
+    climate_order = [],
 ):
     if wyt is None:
         wyt = [1, 2, 3, 4, 5]
 
-    df0 = df.loc[
-        (df["icy"] >= startyr)
-    ]
+    if cy_wy == "wy":
+        df0 = df.loc[
+            (df["iwy"] >= startyr)
+        ]
+    else:
+        df0 = df.loc[
+            (df["icy"] >= startyr)
+        ]
+        
+
     try:
         df0 = cfs_taf(df0, var_dict)
     except Exception:
         print(f"Unable to convert from CFS to TAF for {b_part}")
     # For the last year
-    df1 = round(df0.groupby(["Scenario"]).sum(numeric_only=True) / (endyr - startyr + 1))
+    df1 = round(df0.groupby(["Climate"]).sum(numeric_only=True) / (endyr - startyr + 1))
     df_plot = df1
+
     fig = px.bar(
         df_plot[b_part],
         text=df_plot[b_part],
@@ -226,7 +236,7 @@ def card_bar_plot_cy(
         # width=600,
         height=300,
         showlegend=False,
-        xaxis_title="TAF/Calendar Year",
+        xaxis_title="TAF/Year",
         yaxis_title="",
         xaxis_tickformat=",d",
     )

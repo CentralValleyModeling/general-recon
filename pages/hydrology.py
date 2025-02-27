@@ -1,7 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import Input, Output, callback, dcc, html, register_page
 
-from charts.chart_layouts import CardWidget, card_bar_plot_cy, card_mon_plot
+from charts.chart_layouts import CardWidget, card_bar_plot, card_mon_plot
 from data import load_markdown, universal_data_download
 from utils.query_data import df_sv
 
@@ -29,34 +29,34 @@ hydrology_text = (
 )
 
 eight_ri_card_ann = CardWidget(
-    "Eight River Index",
+    "Eight River Index (Water Year Average)",
     button_id=None,
     button_label=None,
-    charts=card_bar_plot_cy(df_sv, b_part="8RI"),
+    charts=card_bar_plot(df_sv, b_part="8RI", cy_wy="wy"),
     text=load_markdown("page_text/hydrology-8ri.md"),
 )
 
 sac_four_ri_card_ann = CardWidget(
-    "Sacramento River Runoff",
+    "Sacramento River Runoff (Water Year Average)",
     button_id=None,
     button_label=None,
-    charts=card_bar_plot_cy(df_sv, b_part="SAC4"),
+    charts=card_bar_plot(df_sv, b_part="SAC4", cy_wy="wy"),
     text=load_markdown("page_text/hydrology-sacramento-4ri.md"),
 )
 
 sjr_four_ri_card_ann = CardWidget(
-    "San Joaquin River Runoff",
+    "San Joaquin River Runoff (Water Year Average)",
     button_id=None,
     button_label=None,
-    charts=card_bar_plot_cy(df_sv, b_part="SJR4"),
+    charts=card_bar_plot(df_sv, b_part="SJR4", cy_wy="wy"),
     text=load_markdown("page_text/hydrology-san-joaquin-4ri.md"),
 )
 
 orov_inflow_card_ann = CardWidget(
-    "Oroville Reservoir Inflow",
+    "Oroville Reservoir Inflow (Water Year Average)",
     button_id=None,
     button_label=None,
-    charts=card_bar_plot_cy(df_sv, b_part="OROVI"),
+    charts=card_bar_plot(df_sv, b_part="OROVI", cy_wy="wy"),
     text="",
 )
 
