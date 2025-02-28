@@ -199,8 +199,9 @@ def card_bar_plot(
     wyt: list[int] = None,
     startyr: int = 1922,
     endyr: int = 2021,
-    cy_wy: str ="wy",
-    climate_order = [],
+    cy_wy: str = "wy",
+    climate_order: list = [],
+    cm: list = list(range(1, 13))
 ):
     if wyt is None:
         wyt = [1, 2, 3, 4, 5]
@@ -214,6 +215,9 @@ def card_bar_plot(
             (df["icy"] >= startyr)
         ]
         
+    df0 = df.loc[
+            (df["icm"].isin(cm))
+        ]
 
     try:
         df0 = cfs_taf(df0, var_dict)
@@ -362,7 +366,6 @@ def card_bar_plot_orovl_CAP(
     def count_if(series, condition):
         return (condition(series)).sum()
     
-    print(df0)
 
     df2 = round(df0.groupby(["Scenario","Climate","Assumption"]).apply(
         lambda x: count_if(x[b_part], lambda y: y < 1600)))/100

@@ -83,8 +83,10 @@ def layout(**kwargs):
         scen_aliases, df_dv, var_dict, bparts=b,
         yrkind='icy', start_yr=1922, end_yr=2021
     )
-    graph_div = dcc.Graph(id="contractor-exceedance-graph")
-    distplot_div = dcc.Graph(id="contractor-dist-plot")
+
+    #print(exp_tbl)
+    #graph_div = dcc.Graph(id="contractor-exceedance-graph")
+    #distplot_div = dcc.Graph(id="contractor-dist-plot")
 
     layout = dbc.Container(
         class_name="my-y",
@@ -126,12 +128,12 @@ def layout(**kwargs):
                             "textAlign": "left",
                         },
                     ),
-                    graph_div,
-                    html.Div(
-                        className="m-3",
-                        children=create_download_button(DWNLD_BUTTON_ID, graph_div),
-                    ),
-                    distplot_div,
+#                    graph_div,
+#                    html.Div(
+#                        className="m-3",
+#                        children=create_download_button(DWNLD_BUTTON_ID, graph_div),
+#                    ),
+#                    distplot_div,
                 ]
             ),
         ],
@@ -149,8 +151,8 @@ def update_table(slider_yr_range):
         scen_aliases,
         df_dv,
         var_dict,
-        bparts=b,
-        yrkind='icy',
+        bparts=["SWP_TA_CO_SOD"],
+        yrkind='iwy',
         start_yr=slider_yr_range[0],
         end_yr=slider_yr_range[1],
     )
