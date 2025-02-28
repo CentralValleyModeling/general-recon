@@ -29,34 +29,34 @@ hydrology_text = (
 )
 
 eight_ri_card_ann = CardWidget(
-    "Eight River Index (Water Year Average)",
+    "Eight River Index (April-July)",
     button_id=None,
     button_label=None,
-    charts=card_bar_plot(df_sv, b_part="8RI", cy_wy="wy"),
+    charts=card_bar_plot(df_sv, b_part="8RI", cy_wy="wy", cm=[4,5,6,7]),
     text=load_markdown("page_text/hydrology-8ri.md"),
 )
 
 sac_four_ri_card_ann = CardWidget(
-    "Sacramento River Runoff (Water Year Average)",
+    "Sacramento River Runoff (April-July)",
     button_id=None,
     button_label=None,
-    charts=card_bar_plot(df_sv, b_part="SAC4", cy_wy="wy"),
+    charts=card_bar_plot(df_sv, b_part="SAC4", cy_wy="wy", cm=[4,5,6,7]),
     text=load_markdown("page_text/hydrology-sacramento-4ri.md"),
 )
 
 sjr_four_ri_card_ann = CardWidget(
-    "San Joaquin River Runoff (Water Year Average)",
+    "San Joaquin River Runoff (April-July)",
     button_id=None,
     button_label=None,
-    charts=card_bar_plot(df_sv, b_part="SJR4", cy_wy="wy"),
+    charts=card_bar_plot(df_sv, b_part="SJR4", cy_wy="wy", cm=[4,5,6,7]),
     text=load_markdown("page_text/hydrology-san-joaquin-4ri.md"),
 )
 
 orov_inflow_card_ann = CardWidget(
-    "Oroville Reservoir Inflow (Water Year Average)",
+    "Oroville Reservoir Inflow (April-July)",
     button_id=None,
     button_label=None,
-    charts=card_bar_plot(df_sv, b_part="OROVI", cy_wy="wy"),
+    charts=card_bar_plot(df_sv, b_part="OROVI", cy_wy="wy", cm=[4,5,6,7]),
     text="",
 )
 
