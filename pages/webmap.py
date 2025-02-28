@@ -1,4 +1,4 @@
-from dash import Dash, dcc, html, Input, Output, callback, register_page
+from dash import Dash, dcc, html, Input, Output, State, callback, register_page, ctx
 import plotly.graph_objects as go
 import dashboard_map.from_shp_to_dash as api
 import dash_bootstrap_components as dbc
@@ -31,11 +31,23 @@ fig_exp = api.create_export_plot(export_geodf)
 # centroid map for exports
 fig_exp_centroid = api.create_export_centroid(export_geodf)
 
+# upstream flows geodf
+up_flows_geodf = api.load_shp_upstream_flows()
+
+# choropleth map for upstream flows
+fig_up_flows = api.create_up_flows_plot(up_flows_geodf)
+
+# centroid map for upstream flows
+fig_up_flows_centroid = api.create_up_flows_centroid(up_flows_geodf)
+
 # Get the figure for the state border
 figca = api.create_ca_plot()
 
 # choropleth map for reservoirs
 fig_r = api.create_reservoir_plot(reservoir_geodf)
+
+# centroid map for reservoirs
+fig_r_centroid = api.create_reservoir_centroid(reservoir_geodf)
 
 # debug
 fig_monthly = api.update_monthly("S_OROVL", (1922, 2021))
@@ -47,7 +59,6 @@ register_page(
     top_nav=True,
     path="/webmap",
 )
-
 
 # layout function
 def layout():
@@ -87,8 +98,8 @@ def layout():
                                     html.Label("Map Filter"),
                                     dcc.Checklist(
                                         id='my_filter',
-                                        options=['Reservoirs', 'Contractors', 'Exports'],
-                                        value=['Reservoirs', 'Contractors', 'Exports'],
+                                        options=['Reservoirs', 'Contractors', 'Exports', 'Upstream Flows'],
+                                        value=['Reservoirs', 'Exports', 'Upstream Flows'],
                                     )
                                 ]
                             ),
@@ -98,17 +109,9 @@ def layout():
                         ],
                         width=6,
                     ),
-                    dbc.Col(
-                        [
-                            html.H2("Monthly Plot"),
-                            dcc.Graph(id="reservoir_click"),
-                            html.H2("Timeseries Plot"),
-                            dcc.Graph(id="timeseries_click"),
-                            html.H3("Annual Plot"),
-                            dcc.Graph(id="export_click"),
-                        ],
+                    dbc.Col([html.Div(id="my_charts")],
                         width=6,
-                    ),
+                    )
                 ]
             ),
         ],
@@ -117,18 +120,19 @@ def layout():
     return layout
 
 
-@callback(
-    Output("my_id", "figure"),
-    Input("scenario_1", "value"),
-    Input("scenario_2", "value"),
-    Input("my_filter", "value")
-)
+# @callback(
+#     Output("my_id", "figure"),
+#     Output("my_charts", "children"),
+#     Input("scenario_1", "value"),
+#     Input("scenario_2", "value"),
+#     Input("my_filter", "value")
+# )
 def update_graph(scen1: str, scen2: str, selected_values: list):
-
     # add variables for selected filter
     show_contractors = 'Contractors' in selected_values
     show_reservoirs = 'Reservoirs' in selected_values
     show_exports = 'Exports' in selected_values
+    show_upstream_flows = 'Upstream Flows' in selected_values
 
     # Geo DataFrame to hold all necessary data
     scen_geodf = api.create_df_for_scen(data_df, geodf, scen1, scen2)
@@ -151,13 +155,21 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
     
     if show_reservoirs:
         trace4 = fig_r.data[0]
+        trace5 = fig_r_centroid.data[0]
         graph_data.append(trace4)
+        graph_data.append(trace5)
     
     if show_exports:
-        trace5 = fig_exp.data[0]
-        trace6 = fig_exp_centroid.data[0]
-        graph_data.append(trace5)
+        trace6 = fig_exp.data[0]
+        trace7 = fig_exp_centroid.data[0]
         graph_data.append(trace6)
+        graph_data.append(trace7)
+    
+    if show_upstream_flows:
+        trace8 = fig_up_flows.data[0]
+        trace9 = fig_up_flows_centroid.data[0]
+        graph_data.append(trace8)
+        graph_data.append(trace9)
 
     mycolor_scale = [
         [0, "#0000ff"],
@@ -213,74 +225,79 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
 
     return final_fig
 
-@callback(
-    Output("export_click", "figure"),
-    Input("my_id", "clickData"),
-)
-def handle_export_click(clickData):
-    if clickData:
-        points = clickData["points"]
-        if points:
-            custom_data = points[0]["customdata"]
-            if custom_data and len(custom_data) > 1:
-                bpart = custom_data[0]
-                if (bpart in api.arc_id2bpart.values()):
-                    fig1 = api.update_bar_annual(bpart, [1922, 2021])
-                    fig2 = api.update_timeseries(bpart)
-                    fig3 = api.update_monthly(bpart, [1922, 2021])
-                    fig = go.Figure(data=[fig1.data[0], fig2.data[0], fig3.data[0]])
-                    return fig
+# @callback(
+#     Output("my_charts", "children"),
+#     Input("my_id", "clickData"),
+# )
+def handle_click(custom_data):
+    result = []
+    if custom_data and len(custom_data) > 1:
+        data_type = custom_data[-1]
+        bpart = custom_data[0]
+
+        result.append(html.H2("Annual Plot"))
+        ex_fig = api.update_bar_annual(bpart, [1922, 2021])
+        ex_dcc = dcc.Graph(figure=ex_fig)
+        result.append(ex_dcc)
+
+        result.append(html.H2("Monthly Plot"))
+        res_fig = api.update_monthly(bpart, [1922, 2021])
+        res_dcc = dcc.Graph(figure=res_fig)
+        result.append(res_dcc)
+
+        result.append(html.H2("Timeseries Plot"))
+        contractor_fig = api.update_timeseries(bpart)
+        contractor_dcc = dcc.Graph(figure=contractor_fig)
+        result.append(contractor_dcc)
+
+        # if data_type in ["CONTRACTORS", "RESERVOIRS", "EXPORTS"]:
+        #     result.append(html.H2("Timeseries Plot"))
+        #     contractor_fig = api.update_timeseries(bpart)
+        #     contractor_dcc = dcc.Graph(figure=contractor_fig)
+        #     result.append(contractor_dcc)
+        # if data_type in ["RESERVOIRS", "EXPORTS"]:
+        #     result.append(html.H2("Monthly Plot"))
+        #     res_fig = api.update_monthly(bpart, [1922, 2021])
+        #     res_dcc = dcc.Graph(figure=res_fig)
+        #     result.append(res_dcc)
+        # if data_type == "EXPORTS":
+        #     result.append(html.H2("Annual Plot"))
+        #     ex_fig = api.update_bar_annual(bpart, [1922, 2021])
+        #     ex_dcc = dcc.Graph(figure=ex_fig)
+        #     result.append(ex_dcc)
+    return result
 
     # If the code reaches at this point, then there is no figure to update.
-    print("No ClickData")
-    raise PreventUpdate
-
-
-@callback(
-    Output("reservoir_click", "figure"),
-    Input("my_id", "clickData"),
-)
-def handle_reservoir_click(clickData):
-    if clickData:
-        print("1. clickData = ", clickData)
-        points = clickData["points"]
-        if points:
-            custom_data = points[0]["customdata"]
-            if custom_data and len(custom_data) > 1:
-                bpart = custom_data[0]
-                if (
-                    bpart in api.tablename2calsimname.values()
-                    or bpart in api.swp2convention
-                ):
-                    fig1 = api.update_monthly(bpart, [1922, 2021])
-                    fig2 = api.update_timeseries(bpart)
-                    fig = go.Figure(data=[fig1.data[0], fig2.data[0]])
-                    return fig
-
-    # If the code reaches at this point, then there is no figure to update.
-    print("8. No ClickData")
-    raise PreventUpdate
-
+    # print("handle_click: No ClickData")
+    # raise PreventUpdate
 
 @callback(
-    Output("timeseries_click", "figure"),
+    Output("my_id", "figure"),
+    Output("my_charts", "children"),
     Input("my_id", "clickData"),
+    Input("scenario_1", "value"),
+    Input("scenario_2", "value"),
+    Input("my_filter", "value")
 )
-def handle_timeseries_click(clickData):
-    if clickData:
-        # print("1. clickData = ", clickData)
-        points = clickData["points"]
-        if points:
-            custom_data = points[0]["customdata"]
-            if custom_data and len(custom_data) > 1:
-                bpart = custom_data[0]
-                if (
-                    bpart in api.tablename2calsimname.values()
-                    or bpart in api.swp2convention
-                ):
-                    fig2 = api.update_timeseries(bpart)
-                    return fig2
-
-    # If the code reaches at this point, then there is no figure to update.
-    print("9. No ClickData")
-    raise PreventUpdate
+def handle_change(clickData, scen1: str, scen2: str, selected_values: list):
+    input_changed = ctx.triggered_id
+    fig = update_graph(scen1, scen2, selected_values)
+    fig.update_layout(uirevision=True)
+    chart = [
+        html.P("Please Click An Object On The Map To See Charts.",
+                style={
+                    "width": "80%", 
+                    "display": "inline-block",
+                    "height": "100vh",
+                    "line-height": "100vh",
+                    "text-align": "center"
+                }
+        )
+    ]
+    if input_changed == "my_id":
+        if clickData:
+            points = clickData["points"]
+            if points:
+                custom_data = points[0]["customdata"]
+                chart = handle_click(custom_data)
+    return fig, chart

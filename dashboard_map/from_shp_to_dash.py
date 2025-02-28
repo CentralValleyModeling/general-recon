@@ -226,6 +226,8 @@ def load_shp_reservoir() -> gpd.GeoDataFrame:
     geodf["CALSIMNAME"] = "TBD"
     for key, val in tablename2calsimname.items():
         geodf.loc[geodf["TABLENAME"] == key, "CALSIMNAME"] = val
+    
+    geodf["DATA_TYPE"] = "RESERVOIRS"
 
     # set index
     geodf = geodf.reset_index()
@@ -259,6 +261,69 @@ def load_shp_export() -> gpd.GeoDataFrame:
     geodf["ALIAS"] = "TBD"
     for key, val in arc_id2alias.items():
         geodf.loc[geodf["Arc_ID"] == key, "ALIAS"] = val
+    
+    geodf["DATA_TYPE"] = "EXPORTS"
+
+    return geodf
+
+arc_id2bpart_up = {
+    "C_LWSTN": "C_LWSTN",
+    "D_LWSTN_CCT011": "D_LWSTN_CCT011",
+    "C_WKYTN": "C_WKYTN",
+    "C_KSWCK": "C_KSWCK",
+    "C_SAC097": "C_SAC097",
+    "C_FTR059": "C_FTR059",
+    "C_FTR003": "C_FTR003",
+    "C_YUB006": "C_YUB006",
+    "C_SAC083": "C_SAC083",
+    "C_NTOMA": "C_NTOMA",
+    "C_AMR004": "C_AMR004"
+}
+
+arc_id2alias_up = {
+    "C_LWSTN": "Trinity Release",
+    "D_LWSTN_CCT011": "Trinity Export",
+    "C_WKYTN": "Clear Creek below Whiskeytown",
+    "C_KSWCK": "Release - Sacramento at Keswick",
+    "C_SAC097": "Sac R. Flow at Wilkins Slough",
+    "C_FTR059": "Feather below Thermalito",
+    "C_FTR003": "Feather Mouth",
+    "C_YUB006": "Yuba River at Marysville",
+    "C_SAC083": "Sac R. Flow at Verona",
+    "C_NTOMA": "Release-American Nimbus",
+    "C_AMR004": "American River at H-Street"
+}
+
+def load_shp_upstream_flows() -> gpd.GeoDataFrame:
+    geodf = gpd.read_file("dashboard_map/upstream_flows.shp")
+    geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
+
+    # filter for ARC_ID = C_CAA003, C_DMC000
+    geodf = geodf[geodf["Arc_ID"].isin([
+        "C_LWSTN", 
+        "D_LWSTN_CCT011", 
+        "C_WKYTN", 
+        "C_KSWCK", 
+        "C_SAC097", 
+        "C_FTR059", 
+        "C_FTR003", 
+        "C_YUB006",
+        "C_SAC083",
+        "C_NTOMA",
+        "C_AMR004"
+        ])]
+
+    # bpart column
+    geodf["BPART"] = "TBD"
+    for key, val in arc_id2bpart_up.items():
+        geodf.loc[geodf["Arc_ID"] == key, "BPART"] = val
+
+     # alias column
+    geodf["ALIAS"] = "TBD"
+    for key, val in arc_id2alias_up.items():
+        geodf.loc[geodf["Arc_ID"] == key, "ALIAS"] = val
+    
+    geodf["DATA_TYPE"] = "UP_FLOWS"
 
     return geodf
 
@@ -323,6 +388,7 @@ def create_plot(geodf: gpd.GeoDataFrame):
             "VAL_PERC",
             "AGENCYNAME",
             "CONTRACTOR_CONVENTION",
+            "DATA_TYPE"
         ],
         color="VAL_PERC",
         labels={"color": "VAL DIFF %"},
@@ -340,7 +406,7 @@ def create_reservoir_plot(geodf: gpd.GeoDataFrame):
         geodf,
         geojson=geodf.geometry,
         locations=geodf.index,
-        custom_data=["CALSIMNAME", "TABLENAME"],
+        custom_data=["CALSIMNAME", "TABLENAME", "DATA_TYPE"],
     )
 
     # fig.update_geos(fitbounds="locations", visible=False)
@@ -351,12 +417,37 @@ def create_reservoir_plot(geodf: gpd.GeoDataFrame):
 
     return fig
 
+def create_reservoir_centroid(geodf: gpd.GeoDataFrame):
+    hoverdf = geodf[
+        ["CALSIMNAME", "TABLENAME", "DATA_TYPE"]
+    ].copy()
+    my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
+    fig1 = go.Figure(
+        data=go.Scattergeo(
+            lon=geodf.geometry.centroid.x,
+            lat=geodf.geometry.centroid.y,
+            # text=geodf["CALSIMNAME"].astype(str) + "<br>" + geodf["TABLENAME"],
+            text=geodf["TABLENAME"],
+            textfont_size=10,
+            mode="text",
+            showlegend=False,
+            customdata=hoverdf,
+            hovertemplate=my_hovertemplate,
+        )
+    )
+
+    fig1.update_traces(textposition='middle center')
+
+    fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
+
+    return fig1
+
 def create_export_plot(geodf: gpd.GeoDataFrame):
     fig = px.choropleth(
         geodf,
         geojson=geodf.geometry,
         locations=geodf.index,
-        custom_data=["BPART", "ALIAS"],
+        custom_data=["BPART", "ALIAS", "DATA_TYPE"],
     )
 
     # fig.update_geos(fitbounds="locations", visible=False)
@@ -369,7 +460,7 @@ def create_export_plot(geodf: gpd.GeoDataFrame):
 
 def create_export_centroid(geodf: gpd.GeoDataFrame):
     hoverdf = geodf[
-        ["BPART", "ALIAS"]
+        ["BPART", "ALIAS", "DATA_TYPE"]
     ].copy()
     my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
     fig1 = go.Figure(
@@ -383,6 +474,47 @@ def create_export_centroid(geodf: gpd.GeoDataFrame):
             customdata=hoverdf,
             hovertemplate=my_hovertemplate,
             marker=dict(size=5, color="red", symbol="circle")
+        )
+    )
+
+    fig1.update_traces(textposition='middle center')
+
+    fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
+
+    return fig1
+
+def create_up_flows_plot(geodf: gpd.GeoDataFrame):
+    fig = px.choropleth(
+        geodf,
+        geojson=geodf.geometry,
+        locations=geodf.index,
+        custom_data=["BPART", "ALIAS", "DATA_TYPE"],
+    )
+
+    # fig.update_geos(fitbounds="locations", visible=False)
+    fig.update_geos(visible=False)
+
+    my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
+    fig.update_traces(hovertemplate=my_hovertemplate)
+
+    return fig
+
+def create_up_flows_centroid(geodf: gpd.GeoDataFrame):
+    hoverdf = geodf[
+        ["BPART", "ALIAS", "DATA_TYPE"]
+    ].copy()
+    my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
+    fig1 = go.Figure(
+        data=go.Scattergeo(
+            lon=geodf.geometry.centroid.x,
+            lat=geodf.geometry.centroid.y,
+            text=geodf["BPART"].astype(str) + "<br>" + geodf["ALIAS"],
+            textfont_size=10,
+            mode="markers",
+            showlegend=False,
+            customdata=hoverdf,
+            hovertemplate=my_hovertemplate,
+            marker=dict(size=5, color="blue", symbol="circle")
         )
     )
 
@@ -429,6 +561,9 @@ def create_df_for_scen(
                 f"+{value}"
             )
 
+    # create a column that shows what type of data is in the df
+    scen_geodf["DATA_TYPE"] = "CONTRACTORS"
+
     # Set index to rank so that plotting is done in the order of the area
     scen_geodf = scen_geodf.reset_index()
     scen_geodf = scen_geodf.set_index("RANK")
@@ -438,7 +573,7 @@ def create_df_for_scen(
 
 def create_fig_1(geodf: gpd.GeoDataFrame):
     hoverdf = geodf[
-        ["BPART", "CONTRACTOR_CONVENTION", "AGENCYNAME", "VAL_DIFF", "VAL_PERC"]
+        ["BPART", "CONTRACTOR_CONVENTION", "AGENCYNAME", "VAL_DIFF", "VAL_PERC", "DATA_TYPE"]
     ].copy()
     my_hovertemplate = "<b>%{customdata[1]}<br>AGENCYNAME=%{customdata[2]}</b><br><br>VAL_DIFF=%{customdata[3]}<br>VAL_PERC=%{customdata[4]}<extra></extra>"
     fig1 = go.Figure(
