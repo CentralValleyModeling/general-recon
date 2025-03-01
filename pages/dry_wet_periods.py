@@ -6,7 +6,7 @@ import pandas as pd
 import plotly.express as px
 from dash import Input, Output, State, callback, dcc, html, register_page
 
-from charts.chart_layouts import ann_exc_plot, mon_exc_plot
+#from charts.chart_layouts import ann_exc_plot, mon_exc_plot
 from pages.styles import ASSUMPTION_ORDER, CLIMATE_ORDER, PLOT_COLORS, SCENARIO_COLORS
 from utils.query_data import date_map, df_dv, scen_aliases, var_dict
 from utils.tools import (
@@ -21,6 +21,8 @@ register_page(
     path="/dry_wet_periods",
     order=2,
 )
+
+print(var_dict["SWP_TA_CO_SOD"]["alias"])
 
 def create_button_filter(
     label: str,
@@ -168,9 +170,11 @@ def update_annual(assumption, climate, variable, avg_window):
         text_auto=True
     )
     fig.update_layout(
+        title=var_dict["SWP_TA_CO_SOD"]["alias"],
         legend_title="Scenario",
         barmode="relative",
         plot_bgcolor="white",
+        yaxis_tickformat=",d",
     )
 
     fig.update_traces(
