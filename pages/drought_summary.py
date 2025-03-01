@@ -18,13 +18,13 @@ from data.downloads import CHART_REGISTRY
 from utils.query_data import df_dv, scen_aliases, var_dict
 from utils.tools import common_pers, make_summary_df, month_list
 
-register_page(
-    __name__,
-    name="Drought Summary",
-    top_nav=True,
-    path="/drought_summary",
-    order=5,
-)
+#register_page(
+#    __name__,
+#    name="Drought Summary",
+#    top_nav=True,
+#    path="/drought_summary",
+#    order=5,
+#)
 
 contractor_summary_text = (
     """This page shows the long-term SWP Table A deliveries average

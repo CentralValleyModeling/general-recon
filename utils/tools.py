@@ -49,21 +49,21 @@ wyt_list = ["Wet", "Above Normal", "Below Normal", "Dry", "Critical"]
 
 common_pers = {
     "Full Simulation Period (1922-2021)": "1922-2021",
-    "Common Simulation Period (1922-2015)": "1922-2015",
-    "Single Dry Year (1977)": "1977",
+    "2021 DCR Simulation Period (1922-2015)": "1922-2015",
+    "Single Dry Year (1977)": "1977-1977",
     "Two-Year Drought (1976-1977)": "1976-1977",
-    "Single Dry Year (2014)": "2014",
+    "Single Dry Year (2014)": "2014-2014",
     "Two-Year Drought (2014-2015)": "2014-2015",
     "Six Year Drought (1987-1992)": "1987-1992",
     "Six Year Drought (1929-1934)": "1929-1934",
-    "Single Wet Year (1983)": "1983",
-    "Single Wet Year (1998)": "1998",
-    "Single Wet Year (2006)": "2006",
+    "Single Wet Year (1983)": "1983-1983",
+    "Single Wet Year (1998)": "1998-1998",
+    "Single Wet Year (2006)": "2006-2006",
     "Two Year Wet Sequence (1982-1983)": "1982-1983",
     "Four Year Wet Sequence (1980-1983)": "1980-1983",
     "Six Year Wet Sequence (1978-1983)": "1978-1983",
     "Ten Year Wet Sequence (1978-1987)": "1978-1987",
-    "Single Wet Year (2017)": "2017",
+    "Single Wet Year (2017)": "2017-2017",
 }
 
 # opt = [{"label":k,"value":v} for k,v in common_pers.items()]
