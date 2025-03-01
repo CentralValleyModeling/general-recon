@@ -1,119 +1,183 @@
+# Imports
+from collections import namedtuple
+
 import dash_bootstrap_components as dbc
-from dash import Input, Output, callback, dcc, html, register_page
+import pandas as pd
+import plotly.express as px
+from dash import Input, Output, State, callback, dcc, html, register_page
 
-from charts.chart_layouts import ta_dry_wet_barplot
-from data import create_download_button, load_markdown, universal_data_download
-from utils.query_data import df_dv, scen_aliases
-from utils.tools import common_pers
-
-#register_page(
-#    __name__,
-#    name="Table A",
-#    top_nav=True,
-#    path="/dry_wet_periods",
-#    order=2,
-#)
-
-title_ta_dry_wet_text = (
-    """This page shows % of Maximum Table A amount during select dry and wet periods
-      included in the DCR 2023 Main Report.""",
-    html.Br(),
-    html.Br(),
-)
-
-drypers = [
-    "Six Year Drought (1929-1934)",
-    "Single Dry Year (1977)",
-    "Two-Year Drought (1976-1977)",
-    "Six Year Drought (1987-1992)",
-    "Single Dry Year (2014)",
-    "Two-Year Drought (2014-2015)",
-]
-
-wetpers = [
-    "Single Wet Year (1983)",
-    "Single Wet Year (1998)",
-    "Two Year Wet Sequence (1982-1983)",
-    "Four Year Wet Sequence (1980-1983)",
-    "Six Year Wet Sequence (1978-1983)",
-    "Ten Year Wet Sequence (1978-1987)",
-    "Single Wet Year (2017)",
-]
-ta_periods_text = dbc.Row(
-    [
-        html.A(title_ta_dry_wet_text),
-    ],
-    class_name="m-3",
-)
-
-dry_pers = ta_dry_wet_barplot(
-    df_dv,
+#from charts.chart_layouts import ann_exc_plot, mon_exc_plot
+from pages.styles import ASSUMPTION_ORDER, CLIMATE_ORDER, PLOT_COLORS, SCENARIO_COLORS
+from utils.query_data import date_map, df_dv, scen_aliases, var_dict
+from utils.tools import (
+    cfs_taf,
     common_pers,
-    bpart="SWP_TA_CO_SOD",
-    scens=scen_aliases,
-    perlist=drypers,
-)
-wet_pers = ta_dry_wet_barplot(
-    df_dv,
-    common_pers,
-    bpart="SWP_TA_CO_SOD",
-    scens=scen_aliases,
-    perlist=wetpers,
 )
 
-DWNLD_DRY_ID = "table-a-dry-years"
-DWNLD_WET_ID = "table-a-wet-years"
+register_page(
+    __name__,
+    name="Dry/Wet Periods",
+    top_nav=True,
+    path="/dry_wet_periods",
+    order=2,
+)
+
+print(var_dict["SWP_TA_CO_SOD"]["alias"])
+
+def create_button_filter(
+    label: str,
+    filter_id: str,
+    options: list[str],
+    value: list[str],
+) -> html.Div:
+    return html.Div(
+        children=[
+            dbc.Label(label),
+            dbc.Checklist(
+                id=filter_id,
+                value=value,
+                options=[{"label": v, "value": v} for v in options],
+            ),
+        ],
+        className="m-1 p-2 border-top",
+    )
+
+
+def create_radio_filter(
+    label: str,
+    filter_id: str,
+    options: list[str],
+    value: str
+) -> html.Div:
+    return html.Div(
+        children=[
+            dbc.Label(label),
+            dbc.RadioItems(
+                id=filter_id,
+                value=value,
+                options=[{"label": v, "value": v} for v in options],
+            ),
+        ],
+        className="m-1 p-2 border-top",
+    )
+
+
+def create_dropdown(
+    label: str,
+    filter_id: str,
+    options: list[str],
+    value: str,
+) -> html.Div:
+    return html.Div(
+        children=[
+            dbc.Label(label),
+            dbc.Select(
+                id=filter_id,
+                options=[{"label": v, "value": v} for v in options],
+                value=value
+            ),
+        ],
+        className="m-1 p-2 border-top",
+    )
 
 
 def layout():
-    layout = dbc.Container(
-        class_name="my-3",
+    filter_pane = dbc.Col(
+        id="filter_pane",
         children=[
-            dcc.Download(id="download-response-table-a"),
-            dbc.Row(
-                class_name="my-2",
-                children=[
-                    load_markdown("page_text/table-a-percent-max.md"),
-                ],
+            html.H4("Data Filters"),
+            create_button_filter(
+                label="Scenarios",
+                filter_id="filter-assumption",
+                options=ASSUMPTION_ORDER,
+                value=ASSUMPTION_ORDER,
             ),
-            dbc.Row(
-                class_name="my-2",
-                children=[
-                    load_markdown("page_text/table-a-dry.md"),
-                    dcc.Graph(figure=dry_pers),
-                    html.Div(
-                        create_download_button(
-                            DWNLD_DRY_ID,
-                            dry_pers,
-                            button_text="Download Dry Period Data",
-                        )
-                    ),
-                ],
+            create_radio_filter(
+                label="Climate",
+                filter_id="filter-climate",
+                options=CLIMATE_ORDER,
+                value=CLIMATE_ORDER[1],
             ),
-            dbc.Row(
-                class_name="my-2",
-                children=[
-                    load_markdown("page_text/table-a-wet.md"),
-                    dcc.Graph(figure=wet_pers),
-                    html.Div(
-                        create_download_button(
-                            DWNLD_WET_ID,
-                            wet_pers,
-                            button_text="Download Wet Period Data",
-                        )
-                    ),
-                ],
+            create_radio_filter(
+                label="Averaging Windows",
+                filter_id="filter-average-windows",
+                options=common_pers.keys(),
+                value=list(common_pers.keys())[0],
+            ),
+            create_dropdown(
+                label="Variable",
+                filter_id="filter-variable",
+                options=var_dict.keys(),
+                value="SWP_TA_CO_SOD"
             ),
         ],
+        class_name="col-4 col-md-2 bg-light py-3",
     )
-    return layout
+
+    view_pane = dbc.Col(
+        id="view_pane",
+        children=[dcc.Graph(id="graph-annual")],
+        class_name="bg-transparent py-3",
+    )
+
+    return dbc.Row(
+        children=[
+            filter_pane,
+            view_pane,
+        ],
+        class_name="h-100",
+    )
 
 
 @callback(
-    Output("download-response-table-a", "data"),
-    Input(DWNLD_DRY_ID, "n_clicks"),
-    Input(DWNLD_WET_ID, "n_clicks"),
-    prevent_initial_call=True,
+    Output("graph-annual", "figure"),
+    Input("filter-assumption", "value"),
+    Input("filter-climate", "value"),
+    Input("filter-variable", "value"),
+    Input("filter-average-windows", "value"),
 )
-def home_data_download(*args):
-    return universal_data_download()
+def update_annual(assumption, climate, variable, avg_window):
+    endyr = int(common_pers[avg_window].split("-")[1])
+    startyr = int(common_pers[avg_window].split("-")[0])
+
+    df_dv['iwy'] = df_dv['iwy'].astype(int)
+
+    mask = (
+        df_dv["Assumption"].isin(list(assumption)) &
+        (df_dv["Climate"] == climate) &
+        (df_dv["iwy"].between(startyr, endyr))
+    )
+
+    df = df_dv.loc[mask, :]
+    df = cfs_taf(df, var_dict)  # Convert
+
+    df: pd.DataFrame = round(
+        df.groupby(["Assumption"]).sum(numeric_only=True) / (endyr - startyr + 1)
+    )
+
+    df = df.reindex(ASSUMPTION_ORDER, level="Assumption")
+
+    df["denominator"] = df.loc["Maintain", variable]
+    df["percent_change"] = ((df.loc[:, variable]-df["denominator"])/df["denominator"])*100
+
+    fig = px.bar(
+        df,
+        x=df.index.get_level_values(0),
+        y=variable,
+        color=df.index.get_level_values(0),
+        color_discrete_map=SCENARIO_COLORS,
+        custom_data=df[["percent_change"]],
+        text_auto=True
+    )
+    fig.update_layout(
+        title=var_dict["SWP_TA_CO_SOD"]["alias"],
+        legend_title="Scenario",
+        barmode="relative",
+        plot_bgcolor="white",
+        yaxis_tickformat=",d",
+    )
+
+    fig.update_traces(
+        hovertemplate="<b>Change vs Maintain:</b> %{customdata[0]:.2f}% <br>",
+    )
+    return fig

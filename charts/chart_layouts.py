@@ -288,7 +288,6 @@ def card_bar_plot_wy_vert(
     df_plot["Assumption"] = pd.Categorical(df_plot["Assumption"],
                                            categories=ASSUMPTION_ORDER, ordered=True)
 
-
     # Compute "Maintain" baseline for each Climate group
     df_plot["BaselineValue"] = df_plot.groupby("Climate")[b_part].transform(
         lambda x: x.loc[x.index[df_plot.loc[x.index, "Assumption"] == "Maintain"]].values[0] 
@@ -299,7 +298,7 @@ def card_bar_plot_wy_vert(
     df_plot["PercentChange"] = ((df_plot[b_part] - df_plot["BaselineValue"]) / df_plot["BaselineValue"]) * 100
 
     df_plot = df_plot.sort_values(["Climate", "Assumption"])
-    #print(df_plot)
+
     if CSV_EXPORT:
         df_plot[["Climate","Assumption",b_part]].to_csv(f'csv_export/{b_part}.csv', index=False)
 
