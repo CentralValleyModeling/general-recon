@@ -140,12 +140,15 @@ def update_annual(assumption, climate, variable, avg_window):
     endyr = int(common_pers[avg_window].split("-")[1])
     startyr = int(common_pers[avg_window].split("-")[0])
 
+
+    #print(df_dv)
     df_dv['iwy'] = df_dv['iwy'].astype(int)
 
     mask = (
         df_dv["Assumption"].isin(list(assumption)) &
         (df_dv["Climate"] == climate) &
-        (df_dv["iwy"].between(startyr, endyr))
+        (df_dv["iwy"].between(startyr, endyr))&
+        [df_dv["WYT_SAC_"].isin([1,2,3,4,5])]
     )
 
     df = df_dv.loc[mask, :]
