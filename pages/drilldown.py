@@ -404,7 +404,7 @@ def update_bar_annual(b_part, wytchecklist, slider_yr_range, climate_filter):
     ]
 
     df_filtered = cfs_taf(df_filtered, var_dict)
-    df_monthly = round(df_filtered.groupby(["Assumption", "iwm"]).mean(numeric_only=True))
+    df_monthly = df_filtered.groupby(["Assumption", "iwm"]).mean(numeric_only=True)
     df_annual = round(df_monthly.groupby(["Assumption"]).sum(numeric_only=True))
 
     df_annual = df_annual.reindex(ASSUMPTION_ORDER, level="Assumption")
