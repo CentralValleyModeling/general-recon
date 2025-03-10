@@ -15,7 +15,7 @@ from utils.tools import cfs_taf, convert_cm_nums, month_list, monthfilter
 
 
 INFO_ICON = html.I(className='fa fa-info-circle', style=dict(display='inline-block'))
-CSV_EXPORT = True
+CSV_EXPORT = False
 
 # TODO use dictionaries to allow arbitrary number of buttons
 class CardWidget:
