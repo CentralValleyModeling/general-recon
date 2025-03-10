@@ -22,8 +22,6 @@ register_page(
     order=2,
 )
 
-print(var_dict["SWP_TA_CO_SOD"]["alias"])
-
 def create_button_filter(
     label: str,
     filter_id: str,
@@ -147,20 +145,20 @@ def update_annual(assumption, climate, variable, avg_window):
     mask = (
         df_dv["Assumption"].isin(list(assumption)) &
         (df_dv["Climate"] == climate) &
-        (df_dv["iwy"].between(startyr, endyr))&
-        [df_dv["WYT_SAC_"].isin([1,2,3,4,5])]
+        (df_dv["iwy"].between(startyr, endyr))#&
+        #[df_dv["WYT_SAC_"].isin([1,2,3,4,5])]
     )
 
     df = df_dv.loc[mask, :]
     df = cfs_taf(df, var_dict)  # Convert
 
-    df: pd.DataFrame = round(
-        df.groupby(["Assumption"]).sum(numeric_only=True) / (endyr - startyr + 1)
-    )
+    df: pd.DataFrame = df.groupby(["Assumption"]).sum(numeric_only=True) / (endyr - startyr + 1)
+    
 
     df = df.reindex(ASSUMPTION_ORDER, level="Assumption")
 
     df["denominator"] = df.loc["Maintain", variable]
+    df["vol_change"] = ((df.loc[:, variable]-df["denominator"]))
     df["percent_change"] = ((df.loc[:, variable]-df["denominator"])/df["denominator"])*100
 
     fig = px.bar(
@@ -169,7 +167,7 @@ def update_annual(assumption, climate, variable, avg_window):
         y=variable,
         color=df.index.get_level_values(0),
         color_discrete_map=SCENARIO_COLORS,
-        custom_data=df[["percent_change"]],
+        custom_data=df[["percent_change", "vol_change"]],
         text_auto=True
     )
     fig.update_layout(
@@ -181,6 +179,6 @@ def update_annual(assumption, climate, variable, avg_window):
     )
 
     fig.update_traces(
-        hovertemplate="<b>Change vs Maintain:</b> %{customdata[0]:.2f}% <br>",
+        hovertemplate="<b>Change vs Maintain:</b> %{customdata[0]:.2f}% (%{customdata[1]:,d} TAF)<br>"
     )
     return fig

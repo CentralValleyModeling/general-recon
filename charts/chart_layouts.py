@@ -161,7 +161,7 @@ def card_mon_plot(
     #    print("WYT_SAC_ timeseries not found")
 
     df1 = df.loc[df["WYT_SAC_"].isin(wyt)]
-    df1 = round(df1.groupby(["Climate", "iwm"]).mean(numeric_only=True))
+    df1 = df1.groupby(["Climate", "iwm"]).mean(numeric_only=True)
 
     fig = px.line(
         df1,
@@ -224,12 +224,12 @@ def card_bar_plot(
     except Exception:
         print(f"Unable to convert from CFS to TAF for {b_part}")
     # For the last year
-    df1 = round(df0.groupby(["Climate"]).sum(numeric_only=True) / (endyr - startyr + 1))
+    df1 = df0.groupby(["Climate"]).sum(numeric_only=True) / (endyr - startyr + 1)
     df_plot = df1
 
     fig = px.bar(
         df_plot[b_part],
-        text=df_plot[b_part],
+        text_auto=True,
         color=df_plot.index,
         orientation="h",
         color_discrete_sequence=PLOT_COLORS,
@@ -243,6 +243,7 @@ def card_bar_plot(
         xaxis_title="TAF/Year",
         yaxis_title="",
         xaxis_tickformat=",d",
+
     )
     layout = html.Div([dcc.Graph(figure=fig)])
 
@@ -465,7 +466,7 @@ def ann_bar_plot(df, b_part="C_CAA003", startyr=1922, endyr=2021, wyt=[1, 2, 3, 
 
     df0 = cfs_taf(df0, var_dict)
 
-    df1 = round(df0.groupby(["Scenario"]).sum(numeric_only=True) / (endyr - startyr + 1))
+    df1 = df0.groupby(["Scenario"]).sum(numeric_only=True) / (endyr - startyr + 1)
     df1 = df1.reindex(scen_aliases, level="Scenario")
     fig = px.bar(
         df1,
