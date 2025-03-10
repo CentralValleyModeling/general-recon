@@ -248,6 +248,10 @@ df_sv["SJR4"] = df_sv["N_MEL"] + df_sv["DPR_I"] + df_sv["LK_MC"] + df_sv["MILLE"
 df_sv["8RI"] = df_sv["SAC4"] + df_sv["SJR4"]
 
 
+# Add a variable that has only the final WYT for that WY
+may_values = df_dv[df_dv['icm'] == 5].groupby(['Scenario','iwy'])['WYT_SAC_'].first()
+df_dv["WYT_SAC_MAY"] = df_dv.set_index(['Scenario','iwy']).index.map(may_values)
+
 df_sv["WYT_SAC_"] = df_dv_orig["WYT_SAC_"]  # add WYT back to the SV df
 
 # CAP specific stuff

@@ -346,9 +346,8 @@ def update_monthly(b_part, wytchecklist, slider_yr_range, climate_filter):
     startyr = slider_yr_range[0]
     endyr = slider_yr_range[1]
 
-    #print(df_dv)
     df0 = df_dv.loc[
-        df_dv["WYT_SAC_"].isin(convert_wyt_nums(wytchecklist))
+        df_dv["WYT_SAC_MAY"].isin(convert_wyt_nums(wytchecklist))
         & (df_dv["iwy"] >= startyr)
         & (df_dv["iwy"] <= endyr)
         & (df_dv["Climate"] == climate_filter)
@@ -397,14 +396,12 @@ def update_bar_annual(b_part, wytchecklist, slider_yr_range, climate_filter):
     startyr = slider_yr_range[0]
     endyr = slider_yr_range[1]
     df_filtered = df_dv.loc[
-         df_dv["WYT_SAC_"].isin(convert_wyt_nums(wytchecklist))
+        df_dv["WYT_SAC_MAY"].isin(convert_wyt_nums(wytchecklist))
         & (df_dv["iwy"] >= startyr)
         & (df_dv["iwy"] <= endyr)
         & (df_dv["Climate"] == climate_filter)
 
     ]
-
-    #print(df_dv["WYT_SAC_"])
 
     df_filtered = cfs_taf(df_filtered, var_dict)
     df_monthly = round(df_filtered.groupby(["Assumption", "iwm"]).mean(numeric_only=True))
