@@ -396,24 +396,26 @@ def update_monthly(b_part, wytchecklist, slider_yr_range, climate_filter):
 def update_bar_annual(b_part, wytchecklist, slider_yr_range, climate_filter):
     startyr = slider_yr_range[0]
     endyr = slider_yr_range[1]
-    print(wytchecklist)
-    df1 = df_dv.loc[
-        df_dv["WYT_SAC_"].isin(convert_wyt_nums(wytchecklist))
+    df_filtered = df_dv.loc[
+         df_dv["WYT_SAC_"].isin(convert_wyt_nums(wytchecklist))
         & (df_dv["iwy"] >= startyr)
         & (df_dv["iwy"] <= endyr)
         & (df_dv["Climate"] == climate_filter)
 
     ]
 
-    df1 = cfs_taf(df1, var_dict)
+    #print(df_dv["WYT_SAC_"])
 
-    df2 = round(df1.groupby(["Assumption"]).sum(numeric_only=True) / (endyr - startyr + 1))
-    df2 = df2.reindex(ASSUMPTION_ORDER, level="Assumption")
+    df_filtered = cfs_taf(df_filtered, var_dict)
+    df_monthly = round(df_filtered.groupby(["Assumption", "iwm"]).mean(numeric_only=True))
+    df_annual = round(df_monthly.groupby(["Assumption"]).sum(numeric_only=True))
+
+    df_annual = df_annual.reindex(ASSUMPTION_ORDER, level="Assumption")
     fig = px.bar(
-        df2,
-        x=df2.index.get_level_values(0),
+        df_annual,
+        x=df_annual.index.get_level_values(0),
         y=b_part,
-        color=df2.index.get_level_values(0),
+        color=df_annual.index.get_level_values(0),
         text_auto=True,
         color_discrete_map=SCENARIO_COLORS,
     )
