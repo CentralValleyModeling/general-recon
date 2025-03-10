@@ -229,7 +229,7 @@ def card_bar_plot(
 
     fig = px.bar(
         df_plot[b_part],
-        text=df_plot[b_part],
+        text_auto=True,
         color=df_plot.index,
         orientation="h",
         color_discrete_sequence=PLOT_COLORS,
@@ -243,6 +243,7 @@ def card_bar_plot(
         xaxis_title="TAF/Year",
         yaxis_title="",
         xaxis_tickformat=",d",
+
     )
     layout = html.Div([dcc.Graph(figure=fig)])
 
