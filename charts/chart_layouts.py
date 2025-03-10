@@ -15,7 +15,7 @@ from utils.tools import cfs_taf, convert_cm_nums, month_list, monthfilter
 
 
 INFO_ICON = html.I(className='fa fa-info-circle', style=dict(display='inline-block'))
-CSV_EXPORT = False
+CSV_EXPORT = True
 
 # TODO use dictionaries to allow arbitrary number of buttons
 class CardWidget:
@@ -229,6 +229,7 @@ def card_bar_plot(
 
     fig = px.bar(
         df_plot[b_part],
+
         text_auto=True,
         color=df_plot.index,
         orientation="h",
@@ -274,7 +275,7 @@ def card_bar_plot_wy_vert(
         print(f"Unable to convert from CFS to TAF for {b_part}")
 
     
-    df2 = round(df0.groupby(["Scenario","Climate","Assumption"]).sum(numeric_only=True) / (endyr - startyr + 1))
+    df2 = df0.groupby(["Scenario","Climate","Assumption"]).sum(numeric_only=True) / (endyr - startyr + 1)
     df2 = df2.reset_index()
     df_plot = df2
 
@@ -322,7 +323,7 @@ def card_bar_plot_wy_vert(
         xaxis_title="Climate",
         xaxis_tickformat=",d",
         yaxis_title="Thousand Acre-Feet",
-        yaxis_tickformat=",",
+        yaxis_tickformat=",d",
         yaxis_showgrid=True,
         yaxis_gridcolor="lightgray",
     )
@@ -331,7 +332,7 @@ def card_bar_plot_wy_vert(
         hovertemplate=
                     "<b>Scenario:</b> %{customdata[0]}<br>" +
                     "<b>Scenario Alias:</b> %{customdata[1]}<br>" +
-                    "<b>Value:</b> %{customdata[2]:,.0f}<br>" +
+                    "<b>Value:</b> %{customdata[2]:,.2f}<br>" +
                     "<b>Change vs Maintain:</b> %{customdata[3]:.2f}% <br>" + 
                     "<b>Climate:</b> %{customdata[4]}"
 )
