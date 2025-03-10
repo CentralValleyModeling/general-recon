@@ -140,12 +140,14 @@ def update_annual(assumption, climate, variable, avg_window):
     endyr = int(common_pers[avg_window].split("-")[1])
     startyr = int(common_pers[avg_window].split("-")[0])
 
+    #print(df_dv)
     df_dv['iwy'] = df_dv['iwy'].astype(int)
 
     mask = (
         df_dv["Assumption"].isin(list(assumption)) &
         (df_dv["Climate"] == climate) &
-        (df_dv["iwy"].between(startyr, endyr))
+        (df_dv["iwy"].between(startyr, endyr))#&
+        #[df_dv["WYT_SAC_"].isin([1,2,3,4,5])]
     )
 
     df = df_dv.loc[mask, :]
@@ -158,6 +160,7 @@ def update_annual(assumption, climate, variable, avg_window):
     df = df.reindex(ASSUMPTION_ORDER, level="Assumption")
 
     df["denominator"] = df.loc["Maintain", variable]
+    df["vol_change"] = ((df.loc[:, variable]-df["denominator"]))
     df["percent_change"] = ((df.loc[:, variable]-df["denominator"])/df["denominator"])*100
 
     fig = px.bar(
@@ -166,7 +169,7 @@ def update_annual(assumption, climate, variable, avg_window):
         y=variable,
         color=df.index.get_level_values(0),
         color_discrete_map=SCENARIO_COLORS,
-        custom_data=df[["percent_change"]],
+        custom_data=df[["percent_change", "vol_change"]],
         text_auto=True
     )
     fig.update_layout(
@@ -178,6 +181,6 @@ def update_annual(assumption, climate, variable, avg_window):
     )
 
     fig.update_traces(
-        hovertemplate="<b>Change vs Maintain:</b> %{customdata[0]:.2f}% <br>",
+        hovertemplate="<b>Change vs Maintain:</b> %{customdata[0]:.2f}% (%{customdata[1]:,d} TAF)<br>"
     )
     return fig
