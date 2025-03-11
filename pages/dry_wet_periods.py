@@ -109,7 +109,7 @@ def layout():
                 value="SWP_TA_CO_SOD"
             ),
         ],
-        class_name="col-4 col-md-2 bg-light py-3",
+        class_name="col-4 col-md-3 bg-light py-3",
     )
 
     view_pane = dbc.Col(
@@ -141,6 +141,11 @@ def update_annual(assumption, climate, variable, avg_window):
 
     #print(df_dv)
     df_dv['iwy'] = df_dv['iwy'].astype(int)
+    
+    if var_dict[variable]["table_convert"] == "cfs_taf":
+        units = "TAF/year"
+    else:
+        units = ""
 
     mask = (
         df_dv["Assumption"].isin(list(assumption)) &
@@ -171,11 +176,12 @@ def update_annual(assumption, climate, variable, avg_window):
         text_auto=True
     )
     fig.update_layout(
-        title=var_dict["SWP_TA_CO_SOD"]["alias"],
+        title=f"{(var_dict[variable]['alias'])} ({variable})",
         legend_title="Scenario",
         barmode="relative",
         plot_bgcolor="white",
         yaxis_tickformat=",d",
+        yaxis_title=f"{units}"
     )
 
     fig.update_traces(
