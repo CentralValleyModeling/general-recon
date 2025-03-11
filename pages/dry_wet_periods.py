@@ -109,7 +109,7 @@ def layout():
                 value="SWP_TA_CO_SOD"
             ),
         ],
-        class_name="col-4 col-md-2 bg-light py-3",
+        class_name="col-4 col-md-3 bg-light py-3",
     )
 
     view_pane = dbc.Col(
