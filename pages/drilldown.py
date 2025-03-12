@@ -403,11 +403,18 @@ def update_bar_annual(b_part, wytchecklist, slider_yr_range, climate_filter):
 
     ]
 
-    df_filtered = cfs_taf(df_filtered, var_dict)
+    df_filtered = cfs_taf(df_filtered, var_dict)  # Convert
     df_monthly = df_filtered.groupby(["Assumption", "iwm"]).mean(numeric_only=True)
-    df_annual = round(df_monthly.groupby(["Assumption"]).sum(numeric_only=True))
-
+    df_annual = df_monthly.groupby(["Assumption"]).sum(numeric_only=True)
     df_annual = df_annual.reindex(ASSUMPTION_ORDER, level="Assumption")
+
+    if var_dict[b_part]["table_convert"] == "cfs_taf":
+        units = "TAF/year"
+    else:
+        units = ""
+    alias = var_dict[b_part]["alias"]
+    print(alias)
+
     fig = px.bar(
         df_annual,
         x=df_annual.index.get_level_values(0),
@@ -415,11 +422,20 @@ def update_bar_annual(b_part, wytchecklist, slider_yr_range, climate_filter):
         color=df_annual.index.get_level_values(0),
         text_auto=True,
         color_discrete_map=SCENARIO_COLORS,
+        custom_data=df_annual[[b_part]]
     )
+
     fig.update_layout(
+        title=f"Annual Average {alias} ({climate_filter})",
         legend_title="Scenario",
         barmode="relative",
-        plot_bgcolor="white"
+        plot_bgcolor="white",
+        yaxis_title=units,
+        yaxis_tickformat=",d",
+    )
+
+    fig.update_traces(
+        hovertemplate="<b>Value:</b> %{customdata[0]:.2f}<br>"
     )
     return fig
 

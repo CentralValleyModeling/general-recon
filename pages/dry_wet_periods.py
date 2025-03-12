@@ -138,8 +138,6 @@ def update_annual(assumption, climate, variable, avg_window):
     endyr = int(common_pers[avg_window].split("-")[1])
     startyr = int(common_pers[avg_window].split("-")[0])
 
-
-    #print(df_dv)
     df_dv['iwy'] = df_dv['iwy'].astype(int)
     
     if var_dict[variable]["table_convert"] == "cfs_taf":
@@ -158,7 +156,6 @@ def update_annual(assumption, climate, variable, avg_window):
     df = cfs_taf(df, var_dict)  # Convert
 
     df: pd.DataFrame = df.groupby(["Assumption"]).sum(numeric_only=True) / (endyr - startyr + 1)
-    
 
     df = df.reindex(ASSUMPTION_ORDER, level="Assumption")
 
