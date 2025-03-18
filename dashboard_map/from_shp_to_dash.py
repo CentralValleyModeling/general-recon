@@ -427,16 +427,17 @@ def create_reservoir_centroid(geodf: gpd.GeoDataFrame):
             lon=geodf.geometry.centroid.x,
             lat=geodf.geometry.centroid.y,
             # text=geodf["CALSIMNAME"].astype(str) + "<br>" + geodf["TABLENAME"],
-            text=geodf["TABLENAME"],
-            textfont_size=10,
-            mode="text",
+            # text=geodf["TABLENAME"],
+            # textfont_size=10,
+            mode="markers",
+            marker=dict(size=5, color='rgb(141, 198, 63)', symbol="triangle-up"),
             showlegend=False,
             customdata=hoverdf,
             hovertemplate=my_hovertemplate,
         )
     )
 
-    fig1.update_traces(textposition='middle center')
+    # fig1.update_traces(textposition='middle center')
 
     fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
 
@@ -467,17 +468,18 @@ def create_export_centroid(geodf: gpd.GeoDataFrame):
         data=go.Scattergeo(
             lon=geodf.geometry.centroid.x,
             lat=geodf.geometry.centroid.y,
-            text=geodf["BPART"].astype(str) + "<br>" + geodf["ALIAS"],
-            textfont_size=10,
-            mode="markers",
+            # text=geodf["ALIAS"],
+            # textfont_size=10,
+            mode='markers',
             showlegend=False,
             customdata=hoverdf,
             hovertemplate=my_hovertemplate,
-            marker=dict(size=5, color="red", symbol="circle")
+            marker=dict(size=5, color='rgb(251, 184, 32)', symbol="circle"),
+            # textposition='top center'
         )
     )
 
-    fig1.update_traces(textposition='middle center')
+    # fig1.update_traces(textposition='middle center')
 
     fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
 
@@ -508,13 +510,14 @@ def create_up_flows_centroid(geodf: gpd.GeoDataFrame):
         data=go.Scattergeo(
             lon=geodf.geometry.centroid.x,
             lat=geodf.geometry.centroid.y,
-            text=geodf["BPART"].astype(str) + "<br>" + geodf["ALIAS"],
-            textfont_size=10,
+            # text=geodf["ALIAS"],
+            # textfont_size=10,
             mode="markers",
             showlegend=False,
             customdata=hoverdf,
             hovertemplate=my_hovertemplate,
-            marker=dict(size=5, color="blue", symbol="circle")
+            marker=dict(size=5, color='rgb(37, 170, 225)', symbol="square"),
+            # textposition='top center'
         )
     )
 

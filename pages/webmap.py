@@ -98,7 +98,35 @@ def layout():
                                     html.Label("Map Filter"),
                                     dcc.Checklist(
                                         id='my_filter',
-                                        options=['Reservoirs', 'Contractors', 'Exports', 'Upstream Flows'],
+                                        options=[
+                                            {
+                                                "label": [
+                                                    html.Span("Reservoirs"),
+                                                    html.Img(src="/assets/green_triangle.png", style={"height": "10px", "marginLeft": "5px"})
+                                                ],
+                                                "value": "Reservoirs"
+                                            },
+                                            {
+                                                "label": [
+                                                    html.Span("Contractors")
+                                                ],
+                                                "value": "Contractors"
+                                            },
+                                            {
+                                                "label": [
+                                                    html.Span("Exports"),
+                                                    html.Img(src="/assets/yellow_circle.png", style={"height": "10px", "marginLeft": "5px"})
+                                                ],
+                                                "value": "Exports"
+                                            },
+                                            {
+                                                "label": [
+                                                    html.Span("Upstream Flows"),
+                                                    html.Img(src="/assets/blue_square.png", style={"height": "10px", "marginLeft": "5px"})
+                                                ],
+                                                "value": "Upstream Flows"
+                                            },
+                                        ],
                                         value=['Reservoirs', 'Exports', 'Upstream Flows'],
                                     )
                                 ]
@@ -154,9 +182,9 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
         graph_data.append(trace3)
     
     if show_reservoirs:
-        trace4 = fig_r.data[0]
+        # trace4 = fig_r.data[0]
         trace5 = fig_r_centroid.data[0]
-        graph_data.append(trace4)
+        # graph_data.append(trace4)
         graph_data.append(trace5)
     
     if show_exports:
@@ -203,13 +231,24 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
 
     lat_min = 34.3
     lat_max = 40.2
+    long_min = -124.7
+    long_max = -113.9
+
+    # long_min = -124.7
+    # long_max = -116.0
+
+    long_center = (long_min + long_max) / 2
+  
+    # lat_min = 37.0
+    # lat_max = 40.2
+
     lat_center = (lat_min + lat_max) / 2
 
     final_fig.update_geos(
-        center_lon=-119.3,
+        center_lon=long_center,
         center_lat=lat_center,
         lataxis_range=[lat_min, lat_max],
-        lonaxis_range=[-124.7, -113.9],
+        lonaxis_range=[long_min, long_max],
         projection_scale=1,
         fitbounds=False,
     )
