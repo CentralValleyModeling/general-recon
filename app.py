@@ -50,19 +50,16 @@ pages = [
     for page in dash.page_registry.values()
 ]
 
-#navbar = dbc.NavbarSimple(
-#    brand=ReconNavbarBrand("SWP Climate Adaptation Plan"),
-#    children=pages,
-#    #color="light",
-#    #dark=False,
-#    className="mb-0",
-#    style={"backgroundColor": "#007fbd",
-#           "color": "white"}
-#)
-
 navbar = dbc.Navbar(
     dbc.Container([
-        dbc.NavbarBrand("State Water Project Climate Adaptation Plan", href="/", style={"color": "white"}),
+        dbc.NavbarBrand(
+            [
+                html.Img(src="/assets/dwr_seal.png", height="50px", className="me-2"),
+                html.Span("State Water Project Climate Adaptation Plan", style={"fontSize": "2rem"})
+            ],
+            href="/",
+            style={"color": "white", "display": "flex", "alignItems": "center"}
+        ),
 
         dbc.NavbarToggler(id="navbar-toggler", n_clicks=0),
 
