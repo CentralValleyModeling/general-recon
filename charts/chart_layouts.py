@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 from dash import dcc, html
 
 from data import create_download_button
-from pages.styles import PLOT_COLORS, SCENARIO_COLORS, ASSUMPTION_ORDER, CLIMATE_ORDER
+from pages.styles import PLOT_COLORS, SCENARIO_COLORS, ASSUMPTION_ORDER, CLIMATE_ORDER, THEME_COLORS
 from utils.query_data import scen_aliases, var_dict
 from utils.tools import cfs_taf, convert_cm_nums, month_list, monthfilter
 
@@ -80,7 +80,9 @@ class CardWidget:
                     [
 
                         html.H4(self.title, className="card-title",
-                                style={"display": "inline-block"}),
+                                style={"display": "inline-block",
+                                       "font-weight": "normal",
+                                       "color": THEME_COLORS["blue"]}),
                         (
                             dbc.Button(
                                 INFO_ICON,
@@ -141,7 +143,7 @@ class CardWidget:
                     ]
                 ),
             ],
-            #style={"height": height},
+            style={"border": "none"},
         )
 
         return card

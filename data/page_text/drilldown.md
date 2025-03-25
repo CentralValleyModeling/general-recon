@@ -1,0 +1,2 @@
+### Drilldown 
+This page allows users to view various plots and metrics on a timeseries. The user can choose timeseries by B-Part or by alias using the drop down menus or by typing within the text box. Plots and statistics include: monthly and annual timeseries, monthly and annual probability of non-exceedance curves, monthly and annual average.

@@ -83,7 +83,6 @@ def layout():
         children=[
             dcc.Download(id="download-response-home"),
             dbc.Row(),
-            html.Hr(),
             dbc.Col(
                 id="home-cards",
                 className="d-grid gap-2",
@@ -97,7 +96,9 @@ def layout():
                             dbc.Col(
                                 class_name="col-md-4", children=[html.Img(src="/assets/1997_02_05_DK_09434-014_Aqueduct_web.jpg", style={"width": "100%"})]
                             ),
+                            html.Hr(style={"margin": "0.5rem 0"}),
                         ],
+                        
                     ),
                     dbc.Row(
                         id="home-cards-row-0",
@@ -105,6 +106,7 @@ def layout():
                             dbc.Col(
                                 class_name="col-md-12", children=[exp_card.create_card()]
                             ),
+                            html.Hr(style={"margin": "0.5rem 0"}),
                         ],
                     ),
                     dbc.Row(
@@ -113,6 +115,7 @@ def layout():
                             dbc.Col(
                                 class_name="col-md-12", children=[ta_card.create_card()]
                             ),
+                            html.Hr(style={"margin": "0.5rem 0"}),
                         ],
                     ),
                     dbc.Row(
@@ -121,6 +124,7 @@ def layout():
                             dbc.Col(
                                 class_name="col-md-12", children=[ndoi_card.create_card()]
                             ),
+                            html.Hr(style={"margin": "0.5rem 0"}),
                         ],
                     ),
                     dbc.Row(
@@ -129,6 +133,7 @@ def layout():
                             dbc.Col(
                                 class_name="col-md-12", children=[orovl_sep_card.create_card()]
                             ),
+                            html.Hr(style={"margin": "0.5rem 0"}),
                         ],
                     ),
                     dbc.Row(
@@ -137,6 +142,7 @@ def layout():
                             dbc.Col(
                                 class_name="col-md-12", children=[orovl_sep_co_card.create_card()]
                             ),
+                            html.Hr(style={"margin": "0.5rem 0"}),
                         ],
                     ),
                 ],
