@@ -62,7 +62,7 @@ pages = [
 
 navbar = dbc.Navbar(
     dbc.Container([
-        dbc.NavbarBrand("SWP Climate Adaptation Plan", href="/", style={"color": "white"}),
+        dbc.NavbarBrand("State Water Project Climate Adaptation Plan", href="/", style={"color": "white"}),
 
         dbc.NavbarToggler(id="navbar-toggler", n_clicks=0),
 
