@@ -82,7 +82,7 @@ def layout(**kwargs):
             html.Div(id="my-output"),
             dbc.Row(
                 [
-                    dcc.Markdown("**Timeseries**"),
+                    dcc.Markdown("**Monthly Timeseries**"),
                     dcc.Graph(id="timeseries-plot"),
                 ]
             ),
@@ -211,7 +211,6 @@ def update_b_part(alias):
     b = bparts[i]
     return b
 
-
 # Timeseries Plot
 @callback(
     Output(component_id="timeseries-plot", component_property="figure"),
@@ -221,6 +220,7 @@ def update_b_part(alias):
 def update_timeseries(b_part, climate_filter):
     df_plot = df_dv.loc[df_dv['Climate'] == climate_filter]
 
+    alias = var_dict[b_part]["alias"]
 
     fig = px.line(
         df_plot,
@@ -230,10 +230,14 @@ def update_timeseries(b_part, climate_filter):
         color_discrete_map=SCENARIO_COLORS,
     )
     fig.update_layout(
+        title=f"{alias} ({b_part})",
         plot_bgcolor="white",
         legend_title="Scenario",
         xaxis=dict(gridcolor="LightGray"),
+        xaxis_title="CalSim 3 Simulation Period (Monthly)",
         yaxis=dict(gridcolor="LightGray"),
+        #yaxis_title=units,
+        yaxis_tickformat=",d",
     )
     return fig
 
@@ -394,7 +398,6 @@ def update_bar_annual(b_part, wytchecklist, slider_yr_range, climate_filter):
     else:
         units = ""
     alias = var_dict[b_part]["alias"]
-    print(alias)
 
     fig = px.bar(
         df_annual,
