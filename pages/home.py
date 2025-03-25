@@ -32,7 +32,7 @@ register_page(
 )
 
 exp_card = CardWidget(
-    "Total Delta Exports (TAF/year)",
+    "Total Delta exports",
     button_id="EXPORTACTUALTDIF",
     button_label="Drilldown",
     popover_label="exp-info",
@@ -41,7 +41,7 @@ exp_card = CardWidget(
 )
 
 ta_card = CardWidget(
-    "SWP Table A Deliveries (TAF/year)",
+    "SWP Table A deliveries",
     button_id="SWP_TA_CO_SOD",
     button_label="Drilldown",
     popover_label="ta-info",
@@ -50,7 +50,7 @@ ta_card = CardWidget(
 )
 
 ndoi_card = CardWidget(
-    "Total Delta Outflow (TAF/year)",
+    "Total Delta outflow",
     button_id="NDOI",
     button_label="Drilldown",
     popover_label="ndoi-info",
@@ -59,7 +59,7 @@ ndoi_card = CardWidget(
 )
 
 orovl_sep_card = CardWidget(
-    "Oroville September Storage",
+    "Oroville September storage",
     button_id="S_OROVL",
     button_label="Drilldown",
     popover_label="orovl-info",
@@ -68,7 +68,7 @@ orovl_sep_card = CardWidget(
 )
 
 orovl_sep_co_card = CardWidget(
-    "Oroville Carryover (Percent of Simulation Period Where Oroville September Storage < 1.6 MAF)",
+    "Oroville carryover (percent of simulation period where Oroville September storage < 1.6 MAF)",
     button_id="S_OROVL",
     button_label="Drilldown",
     popover_label="orovl-co-info",

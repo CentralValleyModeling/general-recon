@@ -324,7 +324,7 @@ def card_bar_plot_wy_vert(
         showlegend=True,
         xaxis_title="Climate",
         xaxis_tickformat=",d",
-        yaxis_title="Thousand Acre-Feet",
+        yaxis_title="Thousand acre-feet per year",
         yaxis_tickformat=",d",
         yaxis_showgrid=True,
         yaxis_gridcolor="lightgray",

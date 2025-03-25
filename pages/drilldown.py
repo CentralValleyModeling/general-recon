@@ -58,15 +58,15 @@ def layout(**kwargs):
                     html.A(drilldown_text),
                     dbc.Col(
                         [
-                            "Select Climate (filter for all charts): ",
+                            "Climate (filter for all charts): ",
                             dcc.Dropdown(
                                 CLIMATE_ORDER, id="climate-filter", value="2043_CC50", style={"width": "100%"}
                             ),
-                            "Select B-Part: ",
+                            "CalSim variable name (B-Part): ",
                             dcc.Dropdown(
                                 bparts, id="b-part", value=b, style={"width": "100%"}
                             ),
-                            "Or search by alias: ",
+                            "Search by common description: ",
                             dcc.Dropdown(
                                 options=aliases,
                                 id="alias",
@@ -82,7 +82,7 @@ def layout(**kwargs):
             html.Div(id="my-output"),
             dbc.Row(
                 [
-                    dcc.Markdown("**Monthly Timeseries**"),
+                    dcc.Markdown("**Monthly timeseries**"),
                     dcc.Graph(id="timeseries-plot"),
                 ]
             ),
@@ -92,7 +92,7 @@ def layout(**kwargs):
                     dbc.Col(
                         [
                             html.P(
-                                "Select Year Type for Annual Timeseries Plot",
+                                "Select Year Type for Annual timeseries Plot",
                                 className="text-muted mt-1 m-0",
                             ),
                             dcc.Dropdown(
@@ -120,7 +120,7 @@ def layout(**kwargs):
                 [
                     dbc.Col(
                         [
-                            dcc.Markdown("**Monthly Exceedance**"),
+                            dcc.Markdown("**Monthly exceedance**"),
                             dcc.Checklist(
                                 options=month_list,
                                 value=month_list,
@@ -137,7 +137,7 @@ def layout(**kwargs):
                     ),
                     dbc.Col(
                         [
-                            dcc.Markdown("**Monthly Average**"),
+                            dcc.Markdown("**Monthly average**"),
                             dcc.Checklist(
                                 options=wyt_list,
                                 value=wyt_list,
@@ -157,7 +157,7 @@ def layout(**kwargs):
                 [
                     dbc.Col(
                         [
-                            dcc.Markdown("**Annual Exceedance**"),
+                            dcc.Markdown("**Annual exceedance**"),
                             dcc.Dropdown(
                                 options=["Calendar Year", "Water Year"],
                                 id="yearwindow",
@@ -169,7 +169,7 @@ def layout(**kwargs):
                     ),
                     dbc.Col(
                         [
-                            dcc.Markdown("**Annual Average**"),
+                            dcc.Markdown("**Annual average**"),
                             dcc.Dropdown(
                                 options=["Calendar Year", "Water Year"],
                                 id="yearwindow-repeater",
@@ -221,6 +221,9 @@ def update_timeseries(b_part, climate_filter):
     df_plot = df_dv.loc[df_dv['Climate'] == climate_filter]
 
     alias = var_dict[b_part]["alias"]
+    
+    if var_dict[b_part]["units"] == "cfs":
+        units = "Cubic feet per second"
 
     fig = px.line(
         df_plot,
@@ -234,9 +237,9 @@ def update_timeseries(b_part, climate_filter):
         plot_bgcolor="white",
         legend_title="Scenario",
         xaxis=dict(gridcolor="LightGray"),
-        xaxis_title="CalSim 3 Simulation Period (Monthly)",
+        xaxis_title="CalSim 3 simulation period (monthly timestep)",
         yaxis=dict(gridcolor="LightGray"),
-        #yaxis_title=units,
+        yaxis_title=units,
         yaxis_tickformat=",d",
     )
     return fig
