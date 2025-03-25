@@ -13,6 +13,10 @@ from utils.tools import (
     cfs_taf,
     common_pers,
 )
+from data import load_markdown
+
+
+per_of_interest_text = load_markdown("page_text/pers_of_interest.md")
 
 register_page(
     __name__,
@@ -114,7 +118,10 @@ def layout():
 
     view_pane = dbc.Col(
         id="view_pane",
-        children=[dcc.Graph(id="graph-annual")],
+        children=[
+                html.A(per_of_interest_text),
+                dcc.Graph(id="graph-annual"),  
+        ],
         class_name="bg-transparent py-3",
     )
 

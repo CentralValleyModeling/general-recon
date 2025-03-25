@@ -15,18 +15,7 @@ register_page(
 
 # Cards
 
-hydrology_text = (
-    """This page provides annual and monthly averages for four hydrologic metrics:
-     Eight River Index, Sacramento River Runoff, San Joaquin River Runoff,
-      and Oroville reservoir inflow.""",
-    html.Br(),
-    html.Br(),
-    """Additional monthly average plots are provided for Oroville reservoir inflow.
-    One is inflow during drier years (Dry and Critical Sac Valley Index)
-    and the other is inflow during wetter years (Wet and Above Normal).""",
-    html.Br(),
-    html.Br(),
-)
+hydrology_text = load_markdown("page_text/hydrology.md")
 
 eight_ri_card_ann = CardWidget(
     "Eight River Index (April-July)",
@@ -129,18 +118,20 @@ def layout():
             dcc.Download(id="download-response-hydrology"),
             dbc.Col(
                 [
-                    html.H1(["Hydrology Comparison"]),
                     html.A(hydrology_text),
+                    html.Hr(style={"margin": "0.5rem 0"}),
                     dbc.Row(
                         [
                             dbc.Col(eight_ri_card_ann.create_card(height="25rem")),
                             dbc.Col(sac_four_ri_card_ann.create_card(height="25rem")),
+                            html.Hr(style={"margin": "0.5rem 0"}),
                         ]
                     ),
                     dbc.Row(
                         [
                             dbc.Col(sjr_four_ri_card_ann.create_card(height="25rem")),
                             dbc.Col(orov_inflow_card_ann.create_card(height="25rem")),
+                            html.Hr(style={"margin": "0.5rem 0"}),
                         ]
                     ),
                     dbc.Row(
@@ -155,6 +146,7 @@ def layout():
                                     registry_id="monthly-sacramento-4RI",
                                 )
                             ),
+                            html.Hr(style={"margin": "0.5rem 0"}),
                         ]
                     ),
                     dbc.Row(
@@ -169,6 +161,7 @@ def layout():
                                     registry_id="monthly-oroville-inflow",
                                 )
                             ),
+                            html.Hr(style={"margin": "0.5rem 0"}),
                         ]
                     ),
                     dbc.Row(
@@ -183,6 +176,7 @@ def layout():
                                     registry_id="monthly-oroville-inflow-wet",
                                 )
                             ),
+                            html.Hr(style={"margin": "0.5rem 0"}),
                         ]
                     ),
                 ],

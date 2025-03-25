@@ -9,6 +9,7 @@ from dash import Input, Output, State, callback, dcc, html, register_page
 from charts.chart_layouts import ann_exc_plot, mon_exc_plot
 from pages.styles import PLOT_COLORS, ASSUMPTION_ORDER, SCENARIO_COLORS, CLIMATE_ORDER
 from utils.query_data import date_map, df_dv, scen_aliases, var_dict
+from data import load_markdown
 from utils.tools import (
     cfs_taf,
     convert_wyt_nums,
@@ -30,24 +31,7 @@ register_page(
     order=6,
 )
 
-drilldown_text = (
-    """This page allows users to view various plots and metrics on a timeseries.
-    The user can choose timeseries by B-Part or by alias using the drop down menus
-    or by typing within the text box.""",
-    html.Br(),
-    """Plots and statistics include: monthly and annual timeseries, 
-    monthly and annual probability of non-exceedance curves,
-    monthly and annual average.""",
-    html.Br(),
-    html.Br(),
-    """Users have the flexibility to change the year type for annual plots,
-    aggregation method for annual timeseries,
-    months in the exceedance probability plot,
-    water year types for the monthly avearge,
-    using the slider and drop down menu.""",
-    html.Br(),
-    html.Br(),
-)
+drilldown_text = load_markdown("page_text/drilldown.md")
 
 bparts = []
 aliases = []
@@ -71,7 +55,6 @@ def layout(**kwargs):
         children=[
             dbc.Row(
                 [
-                    html.H1("Drilldown"),
                     html.A(drilldown_text),
                     dbc.Col(
                         [
@@ -283,8 +266,6 @@ def update_annual_timeseries(
         .agg({b_part: [agg_method.lower(), "count"]})
         .reset_index()
     )
-
-    #print(df_agg)
 
     df_agg.columns = ["-".join(c).strip("- ") for c in df_agg.columns]
     count = df_agg[f"{b_part}-count"]

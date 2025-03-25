@@ -5,6 +5,10 @@ GLOBAL_MARGIN = {
     "margin-left": "250px",
 }
 
+THEME_COLORS = {
+    "blue": "#007fbd",
+}
+
 PLOT_COLORS = [
     "#4d4d4d",
     "#999999",
