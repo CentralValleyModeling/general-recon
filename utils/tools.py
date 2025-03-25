@@ -66,8 +66,25 @@ common_pers = {
     "Single Wet Year (2017)": "2017-2017",
 }
 
-# opt = [{"label":k,"value":v} for k,v in common_pers.items()]
-# print(opt)
+UNIT_DESCRIPTIONS = {
+        "cfs": "Cubic feet per second",
+        "taf": "Thousand acre-feet",
+        "ec": "µmho/cm",
+        "km": "Kilometers from the Golden Gate Bridge"
+}
+
+def get_unit_descriptions(var_dict, b_part):
+    if var_dict[b_part]["units"] == "cfs":
+        unit_description = UNIT_DESCRIPTIONS["cfs"]
+    elif var_dict[b_part]["units"] == "taf":
+        unit_description = UNIT_DESCRIPTIONS["taf"]
+    elif var_dict[b_part]["units"] == "ec":
+        unit_description = UNIT_DESCRIPTIONS["ec"]
+    elif var_dict[b_part]["units"] == "km":
+        unit_description = UNIT_DESCRIPTIONS["km"]
+    else:
+        unit_description = ""
+    return unit_description
 
 
 def convert_cm_nums(monthchecklist: Iterable[str]) -> list[str]:

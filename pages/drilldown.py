@@ -21,6 +21,7 @@ from utils.tools import (
     monthfilter,
     month_map,
     wyt_list,
+    get_unit_descriptions
 )
 
 register_page(
@@ -44,7 +45,6 @@ for var in var_dict:
 # DataFrames for the summary tables
 df_tbl = make_summary_df(scen_aliases, df_dv, var_dict)
 df_tbl_res = make_ressum_df(scen_aliases, df_dv, var_dict)
-
 
 # Layout Starts Here
 def layout(**kwargs):
@@ -88,11 +88,11 @@ def layout(**kwargs):
             ),
             dbc.Row(
                 [
-                    dcc.Markdown("**Annual Timeseries**"),
+                    dcc.Markdown("**Annual timeseries**"),
                     dbc.Col(
                         [
                             html.P(
-                                "Select Year Type for Annual timeseries Plot",
+                                "Year type for annual timeseries plot",
                                 className="text-muted mt-1 m-0",
                             ),
                             dcc.Dropdown(
@@ -102,7 +102,7 @@ def layout(**kwargs):
                                 value="Water Year",
                             ),
                             html.P(
-                                "Select Aggregation Method for Annual Timeseries Plot",
+                                "Aggregation method for annual timeseries plot",
                                 className="text-muted mt-1 m-0",
                             ),
                             dcc.Dropdown(
@@ -221,9 +221,7 @@ def update_timeseries(b_part, climate_filter):
     df_plot = df_dv.loc[df_dv['Climate'] == climate_filter]
 
     alias = var_dict[b_part]["alias"]
-    
-    if var_dict[b_part]["units"] == "cfs":
-        units = "Cubic feet per second"
+    units = get_unit_descriptions(var_dict, b_part)
 
     fig = px.line(
         df_plot,
@@ -263,7 +261,7 @@ def update_annual_timeseries(
         "Calendar Year": 1,
         "Water Year": 10,
     }
-
+    units = get_unit_descriptions(var_dict, b_part)
     df_plot = df_dv.loc[df_dv['Climate'] == climate_filter]
 
     df_agg = (
@@ -291,6 +289,8 @@ def update_annual_timeseries(
         legend_title="Scenario",
         xaxis=dict(gridcolor="LightGray"),
         yaxis=dict(gridcolor="LightGray"),
+        yaxis_title=f"{units} (annual {agg_method.lower()})",
+        yaxis_tickformat=",d",
     )
     return fig
 
@@ -413,7 +413,7 @@ def update_bar_annual(b_part, wytchecklist, slider_yr_range, climate_filter):
     )
 
     fig.update_layout(
-        title=f"Annual Average {alias} ({climate_filter})",
+        title=f"Annual average {alias} ({climate_filter})",
         legend_title="Scenario",
         barmode="relative",
         plot_bgcolor="white",
