@@ -95,7 +95,7 @@ def layout():
                                 class_name="col-md-8", children=[load_markdown("page_text/site-introduction.md")]
                             ),
                             dbc.Col(
-                                class_name="col-md-4", children=[html.Img(src="/assets/chrisman_pp.jpg", style={"width": "100%"})]
+                                class_name="col-md-4", children=[html.Img(src="/assets/1997_02_05_DK_09434-014_Aqueduct_web.jpg", style={"width": "100%"})]
                             ),
                         ],
                     ),

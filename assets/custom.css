@@ -1,0 +1,16 @@
+.navbar {
+    background-color: #007fbd !important;
+}
+
+.navbar .nav-link {
+    color: white !important;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+    color: #cceeff !important;
+}
+
+.navbar-brand {
+    color: white !important;
+}
