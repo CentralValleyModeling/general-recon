@@ -303,8 +303,20 @@ def update_annual_timeseries(
     Input(component_id="climate-filter", component_property="value"),
 )
 def update_exceedance(b_part, monthchecklist, climate_filter):
+    
     df_plot = df_dv.loc[df_dv['Climate'] == climate_filter]
+    units = get_unit_descriptions(var_dict, b_part)
+    
     fig = mon_exc_plot(df_plot, b_part, monthchecklist, climate_filter)
+
+    fig.update_layout(
+        plot_bgcolor="white",
+        legend_title="Scenario",
+        xaxis=dict(gridcolor="LightGray"),
+        yaxis=dict(gridcolor="LightGray"),
+        yaxis_title=units,
+        yaxis_tickformat=",d",
+    )
     return fig
 
 
@@ -316,9 +328,33 @@ def update_exceedance(b_part, monthchecklist, climate_filter):
     Input(component_id="yearwindow", component_property="value"),
     Input(component_id="climate-filter", component_property="value"),
 )
-def update_exceedance(b_part, monthchecklist, yearwindow, climate_filter):
-    df_plot = df_dv.loc[df_dv['Climate'] == climate_filter]
-    fig = ann_exc_plot(df_plot, b_part, monthchecklist, yearwindow)
+def update_annual_exceedance(b_part, monthchecklist, yearwindow, climate_filter):
+    if var_dict[b_part]["table_convert"] == "cfs_taf":
+        df_plot = df_dv.loc[df_dv['Climate'] == climate_filter]
+        fig = ann_exc_plot(df_plot, b_part, yearwindow)
+        fig.update_layout(
+            plot_bgcolor="white",
+            legend_title="Scenario",
+            xaxis=dict(gridcolor="LightGray"),
+            yaxis=dict(gridcolor="LightGray"),
+            yaxis_title="Thousand acre-feet per year",
+            yaxis_tickformat=",d",
+        )
+
+    else:
+        fig = px.line()
+        fig.update_layout(
+            annotations=[
+                dict(
+                    text="⚠️ Variable not suitable for annual exceedance plot",
+                    xref="paper", yref="paper",
+                    x=0.5, y=0.5,
+                    showarrow=False,
+                    font=dict(size=18, color="red"),
+                    align="center"
+                )
+            ],
+        )
     return fig
 
 
@@ -334,20 +370,27 @@ def update_monthly(b_part, wytchecklist, slider_yr_range, climate_filter):
     startyr = slider_yr_range[0]
     endyr = slider_yr_range[1]
 
-    df0 = df_dv.loc[
+    df = df_dv.loc[
         df_dv["WYT_SAC_MAY"].isin(convert_wyt_nums(wytchecklist))
         & (df_dv["iwy"] >= startyr)
         & (df_dv["iwy"] <= endyr)
         & (df_dv["Climate"] == climate_filter)
     ]
 
-    df1 = round(df0.groupby(["Assumption", "iwm"]).mean(numeric_only=True))
-    df1 = df1.reindex(ASSUMPTION_ORDER, level="Assumption")
+    df = cfs_taf(df, var_dict)
+    df = round(df.groupby(["Assumption", "iwm"]).mean(numeric_only=True))
+    df = df.reindex(ASSUMPTION_ORDER, level="Assumption")
+
+    if var_dict[b_part]["table_convert"] == "cfs_taf":
+        units = "Thousand acre-feet per month"
+    else:
+        units = get_unit_descriptions(var_dict, b_part)
+    
     fig = px.line(
-        df1,
-        x=df1.index.get_level_values(1),
+        df,
+        x=df.index.get_level_values(1),
         y=b_part,
-        color=df1.index.get_level_values(0),
+        color=df.index.get_level_values(0),
         labels={"color": "Assumption"},
         color_discrete_map=SCENARIO_COLORS,
     )
@@ -364,6 +407,7 @@ def update_monthly(b_part, wytchecklist, slider_yr_range, climate_filter):
         yaxis=dict(
             showgrid=True,
             gridcolor="LightGray",
+            title=units
         ),
         yaxis_tickformat=",d",
         xaxis_title="Month"
@@ -397,33 +441,46 @@ def update_bar_annual(b_part, wytchecklist, slider_yr_range, climate_filter):
     df_annual = df_annual.reindex(ASSUMPTION_ORDER, level="Assumption")
 
     if var_dict[b_part]["table_convert"] == "cfs_taf":
-        units = "TAF/year"
+        units = "Thousand acre-feet per year"
+
+        alias = var_dict[b_part]["alias"]
+
+        fig = px.bar(
+            df_annual,
+            x=df_annual.index.get_level_values(0),
+            y=b_part,
+            color=df_annual.index.get_level_values(0),
+            text_auto=True,
+            color_discrete_map=SCENARIO_COLORS,
+            custom_data=df_annual[[b_part]]
+        )
+
+        fig.update_layout(
+            title=f"Annual average {alias} ({climate_filter})",
+            legend_title="Scenario",
+            barmode="relative",
+            plot_bgcolor="white",
+            yaxis_title=units,
+            yaxis_tickformat=",d",
+        )
+
+        fig.update_traces(
+            hovertemplate="<b>Value:</b> %{customdata[0]:.2f}<br>"
+        )
     else:
-        units = ""
-    alias = var_dict[b_part]["alias"]
-
-    fig = px.bar(
-        df_annual,
-        x=df_annual.index.get_level_values(0),
-        y=b_part,
-        color=df_annual.index.get_level_values(0),
-        text_auto=True,
-        color_discrete_map=SCENARIO_COLORS,
-        custom_data=df_annual[[b_part]]
-    )
-
-    fig.update_layout(
-        title=f"Annual average {alias} ({climate_filter})",
-        legend_title="Scenario",
-        barmode="relative",
-        plot_bgcolor="white",
-        yaxis_title=units,
-        yaxis_tickformat=",d",
-    )
-
-    fig.update_traces(
-        hovertemplate="<b>Value:</b> %{customdata[0]:.2f}<br>"
-    )
+        fig = px.line()
+        fig.update_layout(
+            annotations=[
+                dict(
+                    text="⚠️ Variable not suitable for annual bar plot",
+                    xref="paper", yref="paper",
+                    x=0.5, y=0.5,
+                    showarrow=False,
+                    font=dict(size=18, color="red"),
+                    align="center"
+                )
+            ],
+        )
     return fig
 
 
