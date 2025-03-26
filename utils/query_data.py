@@ -32,6 +32,8 @@ var_dict["SWP_TA_CO_SOD"] = {
     "table_convert": "cfs_taf",
     "table_display": "wy",
     "type": "Delivery",
+    "units": "cfs",
+    
 }
 
 var_dict["SWP_CO_SOD"] = {
@@ -41,6 +43,7 @@ var_dict["SWP_CO_SOD"] = {
     "table_convert": "cfs_taf",
     "table_display": "wy",
     "type": "Delivery",
+    "units": "cfs",
 }
 
 var_dict["SWP_IN_SOD"] = {
@@ -50,6 +53,7 @@ var_dict["SWP_IN_SOD"] = {
     "table_convert": "cfs_taf",
     "table_display": "wy",
     "type": "Delivery",
+    "units": "cfs",
 }
 
 
@@ -60,6 +64,7 @@ var_dict["EXPORTACTUALTDIF"] = {
     "table_convert": "cfs_taf",
     "table_display": "wy",
     "type": "Export",
+    "units": "cfs",
 }
 
 # Special logic for the DCR:
