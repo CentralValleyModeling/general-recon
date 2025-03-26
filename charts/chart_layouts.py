@@ -324,7 +324,7 @@ def card_bar_plot_wy_vert(
         showlegend=True,
         xaxis_title="Climate",
         xaxis_tickformat=",d",
-        yaxis_title="Thousand Acre-Feet",
+        yaxis_title="Thousand acre-feet per year",
         yaxis_tickformat=",d",
         yaxis_showgrid=True,
         yaxis_gridcolor="lightgray",
@@ -540,11 +540,11 @@ def mon_exc_plot(df, b_part, monthchecklist,climate):
 
     return fig
 
-def ann_exc_plot(df,
-                 b_part,
-                 monthchecklist,
-                 yearwindow,
-                 title: str = None,
+def ann_exc_plot(
+        df,
+        b_part,
+        yearwindow,
+        title: str = None,
 ):
     series_container = []
     if yearwindow == "Calendar Year":
@@ -552,8 +552,8 @@ def ann_exc_plot(df,
     else:
         yw = "iwy"
 
-    df0 = df.loc[df["icm"].isin(convert_cm_nums(monthchecklist))]
-    df0 = cfs_taf(df0, var_dict)
+    #df0 = df.loc[df["icm"].isin(convert_cm_nums(monthchecklist))]
+    df0 = cfs_taf(df, var_dict)
     df0 = df0.groupby(["Assumption", yw]).sum(numeric_only=True)
 
     for assumption in ASSUMPTION_ORDER:
