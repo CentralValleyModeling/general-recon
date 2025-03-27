@@ -299,6 +299,8 @@ def card_bar_plot_wy_vert(
     )
 
     # Compute Percent Change
+    
+    df_plot["ValueChange"] = df_plot[b_part] - df_plot["BaselineValue"]
     df_plot["PercentChange"] = ((df_plot[b_part] - df_plot["BaselineValue"]) / df_plot["BaselineValue"]) * 100
 
     df_plot = df_plot.sort_values(["Climate", "Assumption"])
@@ -313,7 +315,7 @@ def card_bar_plot_wy_vert(
         color="Assumption",
         barmode="group",
         orientation="v",
-        custom_data=["Assumption","Scenario",b_part,"PercentChange","Climate"],
+        custom_data=["Assumption","Scenario",b_part,"PercentChange","Climate","ValueChange"],
         color_discrete_map=SCENARIO_COLORS,
         text_auto=True
 
@@ -335,8 +337,9 @@ def card_bar_plot_wy_vert(
                     "<b>Scenario:</b> %{customdata[0]}<br>" +
                     "<b>Scenario Alias:</b> %{customdata[1]}<br>" +
                     "<b>Value:</b> %{customdata[2]:,.2f}<br>" +
-                    "<b>Change vs Maintain:</b> %{customdata[3]:.2f}% <br>" + 
+                    "<b>Change vs Maintain:</b> %{customdata[5]:,d} (%{customdata[3]:.2f}%)<br>" +
                     "<b>Climate:</b> %{customdata[4]}"
+
 )
 
     layout = html.Div([dcc.Graph(figure=fig)],style={"flex": "1"})

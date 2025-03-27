@@ -40,6 +40,15 @@ exp_card = CardWidget(
     charts=card_bar_plot_wy_vert(df_dv, b_part="EXPORTACTUALTDIF", climate_order=CLIMATE_ORDER),
 )
 
+swp_exp_card = CardWidget(
+    "SWP Banks Exports",
+    button_id="C_CAA003_SWP",
+    button_label="Drilldown",
+    popover_label="swpexp-info",
+    popover_content=load_markdown("page_text/info-swp-exports.md"),
+    charts=card_bar_plot_wy_vert(df_dv, b_part="C_CAA003_SWP", climate_order=CLIMATE_ORDER),
+)
+
 ta_card = CardWidget(
     "SWP Table A deliveries",
     button_id="SWP_TA_CO_SOD",
@@ -113,6 +122,15 @@ def layout():
                         id="home-cards-row-0",
                         children=[
                             dbc.Col(
+                                class_name="col-md-12", children=[swp_exp_card.create_card()]
+                            ),
+                            html.Hr(style={"margin": "0.5rem 0"}),
+                        ],
+                    ),
+                    dbc.Row(
+                        id="home-cards-row-0",
+                        children=[
+                            dbc.Col(
                                 class_name="col-md-12", children=[ta_card.create_card()]
                             ),
                             html.Hr(style={"margin": "0.5rem 0"}),
@@ -166,12 +184,12 @@ def button_1_action(n_clicks):
         button_index = eval(button_id)["index"]
         url_params = urlencode({"type": button_index})
 
-        print(button_index)
+        #print(button_index)
 
-        if button_index == "ta_wet_dry":
-            return "/dry_wet_periods", True
+        #if button_index == "ta_wet_dry":
+        #    return "/dry_wet_periods", True
 
-        if button_index in ("EXPORTACTUALTDIF", "S_OROVL", "NDOI", "SWP_TA_CO_SOD"):
-            return f"/drilldown?{url_params}", True
-        else:
-            return f"/contractor_summary?{url_params}", True
+        #if button_index in ("EXPORTACTUALTDIF", "S_OROVL", "NDOI", "SWP_TA_CO_SOD", "C_CAA003_SWP"):
+        return f"/drilldown?{url_params}", True
+        #else:
+        #    return f"/contractor_summary?{url_params}", True
