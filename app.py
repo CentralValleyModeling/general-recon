@@ -4,35 +4,6 @@ from dash import dcc, html
 
 FA621 = "https://use.fontawesome.com/releases/v6.2.1/css/all.css"
 APP_TITLE = "SWP Climate Adaptation Plan Dashboard"
-CS3_ICON = "assets/cs3_icon_draft.png"
-
-
-class ReconNavbarBrand(dbc.NavbarBrand):
-    def __init__(self, label: str, **kwargs):
-        img = html.Img(
-            src=str(CS3_ICON),
-            height="30px",
-        )
-        label = dbc.NavbarBrand(label, className="m-0")
-        children = dbc.Row(
-            [
-                dbc.Col(img),
-                dbc.Col(label),
-            ],
-            align="center",
-            className="g-2",
-        )
-        # Update kwargs
-        kwargs = {
-            "href": "/",
-            "children": children,
-            "style": {
-                "textDecoration": "none",
-                "margin": "0",
-            },
-        } | kwargs
-        super().__init__(**kwargs)
-
 
 app = dash.Dash(
     __name__,
