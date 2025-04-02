@@ -327,6 +327,15 @@ def load_shp_upstream_flows() -> gpd.GeoDataFrame:
 
     return geodf
 
+def load_shp_river(filename: str) -> gpd.GeoDataFrame:
+    # "dashboard_map/san_joaquin_river.shp"
+    geodf = gpd.read_file(filename)
+    geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
+
+    print("head of river geodata: \n", geodf.head())
+    
+    # geodf["DATA_TYPE"] = "RIVER"
+    return geodf
 
 def create_ca_plot():
     figca = px.choropleth(
@@ -516,7 +525,7 @@ def create_up_flows_centroid(geodf: gpd.GeoDataFrame):
             showlegend=False,
             customdata=hoverdf,
             hovertemplate=my_hovertemplate,
-            marker=dict(size=5, color='rgb(37, 170, 225)', symbol="square"),
+            marker=dict(size=5, color='rgb(0, 93, 131)', symbol="square"),
             # textposition='top center'
         )
     )
@@ -526,6 +535,87 @@ def create_up_flows_centroid(geodf: gpd.GeoDataFrame):
     fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
 
     return fig1
+
+import shapely.geometry
+import numpy as np
+
+def create_river_plot(filename, river_name):
+    geodf = load_shp_river(filename)
+    print(filename)
+    print(geodf.head())
+
+    lats = []
+    lons = []
+
+    for feature in geodf.geometry:
+        if isinstance(feature, shapely.geometry.linestring.LineString):
+            linestrings = [feature]
+        elif isinstance(feature, shapely.geometry.multilinestring.MultiLineString):
+            linestrings = feature.geoms
+        else:
+            continue
+        for linestring in linestrings:
+            x, y = linestring.xy
+            lats = np.append(lats, y)
+            lons = np.append(lons, x)
+            lats = np.append(lats, None)
+            lons = np.append(lons, None)
+
+    fig = px.line_geo(lat=lats, lon=lons, color_discrete_sequence=['rgb( 37, 170, 225)'])
+
+    # fig.add_annotation(x=lats[0], y=lons[0], text=river_name, showarrow=True, arrowhead=1)
+
+    fig.add_annotation(
+        x=0.5,  # x-coordinate of the text (0-1, relative to the plot area)
+        y=0.95, # y-coordinate of the text (0-1, relative to the plot area)
+        text=river_name,
+        showarrow=False, # remove arrow from annotation
+        font=dict(
+            size=16,
+            color="black"
+        ),
+        xref="paper", # coordinates are relative to the paper (plot area)
+        yref="paper"  # coordinates are relative to the paper (plot area)
+    )
+
+    # fig.update_geos(fitbounds="locations", visible=False)
+    # fig.update_geos(visible=False)
+    fig.update_traces(hoverinfo='none', hovertemplate=None)
+    # fig.add_trace(go.Scattergeo(
+    #     locations=geodf.index,
+    #     text=geodf['Name'],
+    #     mode='text',
+    # ))
+
+
+    return fig
+
+def create_river_centroid(geodf: gpd.GeoDataFrame):
+    # hoverdf = geodf[
+    #     ["BPART", "ALIAS", "DATA_TYPE"]
+    # ].copy()
+    # my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
+    fig1 = go.Figure(
+        data=go.Scattergeo(
+            lon=geodf.geometry.centroid.x,
+            lat=geodf.geometry.centroid.y,
+            text=geodf["Name"],
+            textfont_size=10,
+            showlegend=False,
+            # customdata=hoverdf,
+            # hovertemplate=my_hovertemplate,
+            # marker=dict(size=5, color='rgb(37, 170, 225)', symbol="square"),
+            # textposition='top center'
+        )
+    )
+
+    fig1.update_traces(textposition='middle center')
+
+    fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
+
+    return fig1
+
+
 
 def create_df_for_scen(
     data_df: pd.DataFrame, geodf: gpd.GeoDataFrame, scenario1: str, scenario2: str

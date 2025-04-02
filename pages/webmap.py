@@ -49,6 +49,18 @@ fig_r = api.create_reservoir_plot(reservoir_geodf)
 # centroid map for reservoirs
 fig_r_centroid = api.create_reservoir_centroid(reservoir_geodf)
 
+# map for main rivers
+fig_river_sj = api.create_river_plot("dashboard_map/san_joaquin_river.shp", "San Joaquin River")
+
+fig_river_amer = api.create_river_plot("dashboard_map/american_river.shp", "American River")
+
+fig_river_feath = api.create_river_plot("dashboard_map/feather_river.shp", "Feather River")
+
+fig_river_sac = api.create_river_plot("dashboard_map/sacramento_river.shp", "Sacramento River")
+
+
+
+
 # debug
 fig_monthly = api.update_monthly("S_OROVL", (1922, 2021))
 
@@ -122,7 +134,7 @@ def layout():
                                             {
                                                 "label": [
                                                     html.Span("Upstream Flows"),
-                                                    html.Img(src="/assets/blue_square.png", style={"height": "10px", "marginLeft": "5px"})
+                                                    html.Img(src="/assets/dark_blue_square.png", style={"height": "10px", "marginLeft": "5px"})
                                                 ],
                                                 "value": "Upstream Flows"
                                             },
@@ -168,6 +180,17 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
     # List to hold the all trace data
     trace2 = figca.data[0]
     graph_data = [trace2]
+
+    # adding main rivers to california border map
+    trace_river_sj = fig_river_sj.data[0]
+    trace_river_amer = fig_river_amer.data[0]
+    trace_river_feath = fig_river_feath.data[0]
+    trace_river_sac = fig_river_sac.data[0]
+
+    graph_data.append(trace_river_sj)
+    graph_data.append(trace_river_amer)
+    graph_data.append(trace_river_feath)
+    graph_data.append(trace_river_sac)
 
     if show_contractors:
         # Choropleth map to show % change of flow by agency
@@ -336,7 +359,7 @@ def handle_change(clickData, scen1: str, scen2: str, selected_values: list):
     if input_changed == "my_id":
         if clickData:
             points = clickData["points"]
-            if points:
+            if points and "customdata" in points[0]:
                 custom_data = points[0]["customdata"]
                 chart = handle_click(custom_data)
     return fig, chart
