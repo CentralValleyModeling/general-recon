@@ -26,7 +26,6 @@ def layout():
             dbc.Col(
                 [   
                     dcc.Markdown("### Assumptions Table"),
-                    #Tried embedding in .md directly, but experiencing problems.
                     html.Img(src="/assets/assumptions_table.png", alt="Assumptions Table"),
                     dcc.Markdown(markdown_content, dangerously_allow_html=True),
                 ]
