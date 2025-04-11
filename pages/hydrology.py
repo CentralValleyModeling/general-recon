@@ -119,6 +119,25 @@ def layout():
             dbc.Col(
                 [
                     html.A(hydrology_text),
+                    dcc.Markdown("##### Summary climate and hydrologic metrics (change from current conditions) for selected scenarios"),
+                    html.Img(src="/assets/hyd_assumptions_table.png",
+                             alt="Hydrology Assumptions Table",
+                             style={"width": "100%", "height": "auto"}
+                    ),
+                    html.P(
+                        [
+                            html.Sup("a"),
+                            " Change in extreme precipitation is modeled using Clausius-Clapeyron scaling of 7% per degree Celsius (WGEN reference). "
+                            "As the atmosphere warms, the largest precipitation events (above the 99th percentile) are expected to grow larger. "
+                            "The percent increase value represents the change in daily precipitation of events above the 99th percentile. "
+                            "Events below the 99th percentile are also scaled (usually downward) to fit within the overall metric of average precipitation change.",
+                            html.Br(),
+                            html.Sup("b"),
+                            " See SWP Climate Adaptation Plan Appendix A: Modeling Assumptions for additional analysis and documentation of "
+                            "snow water equivalent and snow-covered area evaluations."
+                        ],
+                        style={"fontSize": "0.8rem", "marginTop": "0.5rem", "color": "#555"}
+                    ),
                     html.Hr(style={"margin": "0.5rem 0"}),
                     dbc.Row(
                         [
