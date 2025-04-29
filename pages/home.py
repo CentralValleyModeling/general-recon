@@ -100,10 +100,10 @@ def layout():
                         id="intro-text",
                         children=[
                             dbc.Col(
-                                class_name="col-md-8", children=[load_markdown("page_text/site-introduction.md")]
+                                class_name="col-md-6", children=[load_markdown("page_text/site-introduction.md")]
                             ),
                             dbc.Col(
-                                class_name="col-md-4", children=[html.Img(src="/assets/1997_02_05_DK_09434-014_Aqueduct_web.jpg", style={"width": "100%"})]
+                                class_name="col-md-6", children=[html.Img(src="/assets/caa_subsidence.png", style={"width": "100%"})]
                             ),
                             html.Hr(style={"margin": "0.5rem 0"}),
                         ],

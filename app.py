@@ -26,7 +26,7 @@ navbar = dbc.Navbar(
         dbc.NavbarBrand(
             [
                 html.Img(src="/assets/dwr_seal.png", height="50px", className="me-2"),
-                html.Span("CalSim 3 ReCon: DCR 2023 Subsidence", style={"fontSize": "2rem"})
+                html.Span("CalSim 3 Results Console (ReCon)", style={"fontSize": "2rem"})
             ],
             href="/",
             style={"color": "white", "display": "flex", "alignItems": "center"}
