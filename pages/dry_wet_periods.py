@@ -7,7 +7,7 @@ import plotly.express as px
 from dash import Input, Output, State, callback, dcc, html, register_page
 
 #from charts.chart_layouts import ann_exc_plot, mon_exc_plot
-from pages.styles import ASSUMPTION_ORDER, CLIMATE_ORDER, PLOT_COLORS, SCENARIO_COLORS, BASELINE
+from pages.styles import ASSUMPTION_ORDER, CLIMATE_ORDER, PLOT_COLORS, ASSUMPTION_COLORS, BASELINE
 from utils.query_data import date_map, df_dv, scen_aliases, var_dict
 from utils.tools import (
     cfs_taf,
@@ -175,7 +175,7 @@ def update_annual(assumption, climate, variable, avg_window):
         x=df.index.get_level_values(0),
         y=variable,
         color=df.index.get_level_values(0),
-        color_discrete_map=SCENARIO_COLORS,
+        color_discrete_map=ASSUMPTION_COLORS,
         custom_data=df[["percent_change", "vol_change"]],
         text_auto=True
     )

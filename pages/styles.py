@@ -39,7 +39,7 @@ SCENARIO_ORDER = [
 
 BASELINE = "CAA Design Capacity"
 
-SCENARIO_COLORS = {
+ASSUMPTION_COLORS = {
     "CAA Design Capacity": "#0072b1",
     "CAA Subsidence": "#ff6c66",
 #    "Degradation": "#ff6c66",

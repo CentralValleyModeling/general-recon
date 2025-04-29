@@ -9,7 +9,15 @@ from dash import dcc, html
 
 from typing import Optional, Literal
 from data import create_download_button
-from pages.styles import PLOT_COLORS, SCENARIO_COLORS, ASSUMPTION_ORDER, CLIMATE_ORDER, THEME_COLORS, BASELINE
+from pages.styles import (
+    PLOT_COLORS,
+    ASSUMPTION_COLORS,
+    ASSUMPTION_ORDER,
+    SCENARIO_ORDER,
+    CLIMATE_ORDER,
+    THEME_COLORS,
+    BASELINE
+)
 from utils.query_data import scen_aliases, var_dict
 from utils.tools import cfs_taf, convert_cm_nums, month_list, monthfilter
 
@@ -317,7 +325,7 @@ def card_bar_plot_wy_vert(
         barmode="group",
         orientation="v",
         custom_data=["Assumption","Scenario",b_part,"PercentChange","Climate","ValueChange"],
-        color_discrete_map=SCENARIO_COLORS,
+        color_discrete_map=ASSUMPTION_COLORS,
         text_auto=True
 
     )
@@ -414,7 +422,7 @@ def card_bar_plot_orovl_CAP(
         barmode="group",
         orientation="v",
         custom_data=["Assumption","Scenario",b_part,"PercentChange","Climate"],
-        color_discrete_map=SCENARIO_COLORS,
+        color_discrete_map=ASSUMPTION_COLORS,
         text_auto=True
 
     )
@@ -525,7 +533,7 @@ def mon_exc_plot(df, b_part, monthchecklist,climate):
                 y=df["y"],
                 mode="lines",
                 name=column,
-                line=dict(color=SCENARIO_COLORS.get(column, "#cccccc")),
+                line=dict(color=ASSUMPTION_COLORS.get(column, "#cccccc")),
             )
         )
     if CSV_EXPORT:
@@ -561,11 +569,18 @@ def ann_exc_plot(
     df0 = cfs_taf(df, var_dict)
     df0 = df0.groupby([groupby, yw]).sum(numeric_only=True)
 
-    for assumption in ASSUMPTION_ORDER:
-        series_i = df0.loc[df0.index.get_level_values(0) == assumption, b_part]
+    if groupby == "Assumption":
+        ORDER = ASSUMPTION_ORDER
+    elif groupby == "Scenario":
+        ORDER = SCENARIO_ORDER
+    else:
+        raise ValueError(f"Unexpected groupby value: {groupby}")
+
+    for i in ORDER:
+        series_i = df0.loc[df0.index.get_level_values(0) == i, b_part]
         series_i = series_i.sort_values()
         series_i = series_i.reset_index(drop=True)
-        series_i.rename(assumption, inplace=True)
+        series_i.rename(i, inplace=True)
         series_container.append(series_i)
 
     df3 = pd.concat(series_container, axis=1)
@@ -589,7 +604,12 @@ def ann_exc_plot(
                 y=df["y"],
                 mode="lines",
                 name=column,
-                line=dict(color=SCENARIO_COLORS.get(column, "#cccccc")),
+                line=dict(
+                    color=ASSUMPTION_COLORS.get(column, "#cccccc")
+                    if groupby == "Assumption"
+                    else PLOT_COLORS[i % len(PLOT_COLORS)]
+                ),
+
             )
         )
 
@@ -641,9 +661,9 @@ def distplot(
         yaxis=dict(gridcolor="LightGrey"),
     )
 
-    fig.for_each_trace(lambda trace: trace.update(visible='legendonly')
-                       if trace.name in scen_aliases[-4:] else ()
-    )
+#    fig.for_each_trace(lambda trace: trace.update(visible='legendonly')
+#                       if trace.name in scen_aliases[-4:] else ()
+#    )
 
     return fig
 

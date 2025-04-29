@@ -27,16 +27,7 @@ register_page(
 )
 
 contractor_summary_text = (
-    """This page shows the long-term SWP Table A deliveries average
-     from Contract Year 1922-2021. There is an exceedance probability plot below.
-     To view the exceedance probability plot and histogram for a contractor,
-     click on any of the B-Part variables.""",
-    html.Br(),
-    html.Br(),
-    """Users have the flexibility to
-     change the averaging time period using the slider and drop down menu.""",
-    html.Br(),
-    html.Br(),
+    """This page shows annual (calendar year) SWP Table A deliveries average (TAF/year)."""
 )
 
 b = []
@@ -91,7 +82,7 @@ def layout(**kwargs):
         children=[
             dcc.Download(id="download-response-contractor"),
             html.H1(["Contractor Summary"]),
-#            html.A(contractor_summary_text),
+            html.A(contractor_summary_text),
             dcc.RangeSlider(
                 1922,
                 2021,
@@ -199,7 +190,7 @@ def show_contractor_data(click_data):
             b,
             yearwindow="Calendar Year",
             title=b,
-            groupby="Assumption",
+            groupby="Scenario",
         )
         print(df_dv)
         # We need to re-register the figure when it's updated
