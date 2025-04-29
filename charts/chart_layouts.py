@@ -262,7 +262,7 @@ def card_bar_plot(
     return layout
 
 
-def card_bar_plot_wy_vert(
+def card_bar_plot_vert(
     df: pd.DataFrame,
     b_part: str = "C_CAA003",
     wyt: list[int] = None,
@@ -270,14 +270,24 @@ def card_bar_plot_wy_vert(
     startyr: int = 1922,
     endyr: int = 2021,
     climate_order = [],
+    rpt_year: Literal["iwy", "icy"] = "iwy",
+    yaxisoverride: Optional[str]=None,
+
 ):
     if wyt is None:
         wyt = [1, 2, 3, 4, 5]
     if cm is None:
         cm = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
+    if yaxisoverride is not None:
+        yaxis_title = yaxisoverride
+    elif rpt_year == "iwy":
+        yaxis_title = "Thousand acre-feet per water year"
+    elif rpt_year == "icy":
+        yaxis_title = "Thousand acre-feet per calendar year"
+
     df0 = df.loc[
-        (df["iwy"] >= startyr)
+        (df[rpt_year] >= startyr)
        & (df["icm"].isin(cm))
     ]
     try:
@@ -335,7 +345,7 @@ def card_bar_plot_wy_vert(
         showlegend=True,
         xaxis_title="Climate",
         xaxis_tickformat=",d",
-        yaxis_title="Thousand acre-feet per year",
+        yaxis_title=yaxis_title,
         yaxis_tickformat=",d",
         yaxis_showgrid=True,
         yaxis_gridcolor="lightgray",

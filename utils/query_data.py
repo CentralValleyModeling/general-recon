@@ -11,6 +11,28 @@ with open("constants/dvars.yaml", "r") as file:
 
 # DV Derived Timeseries
 
+df_dv["SWP_TA_CO_FROM_DELTA"] = (
+    df_dv["SWP_TA_TOTAL"]
+    - df_dv["SWP_TA_FEATH"]
+    + df_dv["SWP_CO_TOTAL"]
+    - df_dv["SWP_CO_FEATH"]
+)
+
+df_dv["SWP_CO_SOD"] = df_dv["SWP_CO_TOTAL"] - df_dv["SWP_CO_FEATH"]
+df_dv["SWP_IN_SOD"] = df_dv["SWP_IN_TOTAL"] - df_dv["SWP_IN_FEATH"]
+
+df_dv["EXPORTACTUALTDIF"] = df_dv["EXPORTACTUALTD"] + df_dv["EXPORTACTUALIF"]
+
+var_dict["SWP_TA_CO_FROM_DELTA"] = {
+    "alias": "Total SWP Table and Carryover from Delta (Inc. NBA)",
+    "bpart": "SWP_TA_CO_FROM_DELTA",
+    "pathname": None,
+    "table_convert": "cfs_taf",
+    "table_display": "wy",
+    "type": "Delivery",
+    "units": "cfs",
+}
+
 df_dv["SWP_TA_CO_SOD"] = (
     df_dv["SWP_TA_TOTAL"]
     - df_dv["SWP_TA_FEATH"]

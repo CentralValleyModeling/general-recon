@@ -14,7 +14,7 @@ from dash import (
 
 from charts.chart_layouts import (
     CardWidget,
-    card_bar_plot_wy_vert,
+    card_bar_plot_vert,
     card_bar_plot_orovl_CAP,
 )
 
@@ -37,7 +37,7 @@ exp_card = CardWidget(
     button_label="Drilldown",
     popover_label="exp-info",
     popover_content=load_markdown("page_text/info-total-exports.md"),
-    charts=card_bar_plot_wy_vert(df_dv, b_part="EXPORTACTUALTDIF", climate_order=CLIMATE_ORDER),
+    charts=card_bar_plot_vert(df_dv, b_part="EXPORTACTUALTDIF", climate_order=CLIMATE_ORDER, rpt_year="icy"),
 )
 
 swp_exp_card = CardWidget(
@@ -46,16 +46,16 @@ swp_exp_card = CardWidget(
     button_label="Drilldown",
     popover_label="swpexp-info",
     popover_content=load_markdown("page_text/info-swp-exports.md"),
-    charts=card_bar_plot_wy_vert(df_dv, b_part="C_CAA003_SWP", climate_order=CLIMATE_ORDER),
+    charts=card_bar_plot_vert(df_dv, b_part="C_CAA003_SWP", climate_order=CLIMATE_ORDER, rpt_year="icy"),
 )
 
 ta_card = CardWidget(
     "SWP Table A deliveries",
-    button_id="SWP_TA_CO_SOD",
+    button_id="SWP_TA_CO_FROM_DELTA",
     button_label="Drilldown",
     popover_label="ta-info",
     popover_content=load_markdown("page_text/info-table-a.md"),
-    charts=card_bar_plot_wy_vert(df_dv, b_part="SWP_TA_CO_SOD", climate_order=CLIMATE_ORDER),
+    charts=card_bar_plot_vert(df_dv, b_part="SWP_TA_CO_FROM_DELTA", climate_order=CLIMATE_ORDER, rpt_year="icy"),
 )
 
 ndoi_card = CardWidget(
@@ -64,7 +64,7 @@ ndoi_card = CardWidget(
     button_label="Drilldown",
     popover_label="ndoi-info",
     popover_content=load_markdown("page_text/info-ndoi.md"),
-    charts=card_bar_plot_wy_vert(df_dv, b_part="NDOI", climate_order=CLIMATE_ORDER),
+    charts=card_bar_plot_vert(df_dv, b_part="NDOI", climate_order=CLIMATE_ORDER, rpt_year="icy"),
 )
 
 orovl_sep_card = CardWidget(
@@ -73,7 +73,11 @@ orovl_sep_card = CardWidget(
     button_label="Drilldown",
     popover_label="orovl-info",
     popover_content=load_markdown("page_text/info-orovl.md"),
-    charts=card_bar_plot_wy_vert(df_dv, b_part="S_OROVL", climate_order=CLIMATE_ORDER, cm=[9]),
+    charts=card_bar_plot_vert(df_dv, 
+                              b_part="S_OROVL", 
+                              climate_order=CLIMATE_ORDER, 
+                              cm=[9],
+                              yaxisoverride="Thousand acre-feet"),
 )
 
 orovl_sep_co_card = CardWidget(
@@ -154,15 +158,15 @@ def layout():
                             html.Hr(style={"margin": "0.5rem 0"}),
                         ],
                     ),
-                    dbc.Row(
-                        id="home-cards-row-0",
-                        children=[
-                            dbc.Col(
-                                class_name="col-md-12", children=[orovl_sep_co_card.create_card()]
-                            ),
-                            html.Hr(style={"margin": "0.5rem 0"}),
-                        ],
-                    ),
+                    #dbc.Row(
+                    #    id="home-cards-row-0",
+                    #    children=[
+                    #        dbc.Col(
+                    #            class_name="col-md-12", children=[orovl_sep_co_card.create_card()]
+                    #        ),
+                    #        html.Hr(style={"margin": "0.5rem 0"}),
+                    #    ],
+                    #),
                 ],
             ),
         ],
