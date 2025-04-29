@@ -7,6 +7,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from dash import dcc, html
 
+from typing import Optional, Literal
 from data import create_download_button
 from pages.styles import PLOT_COLORS, SCENARIO_COLORS, ASSUMPTION_ORDER, CLIMATE_ORDER, THEME_COLORS, BASELINE
 from utils.query_data import scen_aliases, var_dict
@@ -524,7 +525,7 @@ def mon_exc_plot(df, b_part, monthchecklist,climate):
                 y=df["y"],
                 mode="lines",
                 name=column,
-                line=dict(color=PLOT_COLORS[i % len(PLOT_COLORS)]),
+                line=dict(color=SCENARIO_COLORS.get(column, "#cccccc")),
             )
         )
     if CSV_EXPORT:
@@ -544,10 +545,11 @@ def mon_exc_plot(df, b_part, monthchecklist,climate):
     return fig
 
 def ann_exc_plot(
-        df,
-        b_part,
-        yearwindow,
-        title: str = None,
+        df: pd.DataFrame,
+        b_part: str,
+        yearwindow: str,
+        title: Optional[str] = None,
+        groupby: Literal["Assumption", "Scenario"] = "Assumption"
 ):
     series_container = []
     if yearwindow == "Calendar Year":
@@ -557,7 +559,7 @@ def ann_exc_plot(
 
     #df0 = df.loc[df["icm"].isin(convert_cm_nums(monthchecklist))]
     df0 = cfs_taf(df, var_dict)
-    df0 = df0.groupby(["Assumption", yw]).sum(numeric_only=True)
+    df0 = df0.groupby([groupby, yw]).sum(numeric_only=True)
 
     for assumption in ASSUMPTION_ORDER:
         series_i = df0.loc[df0.index.get_level_values(0) == assumption, b_part]
@@ -587,7 +589,7 @@ def ann_exc_plot(
                 y=df["y"],
                 mode="lines",
                 name=column,
-                line=dict(color=PLOT_COLORS[i % len(PLOT_COLORS)]),
+                line=dict(color=SCENARIO_COLORS.get(column, "#cccccc")),
             )
         )
 

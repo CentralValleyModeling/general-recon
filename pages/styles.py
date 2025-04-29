@@ -25,11 +25,16 @@ PLOT_COLORS = [
 ASSUMPTION_ORDER = [
     "CAA Design Capacity",
     "CAA Subsidence",
-#    "Degradation",
-#    "FIRO",
-#    "SOD Storage",
-#    "DCP",
-#    "Combo"
+]
+
+SCENARIO_ORDER = [
+    "Existing_Design",
+    "2043_50_Design",
+    "2043_75_Design",
+    "2043_95_Design",
+    "Existing_Subs",
+    "2043_50_Subs",
+    "2043_75_Subs"
 ]
 
 BASELINE = "CAA Design Capacity"

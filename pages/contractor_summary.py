@@ -115,6 +115,9 @@ def layout(**kwargs):
                         columns=table_order,
                         data=exp_tbl.to_dict(orient="records"),
                         style_header={
+                            "whiteSpace": "normal",
+                            "height": "auto",
+                            "textAlign": "center",
                             "backgroundColor": "rgb(200, 200, 200)",
                             "fontWeight": "bold",
                         },
@@ -194,10 +197,11 @@ def show_contractor_data(click_data):
         fig = ann_exc_plot(
             df_dv,
             b,
-            monthchecklist=month_list,
             yearwindow="Calendar Year",
             title=b,
+            groupby="Assumption",
         )
+        print(df_dv)
         # We need to re-register the figure when it's updated
         CHART_REGISTRY[DWNLD_BUTTON_ID] = lambda *_: fig
         return fig
