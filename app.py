@@ -3,7 +3,7 @@ import dash_bootstrap_components as dbc
 from dash import dcc, html
 
 FA621 = "https://use.fontawesome.com/releases/v6.2.1/css/all.css"
-APP_TITLE = "SWP Climate Adaptation Plan Dashboard"
+APP_TITLE = "General CalSim 3 ReCon"
 
 app = dash.Dash(
     __name__,
@@ -26,7 +26,7 @@ navbar = dbc.Navbar(
         dbc.NavbarBrand(
             [
                 html.Img(src="/assets/dwr_seal.png", height="50px", className="me-2"),
-                html.Span("State Water Project Climate Adaptation Plan", style={"fontSize": "2rem"})
+                html.Span("CalSim 3 ReCon: DCR 2023 Subsidence", style={"fontSize": "2rem"})
             ],
             href="/",
             style={"color": "white", "display": "flex", "alignItems": "center"}

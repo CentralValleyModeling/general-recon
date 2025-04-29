@@ -8,7 +8,7 @@ import plotly.graph_objects as go
 from dash import dcc, html
 
 from data import create_download_button
-from pages.styles import PLOT_COLORS, SCENARIO_COLORS, ASSUMPTION_ORDER, CLIMATE_ORDER, THEME_COLORS
+from pages.styles import PLOT_COLORS, SCENARIO_COLORS, ASSUMPTION_ORDER, CLIMATE_ORDER, THEME_COLORS, BASELINE
 from utils.query_data import scen_aliases, var_dict
 from utils.tools import cfs_taf, convert_cm_nums, month_list, monthfilter
 
@@ -292,10 +292,10 @@ def card_bar_plot_wy_vert(
     df_plot["Assumption"] = pd.Categorical(df_plot["Assumption"],
                                            categories=ASSUMPTION_ORDER, ordered=True)
 
-    # Compute "Maintain" baseline for each Climate group
+    # Compute baseline for each Climate group
     df_plot["BaselineValue"] = df_plot.groupby("Climate")[b_part].transform(
-        lambda x: x.loc[x.index[df_plot.loc[x.index, "Assumption"] == "Maintain"]].values[0] 
-        if (df_plot.loc[x.index, "Assumption"] == "Maintain").any() else None
+        lambda x: x.loc[x.index[df_plot.loc[x.index, "Assumption"] == BASELINE]].values[0] 
+        if (df_plot.loc[x.index, "Assumption"] == BASELINE).any() else None
     )
 
     # Compute Percent Change
@@ -337,7 +337,7 @@ def card_bar_plot_wy_vert(
                     "<b>Scenario:</b> %{customdata[0]}<br>" +
                     "<b>Scenario Alias:</b> %{customdata[1]}<br>" +
                     "<b>Value:</b> %{customdata[2]:,.2f}<br>" +
-                    "<b>Change vs Maintain:</b> %{customdata[5]:,d} (%{customdata[3]:.2f}%)<br>" +
+                    "<b>Change vs Design Capacity:</b> %{customdata[5]:,d} (%{customdata[3]:.2f}%)<br>" +
                     "<b>Climate:</b> %{customdata[4]}"
 
 )
@@ -391,10 +391,10 @@ def card_bar_plot_orovl_CAP(
                                            categories=ASSUMPTION_ORDER, ordered=True)
 
 
-    # Compute "Maintain" baseline for each Climate group
+    # Compute baseline for each Climate group
     df_plot["BaselineValue"] = df_plot.groupby("Climate")[b_part].transform(
-        lambda x: x.loc[x.index[df_plot.loc[x.index, "Assumption"] == "Maintain"]].values[0] 
-        if (df_plot.loc[x.index, "Assumption"] == "Maintain").any() else None
+        lambda x: x.loc[x.index[df_plot.loc[x.index, "Assumption"] == BASELINE]].values[0] 
+        if (df_plot.loc[x.index, "Assumption"] == BASELINE).any() else None
     )
 
     # Compute Percent Change
@@ -434,7 +434,7 @@ def card_bar_plot_orovl_CAP(
                     "<b>Scenario:</b> %{customdata[0]}<br>" +
                     "<b>Scenario Alias:</b> %{customdata[1]}<br>" +
                     "<b>Value:</b> %{customdata[2]:,.2f}<br>" +
-                    "<b>Change vs Maintain:</b> %{customdata[3]:.2f}% <br>" + 
+                    "<b>Change vs Design Capacity:</b> %{customdata[3]:.2f}% <br>" + 
                     "<b>Climate:</b> %{customdata[4]}"
 )
 
