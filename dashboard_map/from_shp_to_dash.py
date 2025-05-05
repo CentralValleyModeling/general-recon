@@ -393,31 +393,6 @@ def create_plot(geodf: gpd.GeoDataFrame):
         marker={"opacity": 0.7}
     )
 
-    mycolor_scale = [
-        [0, "#0000ff"],
-        [0.1, "#3333ff"],
-        [0.2, "#6666ff"],
-        [0.3, "#9999ff"],
-        [0.4, "#ccccff"],
-        [0.5, "#ffffff"],
-        [0.6, "#ffcccc"],
-        [0.7, "#ff9999"],
-        [0.8, "#ff6666"],
-        [0.9, "#ff3333"],
-        [1.0, "#ff0000"],
-    ]
-
-    fig.update_layout(
-        colorscale={"diverging": mycolor_scale},
-        coloraxis={
-            "cmin": -50,
-            "cmax": 50,
-            "cauto": False,
-            "autocolorscale": False,
-            "colorbar": {"title": {"text": "VAL DIFF %"}},
-        }
-    )
-
     return fig
 
 

@@ -59,10 +59,22 @@ fig_river_feath = api.create_river_plot("dashboard_map/feather_river.shp", "Feat
 fig_river_sac = api.create_river_plot("dashboard_map/sacramento_river.shp", "Sacramento River")
 
 
-
-
 # debug
 fig_monthly = api.update_monthly("S_OROVL", (1922, 2021))
+
+mycolor_scale = [
+    [0, "#0000ff"],
+    [0.1, "#3333ff"],
+    [0.2, "#6666ff"],
+    [0.3, "#9999ff"],
+    [0.4, "#ccccff"],
+    [0.5, "#ffffff"],
+    [0.6, "#ffcccc"],
+    [0.7, "#ff9999"],
+    [0.8, "#ff6666"],
+    [0.9, "#ff3333"],
+    [1.0, "#ff0000"],
+]
 
 # Register the page webmap on the dashboard menu
 register_page(
@@ -220,7 +232,15 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
         margin={'r': 0, 't': 0, 'l': 0, 'b': 0},
         map_center={'lon': -122.0, 'lat': 38.0},
         map_zoom=6.3,
-        height=800
+        height=800,
+        colorscale={"diverging": mycolor_scale},
+        coloraxis={
+            "cmin": -50,
+            "cmax": 50,
+            "cauto": False,
+            "autocolorscale": False,
+            "colorbar": {"title": {"text": "VAL DIFF %"}},
+        }
     )
 
     return final_fig
