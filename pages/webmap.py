@@ -93,7 +93,6 @@ def layout():
                                         scenario_list, scenario_list[0], id="scenario_1"
                                     ),
                                 ],
-                                # style={"width": "48%", "display": "inline-block"},
                             ),
                             html.Div(
                                 [
@@ -102,7 +101,6 @@ def layout():
                                         scenario_list, scenario_list[1], id="scenario_2"
                                     ),
                                 ],
-                                # style={"width": "48%", "float": "right"},
                             ),
                             html.Div(
                                 children=[
@@ -159,14 +157,6 @@ def layout():
 
     return layout
 
-
-# @callback(
-#     Output("my_id", "figure"),
-#     Output("my_charts", "children"),
-#     Input("scenario_1", "value"),
-#     Input("scenario_2", "value"),
-#     Input("my_filter", "value")
-# )
 def update_graph(scen1: str, scen2: str, selected_values: list):
     # add variables for selected filter
     show_contractors = 'Contractors' in selected_values
@@ -174,25 +164,15 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
     show_exports = 'Exports' in selected_values
     show_upstream_flows = 'Upstream Flows' in selected_values
 
-    # Geo DataFrame to hold all necessary data
-    scen_geodf = api.create_df_for_scen(data_df, geodf, scen1, scen2)
+    # create an empty figure and add ca state border
+    final_fig = go.Figure()
+    final_fig.add_trace(figca.data[0])
 
-    # List to hold the all trace data
-    trace2 = figca.data[0]
-    graph_data = [trace2]
-
-    # adding main rivers to california border map
-    trace_river_sj = fig_river_sj.data[0]
-    trace_river_amer = fig_river_amer.data[0]
-    trace_river_feath = fig_river_feath.data[0]
-    trace_river_sac = fig_river_sac.data[0]
-
-    graph_data.append(trace_river_sj)
-    graph_data.append(trace_river_amer)
-    graph_data.append(trace_river_feath)
-    graph_data.append(trace_river_sac)
-
+    # add contractors if selected
     if show_contractors:
+        # Geo DataFrame to hold all necessary data
+        scen_geodf = api.create_df_for_scen(data_df, geodf, scen1, scen2)
+
         # Choropleth map to show % change of flow by agency
         fig = api.create_plot(scen_geodf)
 
@@ -201,96 +181,51 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
 
         trace1 = fig.data[0]
         trace3 = fig1.data[0]
-        graph_data.append(trace1)
-        graph_data.append(trace3)
+        final_fig.add_trace(trace1)
+        final_fig.add_trace(trace3)
     
+    # add reservoirs if selected
     if show_reservoirs:
-        # trace4 = fig_r.data[0]
-        trace5 = fig_r_centroid.data[0]
-        # graph_data.append(trace4)
-        graph_data.append(trace5)
+        trace5 = fig_r.data[0]
+        final_fig.add_trace(trace5)
     
+    # add exports if selected
     if show_exports:
         trace6 = fig_exp.data[0]
         trace7 = fig_exp_centroid.data[0]
-        graph_data.append(trace6)
-        graph_data.append(trace7)
+        final_fig.add_trace(trace6)
+        final_fig.add_trace(trace7)
     
+    # add upstream flows if selected
     if show_upstream_flows:
         trace8 = fig_up_flows.data[0]
         trace9 = fig_up_flows_centroid.data[0]
-        graph_data.append(trace8)
-        graph_data.append(trace9)
+        final_fig.add_trace(trace8)
+        final_fig.add_trace(trace9)
+    
+    # adding main rivers to california border map
+    trace_river_sj = fig_river_sj.data[0]
+    trace_river_amer = fig_river_amer.data[0]
+    trace_river_feath = fig_river_feath.data[0]
+    trace_river_sac = fig_river_sac.data[0]
 
-    mycolor_scale = [
-        [0, "#0000ff"],
-        [0.1, "#3333ff"],
-        [0.2, "#6666ff"],
-        [0.3, "#9999ff"],
-        [0.4, "#ccccff"],
-        [0.5, "#ffffff"],
-        [0.6, "#ffcccc"],
-        [0.7, "#ff9999"],
-        [0.8, "#ff6666"],
-        [0.9, "#ff3333"],
-        [1.0, "#ff0000"],
-    ]
+    final_fig.add_trace(trace_river_sj)
+    final_fig.add_trace(trace_river_amer)
+    final_fig.add_trace(trace_river_feath)
+    final_fig.add_trace(trace_river_sac)
 
-    layout = go.Layout(
-        geo={"visible": False, "fitbounds": "locations"},
-        autosize=False,
-        height=1000,
-        colorscale={"diverging": mycolor_scale},
-        coloraxis={
-            "cmin": -50,
-            "cmax": 50,
-            "cauto": False,
-            "autocolorscale": False,
-            "colorbar": {"title": {"text": "VAL DIFF %"}},
-        },
-    )
-    # final_fig = go.Figure(data=[trace1, trace2, trace3, trace4], layout=layout)
-    final_fig = go.Figure(graph_data, layout=layout)
-
-    lat_min = 34.3
-    lat_max = 40.2
-    long_min = -124.7
-    long_max = -113.9
-
-    # long_min = -124.7
-    # long_max = -116.0
-
-    long_center = (long_min + long_max) / 2
-  
-    # lat_min = 37.0
-    # lat_max = 40.2
-
-    lat_center = (lat_min + lat_max) / 2
-
-    final_fig.update_geos(
-        center_lon=long_center,
-        center_lat=lat_center,
-        lataxis_range=[lat_min, lat_max],
-        lonaxis_range=[long_min, long_max],
-        projection_scale=1,
-        fitbounds=False,
-    )
 
     final_fig.update_layout(
-        autosize=False,
-        margin=dict(l=0, r=0, b=0, t=0, pad=0, autoexpand=True),
-        height=600,
-        coloraxis_colorbar=dict(xref="paper", xanchor="right", x=1.2),
-        uniformtext_minsize=8, 
-        uniformtext_mode='hide'
+        map_style='open-street-map',
+        margin={'r': 0, 't': 0, 'l': 0, 'b': 0},
+        map_center={'lon': -122.0, 'lat': 38.0},
+        map_zoom=6.3,
+        height=800
     )
 
     return final_fig
 
-# @callback(
-#     Output("my_charts", "children"),
-#     Input("my_id", "clickData"),
-# )
+
 def handle_click(custom_data):
     result = []
     if custom_data and len(custom_data) > 1:
@@ -311,27 +246,8 @@ def handle_click(custom_data):
         contractor_fig = api.update_timeseries(bpart)
         contractor_dcc = dcc.Graph(figure=contractor_fig)
         result.append(contractor_dcc)
-
-        # if data_type in ["CONTRACTORS", "RESERVOIRS", "EXPORTS"]:
-        #     result.append(html.H2("Timeseries Plot"))
-        #     contractor_fig = api.update_timeseries(bpart)
-        #     contractor_dcc = dcc.Graph(figure=contractor_fig)
-        #     result.append(contractor_dcc)
-        # if data_type in ["RESERVOIRS", "EXPORTS"]:
-        #     result.append(html.H2("Monthly Plot"))
-        #     res_fig = api.update_monthly(bpart, [1922, 2021])
-        #     res_dcc = dcc.Graph(figure=res_fig)
-        #     result.append(res_dcc)
-        # if data_type == "EXPORTS":
-        #     result.append(html.H2("Annual Plot"))
-        #     ex_fig = api.update_bar_annual(bpart, [1922, 2021])
-        #     ex_dcc = dcc.Graph(figure=ex_fig)
-        #     result.append(ex_dcc)
     return result
 
-    # If the code reaches at this point, then there is no figure to update.
-    # print("handle_click: No ClickData")
-    # raise PreventUpdate
 
 @callback(
     Output("my_id", "figure"),

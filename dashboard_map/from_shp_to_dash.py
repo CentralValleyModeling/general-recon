@@ -1,6 +1,4 @@
 import sys
-
-# from ..utils import query_data as qd
 import geopandas as gpd
 import plotly.express as px
 from dash import Dash, dcc, html, Input, Output, callback
@@ -200,14 +198,6 @@ def load_shp() -> gpd.GeoDataFrame:
     # Add rank column based on area
     geodf["RANK"] = geodf["AREA"].rank(method="first").astype(int)
 
-    # Add a column for the contractors that need text arrow annotation
-    # geodf["ARROW"] = False
-    # for area in geodf["AREA"]:
-    #     if area <= 0.360672:
-    #         geodf.loc[geodf["AREA"] == area, "ARROW"] = True
-
-
-
     return geodf
 
 
@@ -338,29 +328,23 @@ def load_shp_river(filename: str) -> gpd.GeoDataFrame:
     return geodf
 
 def create_ca_plot():
-    figca = px.choropleth(
-        locations=["CA"],
-        locationmode="USA-states",
-        scope="usa",
-        color_discrete_sequence=["rgba(255,0,0,0.0)"],
-        basemap_visible=False,
-        # fitbounds="locations",
-        height=800,
-        color_continuous_scale="Bluered",
+    # read shapefile for california state boundary
+    # downloaded from https://data.ca.gov/dataset/ca-geographic-boundaries
+    geodf = gpd.read_file("dashboard_map/CA_State.shp")
+    geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
+
+    figca = px.choropleth_map(
+        geodf,
+        geojson=geodf.geometry,
+        locations=geodf.index,
+        color_discrete_sequence=["rgba(255, 255, 255, 0)"]
     )
 
-    figca.update_layout(
+    figca.update_traces(
         showlegend=False,
-        autosize=False,
-        margin=dict(l=0, r=0, b=0, t=0, pad=0, autoexpand=True),
+        hoverinfo="skip",
+        hovertemplate=None
     )
-    figca.update_traces(hoverinfo="skip", hovertemplate=None)
-    # figca.update_geos(
-    #     center_lon=-119.3,
-    #     center_lat=37.25,
-    #     lataxis_range=[32.3, 42.2],
-    #     lonaxis_range=[-124.7, -113.9],
-    # )
 
     return figca
 
@@ -387,7 +371,7 @@ def get_min_max(geodf: gpd.GeoDataFrame):
 
 def create_plot(geodf: gpd.GeoDataFrame):
     print("geodf = \n", geodf)
-    fig = px.choropleth(
+    fig = px.choropleth_map(
         geodf,
         geojson=geodf.geometry,
         locations=geodf.index,
@@ -403,68 +387,92 @@ def create_plot(geodf: gpd.GeoDataFrame):
         labels={"color": "VAL DIFF %"},
     )
 
-    # my_hovertemplate = "<b>%{hovertext}<br>AGENCYNAME=%{customdata[2]}</b><br><br>VAL_DIFF=%{customdata[0]}<br>VAL_PERC=%{z}<extra></extra>"
     my_hovertemplate = "<b>%{customdata[4]}<br>AGENCYNAME=%{customdata[3]}</b><br><br>VAL_DIFF=%{customdata[1]}<br>VAL_PERC=%{z}<extra></extra>"
-    fig.update_traces(hovertemplate=my_hovertemplate)
+    fig.update_traces(
+        hovertemplate=my_hovertemplate, 
+        marker={"opacity": 0.7}
+    )
+
+    mycolor_scale = [
+        [0, "#0000ff"],
+        [0.1, "#3333ff"],
+        [0.2, "#6666ff"],
+        [0.3, "#9999ff"],
+        [0.4, "#ccccff"],
+        [0.5, "#ffffff"],
+        [0.6, "#ffcccc"],
+        [0.7, "#ff9999"],
+        [0.8, "#ff6666"],
+        [0.9, "#ff3333"],
+        [1.0, "#ff0000"],
+    ]
+
+    fig.update_layout(
+        colorscale={"diverging": mycolor_scale},
+        coloraxis={
+            "cmin": -50,
+            "cmax": 50,
+            "cauto": False,
+            "autocolorscale": False,
+            "colorbar": {"title": {"text": "VAL DIFF %"}},
+        }
+    )
 
     return fig
 
 
 def create_reservoir_plot(geodf: gpd.GeoDataFrame):
-    fig = px.choropleth(
+    fig = px.choropleth_map(
         geodf,
         geojson=geodf.geometry,
         locations=geodf.index,
         custom_data=["CALSIMNAME", "TABLENAME", "DATA_TYPE"],
     )
 
-    # fig.update_geos(fitbounds="locations", visible=False)
-    fig.update_geos(visible=False)
-
     my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
-    fig.update_traces(hovertemplate=my_hovertemplate)
+    fig.update_traces(
+        hovertemplate=my_hovertemplate, 
+        marker={"opacity": 0.7},
+        showlegend=False
+    )
 
     return fig
 
 def create_reservoir_centroid(geodf: gpd.GeoDataFrame):
-    hoverdf = geodf[
-        ["CALSIMNAME", "TABLENAME", "DATA_TYPE"]
-    ].copy()
-    my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
-    fig1 = go.Figure(
-        data=go.Scattergeo(
-            lon=geodf.geometry.centroid.x,
-            lat=geodf.geometry.centroid.y,
-            # text=geodf["CALSIMNAME"].astype(str) + "<br>" + geodf["TABLENAME"],
-            # text=geodf["TABLENAME"],
-            # textfont_size=10,
-            mode="markers",
-            marker=dict(size=5, color='rgb(141, 198, 63)', symbol="triangle-up"),
-            showlegend=False,
-            customdata=hoverdf,
-            hovertemplate=my_hovertemplate,
-        )
+    fig1 = px.scatter_map(
+        geodf,
+        lat=geodf.geometry.centroid.y,
+        lon=geodf.geometry.centroid.x,
+        custom_data=["CALSIMNAME", "TABLENAME", "DATA_TYPE"]
     )
 
-    # fig1.update_traces(textposition='middle center')
+    fig1.update_traces(
+        textposition='middle center', 
+        hovertemplate="<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>", 
+        showlegend=False,
+        mode='markers',
+        # marker=dict(size=15, color='rgb(141, 198, 63)', symbol="triangle-up")
+        marker=dict(size=15, color='red', symbol="square")
+    )
 
     fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
 
     return fig1
 
 def create_export_plot(geodf: gpd.GeoDataFrame):
-    fig = px.choropleth(
+    fig = px.choropleth_map(
         geodf,
         geojson=geodf.geometry,
         locations=geodf.index,
         custom_data=["BPART", "ALIAS", "DATA_TYPE"],
     )
 
-    # fig.update_geos(fitbounds="locations", visible=False)
-    fig.update_geos(visible=False)
-
     my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
-    fig.update_traces(hovertemplate=my_hovertemplate)
+    fig.update_traces(
+        hovertemplate=my_hovertemplate,
+        marker={"opacity": 0.7},
+        showlegend=False
+    )
 
     return fig
 
@@ -473,40 +481,39 @@ def create_export_centroid(geodf: gpd.GeoDataFrame):
         ["BPART", "ALIAS", "DATA_TYPE"]
     ].copy()
     my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
-    fig1 = go.Figure(
-        data=go.Scattergeo(
-            lon=geodf.geometry.centroid.x,
-            lat=geodf.geometry.centroid.y,
-            # text=geodf["ALIAS"],
-            # textfont_size=10,
-            mode='markers',
-            showlegend=False,
-            customdata=hoverdf,
-            hovertemplate=my_hovertemplate,
-            marker=dict(size=5, color='rgb(251, 184, 32)', symbol="circle"),
-            # textposition='top center'
-        )
+    fig1 = px.scatter_map(
+        geodf,
+        lat=geodf.geometry.centroid.y,
+        lon=geodf.geometry.centroid.x,
+        custom_data=["BPART", "ALIAS", "DATA_TYPE"]
     )
 
-    # fig1.update_traces(textposition='middle center')
+    fig1.update_traces(
+        textposition='middle center', 
+        hovertemplate=my_hovertemplate, 
+        showlegend=False,
+        mode='markers',
+        marker=dict(size=15, color='rgb(251, 184, 32)', symbol="circle")
+        )
 
     fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
 
     return fig1
 
 def create_up_flows_plot(geodf: gpd.GeoDataFrame):
-    fig = px.choropleth(
+    fig = px.choropleth_map(
         geodf,
         geojson=geodf.geometry,
         locations=geodf.index,
         custom_data=["BPART", "ALIAS", "DATA_TYPE"],
     )
 
-    # fig.update_geos(fitbounds="locations", visible=False)
-    fig.update_geos(visible=False)
-
     my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
-    fig.update_traces(hovertemplate=my_hovertemplate)
+    fig.update_traces(
+        hovertemplate=my_hovertemplate,
+        marker={"opacity": 0.7},
+        showlegend=False
+    )
 
     return fig
 
@@ -515,22 +522,20 @@ def create_up_flows_centroid(geodf: gpd.GeoDataFrame):
         ["BPART", "ALIAS", "DATA_TYPE"]
     ].copy()
     my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
-    fig1 = go.Figure(
-        data=go.Scattergeo(
-            lon=geodf.geometry.centroid.x,
-            lat=geodf.geometry.centroid.y,
-            # text=geodf["ALIAS"],
-            # textfont_size=10,
-            mode="markers",
-            showlegend=False,
-            customdata=hoverdf,
-            hovertemplate=my_hovertemplate,
-            marker=dict(size=5, color='rgb(0, 93, 131)', symbol="square"),
-            # textposition='top center'
-        )
+    fig1 = px.scatter_map(
+        geodf,
+        lat=geodf.geometry.centroid.y,
+        lon=geodf.geometry.centroid.x,
+        custom_data= ["BPART", "ALIAS", "DATA_TYPE"]
     )
 
-    fig1.update_traces(textposition='middle center')
+    fig1.update_traces(
+        textposition='middle center', 
+        hovertemplate=my_hovertemplate, 
+        showlegend=False,
+        mode='markers',
+        marker=dict(size=10, color='rgb(0, 93, 131)', symbol="square")
+    )
 
     fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
 
@@ -560,56 +565,35 @@ def create_river_plot(filename, river_name):
             lons = np.append(lons, x)
             lats = np.append(lats, None)
             lons = np.append(lons, None)
-
-    fig = px.line_geo(lat=lats, lon=lons, color_discrete_sequence=['rgb( 37, 170, 225)'])
-
-    # fig.add_annotation(x=lats[0], y=lons[0], text=river_name, showarrow=True, arrowhead=1)
-
-    fig.add_annotation(
-        x=0.5,  # x-coordinate of the text (0-1, relative to the plot area)
-        y=0.95, # y-coordinate of the text (0-1, relative to the plot area)
-        text=river_name,
-        showarrow=False, # remove arrow from annotation
-        font=dict(
-            size=16,
-            color="black"
-        ),
-        xref="paper", # coordinates are relative to the paper (plot area)
-        yref="paper"  # coordinates are relative to the paper (plot area)
+    
+    river_names = [river_name] * len(lats)
+    
+    fig = px.line_map(
+        lat=lats, 
+        lon=lons, 
+        color_discrete_sequence=['rgb( 37, 170, 225)'],
+        hover_name=river_names,
     )
 
-    # fig.update_geos(fitbounds="locations", visible=False)
-    # fig.update_geos(visible=False)
-    fig.update_traces(hoverinfo='none', hovertemplate=None)
-    # fig.add_trace(go.Scattergeo(
-    #     locations=geodf.index,
-    #     text=geodf['Name'],
-    #     mode='text',
-    # ))
-
+    fig.update_traces(
+        hovertemplate=None,
+        showlegend=False
+    )
 
     return fig
 
 def create_river_centroid(geodf: gpd.GeoDataFrame):
-    # hoverdf = geodf[
-    #     ["BPART", "ALIAS", "DATA_TYPE"]
-    # ].copy()
-    # my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
-    fig1 = go.Figure(
-        data=go.Scattergeo(
-            lon=geodf.geometry.centroid.x,
-            lat=geodf.geometry.centroid.y,
-            text=geodf["Name"],
-            textfont_size=10,
-            showlegend=False,
-            # customdata=hoverdf,
-            # hovertemplate=my_hovertemplate,
-            # marker=dict(size=5, color='rgb(37, 170, 225)', symbol="square"),
-            # textposition='top center'
-        )
+    fig1 = px.scatter_map(
+        geodf,
+        lat=geodf.geometry.centroid.y,
+        lon=geodf.geometry.centroid.x,
+        text=geodf["Name"]
     )
 
-    fig1.update_traces(textposition='middle center')
+    fig1.update_traces(
+        textposition='middle center', 
+        showlegend=False,
+    )
 
     fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
 
@@ -669,32 +653,22 @@ def create_fig_1(geodf: gpd.GeoDataFrame):
         ["BPART", "CONTRACTOR_CONVENTION", "AGENCYNAME", "VAL_DIFF", "VAL_PERC", "DATA_TYPE"]
     ].copy()
     my_hovertemplate = "<b>%{customdata[1]}<br>AGENCYNAME=%{customdata[2]}</b><br><br>VAL_DIFF=%{customdata[3]}<br>VAL_PERC=%{customdata[4]}<extra></extra>"
-    fig1 = go.Figure(
-        data=go.Scattergeo(
-            lon=geodf.geometry.centroid.x,
-            lat=geodf.geometry.centroid.y,
-            text=geodf["VAL_DIFF_SIGN"].astype(str) + "%" + "<br>" + geodf["BPART_SUFFIX"],
-            textfont_size=10,
-            mode="text",
-            showlegend=False,
-            customdata=hoverdf,
-            hovertemplate=my_hovertemplate,
-        )
+    fig1 = px.scatter_map(
+        geodf,
+        lat=geodf.geometry.centroid.y,
+        lon=geodf.geometry.centroid.x,
+        text=geodf["VAL_DIFF_SIGN"].astype(str) + "%" + "<br>" + geodf["BPART_SUFFIX"],
+        custom_data=["BPART", "CONTRACTOR_CONVENTION", "AGENCYNAME", "VAL_DIFF", "VAL_PERC", "DATA_TYPE"],
     )
 
-    fig1.update_traces(textposition='middle center')
+    fig1.update_traces(
+        textposition='middle center', 
+        hovertemplate=my_hovertemplate, 
+        showlegend=False,
+        mode='text'
+    )
 
     fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
-
-    # fig1.add_trace(go.Scatter(x=[-119.81560842293953], y=[36.075305511380044], mode='markers', marker=dict(size=10, color='red'), name='Special Dot'))
-
-    # for i, row in geodf.iterrows():
-    #     x = row.geometry.centroid.x
-    #     y = row.geometry.centroid.y
-    #     showarrow = row["ARROW"]
-    #     text = str(row["VAL_DIFF_SIGN"]) + "<br>" + row["BPART_SUFFIX"]
-    #     fig1.add_annotation(x=x, y=y, text=text, showarrow=showarrow, arrowhead=1)
-    #     print(f"i = {i}, x = {x}, y = {y}, showarrow = {showarrow}, text = {text}")
 
     return fig1
 
@@ -703,7 +677,6 @@ def update_monthly(b_part, slider_yr_range):
     startyr = slider_yr_range[0]
     endyr = slider_yr_range[1]
     df0 = qd.df_dv.loc[
-        # qd.df_dv["WYT_SAC_"].isin(convert_wyt_nums(wytchecklist))
         (qd.df_dv["iwy"] >= startyr)
         & (qd.df_dv["iwy"] <= endyr)
     ]
@@ -756,9 +729,7 @@ def update_timeseries(b_part):
 def update_bar_annual(b_part, slider_yr_range):
     startyr = slider_yr_range[0]
     endyr = slider_yr_range[1]
-    # print(wytchecklist)
     df1 = qd.df_dv.loc[
-        # qd.df_dv["WYT_SAC_"].isin(qd.convert_wyt_nums(wytchecklist))
         (qd.df_dv["iwy"] >= startyr)
         & (qd.df_dv["iwy"] <= endyr)
     ]
@@ -790,9 +761,6 @@ def run_test_app():
     geodf = load_shp()
 
     reservoir_geodf = load_shp_reservoir()
-
-    print("!!!!!!!!!!!!!!!!!!!!!!! ")
-    print(reservoir_geodf)
 
     # Get the figure for the state border
     figca = create_ca_plot()
@@ -871,8 +839,6 @@ def run_test_app():
         ]
 
         layout = go.Layout(
-            # geo={"visible": False, "fitbounds": "locations"},
-            geo={"visible": False},
             autosize=False,
             height=1000,
             colorscale={"diverging": mycolor_scale},
