@@ -18,6 +18,8 @@ dependencies:
   - dash-bootstrap-components
   - plotly
   - seaborn
+  - geopandas
+  - pyproj
   # Misc
   - flake8
   - httpx
