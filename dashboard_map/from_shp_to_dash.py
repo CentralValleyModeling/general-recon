@@ -427,7 +427,7 @@ def create_reservoir_centroid(geodf: gpd.GeoDataFrame):
         showlegend=False,
         mode='markers',
         # marker=dict(size=15, color='rgb(141, 198, 63)', symbol="triangle-up")
-        marker=dict(size=15, color='red', symbol="square")
+        marker=dict(size=15, color='rgb(141, 198, 63)', symbol="circle")
     )
 
     fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
@@ -509,7 +509,7 @@ def create_up_flows_centroid(geodf: gpd.GeoDataFrame):
         hovertemplate=my_hovertemplate, 
         showlegend=False,
         mode='markers',
-        marker=dict(size=10, color='rgb(0, 93, 131)', symbol="square")
+        marker=dict(size=15, color='rgb(0, 93, 131)', symbol="circle")
     )
 
     fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
@@ -542,16 +542,19 @@ def create_river_plot(filename, river_name):
             lons = np.append(lons, None)
     
     river_names = [river_name] * len(lats)
+    df = pd.DataFrame({'lat': lats, 'lon': lons, 'name': river_names})
     
     fig = px.line_map(
-        lat=lats, 
-        lon=lons, 
+        df,
+        lat='lat', 
+        lon='lon', 
         color_discrete_sequence=['rgb( 37, 170, 225)'],
-        hover_name=river_names,
+        hover_name='name',
+        hover_data={'lat': False, 'lon': False}
     )
 
     fig.update_traces(
-        hovertemplate=None,
+        # hovertemplate=None,
         showlegend=False
     )
 

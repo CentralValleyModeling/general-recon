@@ -124,7 +124,7 @@ def layout():
                                             {
                                                 "label": [
                                                     html.Span("Reservoirs"),
-                                                    html.Img(src="/assets/green_triangle.png", style={"height": "10px", "marginLeft": "5px"})
+                                                    html.Img(src="/assets/green_circle.png", style={"height": "10px", "marginLeft": "5px"})
                                                 ],
                                                 "value": "Reservoirs"
                                             },
@@ -144,7 +144,7 @@ def layout():
                                             {
                                                 "label": [
                                                     html.Span("Upstream Flows"),
-                                                    html.Img(src="/assets/dark_blue_square.png", style={"height": "10px", "marginLeft": "5px"})
+                                                    html.Img(src="/assets/blue_circle.png", style={"height": "10px", "marginLeft": "5px"})
                                                 ],
                                                 "value": "Upstream Flows"
                                             },
@@ -198,7 +198,9 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
     
     # add reservoirs if selected
     if show_reservoirs:
+        trace4 = fig_r_centroid.data[0]
         trace5 = fig_r.data[0]
+        final_fig.add_trace(trace4)
         final_fig.add_trace(trace5)
     
     # add exports if selected
