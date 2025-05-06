@@ -27,7 +27,7 @@ register_page(
 )
 
 contractor_summary_text = (
-    """This page shows annual (calendar year) SWP Table A deliveries average (TAF/year)."""
+    """This page shows annual (calendar year) averages of variables, given the variable category (TAF/year)."""
 )
 
 b = []
@@ -65,7 +65,7 @@ def layout(**kwargs):
     global b
     global exp_tbl
     b = []
-    s = str(kwargs.get("type", "caa_btn"))
+    s = str(kwargs.get("type", "table_a_btn"))
     typefilter = typefilter_dict[s]
 
     for i in var_dict:
@@ -84,6 +84,11 @@ def layout(**kwargs):
             dcc.Download(id="download-response-contractor"),
             html.H1(["Contractor Summary"]),
             html.A(contractor_summary_text),
+            dcc.Dropdown(
+                options=typefilter_dict,
+                id="dropdown-table-var-category",
+                placeholder="Select the variable category",
+            ),
             dcc.RangeSlider(
                 1922,
                 2021,
@@ -137,8 +142,17 @@ def layout(**kwargs):
 @callback(
     Output(component_id="exp_tbl", component_property="data"),
     Input(component_id="slider-yr-range", component_property="value"),
+    Input(component_id="dropdown-table-var-category", component_property="value"),
 )
-def update_table(slider_yr_range):
+def update_table(slider_yr_range, var_category):
+
+    b = []
+    typefilter = typefilter_dict[var_category]
+
+    for i in var_dict:
+        if var_dict[i]["type"] == typefilter:
+            b.append(i)
+
     df_tbl = make_summary_df(
         scen_aliases,
         df_dv,
@@ -149,6 +163,7 @@ def update_table(slider_yr_range):
         end_yr=slider_yr_range[1],
     )
     data = df_tbl.to_dict(orient="records")
+    print(var_category)
     return data
 
 
