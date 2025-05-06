@@ -53,6 +53,7 @@ typefilter_dict = {
     "table_a_btn": "Delivery - TA",
     "a21_btn": "Delivery - IN",
     "a56_btn": "Delivery - CO",
+    "caa_btn": "CAA",
 }
 
 opt = [{"label": k, "value": v} for k, v in common_pers.items()]
@@ -64,7 +65,7 @@ def layout(**kwargs):
     global b
     global exp_tbl
     b = []
-    s = str(kwargs.get("type", "table_a_btn"))
+    s = str(kwargs.get("type", "caa_btn"))
     typefilter = typefilter_dict[s]
 
     for i in var_dict:

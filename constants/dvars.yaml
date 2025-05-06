@@ -1423,12 +1423,12 @@ SWP_TA_VC:
   type: Delivery - TA
   units: cfs
 C_CAA087:
-  alias: Dos Amigos Pumping Plant (Pool 14)
+  alias: Dos Amigos Pumping Plant
   bpart: C_CAA087
   pathname: /CALSIM/C_CAA087/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA087_CVP:
   alias: Dos Amigos Pumping Plant (CVP)
@@ -1447,135 +1447,135 @@ C_CAA087_SWP:
   type: Delivery
   units: cfs
 C_CAA095:
-  alias: SLC Pool 15
+  alias: Pool 15 (SLC)
   bpart: C_CAA095
   pathname: /CALSIM/C_CAA095/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA109:
-  alias: SLC Pool 16
+  alias: Pool 16 (SLC)
   bpart: C_CAA109
   pathname: /CALSIM/C_CAA109/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA143:
-  alias: SLC Pool 19
+  alias: Pool 19 (SLC)
   bpart: C_CAA143
   pathname: /CALSIM/C_CAA143/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA155:
-  alias: SLC Pool 20
+  alias: Pool 20 (SLC)
   bpart: C_CAA155
   pathname: /CALSIM/C_CAA155/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA156:
-  alias: SLC Pool 20 (Delivery to Avenal, Coalinga, Huron)
+  alias: Pool 20 (SLC) Delivery to Avenal, Coalinga, Huron
   bpart: C_CAA156 
   pathname: /CALSIM/C_CAA156/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA165:
-  alias: SLC Pool 21
+  alias: Pool 21 (SLC)
   bpart: C_CAA165
   pathname: /CALSIM/C_CAA165/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA172:
-  alias: CAA Pool 22
+  alias: Pool 22
   bpart: C_CAA172
   pathname: /CALSIM/C_CAA172/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA173:
-  alias: CAA Pool 22, SWP Reach 8C
+  alias: Pool 22, SWP Reach 8C
   bpart: C_CAA173
   pathname: /CALSIM/C_CAA173/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA181:
-  alias: CAA Pool 22, SWP Reach 8C  County Of Kings
+  alias: Pool 22, SWP Reach 8C  County Of Kings
   bpart: C_CAA181
   pathname: /CALSIM/C_CAA181/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA183:
-  alias: CAA Pool 22, 8C-8D  Tulare Lake Basin Wsd
+  alias: Pool 22, 8C-8D  Tulare Lake Basin Wsd
   bpart: C_CAA183
   pathname: /CALSIM/C_CAA183/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA184:
-  alias: CAA Pool 22, SWP Reach 8D  Dudley Ridge WD
+  alias: Pool 22, SWP Reach 8D  Dudley Ridge WD
   bpart: C_CAA184
   pathname: /CALSIM/C_CAA184/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA185:
-  alias: CAA Pool 22, SWP Aqueduct Downstream of Bifurcation To Coastal Br
+  alias: Pool 22, SWP Aqueduct Downstream of Bifurcation To Coastal Br
   bpart: C_CAA185
   pathname: /CALSIM/C_CAA185/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA194:
-  alias: CAA Pool 23, SWP Reach 9-13B  KCWA
+  alias: Pool 23, SWP Reach 9-13B  KCWA
   bpart: C_CAA194
   pathname: /CALSIM/C_CAA194/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA207:
-  alias: CAA Pool 24, KWB  Semitropic Element Diversion
+  alias: Pool 24, KWB  Semitropic Element Diversion
   bpart: C_CAA207
   pathname: /CALSIM/C_CAA207/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA210:
-  alias: CAA Pool 25, KCWA & KWB  Semitropic Return
+  alias: Pool 25, KCWA & KWB  Semitropic Return
   bpart: C_CAA210
   pathname: /CALSIM/C_CAA210/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA220:
-  alias: CAA Pool 26
+  alias: Pool 26
   bpart: C_CAA220
   pathname: /CALSIM/C_CAA220/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA225:
-  alias: CAA Pool 27
+  alias: Pool 27
   bpart: C_CAA225
   pathname: /CALSIM/C_CAA225/.*//.*/.*/
   table_convert: cfs_taf
@@ -1583,7 +1583,7 @@ C_CAA225:
   type: Channel
   units: cfs
 C_CAA232:
-  alias: CAA Pool 28
+  alias: Pool 28
   bpart: C_CAA232
   pathname: /CALSIM/C_CAA232/.*//.*/.*/
   table_convert: cfs_taf
@@ -1591,55 +1591,55 @@ C_CAA232:
   type: Channel
   units: cfs
 C_CAA238:
-  alias: CAA Pool 29, CVP Cross Valley Canal  AG Diversion
+  alias: Pool 29, CVP Cross Valley Canal  AG Diversion
   bpart: C_CAA238
   pathname: /CALSIM/C_CAA238/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA239:
-  alias: CAA Pool 29, CVP Cross Valley  Refuge Diversion
+  alias: Pool 29, CVP Cross Valley  Refuge Diversion
   bpart: C_CAA239
   pathname: /CALSIM/C_CAA239/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA240:
-  alias: CAA Pool 29, KWB  Fan Element Diversion
+  alias: Pool 29, KWB  Fan Element Diversion
   bpart: C_CAA240
   pathname: /CALSIM/C_CAA240/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA241:
-  alias: CAA Pool 29, KWB  Local Element Diversion
+  alias: Pool 29, KWB  Local Element Diversion
   bpart: C_CAA241
   pathname: /CALSIM/C_CAA241/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA242:
-  alias: CAA Pool 29, SWP KCWA & KWB Local Elmnt Rtrn
+  alias: Pool 29, SWP KCWA & KWB Local Elmnt Rtrn
   bpart: C_CAA242
   pathname: /CALSIM/C_CAA242/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA245:
-  alias: Buena Vista Pumping Plant (Pool 30)
+  alias: Pool 30, Buena Vista Pumping Plant 
   bpart: C_CAA245
   pathname: /CALSIM/C_CAA245/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA251:
-  alias: CAA Pool 31
+  alias: Pool 31
   bpart: C_CAA251
   pathname: /CALSIM/C_CAA251/.*//.*/.*/
   table_convert: cfs_taf
@@ -1647,7 +1647,7 @@ C_CAA251:
   type: Channel
   units: cfs
 C_CAA256:
-  alias: CAA Pool 32
+  alias: Pool 32
   bpart: C_CAA256
   pathname: /CALSIM/C_CAA256/.*//.*/.*/
   table_convert: cfs_taf
@@ -1655,15 +1655,15 @@ C_CAA256:
   type: Channel
   units: cfs
 C_CAA262:
-  alias: CAA Pool 33, SWP Reach 14A-14C  KCWA
+  alias: Pool 33, SWP Reach 14A-14C  KCWA
   bpart: C_CAA262
   pathname: /CALSIM/C_CAA262/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA267:
-  alias: CAA Pool 34
+  alias: Pool 34
   bpart: C_CAA267
   pathname: /CALSIM/C_CAA267/.*//.*/.*/
   table_convert: cfs_taf
@@ -1671,7 +1671,7 @@ C_CAA267:
   type: Channel
   units: cfs
 C_CAA271:
-  alias: CAA Pool 35
+  alias: Pool 35
   bpart: C_CAA271
   pathname: /CALSIM/C_CAA271/.*//.*/.*/
   table_convert: cfs_taf
@@ -1679,31 +1679,31 @@ C_CAA271:
   type: Channel
   units: cfs
 C_CAA278:
-  alias: Wheeler Ridge Pumping Plant (CAA Pool 36)
+  alias: Pool 36, Wheeler Ridge Pumping Plant
   bpart: C_CAA278
   pathname: /CALSIM/C_CAA278/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA279:
-  alias: CAA Pool 36, SWP Reach 15A-16A  KCWA
+  alias: Pool 36, SWP Reach 15A-16A  KCWA
   bpart: C_CAA279
   pathname: /CALSIM/C_CAA279/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA280:
-  alias: Chrisman Pumping Plant (CAA Pool 37)
+  alias: Pool 37, Chrisman Pumping Plant
   bpart: C_CAA280
   pathname: /CALSIM/C_CAA280/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
 C_CAA283:
-  alias: CAA Pool 38
+  alias: Pool 38
   bpart: C_CAA283
   pathname: /CALSIM/C_CAA283/.*//.*/.*/
   table_convert: cfs_taf
@@ -1711,7 +1711,7 @@ C_CAA283:
   type: Channel
   units: cfs
 C_CAA287:
-  alias: CAA Pool 39
+  alias: Pool 39
   bpart: C_CAA287
   pathname: /CALSIM/C_CAA287/.*//.*/.*/
   table_convert: cfs_taf
@@ -1719,7 +1719,7 @@ C_CAA287:
   type: Channel
   units: cfs
 C_CAA291:
-  alias: CAA Pool 40
+  alias: Pool 40
   bpart: C_CAA291
   pathname: /CALSIM/C_CAA291/.*//.*/.*/
   table_convert: cfs_taf
@@ -1727,10 +1727,10 @@ C_CAA291:
   type: Channel
   units: cfs
 C_CAA293:
-  alias: Edmondston Pumping Plant (CAA Pool 41)
+  alias: Pool 41, Edmondston Pumping Plant
   bpart: C_CAA293
   pathname: /CALSIM/C_CAA293/.*//.*/.*/
   table_convert: cfs_taf
   table_display: wy
-  type: Channel
+  type: CAA
   units: cfs
