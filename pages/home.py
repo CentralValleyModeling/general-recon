@@ -58,6 +58,15 @@ ta_card = CardWidget(
     charts=card_bar_plot_vert(df_dv, b_part="SWP_TA_CO_FROM_DELTA", climate_order=CLIMATE_ORDER, rpt_year="icy"),
 )
 
+a21_card = CardWidget(
+    "SWP Article 21 deliveries",
+    button_id="SWP_IN_TOTAL",
+    button_label="Drilldown",
+    popover_label="a21-info",
+    popover_content=load_markdown("page_text/info-article-21.md"),
+    charts=card_bar_plot_vert(df_dv, b_part="SWP_IN_TOTAL", climate_order=CLIMATE_ORDER, rpt_year="icy"),
+)
+
 ndoi_card = CardWidget(
     "Total Delta outflow",
     button_id="NDOI",
@@ -76,6 +85,19 @@ orovl_sep_card = CardWidget(
     charts=card_bar_plot_vert(df_dv, 
                               b_part="S_OROVL", 
                               climate_order=CLIMATE_ORDER, 
+                              cm=[9],
+                              yaxisoverride="Thousand acre-feet"),
+)
+
+sluis_swp_sep_card = CardWidget(
+    "San Luis SWP September storage",
+    button_id="S_SLUIS_SWP",
+    button_label="Drilldown",
+    popover_label=None,
+    popover_content=None,
+    charts=card_bar_plot_vert(df_dv,
+                              b_part="S_SLUIS_SWP",
+                              climate_order=CLIMATE_ORDER,
                               cm=[9],
                               yaxisoverride="Thousand acre-feet"),
 )
@@ -144,6 +166,15 @@ def layout():
                         id="home-cards-row-0",
                         children=[
                             dbc.Col(
+                                class_name="col-md-12", children=[a21_card.create_card()]
+                            ),
+                            html.Hr(style={"margin": "0.5rem 0"}),
+                        ],
+                    ),
+                    dbc.Row(
+                        id="home-cards-row-0",
+                        children=[
+                            dbc.Col(
                                 class_name="col-md-12", children=[ndoi_card.create_card()]
                             ),
                             html.Hr(style={"margin": "0.5rem 0"}),
@@ -154,6 +185,15 @@ def layout():
                         children=[
                             dbc.Col(
                                 class_name="col-md-12", children=[orovl_sep_card.create_card()]
+                            ),
+                            html.Hr(style={"margin": "0.5rem 0"}),
+                        ],
+                    ),
+                    dbc.Row(
+                        id="home-cards-row-0",
+                        children=[
+                            dbc.Col(
+                                class_name="col-md-12", children=[sluis_swp_sep_card.create_card()]
                             ),
                             html.Hr(style={"margin": "0.5rem 0"}),
                         ],
