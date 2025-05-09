@@ -44,7 +44,7 @@ navbar = dbc.Navbar(
             navbar=True,
         )
     ]),
-    color="#007fbd",  # still needs custom CSS for full override
+    color="#285E80",  # still needs custom CSS for full override
     dark=True,
     sticky="top"
 )
