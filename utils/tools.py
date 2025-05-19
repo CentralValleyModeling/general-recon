@@ -253,12 +253,7 @@ def make_summary_df(
     columns_to_drop = [col for col in df1.columns if "S_" in col]
     df1 = df1.drop(columns=columns_to_drop)
     # Do Conversions
-    for var in var_dict:
-        if var_dict[var]["table_convert"] == "cfs_taf":
-            if var not in df1.columns:
-                print(f"Warning: '{var}' not found in DataFrame. Skipping.")
-                continue
-            df1[var] = df1[var] * df1["cfs_taf"]
+    df1 = cfs_taf(df1, var_dict)
 
     # Annual Average
     df_tbl = round(df1.groupby(["Scenario"]).sum(numeric_only=True) / (end_yr - start_yr + 1))

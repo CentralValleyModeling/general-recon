@@ -34,11 +34,6 @@ studies = [
     Study(r"C:\jobs\20230428_DCR23\models\9.3.1_danube_cc95\9.3.1_danube_cc95\DSS\output\DCR2023_DV_9.3.1_Danube_CC95_v1.8.dss",
           r"C:\jobs\20230428_DCR23\models\9.3.1_danube_cc95\9.3.1_danube_cc95\DSS\input\DCR2023_SV_Danube_cc95_v1.8.dss",
           "DCR23_CC95", "DCR 2023", "2043_CC95", 1),
-
-    Study(r"C:\jobs\20230428_DCR23\models\9.3.1_danube_adj\DSS\output\DCR2023_DV_9.3.1_v2a_Danube_Adj_v1.8.dss",
-          r"C:\jobs\20230428_DCR23\models\9.3.1_danube_adj\DSS\input\DCR2023_SV_Danube_Adj_v1.8.dss",
-          "DCR21_Baseline", "DCR 2021", "Current", 1),
-
 ]
 
 date_map = pd.read_csv("constants/date_map.csv", index_col=0, parse_dates=True)
