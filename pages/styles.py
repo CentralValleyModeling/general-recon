@@ -40,11 +40,6 @@ BASELINE = "DCR 2023"
 ASSUMPTION_COLORS = {
     "DCR 2023": "#0072b1",
     "DCR 2021": "#ff6c66",
-#    "Degradation": "#ff6c66",
-#    "FIRO": "#55b4eb",
-#    "SOD Storage": "#0072b1",
-#    "DCP": "#003759",
-#    "Combo": "#039d73"
 }
 
 CLIMATE_ORDER = [
@@ -52,7 +47,4 @@ CLIMATE_ORDER = [
     "2043_CC50",
     "2043_CC75",
     "2043_CC95",
-#    "2085_CC50",
-#    "2085_CC75"
-#    "2085_CC95"
 ]

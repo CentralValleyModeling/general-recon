@@ -88,6 +88,7 @@ def layout(**kwargs):
                 options=typefilter_dict,
                 id="dropdown-table-var-category",
                 placeholder="Select the variable category",
+                value="table_a_btn"
             ),
             dcc.RangeSlider(
                 1922,
@@ -208,7 +209,7 @@ def show_contractor_data(click_data):
             title=b,
             groupby="Scenario",
         )
-        print(df_dv)
+        #print(df_dv)
         # We need to re-register the figure when it's updated
         CHART_REGISTRY[DWNLD_BUTTON_ID] = lambda *_: fig
         return fig

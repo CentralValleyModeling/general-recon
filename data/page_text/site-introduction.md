@@ -1,5 +1,3 @@
-### Delivery Capability Report 2023 Addendum: Impacts of Subsidence
+### Template for ReCon
 
-The 2023 Delivery Capability Report (DCR 2023) provided estimates of both current and potential future delivery capabilities of the State Water Project (SWP). Those estimates were based on the latest available data concerning hydrology, climate change, regulations, water demands, and other factors critical to SWP operations. However, as noted in that report, the DCR 2023 did not account for the effects of subsidence in its current or future delivery capability estimates. The *DCR 2023 Addendum: Impacts of Subsidence* addresses that gap by evaluating the impacts of subsidence on the joint use and SWP facilities in the San Joaquin Valley.  
-
-This Results Console (ReCon) is an interactive dashboard designed to complement the DCR 2023 Addendum: Impacts of Subsidence. ReCon presents the outputs of CalSim 3, the operation model that informs this analysis, and allows the user to explore technical details beyond those presented in the main report.
+This is a template for ReCon. As placeholder studies, the Final DCR 2023 studies are loaded.
