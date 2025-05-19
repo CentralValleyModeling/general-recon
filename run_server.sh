@@ -1,13 +1,16 @@
 #!/bin/bash
+set -e  # Exit on error
+
+# Inputs
+git_repo_url="$1"
+branch="$2"
 
 # Activate environment
 source /env/bin/activate
 
-git_repo_url="https://github.com/CentralValleyModeling/general-recon.git"
-
 # Clone the repo into a subfolder
-echo "cloning repo $1"
-git clone -b production "$git_repo_url" "code"
+echo "Cloning $git_repo_url (branch: $branch)"
+git clone -b "$branch" "$git_repo_url" code
 
 # Run app
 echo "$PWD"
