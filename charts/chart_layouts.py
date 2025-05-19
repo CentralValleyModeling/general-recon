@@ -1,4 +1,5 @@
 import warnings
+import traceback
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 import dash_bootstrap_components as dbc
@@ -232,8 +233,9 @@ def card_bar_plot(
 
     try:
         df0 = cfs_taf(df0, var_dict)
-    except Exception:
-        print(f"Unable to convert from CFS to TAF for {b_part}")
+    except KeyError as e:
+        print(f"Unable to convert from CFS to TAF for {b_part}: {e}")
+        #traceback.print_exc()
     # For the last year
     df1 = df0.groupby(["Climate"]).sum(numeric_only=True) / (endyr - startyr + 1)
     df_plot = df1

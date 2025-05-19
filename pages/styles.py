@@ -23,25 +23,23 @@ PLOT_COLORS = [
 ]
 
 ASSUMPTION_ORDER = [
-    "CAA Design Capacity",
-    "CAA Subsidence",
+    "DCR 2023",
+    "DCR 2021",
 ]
 
 SCENARIO_ORDER = [
-    "Existing_Design",
-    "2043_50_Design",
-    "2043_75_Design",
-    "2043_95_Design",
-    "Existing_Subs",
-    "2043_50_Subs",
-    "2043_75_Subs"
+    "DCR23_Baseline",
+    "DCR23_CC50",
+    "DCR23_CC75",
+    "DCR23_CC95",
+    "DCR21_Baseline",
 ]
 
-BASELINE = "CAA Design Capacity"
+BASELINE = "DCR 2023"
 
 ASSUMPTION_COLORS = {
-    "CAA Design Capacity": "#0072b1",
-    "CAA Subsidence": "#ff6c66",
+    "DCR 2023": "#0072b1",
+    "DCR 2021": "#ff6c66",
 #    "Degradation": "#ff6c66",
 #    "FIRO": "#55b4eb",
 #    "SOD Storage": "#0072b1",
