@@ -330,7 +330,6 @@ def load_shp_upstream_flows() -> gpd.GeoDataFrame:
     return geodf
 
 def load_shp_river(filename: str) -> gpd.GeoDataFrame:
-    # "dashboard_map/san_joaquin_river.shp"
     geodf = gpd.read_file(filename)
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 
@@ -340,7 +339,6 @@ def load_shp_river(filename: str) -> gpd.GeoDataFrame:
     return geodf
 
 def load_shp_pool() -> gpd.GeoDataFrame:
-    # "dashboard_map/san_joaquin_river.shp"
     geodf = gpd.read_file("dashboard_map/caa_pools.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 
@@ -381,24 +379,24 @@ def create_ca_plot():
     return figca
 
 
-def get_min_max(geodf: gpd.GeoDataFrame):
-    # Get min and max values
-    maximum = max(geodf["VAL_PERC"])
-    minimum = min(geodf["VAL_PERC"])
+# def get_min_max(geodf: gpd.GeoDataFrame):
+#     # Get min and max values
+#     maximum = max(geodf["VAL_PERC"])
+#     minimum = min(geodf["VAL_PERC"])
 
-    # Make min positive if it is negative
-    if minimum < 0:
-        minimum = -minimum
+#     # Make min positive if it is negative
+#     if minimum < 0:
+#         minimum = -minimum
 
-    # Make max positive if it is negative
-    if maximum < 0:
-        maximum = -maximum
+#     # Make max positive if it is negative
+#     if maximum < 0:
+#         maximum = -maximum
 
-    # Get max
-    mymax = max(minimum, maximum)
+#     # Get max
+#     mymax = max(minimum, maximum)
 
-    # Return range symmetric around zero
-    return (-mymax, mymax)
+#     # Return range symmetric around zero
+#     return (-mymax, mymax)
 
 
 def create_plot(geodf: gpd.GeoDataFrame):
@@ -458,7 +456,6 @@ def create_reservoir_centroid(geodf: gpd.GeoDataFrame):
         hovertemplate="<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>", 
         showlegend=False,
         mode='markers',
-        # marker=dict(size=15, color='rgb(141, 198, 63)', symbol="triangle-up")
         marker=dict(size=15, color='rgb(141, 198, 63)', symbol="circle")
     )
 
@@ -581,8 +578,6 @@ def create_river_plot(filename, river_name):
         lat='lat', 
         lon='lon', 
         color_discrete_sequence=['rgb( 37, 170, 225)'],
-        # hover_name='name',
-        # hover_data={'lat': False, 'lon': False}
     )
 
     fig.update_traces(

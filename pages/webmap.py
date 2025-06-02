@@ -4,10 +4,6 @@ import dashboard_map.from_shp_to_dash as api
 import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
 
-# study loader testing
-# print("Study loader")
-# print(scen_dict)
-
 # get the average annual sum of each delivery/agencyname
 data_df = api.calc_mean()
 
@@ -264,9 +260,7 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
 
 
     final_fig.update_layout(
-        # map_style='open-street-map', #le shows streets very detailed and like google maps sty
-        # map_style='satellite-streets', # nature is more visible (green and blue)
-        map_style='outdoors', # features are very visible
+        map_style='outdoors',
         margin={'r': 0, 't': 0, 'l': 0, 'b': 0},
         map_center={'lon': -122.0, 'lat': 38.0},
         map_zoom=6.3,
