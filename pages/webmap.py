@@ -4,6 +4,10 @@ import dashboard_map.from_shp_to_dash as api
 import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
 
+# study loader testing
+# print("Study loader")
+# print(scen_dict)
+
 # get the average annual sum of each delivery/agencyname
 data_df = api.calc_mean()
 
@@ -24,6 +28,9 @@ print("EXPORT GEODF:")
 print("columns = ", export_geodf.columns)
 print("data = \n", export_geodf.head())
 print("arc descrip column: /n", export_geodf["Comments"])
+
+# pool geodf
+pool_geodf = api.load_shp_pool()
 
 # choropleth map for exports
 fig_exp = api.create_export_plot(export_geodf)
@@ -58,9 +65,20 @@ fig_river_feath = api.create_river_plot("dashboard_map/feather_river.shp", "Feat
 
 fig_river_sac = api.create_river_plot("dashboard_map/sacramento_river.shp", "Sacramento River")
 
+# choropleth map for pools
+fig_p = api.create_pool_plot(pool_geodf)
+
+# centroid map for reservoirs
+fig_p_centroid = api.create_pool_centroid(pool_geodf)
+
 
 # debug
 fig_monthly = api.update_monthly("S_OROVL", (1922, 2021))
+
+# debug
+api.load_shp_pool()
+print("pool2bpart map:")
+print(api.create_pool2bpart_map())
 
 mycolor_scale = [
     [0, "#0000ff"],
@@ -148,9 +166,17 @@ def layout():
                                                 ],
                                                 "value": "Upstream Flows"
                                             },
+                                            {
+                                                "label": [
+                                                    html.Span("Conveyance"),
+                                                    html.Img(src="/assets/gray_circle.png", style={"height": "10px", "marginLeft": "5px"})
+                                                ],
+                                                "value": "Pools"
+                                            },
                                         ],
-                                        value=['Reservoirs', 'Exports', 'Upstream Flows'],
-                                    )
+                                        value=['Reservoirs', 'Exports', 'Upstream Flows', 'Pools'],
+                                    ),
+                                    html.Br(),
                                 ]
                             ),
                             dcc.Graph(
@@ -175,10 +201,22 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
     show_reservoirs = 'Reservoirs' in selected_values
     show_exports = 'Exports' in selected_values
     show_upstream_flows = 'Upstream Flows' in selected_values
+    show_pool = 'Pools' in selected_values
 
     # create an empty figure and add ca state border
     final_fig = go.Figure()
     final_fig.add_trace(figca.data[0])
+
+    # adding main rivers to california border map
+    trace_river_sj = fig_river_sj.data[0]
+    trace_river_amer = fig_river_amer.data[0]
+    trace_river_feath = fig_river_feath.data[0]
+    trace_river_sac = fig_river_sac.data[0]
+
+    final_fig.add_trace(trace_river_sj)
+    final_fig.add_trace(trace_river_amer)
+    final_fig.add_trace(trace_river_feath)
+    final_fig.add_trace(trace_river_sac)
 
     # add contractors if selected
     if show_contractors:
@@ -199,9 +237,9 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
     # add reservoirs if selected
     if show_reservoirs:
         trace4 = fig_r_centroid.data[0]
-        trace5 = fig_r.data[0]
+        # trace5 = fig_r.data[0]
         final_fig.add_trace(trace4)
-        final_fig.add_trace(trace5)
+        # final_fig.add_trace(trace5)
     
     # add exports if selected
     if show_exports:
@@ -217,20 +255,18 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
         final_fig.add_trace(trace8)
         final_fig.add_trace(trace9)
     
-    # adding main rivers to california border map
-    trace_river_sj = fig_river_sj.data[0]
-    trace_river_amer = fig_river_amer.data[0]
-    trace_river_feath = fig_river_feath.data[0]
-    trace_river_sac = fig_river_sac.data[0]
-
-    final_fig.add_trace(trace_river_sj)
-    final_fig.add_trace(trace_river_amer)
-    final_fig.add_trace(trace_river_feath)
-    final_fig.add_trace(trace_river_sac)
+    # add pools
+    if show_pool:
+        trace10 = fig_p.data[0]
+        trace11 = fig_p_centroid.data[0]
+        final_fig.add_trace(trace10)
+        final_fig.add_trace(trace11)
 
 
     final_fig.update_layout(
-        map_style='open-street-map',
+        # map_style='open-street-map', #le shows streets very detailed and like google maps sty
+        # map_style='satellite-streets', # nature is more visible (green and blue)
+        map_style='outdoors', # features are very visible
         margin={'r': 0, 't': 0, 'l': 0, 'b': 0},
         map_center={'lon': -122.0, 'lat': 38.0},
         map_zoom=6.3,
@@ -253,21 +289,80 @@ def handle_click(custom_data):
     if custom_data and len(custom_data) > 1:
         data_type = custom_data[-1]
         bpart = custom_data[0]
+        print("handle_click: bpart: ", bpart)
 
         result.append(html.H2("Annual Plot"))
-        ex_fig = api.update_bar_annual(bpart, [1922, 2021])
-        ex_dcc = dcc.Graph(figure=ex_fig)
-        result.append(ex_dcc)
+        try:
+            ex_fig = api.update_bar_annual(bpart, [1922, 2021])
+            ex_dcc = dcc.Graph(figure=ex_fig)
+            result.append(ex_dcc)
+        except:
+            ex_fig = go.Figure()
+            ex_fig.update_layout(
+                margin={'r': 0, 't': 0, 'l': 0, 'b': 10},
+                xaxis = {"visible": False},
+                yaxis = {"visible": False},
+                annotations = [
+                    {
+                        "text": "No Data Available",
+                        "xref": "paper",
+                        "yref": "paper",
+                        "showarrow": False,
+                        "font": {"size": 28}
+                    }
+                ]
+            )
+            ex_dcc = dcc.Graph(figure=ex_fig)
+            result.append(ex_dcc)
 
         result.append(html.H2("Monthly Plot"))
-        res_fig = api.update_monthly(bpart, [1922, 2021])
-        res_dcc = dcc.Graph(figure=res_fig)
-        result.append(res_dcc)
+        try:
+            res_fig = api.update_monthly(bpart, [1922, 2021])
+            res_dcc = dcc.Graph(figure=res_fig)
+            result.append(res_dcc)
+        except:
+            res_fig = go.Figure()
+            res_fig.update_layout(
+                margin={'r': 0, 't': 0, 'l': 0, 'b': 10},
+                xaxis = {"visible": False},
+                yaxis = {"visible": False},
+                annotations = [
+                    {
+                        "text": "No Data Available",
+                        "xref": "paper",
+                        "yref": "paper",
+                        "showarrow": False,
+                        "font": {"size": 28}
+                    }
+                ]
+            )
+            res_dcc = dcc.Graph(figure=res_fig)
+            result.append(res_dcc)
+
 
         result.append(html.H2("Timeseries Plot"))
-        contractor_fig = api.update_timeseries(bpart)
-        contractor_dcc = dcc.Graph(figure=contractor_fig)
-        result.append(contractor_dcc)
+        try:
+            contractor_fig = api.update_timeseries(bpart)
+            contractor_dcc = dcc.Graph(figure=contractor_fig)
+            result.append(contractor_dcc)
+        except:
+            contractor_fig = go.Figure()
+            contractor_fig.update_layout(
+                margin={'r': 0, 't': 0, 'l': 0, 'b': 0},
+                xaxis = {"visible": False},
+                yaxis = {"visible": False},
+                annotations = [
+                    {
+                        "text": "No Data Available",
+                        "xref": "paper",
+                        "yref": "paper",
+                        "showarrow": False,
+                        "font": {"size": 28}
+                    }
+                ]
+            )
+            contractor_dcc = dcc.Graph(figure=contractor_fig)
+            result.append(contractor_dcc)
     return result
 
 

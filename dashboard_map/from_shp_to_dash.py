@@ -5,6 +5,7 @@ from dash import Dash, dcc, html, Input, Output, callback
 import pyproj
 import pandas as pd
 import plotly.graph_objects as go
+import yaml
 
 sys.path.append(".")
 import utils.query_data as qd
@@ -105,6 +106,17 @@ swp2description = {
     "SWP_TA_ACFC": "Alameda County FC&WCD, Zone 7",
 }
 
+def create_pool2bpart_map():
+    pool2bpart = {}
+    with open("dashboard_map/dvars.yaml", "r") as file:
+        var_dict = yaml.safe_load(file)
+        for key, val in var_dict.items():
+            alias = val['alias']
+            if alias.startswith("Pool"):
+                pool2bpart[alias] = val['bpart']
+    return pool2bpart
+
+pool2bpart = create_pool2bpart_map()
 
 def calc_mean():
     combined_df = pd.DataFrame(
@@ -325,6 +337,26 @@ def load_shp_river(filename: str) -> gpd.GeoDataFrame:
     print("head of river geodata: \n", geodf.head())
     
     # geodf["DATA_TYPE"] = "RIVER"
+    return geodf
+
+def load_shp_pool() -> gpd.GeoDataFrame:
+    # "dashboard_map/san_joaquin_river.shp"
+    geodf = gpd.read_file("dashboard_map/caa_pools.shp")
+    geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
+
+    # bpart column
+    geodf["BPART"] = ""
+    for key, val in pool2bpart.items():
+        geodf.loc[geodf["AssetReg_2"] == key, "BPART"] = val
+
+    geodf = geodf[geodf["BPART"] != ""]
+    
+    geodf["DATA_TYPE"] = "POOL"
+
+    print("columns of pool data: \n", geodf.columns)
+    # print the head of the geodf with non empty bparts
+    print("head of pool data: \n", geodf.head())
+
     return geodf
 
 def create_ca_plot():
@@ -549,12 +581,13 @@ def create_river_plot(filename, river_name):
         lat='lat', 
         lon='lon', 
         color_discrete_sequence=['rgb( 37, 170, 225)'],
-        hover_name='name',
-        hover_data={'lat': False, 'lon': False}
+        # hover_name='name',
+        # hover_data={'lat': False, 'lon': False}
     )
 
     fig.update_traces(
-        # hovertemplate=None,
+        hovertemplate=None,
+        hoverinfo="skip",
         showlegend=False
     )
 
@@ -577,6 +610,42 @@ def create_river_centroid(geodf: gpd.GeoDataFrame):
 
     return fig1
 
+def create_pool_plot(geodf: gpd.GeoDataFrame):
+    fig = px.choropleth_map(
+        geodf,
+        geojson=geodf.geometry,
+        locations=geodf.index,
+        custom_data=["BPART","AssetReg_2", "DATA_TYPE"],
+    )
+
+    my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
+    fig.update_traces(
+        hovertemplate=my_hovertemplate, 
+        marker={"opacity": 0.7},
+        showlegend=False
+    )
+
+    return fig
+
+def create_pool_centroid(geodf: gpd.GeoDataFrame):
+    fig1 = px.scatter_map(
+        geodf,
+        lat=geodf.geometry.centroid.y,
+        lon=geodf.geometry.centroid.x,
+        custom_data=["BPART","AssetReg_2", "DATA_TYPE"]
+    )
+
+    fig1.update_traces(
+        textposition='middle center', 
+        hovertemplate="<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>", 
+        showlegend=False,
+        mode='markers',
+        marker=dict(size=15, color='rgb(109, 129, 150)', symbol="circle")
+    )
+
+    fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
+
+    return fig1
 
 
 def create_df_for_scen(
