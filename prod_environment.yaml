@@ -22,3 +22,5 @@ dependencies:
   - flake8
   - httpx
   - pyyaml
+  # Mapping
+  - geopandas
