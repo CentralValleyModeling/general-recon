@@ -2,8 +2,8 @@
 set -e  # Exit on error
 
 # Inputs
-git_repo_url="$1"
-branch="$2"
+git_repo_url="$2"
+branch="$3"
 
 # Activate environment
 source /env/bin/activate
