@@ -200,7 +200,21 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
     show_pool = 'Pools' in selected_values
 
     # create an empty figure and add ca state border
-    final_fig = go.Figure()
+    #final_fig = go.Figure()
+
+
+    final_fig = go.Figure(
+        layout=dict(
+            mapbox=dict(
+                style="carto-positron",
+                center={"lon": -122.0, "lat": 38.0},
+                zoom=6.3
+            ),
+            margin={'r': 0, 't': 0, 'l': 0, 'b': 0},
+            height=800,
+        )
+    )
+
     final_fig.add_trace(figca.data[0])
 
     # adding main rivers to california border map
@@ -257,23 +271,6 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
         trace11 = fig_p_centroid.data[0]
         final_fig.add_trace(trace10)
         final_fig.add_trace(trace11)
-
-
-    final_fig.update_layout(
-        map_style='outdoors',
-        margin={'r': 0, 't': 0, 'l': 0, 'b': 0},
-        map_center={'lon': -122.0, 'lat': 38.0},
-        map_zoom=6.3,
-        height=800,
-        colorscale={"diverging": mycolor_scale},
-        coloraxis={
-            "cmin": -50,
-            "cmax": 50,
-            "cauto": False,
-            "autocolorscale": False,
-            "colorbar": {"title": {"text": "VAL DIFF %"}},
-        }
-    )
 
     return final_fig
 
