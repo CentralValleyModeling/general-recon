@@ -179,10 +179,10 @@ def layout():
                                 id="my_id",
                             ),
                         ],
-                        width=6,
+                        width=8,
                     ),
                     dbc.Col([html.Div(id="my_charts")],
-                        width=6,
+                        width=4,
                     )
                 ]
             ),
