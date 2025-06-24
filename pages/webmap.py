@@ -67,6 +67,9 @@ fig_p = api.create_pool_plot(pool_geodf)
 # centroid map for reservoirs
 fig_p_centroid = api.create_pool_centroid(pool_geodf)
 
+# map for aqueducts
+fig_aqueducts = api.create_aqueduct_plot()
+
 
 # debug
 fig_monthly = api.update_monthly("S_OROVL", (1922, 2021))
@@ -217,6 +220,9 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
     final_fig.add_trace(trace_river_amer)
     final_fig.add_trace(trace_river_feath)
     final_fig.add_trace(trace_river_sac)
+
+    # adding aqueducts to california border map
+    final_fig.add_trace(fig_aqueducts.data[0])
 
     # add contractors if selected
     if show_contractors:
