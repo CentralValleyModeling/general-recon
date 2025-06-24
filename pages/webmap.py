@@ -112,26 +112,29 @@ def layout():
                 [
                     dbc.Col(
                         [
-                            html.Div(
-                                [
-                                    html.Label("Scenario 1:", htmlFor=("scenario_1")),
-                                    dcc.Dropdown(
-                                        scenario_list, scenario_list[0], id="scenario_1"
-                                    ),
-                                ],
-                            ),
-                            html.Div(
-                                [
-                                    html.Label("Scenario 2:", htmlFor=("scenario_2")),
-                                    dcc.Dropdown(
-                                        scenario_list, scenario_list[1], id="scenario_2"
-                                    ),
-                                ],
-                            ),
+                            html.Div([
+                                html.Div(
+                                    [
+                                        html.Label("Scenario 1:", htmlFor=("scenario_1"), style={'margin-right': '15px', 'font-weight': 'bold'}),
+                                        dcc.Dropdown(
+                                            scenario_list, scenario_list[0], id="scenario_1", style={'flex-grow': '1'}
+                                        ),
+                                    ], style={'display': 'flex', 'flex': '1', 'margin-right': '30px'}
+                                ),
+                                html.Div(
+                                    [
+                                        html.Label("Scenario 2:", htmlFor=("scenario_2"), style={'margin-right': '15px', 'font-weight': 'bold'}),
+                                        dcc.Dropdown(
+                                            scenario_list, scenario_list[1], id="scenario_2",
+                                            style={'flex-grow': '1'}
+                                        ),
+                                    ], style={'display': 'flex', 'flex': '1', 'margin-right': '30px'}
+                                ),
+                            ], style={'display': 'flex', 'gap': '10px'}),
                             html.Div(
                                 children=[
-                                    html.Br(),
-                                    html.Label("Map Filter"),
+                                    # html.Br(),
+                                    html.Label("Map Filter:", style={'font-weight': 'bold'}),
                                     dcc.Checklist(
                                         id='my_filter',
                                         options=[
@@ -157,7 +160,7 @@ def layout():
                                             },
                                             {
                                                 "label": [
-                                                    html.Span("Upstream Flows"),
+                                                    html.Span("Flows"),
                                                     html.Img(src="/assets/blue_circle.png", style={"height": "10px", "marginLeft": "5px"})
                                                 ],
                                                 "value": "Upstream Flows"
@@ -171,9 +174,10 @@ def layout():
                                             },
                                         ],
                                         value=['Reservoirs', 'Exports', 'Upstream Flows', 'Pools'],
-                                    ),
-                                    html.Br(),
-                                ]
+                                    style={'display': 'flex', 'gap': '10px', 'justify-content' : 'space-between', 'flex-grow': '1'}
+                                    ), 
+                                    # html.Br(),
+                                ], style={'display': 'flex', 'gap': '10px', 'padding-top': '20px', 'padding-bottom': '20px'},
                             ),
                             dcc.Graph(
                                 id="my_id",
