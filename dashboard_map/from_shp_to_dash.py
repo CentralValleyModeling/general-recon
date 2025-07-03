@@ -179,6 +179,8 @@ def area_from_geodf(geodf: gpd.GeoDataFrame):
     # create a new geodf to get the area
     area_geodf = geodf.copy()
 
+    print("area geodf:\n", area_geodf)
+
     # Change the CRS with unit = degree to a CRS with unit = meter
     area_geodf = area_geodf.to_crs({"init": "epsg:32610"})
 
@@ -191,7 +193,9 @@ def area_from_geodf(geodf: gpd.GeoDataFrame):
 
 def load_shp() -> gpd.GeoDataFrame:
     geodf = gpd.read_file("SWP_Contractors.shp")
+    print("load_shp:\n", geodf)
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
+    print("load_shp with crs:\n", geodf)
 
     # Add a column for conventions to geodf
     geodf["CONTRACTOR_CONVENTION"] = "TBD"
@@ -206,8 +210,12 @@ def load_shp() -> gpd.GeoDataFrame:
 
     # Add area to the geodf
     geodf["AREA"] = area_from_geodf(geodf)
+    print("AREA VALS: ")
+    print(geodf["AREA"])
 
     # Add rank column based on area
+    print("RANK VALS: ")
+    print(geodf["AREA"].rank(method="first"))
     geodf["RANK"] = geodf["AREA"].rank(method="first").astype(int)
 
     return geodf
@@ -325,7 +333,7 @@ def load_shp_upstream_flows() -> gpd.GeoDataFrame:
     for key, val in arc_id2alias_up.items():
         geodf.loc[geodf["Arc_ID"] == key, "ALIAS"] = val
     
-    geodf["DATA_TYPE"] = "UP_FLOWS"
+    geodf["DATA_TYPE"] = "FLOWS"
 
     return geodf
 
@@ -691,6 +699,19 @@ def create_pool_centroid(geodf: gpd.GeoDataFrame):
 
     return fig1
 
+def create_delta_out_centroid():
+    fig1 = go.Figure(go.Scattermapbox(
+        lat=[38.01937000],
+        lon=[-122.13413000],
+        mode='markers',
+        marker=go.scattermapbox.Marker(size=15, color='rgb(0, 93, 131)'),
+        text=["NDOI"],  # Hover text
+        hoverinfo='text'
+    ))
+
+    fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
+
+    return fig1
 
 def create_df_for_scen(
     data_df: pd.DataFrame, geodf: gpd.GeoDataFrame, scenario1: str, scenario2: str
@@ -950,3 +971,4 @@ def run_test_app():
 
 if __name__ == "__main__":
     run_test_app()
+    

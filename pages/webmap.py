@@ -70,6 +70,9 @@ fig_p_centroid = api.create_pool_centroid(pool_geodf)
 # map for aqueducts
 fig_aqueducts = api.create_aqueduct_plot()
 
+# centroid map for delta outflows
+# fig_delta_out_centroid = api.create_delta_out_centroid()
+
 
 # debug
 fig_monthly = api.update_monthly("S_OROVL", (1922, 2021))
@@ -131,12 +134,11 @@ def layout():
                                             scenario_list, scenario_list[1], id="scenario_2",
                                             style={'flex-grow': '1'}
                                         ),
-                                    ], style={'display': 'flex', 'flex': '1', 'margin-right': '30px'}
+                                    ], style={'display': 'flex', 'flex': '1'},
                                 ),
-                            ], style={'display': 'flex', 'gap': '10px'}),
+                            ], style={'display': 'none', 'gap': '10px'}, id='drop_container'),
                             html.Div(
                                 children=[
-                                    # html.Br(),
                                     html.Label("Map Filter:", style={'font-weight': 'bold'}),
                                     dcc.Checklist(
                                         id='my_filter',
@@ -166,7 +168,7 @@ def layout():
                                                     html.Span("Flows"),
                                                     html.Img(src="/assets/blue_circle.png", style={"height": "10px", "marginLeft": "5px"})
                                                 ],
-                                                "value": "Upstream Flows"
+                                                "value": "Flows"
                                             },
                                             {
                                                 "label": [
@@ -176,10 +178,9 @@ def layout():
                                                 "value": "Pools"
                                             },
                                         ],
-                                        value=['Reservoirs', 'Exports', 'Upstream Flows', 'Pools'],
+                                        value=['Reservoirs', 'Exports', 'Flows', 'Pools'],
                                     style={'display': 'flex', 'gap': '10px', 'justify-content' : 'space-between', 'flex-grow': '1'}
                                     ), 
-                                    # html.Br(),
                                 ], style={'display': 'flex', 'gap': '10px', 'padding-top': '20px', 'padding-bottom': '20px'},
                             ),
                             dcc.Graph(
@@ -195,15 +196,25 @@ def layout():
             ),
         ],
     )
-
     return layout
+
+
+@callback(
+    Output("drop_container", "style"),
+    Input("my_filter", "value")
+)
+def filter_to_drop(selected_values):
+    if 'Contractors' in selected_values:
+        return {'display': 'flex', 'gap': '10px'}
+    return {'display': 'none', 'gap': '10px'}
+
 
 def update_graph(scen1: str, scen2: str, selected_values: list):
     # add variables for selected filter
     show_contractors = 'Contractors' in selected_values
     show_reservoirs = 'Reservoirs' in selected_values
     show_exports = 'Exports' in selected_values
-    show_upstream_flows = 'Upstream Flows' in selected_values
+    show_flows = 'Flows' in selected_values
     show_pool = 'Pools' in selected_values
 
     # create an empty figure and add ca state border
@@ -239,7 +250,8 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
         trace3 = fig1.data[0]
         final_fig.add_trace(trace1)
         final_fig.add_trace(trace3)
-    
+
+       
     # add reservoirs if selected
     if show_reservoirs:
         trace4 = fig_r_centroid.data[0]
@@ -254,14 +266,16 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
         final_fig.add_trace(trace6)
         final_fig.add_trace(trace7)
     
-    # add upstream flows if selected
-    if show_upstream_flows:
+    # add flows if selected
+    if show_flows:
         trace8 = fig_up_flows.data[0]
         trace9 = fig_up_flows_centroid.data[0]
+        # trace9a = fig_delta_out_centroid.data[0]
         final_fig.add_trace(trace8)
         final_fig.add_trace(trace9)
+        # final_fig.add_trace(trace9a)
     
-    # add pools
+    # add pools if selected
     if show_pool:
         trace10 = fig_p.data[0]
         trace11 = fig_p_centroid.data[0]
