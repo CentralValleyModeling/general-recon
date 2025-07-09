@@ -357,6 +357,17 @@ def load_shp_pool() -> gpd.GeoDataFrame:
 
     return geodf
 
+def load_shp_aqueduct() -> gpd.GeoDataFrame:
+    geodf = gpd.read_file("dashboard_map/caa_pools.shp")
+    geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
+    geodf = geodf.dropna(subset=["Branch"])
+    geodf = geodf[geodf["Branch"].str.contains('Aqueduct')]
+
+    # geodf = geodf[geodf["BPART"] != ""]
+    # geodf["DATA_TYPE"] = "AQUEDUCT"
+
+    return geodf
+
 def create_ca_plot():
     # read shapefile for california state boundary
     # downloaded from https://data.ca.gov/dataset/ca-geographic-boundaries
@@ -578,6 +589,43 @@ def create_river_plot(filename, river_name):
         lat='lat', 
         lon='lon', 
         color_discrete_sequence=['rgb( 37, 170, 225)'],
+    )
+
+    fig.update_traces(
+        hovertemplate=None,
+        hoverinfo="skip",
+        showlegend=False
+    )
+
+    return fig
+
+def create_aqueduct_plot():
+    geodf = load_shp_aqueduct()
+
+    lats = []
+    lons = []
+
+    for feature in geodf.geometry:
+        if isinstance(feature, shapely.geometry.linestring.LineString):
+            linestrings = [feature]
+        elif isinstance(feature, shapely.geometry.multilinestring.MultiLineString):
+            linestrings = feature.geoms
+        else:
+            continue
+        for linestring in linestrings:
+            x, y = linestring.xy
+            lats = np.append(lats, y)
+            lons = np.append(lons, x)
+            lats = np.append(lats, None)
+            lons = np.append(lons, None)
+    
+    df = pd.DataFrame({'lat': lats, 'lon': lons})
+    
+    fig = px.line_map(
+        df,
+        lat='lat', 
+        lon='lon', 
+        color_discrete_sequence=['rgb(192, 192, 192)'],
     )
 
     fig.update_traces(

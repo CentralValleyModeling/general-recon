@@ -254,6 +254,7 @@ def make_summary_df(
     df1 = df1.drop(columns=columns_to_drop)
     # Do Conversions
     df1 = cfs_taf(df1, var_dict)
+    df1 = cfs_taf(df1, var_dict)
 
     # Annual Average
     df_tbl = round(df1.groupby(["Scenario"]).sum(numeric_only=True) / (end_yr - start_yr + 1))

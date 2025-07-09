@@ -67,14 +67,16 @@ fig_p = api.create_pool_plot(pool_geodf)
 # centroid map for reservoirs
 fig_p_centroid = api.create_pool_centroid(pool_geodf)
 
+# map for aqueducts
+fig_aqueducts = api.create_aqueduct_plot()
 
 # debug
-fig_monthly = api.update_monthly("S_OROVL", (1922, 2021))
+# fig_monthly = api.update_monthly("S_OROVL", (1922, 2021))
 
 # debug
-api.load_shp_pool()
-print("pool2bpart map:")
-print(api.create_pool2bpart_map())
+# api.load_shp_pool()
+# print("pool2bpart map:")
+# print(api.create_pool2bpart_map())
 
 mycolor_scale = [
     [0, "#0000ff"],
@@ -112,26 +114,28 @@ def layout():
                 [
                     dbc.Col(
                         [
-                            html.Div(
-                                [
-                                    html.Label("Scenario 1:", htmlFor=("scenario_1")),
-                                    dcc.Dropdown(
-                                        scenario_list, scenario_list[0], id="scenario_1"
-                                    ),
-                                ],
-                            ),
-                            html.Div(
-                                [
-                                    html.Label("Scenario 2:", htmlFor=("scenario_2")),
-                                    dcc.Dropdown(
-                                        scenario_list, scenario_list[1], id="scenario_2"
-                                    ),
-                                ],
-                            ),
+                            html.Div([
+                                html.Div(
+                                    [
+                                        html.Label("Scenario 1:", htmlFor=("scenario_1"), style={'margin-right': '15px', 'font-weight': 'bold'}),
+                                        dcc.Dropdown(
+                                            scenario_list, scenario_list[0], id="scenario_1", style={'flex-grow': '1'}
+                                        ),
+                                    ], style={'display': 'flex', 'flex': '1', 'margin-right': '30px'}
+                                ),
+                                html.Div(
+                                    [
+                                        html.Label("Scenario 2:", htmlFor=("scenario_2"), style={'margin-right': '15px', 'font-weight': 'bold'}),
+                                        dcc.Dropdown(
+                                            scenario_list, scenario_list[1], id="scenario_2",
+                                            style={'flex-grow': '1'}
+                                        ),
+                                    ], style={'display': 'flex', 'flex': '1'},
+                                ),
+                            ], style={'display': 'none', 'gap': '10px'}, id='drop_container'),
                             html.Div(
                                 children=[
-                                    html.Br(),
-                                    html.Label("Map Filter"),
+                                    html.Label("Map Filter:", style={'font-weight': 'bold'}),
                                     dcc.Checklist(
                                         id='my_filter',
                                         options=[
@@ -157,10 +161,10 @@ def layout():
                                             },
                                             {
                                                 "label": [
-                                                    html.Span("Upstream Flows"),
+                                                    html.Span("Flows"),
                                                     html.Img(src="/assets/blue_circle.png", style={"height": "10px", "marginLeft": "5px"})
                                                 ],
-                                                "value": "Upstream Flows"
+                                                "value": "Flows"
                                             },
                                             {
                                                 "label": [
@@ -170,33 +174,42 @@ def layout():
                                                 "value": "Pools"
                                             },
                                         ],
-                                        value=['Reservoirs', 'Exports', 'Upstream Flows', 'Pools'],
-                                    ),
-                                    html.Br(),
-                                ]
+                                        value=['Reservoirs', 'Exports', 'Flows', 'Pools'],
+                                    style={'display': 'flex', 'gap': '10px', 'justify-content' : 'space-between', 'flex-grow': '1'}
+                                    ), 
+                                ], style={'display': 'flex', 'gap': '10px', 'padding-top': '20px', 'padding-bottom': '20px'},
                             ),
                             dcc.Graph(
                                 id="my_id",
                             ),
                         ],
-                        width=6,
+                        width=8,
                     ),
                     dbc.Col([html.Div(id="my_charts")],
-                        width=6,
+                        width=4,
                     )
                 ]
             ),
         ],
     )
-
     return layout
+
+
+@callback(
+    Output("drop_container", "style"),
+    Input("my_filter", "value")
+)
+def filter_to_drop(selected_values):
+    if 'Contractors' in selected_values:
+        return {'display': 'flex', 'gap': '10px'}
+    return {'display': 'none', 'gap': '10px'}
 
 def update_graph(scen1: str, scen2: str, selected_values: list):
     # add variables for selected filter
     show_contractors = 'Contractors' in selected_values
     show_reservoirs = 'Reservoirs' in selected_values
     show_exports = 'Exports' in selected_values
-    show_upstream_flows = 'Upstream Flows' in selected_values
+    show_flows = 'Flows' in selected_values
     show_pool = 'Pools' in selected_values
 
     # create an empty figure and add ca state border
@@ -259,7 +272,7 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
         final_fig.add_trace(trace7)
     
     # add upstream flows if selected
-    if show_upstream_flows:
+    if show_flows:
         trace8 = fig_up_flows.data[0]
         trace9 = fig_up_flows_centroid.data[0]
         final_fig.add_trace(trace8)
@@ -271,6 +284,22 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
         trace11 = fig_p_centroid.data[0]
         final_fig.add_trace(trace10)
         final_fig.add_trace(trace11)
+
+    final_fig.update_layout(
+        map_style='outdoors',
+        margin={'r': 0, 't': 0, 'l': 0, 'b': 0},
+        map_center={'lon': -122.0, 'lat': 38.0},
+        map_zoom=6.3,
+        height=800,
+        colorscale={"diverging": mycolor_scale},
+        coloraxis={
+            "cmin": -50,
+            "cmax": 50,
+            "cauto": False,
+            "autocolorscale": False,
+            "colorbar": {"title": {"text": "VAL DIFF %"}},
+        }
+    )
 
     return final_fig
 
