@@ -214,7 +214,7 @@ def load_shp() -> gpd.GeoDataFrame:
 
 
 def load_shp_reservoir() -> gpd.GeoDataFrame:
-    geodf = gpd.read_file("dashboard_map/calsim_lakes_for_visualization.shp")
+    geodf = gpd.read_file("assets/qgis/calsim_lakes_for_visualization.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 
     # filter out uneccesary reservoirs
@@ -248,7 +248,7 @@ arc_id2alias = {
 }
 
 def load_shp_export() -> gpd.GeoDataFrame:
-    geodf = gpd.read_file("dashboard_map/main_exports.shp")
+    geodf = gpd.read_file("assets/qgis/main_exports.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 
     # filter for ARC_ID = C_CAA003, C_DMC000
@@ -297,7 +297,7 @@ arc_id2alias_up = {
 }
 
 def load_shp_upstream_flows() -> gpd.GeoDataFrame:
-    geodf = gpd.read_file("dashboard_map/upstream_flows.shp")
+    geodf = gpd.read_file("assets/qgis/upstream_flows.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 
     # filter for ARC_ID = C_CAA003, C_DMC000
@@ -339,7 +339,7 @@ def load_shp_river(filename: str) -> gpd.GeoDataFrame:
     return geodf
 
 def load_shp_pool() -> gpd.GeoDataFrame:
-    geodf = gpd.read_file("dashboard_map/caa_pools.shp")
+    geodf = gpd.read_file("assets/qgis/caa_pools.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 
     # bpart column
@@ -358,7 +358,7 @@ def load_shp_pool() -> gpd.GeoDataFrame:
     return geodf
 
 def load_shp_aqueduct() -> gpd.GeoDataFrame:
-    geodf = gpd.read_file("dashboard_map/caa_pools.shp")
+    geodf = gpd.read_file("assets/qgis/caa_pools.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
     geodf = geodf.dropna(subset=["Branch"])
     geodf = geodf[geodf["Branch"].str.contains('Aqueduct')]
@@ -371,7 +371,7 @@ def load_shp_aqueduct() -> gpd.GeoDataFrame:
 def create_ca_plot():
     # read shapefile for california state boundary
     # downloaded from https://data.ca.gov/dataset/ca-geographic-boundaries
-    geodf = gpd.read_file("dashboard_map/CA_State.shp")
+    geodf = gpd.read_file("assets/qgis/CA_State.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 
     figca = px.choropleth_mapbox(

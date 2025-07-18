@@ -53,13 +53,13 @@ fig_r = api.create_reservoir_plot(reservoir_geodf)
 fig_r_centroid = api.create_reservoir_centroid(reservoir_geodf)
 
 # map for main rivers
-fig_river_sj = api.create_river_plot("dashboard_map/san_joaquin_river.shp", "San Joaquin River")
+fig_river_sj = api.create_river_plot("assets/qgis/san_joaquin_river.shp", "San Joaquin River")
 
-fig_river_amer = api.create_river_plot("dashboard_map/american_river.shp", "American River")
+fig_river_amer = api.create_river_plot("assets/qgis/american_river.shp", "American River")
 
-fig_river_feath = api.create_river_plot("dashboard_map/feather_river.shp", "Feather River")
+fig_river_feath = api.create_river_plot("assets/qgis/feather_river.shp", "Feather River")
 
-fig_river_sac = api.create_river_plot("dashboard_map/sacramento_river.shp", "Sacramento River")
+fig_river_sac = api.create_river_plot("assets/qgis/sacramento_river.shp", "Sacramento River")
 
 # choropleth map for pools
 fig_p = api.create_pool_plot(pool_geodf)
