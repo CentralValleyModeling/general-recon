@@ -190,7 +190,7 @@ def area_from_geodf(geodf: gpd.GeoDataFrame):
 
 
 def load_shp() -> gpd.GeoDataFrame:
-    geodf = gpd.read_file("dashboard_map/SWP_Contractors.shp")
+    geodf = gpd.read_file("assets/qgis/SWP_Contractors.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 
     # Add a column for conventions to geodf
