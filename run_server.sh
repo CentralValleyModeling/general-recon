@@ -12,7 +12,7 @@ source /env/bin/activate
 echo "Cloning $git_repo_url (branch: $branch)"
 git clone -b "$branch" "$git_repo_url" code
 
-# Run app
+# Run app 
 echo "$PWD"
 ls
 
