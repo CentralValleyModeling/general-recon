@@ -12,18 +12,12 @@ scenario_list = data_df["Scenario"].unique()
 
 # get the geodata of the agencies
 geodf = api.load_shp()
-
-print(geodf['AREA'])
       
 # reservoir geodf
 reservoir_geodf = api.load_shp_reservoir()
 
 # export geodf
 export_geodf = api.load_shp_export()
-print("EXPORT GEODF:")
-print("columns = ", export_geodf.columns)
-print("data = \n", export_geodf.head())
-print("arc descrip column: /n", export_geodf["Comments"])
 
 # pool geodf
 pool_geodf = api.load_shp_pool()
@@ -69,14 +63,6 @@ fig_p_centroid = api.create_pool_centroid(pool_geodf)
 
 # map for aqueducts
 fig_aqueducts = api.create_aqueduct_plot()
-
-# debug
-# fig_monthly = api.update_monthly("S_OROVL", (1922, 2021))
-
-# debug
-# api.load_shp_pool()
-# print("pool2bpart map:")
-# print(api.create_pool2bpart_map())
 
 mycolor_scale = [
     [0, "#0000ff"],
@@ -212,10 +198,6 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
     show_flows = 'Flows' in selected_values
     show_pool = 'Pools' in selected_values
 
-    # create an empty figure and add ca state border
-    #final_fig = go.Figure()
-
-
     final_fig = go.Figure(
         layout=dict(
             mapbox=dict(
@@ -260,9 +242,7 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
     # add reservoirs if selected
     if show_reservoirs:
         trace4 = fig_r_centroid.data[0]
-        # trace5 = fig_r.data[0]
         final_fig.add_trace(trace4)
-        # final_fig.add_trace(trace5)
     
     # add exports if selected
     if show_exports:
@@ -309,31 +289,30 @@ def handle_click(custom_data):
     if custom_data and len(custom_data) > 1:
         data_type = custom_data[-1]
         bpart = custom_data[0]
-        print("handle_click: bpart: ", bpart)
-
-        result.append(html.H2("Annual Plot"))
-        try:
-            ex_fig = api.update_bar_annual(bpart, [1922, 2021])
-            ex_dcc = dcc.Graph(figure=ex_fig)
-            result.append(ex_dcc)
-        except:
-            ex_fig = go.Figure()
-            ex_fig.update_layout(
-                margin={'r': 0, 't': 0, 'l': 0, 'b': 10},
-                xaxis = {"visible": False},
-                yaxis = {"visible": False},
-                annotations = [
-                    {
-                        "text": "No Data Available",
-                        "xref": "paper",
-                        "yref": "paper",
-                        "showarrow": False,
-                        "font": {"size": 28}
-                    }
-                ]
-            )
-            ex_dcc = dcc.Graph(figure=ex_fig)
-            result.append(ex_dcc)
+        if data_type != "RESERVOIRS":
+            result.append(html.H2("Annual Plot"))
+            try:
+                ex_fig = api.update_bar_annual(bpart, [1922, 2021])
+                ex_dcc = dcc.Graph(figure=ex_fig)
+                result.append(ex_dcc)
+            except:
+                ex_fig = go.Figure()
+                ex_fig.update_layout(
+                    margin={'r': 0, 't': 0, 'l': 0, 'b': 10},
+                    xaxis = {"visible": False},
+                    yaxis = {"visible": False},
+                    annotations = [
+                        {
+                            "text": "No Data Available",
+                            "xref": "paper",
+                            "yref": "paper",
+                            "showarrow": False,
+                            "font": {"size": 28}
+                        }
+                    ]
+                )
+                ex_dcc = dcc.Graph(figure=ex_fig)
+                result.append(ex_dcc)
 
         result.append(html.H2("Monthly Plot"))
         try:

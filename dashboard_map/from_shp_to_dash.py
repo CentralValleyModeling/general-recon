@@ -169,7 +169,7 @@ def calc_mean():
         # Add suffix of bpart for display
         combined_df.loc[combined_df["CONTRACTOR_CONVENTION"] == val, "BPART_SUFFIX"] = (
             key[7:]
-        )  # len("SWP_TA_") = 7
+        )
 
     # Return the dataframe containing the average annual sum
     return combined_df
@@ -209,6 +209,8 @@ def load_shp() -> gpd.GeoDataFrame:
 
     # Add rank column based on area
     geodf["RANK"] = geodf["AREA"].rank(method="first").astype(int)
+
+    # geodf = geodf[geodf["BPART"].isin(qd.df_dv.columns)]
 
     return geodf
 
@@ -263,6 +265,8 @@ def load_shp_export() -> gpd.GeoDataFrame:
     geodf["ALIAS"] = "TBD"
     for key, val in arc_id2alias.items():
         geodf.loc[geodf["Arc_ID"] == key, "ALIAS"] = val
+
+    geodf = geodf[geodf["BPART"].isin(qd.df_dv.columns)]
     
     geodf["DATA_TYPE"] = "EXPORTS"
 
@@ -325,6 +329,8 @@ def load_shp_upstream_flows() -> gpd.GeoDataFrame:
     for key, val in arc_id2alias_up.items():
         geodf.loc[geodf["Arc_ID"] == key, "ALIAS"] = val
     
+    geodf = geodf[geodf["BPART"].isin(qd.df_dv.columns)]
+    
     geodf["DATA_TYPE"] = "UP_FLOWS"
 
     return geodf
@@ -333,9 +339,6 @@ def load_shp_river(filename: str) -> gpd.GeoDataFrame:
     geodf = gpd.read_file(filename)
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 
-    print("head of river geodata: \n", geodf.head())
-    
-    # geodf["DATA_TYPE"] = "RIVER"
     return geodf
 
 def load_shp_pool() -> gpd.GeoDataFrame:
@@ -348,12 +351,10 @@ def load_shp_pool() -> gpd.GeoDataFrame:
         geodf.loc[geodf["AssetReg_2"] == key, "BPART"] = val
 
     geodf = geodf[geodf["BPART"] != ""]
+
+    geodf = geodf[geodf["BPART"].isin(qd.df_dv.columns)]
     
     geodf["DATA_TYPE"] = "POOL"
-
-    print("columns of pool data: \n", geodf.columns)
-    # print the head of the geodf with non empty bparts
-    print("head of pool data: \n", geodf.head())
 
     return geodf
 
@@ -362,9 +363,6 @@ def load_shp_aqueduct() -> gpd.GeoDataFrame:
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
     geodf = geodf.dropna(subset=["Branch"])
     geodf = geodf[geodf["Branch"].str.contains('Aqueduct')]
-
-    # geodf = geodf[geodf["BPART"] != ""]
-    # geodf["DATA_TYPE"] = "AQUEDUCT"
 
     return geodf
 
@@ -389,29 +387,7 @@ def create_ca_plot():
 
     return figca
 
-
-# def get_min_max(geodf: gpd.GeoDataFrame):
-#     # Get min and max values
-#     maximum = max(geodf["VAL_PERC"])
-#     minimum = min(geodf["VAL_PERC"])
-
-#     # Make min positive if it is negative
-#     if minimum < 0:
-#         minimum = -minimum
-
-#     # Make max positive if it is negative
-#     if maximum < 0:
-#         maximum = -maximum
-
-#     # Get max
-#     mymax = max(minimum, maximum)
-
-#     # Return range symmetric around zero
-#     return (-mymax, mymax)
-
-
 def create_plot(geodf: gpd.GeoDataFrame):
-    print("geodf = \n", geodf)
     fig = px.choropleth_mapbox(
         geodf,
         geojson=geodf.geometry,
@@ -561,8 +537,6 @@ import numpy as np
 
 def create_river_plot(filename, river_name):
     geodf = load_shp_river(filename)
-    print(filename)
-    print(geodf.head())
 
     lats = []
     lons = []
@@ -634,24 +608,7 @@ def create_aqueduct_plot():
         showlegend=False
     )
 
-    return fig
-
-def create_river_centroid(geodf: gpd.GeoDataFrame):
-    fig1 = px.scatter_mapbox(
-        geodf,
-        lat=geodf.geometry.centroid.y,
-        lon=geodf.geometry.centroid.x,
-        text=geodf["Name"]
-    )
-
-    fig1.update_traces(
-        textposition='middle center', 
-        showlegend=False,
-    )
-
-    fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
-
-    return fig1
+    return fig 
 
 def create_pool_plot(geodf: gpd.GeoDataFrame):
     fig = px.choropleth_mapbox(
@@ -771,8 +728,6 @@ def update_monthly(b_part, slider_yr_range):
         & (qd.df_dv["iwy"] <= endyr)
     ]
 
-    #print(df0)
-
     df1 = round(df0.groupby(["Scenario", "iwm"]).mean(numeric_only=True))
     df1 = df1.reindex(qd.scen_aliases, level="Scenario")
     fig = px.line(
@@ -826,11 +781,14 @@ def update_bar_annual(b_part, slider_yr_range):
         (qd.df_dv["iwy"] >= startyr)
         & (qd.df_dv["iwy"] <= endyr)
     ]
-
+    
     df1 = cfs_taf(df1, qd.var_dict)
 
-    df2 = round(df1.groupby(["Scenario"]).sum() / (endyr - startyr + 1))
+    # df2 = round(df1.groupby(["Scenario"]).sum().select_dtypes(include=["number"]) / (endyr - startyr + 1))
+    df2 = round(df1.groupby(["Scenario"]).sum(numeric_only=True) / (endyr - startyr + 1))
+    
     df2 = df2.reindex(qd.scen_aliases, level="Scenario")
+
     fig = px.bar(
         df2,
         x=df2.index.get_level_values(0),
