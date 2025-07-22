@@ -176,14 +176,18 @@ def calc_mean():
 
 
 def area_from_geodf(geodf: gpd.GeoDataFrame):
+    area_df = geodf.geometry.to_crs(epsg=32618)
+    area_projected = area_df.geometry.area
+
     # create a new geodf to get the area
     area_geodf = geodf.copy()
 
     # Change the CRS with unit = degree to a CRS with unit = meter
-    area_geodf = area_geodf.to_crs({"init": "epsg:32610"})
+    # area_geodf = area_geodf.to_crs({"init": "epsg:32610"})
 
     # Create the area column
-    area_geodf["AREA"] = geodf["geometry"].area
+    # area_geodf["AREA"] = geodf["geometry"].area
+    area_geodf["AREA"] = area_projected
 
     # Return the new column
     return area_geodf["AREA"]
@@ -431,10 +435,14 @@ def create_reservoir_plot(geodf: gpd.GeoDataFrame):
     return fig
 
 def create_reservoir_centroid(geodf: gpd.GeoDataFrame):
+    centroid_df = geodf.geometry.to_crs(epsg=32618)
+    centroid_projected = centroid_df.geometry.centroid
+    centroid_geographic = centroid_projected.to_crs(epsg=4326)
+
     fig1 = px.scatter_mapbox(
         geodf,
-        lat=geodf.geometry.centroid.y,
-        lon=geodf.geometry.centroid.x,
+        lat=centroid_geographic.y,
+        lon=centroid_geographic.x,
         custom_data=["CALSIMNAME", "TABLENAME", "DATA_TYPE"]
     )
 
@@ -468,14 +476,18 @@ def create_export_plot(geodf: gpd.GeoDataFrame):
     return fig
 
 def create_export_centroid(geodf: gpd.GeoDataFrame):
+    centroid_df = geodf.geometry.to_crs(epsg=32618)
+    centroid_projected = centroid_df.geometry.centroid
+    centroid_geographic = centroid_projected.to_crs(epsg=4326)
+
     hoverdf = geodf[
         ["BPART", "ALIAS", "DATA_TYPE"]
     ].copy()
     my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
     fig1 = px.scatter_mapbox(
         geodf,
-        lat=geodf.geometry.centroid.y,
-        lon=geodf.geometry.centroid.x,
+        lat=centroid_geographic.y,
+        lon=centroid_geographic.x,
         custom_data=["BPART", "ALIAS", "DATA_TYPE"]
     )
 
@@ -509,14 +521,18 @@ def create_up_flows_plot(geodf: gpd.GeoDataFrame):
     return fig
 
 def create_up_flows_centroid(geodf: gpd.GeoDataFrame):
+    centroid_df = geodf.geometry.to_crs(epsg=32618)
+    centroid_projected = centroid_df.geometry.centroid
+    centroid_geographic = centroid_projected.to_crs(epsg=4326)
+
     hoverdf = geodf[
         ["BPART", "ALIAS", "DATA_TYPE"]
     ].copy()
     my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
     fig1 = px.scatter_mapbox(
         geodf,
-        lat=geodf.geometry.centroid.y,
-        lon=geodf.geometry.centroid.x,
+        lat=centroid_geographic.y,
+        lon=centroid_geographic.x,
         custom_data= ["BPART", "ALIAS", "DATA_TYPE"]
     )
 
@@ -628,10 +644,14 @@ def create_pool_plot(geodf: gpd.GeoDataFrame):
     return fig
 
 def create_pool_centroid(geodf: gpd.GeoDataFrame):
+    centroid_df = geodf.geometry.to_crs(epsg=32618)
+    centroid_projected = centroid_df.geometry.centroid
+    centroid_geographic = centroid_projected.to_crs(epsg=4326)
+
     fig1 = px.scatter_mapbox(
         geodf,
-        lat=geodf.geometry.centroid.y,
-        lon=geodf.geometry.centroid.x,
+        lat=centroid_geographic.y,
+        lon=centroid_geographic.x,
         custom_data=["BPART","AssetReg_2", "DATA_TYPE"]
     )
 
@@ -696,14 +716,18 @@ def create_df_for_scen(
 
 
 def create_fig_1(geodf: gpd.GeoDataFrame):
+    centroid_df = geodf.geometry.to_crs(epsg=32618)
+    centroid_projected = centroid_df.geometry.centroid
+    centroid_geographic = centroid_projected.to_crs(epsg=4326)
+
     hoverdf = geodf[
         ["BPART", "CONTRACTOR_CONVENTION", "AGENCYNAME", "VAL_DIFF", "VAL_PERC", "DATA_TYPE"]
     ].copy()
     my_hovertemplate = "<b>%{customdata[1]}<br>AGENCYNAME=%{customdata[2]}</b><br><br>VAL_DIFF=%{customdata[3]}<br>VAL_PERC=%{customdata[4]}<extra></extra>"
     fig1 = px.scatter_mapbox(
         geodf,
-        lat=geodf.geometry.centroid.y,
-        lon=geodf.geometry.centroid.x,
+        lat=centroid_geographic.y,
+        lon=centroid_geographic.x,
         text=geodf["VAL_DIFF_SIGN"].astype(str) + "%" + "<br>" + geodf["BPART_SUFFIX"],
         custom_data=["BPART", "CONTRACTOR_CONVENTION", "AGENCYNAME", "VAL_DIFF", "VAL_PERC", "DATA_TYPE"],
     )
@@ -783,8 +807,7 @@ def update_bar_annual(b_part, slider_yr_range):
     ]
     
     df1 = cfs_taf(df1, qd.var_dict)
-
-    # df2 = round(df1.groupby(["Scenario"]).sum().select_dtypes(include=["number"]) / (endyr - startyr + 1))
+    
     df2 = round(df1.groupby(["Scenario"]).sum(numeric_only=True) / (endyr - startyr + 1))
     
     df2 = df2.reindex(qd.scen_aliases, level="Scenario")
