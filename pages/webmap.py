@@ -93,7 +93,7 @@ def layout():
         children=[
             dbc.Row(
                 [
-                    html.H1("State Water Project Contractor Deliveries"),
+                    html.H1("CalSim Webmap"),
                 ]
             ),
             dbc.Row(
