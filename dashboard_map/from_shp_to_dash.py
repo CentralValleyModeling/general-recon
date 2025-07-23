@@ -548,6 +548,36 @@ def create_up_flows_centroid(geodf: gpd.GeoDataFrame):
 
     return fig1
 
+def create_del_outflows_centroid():
+    data = {
+        'BPART': ['NDOI'],
+        'lat': [37.997417],
+        'lon': [-122.133598],
+        'DATA_TYPE': ['FLOWS']
+    }
+
+    df = pd.DataFrame(data)
+    
+    my_hovertemplate = "<b>%{customdata[0]}</b><extra></extra>"
+    fig1 = px.scatter_mapbox(
+        df,
+        lat='lat',
+        lon='lon',
+        custom_data= ["BPART"]
+    )
+
+    fig1.update_traces(
+        textposition='middle center', 
+        hovertemplate=my_hovertemplate, 
+        showlegend=False,
+        mode='markers',
+        marker=dict(size=15, color='rgb(0, 93, 131)', symbol="circle")
+    )
+
+    fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
+
+    return fig1
+
 import shapely.geometry
 import numpy as np
 
@@ -807,7 +837,7 @@ def update_bar_annual(b_part, slider_yr_range):
     ]
     
     df1 = cfs_taf(df1, qd.var_dict)
-    
+
     df2 = round(df1.groupby(["Scenario"]).sum(numeric_only=True) / (endyr - startyr + 1))
     
     df2 = df2.reindex(qd.scen_aliases, level="Scenario")

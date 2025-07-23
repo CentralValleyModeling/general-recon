@@ -64,6 +64,9 @@ fig_p_centroid = api.create_pool_centroid(pool_geodf)
 # map for aqueducts
 fig_aqueducts = api.create_aqueduct_plot()
 
+# centroid map for delta outflows
+fig_del_outflows = api.create_del_outflows_centroid()
+
 mycolor_scale = [
     [0, "#0000ff"],
     [0.1, "#3333ff"],
@@ -86,6 +89,40 @@ register_page(
     path="/webmap",
 )
 
+del_outflow_modal = html.Div([
+    dbc.Modal(
+        [
+            dbc.ModalHeader(dbc.ModalTitle("Delta Outflow BPART Selection")),
+            dbc.ModalBody(
+                # "This is modal body"
+                html.Div(
+                    [
+                        dbc.RadioItems(
+                            options=[
+                                {"label": "NDOI", "value": 1},
+                                {"label": "NDOI_ADD", "value": 2},
+                                {"label": "NDOI_ADD_ANN", "value": 3},
+                                {"label": "NDOI_ADD_CVP", "value":4},
+                                {"label": "NDOI_ADD_SWP", "value":5},
+                                {"label": "NDOI_MIN", "value":6},
+                                {"label": "DELTAINFLOWFORNDOI", "value":7}
+                            ],
+                            value=1,
+                            id="del_out_bpart"
+
+                        )
+                    ]
+                )
+            ),
+            dbc.ModalFooter(
+                dbc.Button("Close", id="close", className="ms-auto", n_clicks=0)
+            ),
+        ],
+        id="del_out_modal",
+        is_open=False,
+    )
+])
+
 # layout function
 def layout():
     layout = dbc.Container(
@@ -93,7 +130,7 @@ def layout():
         children=[
             dbc.Row(
                 [
-                    html.H1("CalSim Webmap"),
+                    html.H1("CalSim Webmap"), del_outflow_modal,
                 ]
             ),
             dbc.Row(
@@ -257,6 +294,7 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
         trace9 = fig_up_flows_centroid.data[0]
         final_fig.add_trace(trace8)
         final_fig.add_trace(trace9)
+        final_fig.add_trace(fig_del_outflows.data[0])
     
     # add pools
     if show_pool:
@@ -364,16 +402,19 @@ def handle_click(custom_data):
             result.append(contractor_dcc)
     return result
 
-
 @callback(
     Output("my_id", "figure"),
     Output("my_charts", "children"),
+    Output("del_out_modal", "is_open"),
     Input("my_id", "clickData"),
     Input("scenario_1", "value"),
     Input("scenario_2", "value"),
-    Input("my_filter", "value")
+    Input("my_filter", "value"),
+    Input("close", "n_clicks"),
+    State("del_out_modal", "is_open")
 )
-def handle_change(clickData, scen1: str, scen2: str, selected_values: list):
+def handle_change(clickData, scen1: str, scen2: str, selected_values: list, n1: int, is_open: bool):
+    open_val = False
     input_changed = ctx.triggered_id
     fig = update_graph(scen1, scen2, selected_values)
     fig.update_layout(uirevision=True)
@@ -393,5 +434,11 @@ def handle_change(clickData, scen1: str, scen2: str, selected_values: list):
             points = clickData["points"]
             if points and "customdata" in points[0]:
                 custom_data = points[0]["customdata"]
+                bpart = custom_data[0]
+                if bpart == "NDOI":
+                    if is_open:
+                        open_val = False
+                    else:
+                       open_val = True 
                 chart = handle_click(custom_data)
-    return fig, chart
+    return fig, chart, open_val
