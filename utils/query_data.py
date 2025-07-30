@@ -2,38 +2,32 @@ import pandas as pd
 import yaml
 from functools import lru_cache
 
-# Load date map
-# Reads a CSV file with dates that are used to fill in or fix missing data
-# Cached because it never changes
-@lru_cache(maxsize=1)
-def load_date_map():
-    return pd.read_csv("constants/date_map.csv", index_col=0, parse_dates=True)
+# Generic cached CSV reader function
+@lru_cache(maxsize=10)
+def cache_read_csv(path: str, *args, index_col=0, parse_dates=True, **kwargs) -> pd.DataFrame:
+    """
+    Cached CSV reader to avoid re-reading the same files multiple times.
+    Uses LRU cache to store up to 10 DataFrames in memory for performance.
+    """
+    return pd.read_csv(path, *args, index_col=index_col, parse_dates=parse_dates, **kwargs)
 
-# Load original dv_data for reference 
-# Used later for a specific column (WYT_SAC_) but not modified
-@lru_cache(maxsize=1)
-def load_df_dv_orig():
-    return pd.read_csv("data/dv_data.csv", index_col=0, parse_dates=True)
-
-# Load YAML configurations with caching
+# Load variable definitions from yaml file once and keep in memory
 @lru_cache(maxsize=1)
 def load_var_dict():
     with open("constants/dvars.yaml", "r") as file:
         return yaml.safe_load(file)
 
+# Load state variable definitions from yaml file once and keep in memory
 @lru_cache(maxsize=1)
 def load_svar_dict():
     with open("constants/svars.yaml", "r") as file:
         return yaml.safe_load(file)
 
-# Fully processed and cached df_dv - THIS IS THE KEY OPTIMIZATION
-# This function does ALL the DV processing work and caches the final result
 @lru_cache(maxsize=1)
 def get_fully_processed_df_dv():
     """Load and fully process DV data with all transformations. Cached for performance."""
-    # Load base data
-    df_dv = pd.read_csv("data/dv_data.csv", index_col=0, parse_dates=True)
-    date_map = load_date_map()
+    df_dv = cache_read_csv("data/dv_data.csv")
+    date_map = cache_read_csv("constants/date_map.csv")
     
     # DV Derived Timeseries
     df_dv["SWP_TA_CO_SOD"] = (
@@ -94,14 +88,11 @@ def get_fully_processed_df_dv():
     
     return df_dv
 
-# Fully processed and cached df_sv - THIS IS THE OTHER KEY OPTIMIZATION
-# This function does ALL the SV processing work and caches the final result
 @lru_cache(maxsize=1)
 def get_fully_processed_df_sv():
     """Load and fully process SV data with all transformations. Cached for performance."""
-    # Load base data
-    df_sv = pd.read_csv("data/sv_data.csv", index_col=0, parse_dates=True)
-    df_dv_orig = load_df_dv_orig()
+    df_sv = cache_read_csv("data/sv_data.csv")
+    df_dv_orig = cache_read_csv("data/dv_data.csv")
 
     # SV Derived Timeseries
     sac_b_map = [
@@ -251,17 +242,16 @@ def get_fully_processed_df_sv():
     unique_scenarios = ["CCA1", "CCA4", "CCA5", "CCA16", "CCA17"]
     df_sv = df_sv[df_sv["Scenario"].isin(unique_scenarios)]
 
-    # Name indexes
     df_sv.index.name = "Date"
     
     return df_sv
 
-# Cache the updated var_dict with derived variable definitions
 @lru_cache(maxsize=1)
 def get_updated_var_dict():
     """Get var_dict with all derived variable definitions added. Cached for performance."""
     var_dict = load_var_dict()
     
+    # Add metadata for the new derived variables we created above
     var_dict["SWP_TA_CO_SOD"] = {
         "alias": "Total SWP Table and Carryover Delivery South of Delta",
         "bpart": "SWP_TA_CO_SOD",
@@ -304,12 +294,11 @@ def get_updated_var_dict():
     
     return var_dict
 
-# Initialize global variables using the cached functions
-# NOW THESE ARE FAST because they use the cached, fully processed data!
-date_map = load_date_map()
-df_dv_orig = load_df_dv_orig()
-df_dv = get_fully_processed_df_dv()  # This is now cached and fast!
+# Initialize global variables using cached data loading functions
+date_map = cache_read_csv("constants/date_map.csv")
+df_dv_orig = cache_read_csv("data/dv_data.csv")
+df_dv = get_fully_processed_df_dv()
 scen_aliases = df_dv.Scenario.unique()
-var_dict = get_updated_var_dict()  # This is now cached and fast!
-df_sv = get_fully_processed_df_sv()  # This is now cached and fast!
+var_dict = get_updated_var_dict()
+df_sv = get_fully_processed_df_sv()
 svar_dict = load_svar_dict()
