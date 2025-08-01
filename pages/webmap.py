@@ -92,24 +92,17 @@ register_page(
     path="/webmap",
 )
 
-del_outflow_modal = html.Div([
+
+graph_modal = html.Div([
     dbc.Modal(
         [
-            dbc.ModalHeader(dbc.ModalTitle("Delta Outflow BPART Selection")),
-            dbc.ModalBody(
-                # "This is modal body"
-                html.Div(
-                    [
-                        dcc.Dropdown(ndoi_bparts, ndoi_bparts[0], id="del_out_bpart"),
-                        html.Div(id="ndoi_graph_id")
-                    ]
-                )
-            ),
+            dbc.ModalHeader(dbc.ModalTitle("")),
+            dbc.ModalBody([html.Div(id="my_charts")]),
             dbc.ModalFooter(
                 dbc.Button("Close", id="close", className="ms-auto", n_clicks=0)
             ),
         ],
-        id="del_out_modal",
+        id="graph_modal",
         is_open=False,
         style={'margin-left': '50px', 'margin-right': '50px'},
         scrollable=True
@@ -118,97 +111,77 @@ del_outflow_modal = html.Div([
 
 # layout function
 def layout():
-    layout = dbc.Container(
-        class_name="my-3",
-        children=[
-            dbc.Row(
+    layout = html.Div([
+        graph_modal,
+        html.Div([html.H1("CalSim Webmap")]),
+        html.Div([
+            html.Div(
                 [
-                    html.H1("CalSim Webmap"),
-                    del_outflow_modal,
-                ]
-            ),
-            dbc.Row(
-                [
-                    dbc.Col(
-                        [
-                            html.Div([
-                                html.Div(
-                                    [
-                                        html.Label("Scenario 1:", htmlFor=("scenario_1"), style={'margin-right': '15px', 'font-weight': 'bold'}),
-                                        dcc.Dropdown(
-                                            scenario_list, scenario_list[0], id="scenario_1", style={'flex-grow': '1'}
-                                        ),
-                                    ], style={'display': 'flex', 'flex': '1', 'margin-right': '30px'}
-                                ),
-                                html.Div(
-                                    [
-                                        html.Label("Scenario 2:", htmlFor=("scenario_2"), style={'margin-right': '15px', 'font-weight': 'bold'}),
-                                        dcc.Dropdown(
-                                            scenario_list, scenario_list[1], id="scenario_2",
-                                            style={'flex-grow': '1'}
-                                        ),
-                                    ], style={'display': 'flex', 'flex': '1'},
-                                ),
-                            ], style={'display': 'none', 'gap': '10px'}, id='drop_container'),
-                            html.Div(
-                                children=[
-                                    html.Label("Map Filter:", style={'font-weight': 'bold'}),
-                                    dcc.Checklist(
-                                        id='my_filter',
-                                        options=[
-                                            {
-                                                "label": [
-                                                    html.Span("Reservoirs"),
-                                                    html.Img(src="/assets/green_circle.png", style={"height": "10px", "marginLeft": "5px"})
-                                                ],
-                                                "value": "Reservoirs"
-                                            },
-                                            {
-                                                "label": [
-                                                    html.Span("Contractors")
-                                                ],
-                                                "value": "Contractors"
-                                            },
-                                            {
-                                                "label": [
-                                                    html.Span("Exports"),
-                                                    html.Img(src="/assets/yellow_circle.png", style={"height": "10px", "marginLeft": "5px"})
-                                                ],
-                                                "value": "Exports"
-                                            },
-                                            {
-                                                "label": [
-                                                    html.Span("Flows"),
-                                                    html.Img(src="/assets/blue_circle.png", style={"height": "10px", "marginLeft": "5px"})
-                                                ],
-                                                "value": "Flows"
-                                            },
-                                            {
-                                                "label": [
-                                                    html.Span("Conveyance"),
-                                                    html.Img(src="/assets/gray_circle.png", style={"height": "10px", "marginLeft": "5px"})
-                                                ],
-                                                "value": "Pools"
-                                            },
-                                        ],
-                                        value=['Reservoirs', 'Exports', 'Flows', 'Pools'],
-                                    style={'display': 'flex', 'gap': '10px', 'justify-content' : 'space-between', 'flex-grow': '1'}
-                                    ), 
-                                ], style={'display': 'flex', 'gap': '10px', 'padding-top': '20px', 'padding-bottom': '20px'},
-                            ),
-                            dcc.Graph(
-                                id="my_id",
-                            ),
-                        ],
-                        width=8,
+                    html.Label("Scenario 1:", htmlFor=("scenario_1"), style={'margin-right': '15px', 'font-weight': 'bold'}),
+                    dcc.Dropdown(
+                        scenario_list, scenario_list[0], id="scenario_1", style={'flex-grow': '1'}
                     ),
-                    dbc.Col([html.Div(id="my_charts")],
-                        width=4,
-                    )
-                ]
+                ], style={'display': 'flex', 'flex': '1', 'margin-right': '30px'}
             ),
-        ],
-    )
+            html.Div(
+                [
+                    html.Label("Scenario 2:", htmlFor=("scenario_2"), style={'margin-right': '15px', 'font-weight': 'bold'}),
+                    dcc.Dropdown(
+                        scenario_list, scenario_list[1], id="scenario_2",
+                        style={'flex-grow': '1'}
+                    ),
+                ], style={'display': 'flex', 'flex': '1'},
+            ),
+        ], style={'display': 'none', 'gap': '10px'}, id='drop_container'),
+        html.Div(
+            children=[
+                html.Label("Map Filter:", style={'font-weight': 'bold'}),
+                dcc.Checklist(
+                    id='my_filter',
+                    options=[
+                        {
+                            "label": [
+                                html.Span("Reservoirs"),
+                                html.Img(src="/assets/green_circle.png", style={"height": "10px", "marginLeft": "5px"})
+                            ],
+                            "value": "Reservoirs"
+                        },
+                        {
+                            "label": [
+                                html.Span("Contractors")
+                            ],
+                            "value": "Contractors"
+                        },
+                        {
+                            "label": [
+                                html.Span("Exports"),
+                                html.Img(src="/assets/yellow_circle.png", style={"height": "10px", "marginLeft": "5px"})
+                            ],
+                            "value": "Exports"
+                        },
+                        {
+                            "label": [
+                                html.Span("Flows"),
+                                html.Img(src="/assets/blue_circle.png", style={"height": "10px", "marginLeft": "5px"})
+                            ],
+                            "value": "Flows"
+                        },
+                        {
+                            "label": [
+                                html.Span("Conveyance"),
+                                html.Img(src="/assets/gray_circle.png", style={"height": "10px", "marginLeft": "5px"})
+                            ],
+                            "value": "Pools"
+                        },
+                    ],
+                    value=['Reservoirs', 'Exports', 'Flows', 'Pools'],
+                style={'display': 'flex', 'gap': '10px', 'justify-content' : 'space-between', 'flex-grow': '1'}
+                ), 
+            ], style={'display': 'flex', 'gap': '10px', 'padding-top': '20px', 'padding-bottom': '20px'},
+        ),
+        dcc.Graph(id="my_id"),
+    ])
+
     return layout
 
 
@@ -220,6 +193,7 @@ def filter_to_drop(selected_values):
     if 'Contractors' in selected_values:
         return {'display': 'flex', 'gap': '10px'}
     return {'display': 'none', 'gap': '10px'}
+
 
 def update_graph(scen1: str, scen2: str, selected_values: list):
     # add variables for selected filter
@@ -399,9 +373,9 @@ def handle_click(custom_data):
             result.append(contractor_dcc)
     return result
 
+
 @callback(
     Output("my_id", "figure"),
-    Output("my_charts", "children"),
     Input("my_id", "clickData"),
     Input("scenario_1", "value"),
     Input("scenario_2", "value"),
@@ -411,127 +385,48 @@ def handle_change(clickData, scen1: str, scen2: str, selected_values: list):
     input_changed = ctx.triggered_id
     fig = update_graph(scen1, scen2, selected_values)
     fig.update_layout(uirevision=True)
-    chart = [
-        html.P("Please Click An Object On The Map To See Charts.",
-                style={
-                    "width": "80%", 
-                    "display": "inline-block",
-                    "height": "100vh",
-                    "line-height": "100vh",
-                    "text-align": "center"
-                }
-        )
-    ]
-    if input_changed == "my_id":
-        if clickData:
-            points = clickData["points"]
-            if points and "customdata" in points[0]:
-                custom_data = points[0]["customdata"]
-                chart = handle_click(custom_data)
-    return fig, chart
+    return fig
 
-@callback(
-    Output("del_out_modal", "is_open"),
-    Output("my_id", "clickData"),
-    Input("my_id", "clickData"),
-    Input("close", "n_clicks"),
-    State("del_out_modal", "is_open")
-)
-def handle_del_outflow_click(clickData, n1, is_open):
-    if is_open:
-        return False, None
-    else:
-        if clickData:
-            points = clickData["points"]
-        else:
-            return False, clickData
-
-        if points and "customdata" in points[0]:
-            custom_data = points[0]["customdata"]
-            bpart = custom_data[0]
-            if bpart == "NDOI":
-                return True, None
-            else:
-                return False, clickData
-    return False, None
 
 @callback(
     Output("ndoi_graph_id", "children"),
     Input("del_out_bpart", "value"),
 )
 def handle_ndoi_selection(bpart):
-    result = []
-    if bpart:
-        result.append(html.H2("Annual Plot"))
-        try:
-            ex_fig = api.update_bar_annual(bpart, [1922, 2021])
-            ex_dcc = dcc.Graph(figure=ex_fig)
-            result.append(ex_dcc)
-        except:
-            ex_fig = go.Figure()
-            ex_fig.update_layout(
-                margin={'r': 0, 't': 0, 'l': 0, 'b': 10},
-                xaxis = {"visible": False},
-                yaxis = {"visible": False},
-                annotations = [
-                    {
-                        "text": "No Data Available",
-                        "xref": "paper",
-                        "yref": "paper",
-                        "showarrow": False,
-                        "font": {"size": 28}
-                    }
-                ]
-            )
-            ex_dcc = dcc.Graph(figure=ex_fig)
-            result.append(ex_dcc)
-
-        result.append(html.H2("Monthly Plot"))
-        try:
-            res_fig = api.update_monthly(bpart, [1922, 2021])
-            res_dcc = dcc.Graph(figure=res_fig)
-            result.append(res_dcc)
-        except:
-            res_fig = go.Figure()
-            res_fig.update_layout(
-                margin={'r': 0, 't': 0, 'l': 0, 'b': 10},
-                xaxis = {"visible": False},
-                yaxis = {"visible": False},
-                annotations = [
-                    {
-                        "text": "No Data Available",
-                        "xref": "paper",
-                        "yref": "paper",
-                        "showarrow": False,
-                        "font": {"size": 28}
-                    }
-                ]
-            )
-            res_dcc = dcc.Graph(figure=res_fig)
-            result.append(res_dcc)
+    return handle_click([bpart, "FLOW"])
 
 
-        result.append(html.H2("Timeseries Plot"))
-        try:
-            contractor_fig = api.update_timeseries(bpart)
-            contractor_dcc = dcc.Graph(figure=contractor_fig)
-            result.append(contractor_dcc)
-        except:
-            contractor_fig = go.Figure()
-            contractor_fig.update_layout(
-                margin={'r': 0, 't': 0, 'l': 0, 'b': 0},
-                xaxis = {"visible": False},
-                yaxis = {"visible": False},
-                annotations = [
-                    {
-                        "text": "No Data Available",
-                        "xref": "paper",
-                        "yref": "paper",
-                        "showarrow": False,
-                        "font": {"size": 28}
-                    }
-                ]
-            )
-            contractor_dcc = dcc.Graph(figure=contractor_fig)
-            result.append(contractor_dcc)
-    return result
+@callback(
+    Output("graph_modal", "is_open"),
+    Output("my_id", "clickData"),
+    Output("my_charts", "children"),
+    Input("my_id", "clickData"),
+    Input("close", "n_clicks"),
+    State("graph_modal", "is_open"),
+)
+def handle_graph_click(clickData, n1, is_open):
+    if is_open:
+        return False, None, None
+    else:
+        if clickData:
+            points = clickData["points"]
+        else:
+            return False, clickData, None
+
+        if points and "customdata" in points[0]:
+            custom_data = points[0]["customdata"]
+            bpart = custom_data[0]
+            if bpart == "NDOI":
+                results = []
+                results.append(dcc.Dropdown(ndoi_bparts, ndoi_bparts[0], id="del_out_bpart"))
+                chart = handle_click(custom_data)
+                div = html.Div(children=chart, id="ndoi_graph_id")
+                results.append(div)
+                return True, None, results
+            else:
+                chart = handle_click(custom_data)
+                return True, None, chart
+            
+
+    return False, None, None
+

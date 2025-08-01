@@ -563,7 +563,7 @@ def create_del_outflows_centroid():
         df,
         lat='lat',
         lon='lon',
-        custom_data= ["BPART"]
+        custom_data= ["BPART", "DATA_TYPE"]
     )
 
     fig1.update_traces(
