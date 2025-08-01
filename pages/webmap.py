@@ -67,6 +67,9 @@ fig_aqueducts = api.create_aqueduct_plot()
 # centroid map for delta outflows
 fig_del_outflows = api.create_del_outflows_centroid()
 
+# list of NDOI bparts
+ndoi_bparts = ["NDOI", "NDOI_ADD", "NDOI_ADD_ANN", "NDOI_ADD_CVP", "NDOI_ADD_SWP", "NDOI_MIN", "DELTAINFLOWFORNDOI"]
+
 mycolor_scale = [
     [0, "#0000ff"],
     [0.1, "#3333ff"],
@@ -97,30 +100,19 @@ del_outflow_modal = html.Div([
                 # "This is modal body"
                 html.Div(
                     [
-                        dbc.RadioItems(
-                            options=[
-                                {"label": "NDOI", "value": "NDOI"},
-                                {"label": "NDOI_ADD", "value": "NDOI_ADD"},
-                                {"label": "NDOI_ADD_ANN", "value": "NDOI_ADD_ANN"},
-                                {"label": "NDOI_ADD_CVP", "value":"NDOI_ADD_CVP"},
-                                {"label": "NDOI_ADD_SWP", "value":"NDOI_ADD_SWP"},
-                                {"label": "NDOI_MIN", "value":"NDOI_MIN"},
-                                {"label": "DELTAINFLOWFORNDOI", "value":"DELTAINFLOWFORNDOI"}
-                            ],
-                            value="NDOI",
-                            id="del_out_bpart"
-
-                        )
+                        dcc.Dropdown(ndoi_bparts, ndoi_bparts[0], id="del_out_bpart"),
+                        html.Div(id="ndoi_graph_id")
                     ]
                 )
             ),
-            html.Div(id="ndoi_graph_id"),
             dbc.ModalFooter(
                 dbc.Button("Close", id="close", className="ms-auto", n_clicks=0)
             ),
         ],
         id="del_out_modal",
         is_open=False,
+        style={'margin-left': '50px', 'margin-right': '50px'},
+        scrollable=True
     )
 ])
 
@@ -416,7 +408,6 @@ def handle_click(custom_data):
     Input("my_filter", "value")
 )
 def handle_change(clickData, scen1: str, scen2: str, selected_values: list):
-    print("handle_change(): clickData =", clickData)
     input_changed = ctx.triggered_id
     fig = update_graph(scen1, scen2, selected_values)
     fig.update_layout(uirevision=True)
