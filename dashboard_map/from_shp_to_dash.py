@@ -641,7 +641,7 @@ def create_aqueduct_plot():
     
     df = pd.DataFrame({'lat': lats, 'lon': lons})
     
-    fig = px.line_map(
+    fig = px.line_mapbox(
         df,
         lat='lat', 
         lon='lon', 

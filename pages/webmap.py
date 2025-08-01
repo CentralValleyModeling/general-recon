@@ -99,21 +99,22 @@ del_outflow_modal = html.Div([
                     [
                         dbc.RadioItems(
                             options=[
-                                {"label": "NDOI", "value": 1},
-                                {"label": "NDOI_ADD", "value": 2},
-                                {"label": "NDOI_ADD_ANN", "value": 3},
-                                {"label": "NDOI_ADD_CVP", "value":4},
-                                {"label": "NDOI_ADD_SWP", "value":5},
-                                {"label": "NDOI_MIN", "value":6},
-                                {"label": "DELTAINFLOWFORNDOI", "value":7}
+                                {"label": "NDOI", "value": "NDOI"},
+                                {"label": "NDOI_ADD", "value": "NDOI_ADD"},
+                                {"label": "NDOI_ADD_ANN", "value": "NDOI_ADD_ANN"},
+                                {"label": "NDOI_ADD_CVP", "value":"NDOI_ADD_CVP"},
+                                {"label": "NDOI_ADD_SWP", "value":"NDOI_ADD_SWP"},
+                                {"label": "NDOI_MIN", "value":"NDOI_MIN"},
+                                {"label": "DELTAINFLOWFORNDOI", "value":"DELTAINFLOWFORNDOI"}
                             ],
-                            value=1,
+                            value="NDOI",
                             id="del_out_bpart"
 
                         )
                     ]
                 )
             ),
+            html.Div(id="ndoi_graph_id"),
             dbc.ModalFooter(
                 dbc.Button("Close", id="close", className="ms-auto", n_clicks=0)
             ),
@@ -130,7 +131,8 @@ def layout():
         children=[
             dbc.Row(
                 [
-                    html.H1("CalSim Webmap"), del_outflow_modal,
+                    html.H1("CalSim Webmap"),
+                    del_outflow_modal,
                 ]
             ),
             dbc.Row(
@@ -260,6 +262,9 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
     final_fig.add_trace(trace_river_feath)
     final_fig.add_trace(trace_river_sac)
 
+    # add the aqueducts
+    final_fig.add_trace(fig_aqueducts.data[0])
+
     # add contractors if selected
     if show_contractors:
         # Geo DataFrame to hold all necessary data
@@ -302,7 +307,7 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
         trace11 = fig_p_centroid.data[0]
         final_fig.add_trace(trace10)
         final_fig.add_trace(trace11)
-
+ 
     final_fig.update_layout(
         map_style='outdoors',
         margin={'r': 0, 't': 0, 'l': 0, 'b': 0},
@@ -405,16 +410,13 @@ def handle_click(custom_data):
 @callback(
     Output("my_id", "figure"),
     Output("my_charts", "children"),
-    Output("del_out_modal", "is_open"),
     Input("my_id", "clickData"),
     Input("scenario_1", "value"),
     Input("scenario_2", "value"),
-    Input("my_filter", "value"),
-    Input("close", "n_clicks"),
-    State("del_out_modal", "is_open")
+    Input("my_filter", "value")
 )
-def handle_change(clickData, scen1: str, scen2: str, selected_values: list, n1: int, is_open: bool):
-    open_val = False
+def handle_change(clickData, scen1: str, scen2: str, selected_values: list):
+    print("handle_change(): clickData =", clickData)
     input_changed = ctx.triggered_id
     fig = update_graph(scen1, scen2, selected_values)
     fig.update_layout(uirevision=True)
@@ -434,11 +436,111 @@ def handle_change(clickData, scen1: str, scen2: str, selected_values: list, n1: 
             points = clickData["points"]
             if points and "customdata" in points[0]:
                 custom_data = points[0]["customdata"]
-                bpart = custom_data[0]
-                if bpart == "NDOI":
-                    if is_open:
-                        open_val = False
-                    else:
-                       open_val = True 
                 chart = handle_click(custom_data)
-    return fig, chart, open_val
+    return fig, chart
+
+@callback(
+    Output("del_out_modal", "is_open"),
+    Output("my_id", "clickData"),
+    Input("my_id", "clickData"),
+    Input("close", "n_clicks"),
+    State("del_out_modal", "is_open")
+)
+def handle_del_outflow_click(clickData, n1, is_open):
+    if is_open:
+        return False, None
+    else:
+        if clickData:
+            points = clickData["points"]
+        else:
+            return False, clickData
+
+        if points and "customdata" in points[0]:
+            custom_data = points[0]["customdata"]
+            bpart = custom_data[0]
+            if bpart == "NDOI":
+                return True, None
+            else:
+                return False, clickData
+    return False, None
+
+@callback(
+    Output("ndoi_graph_id", "children"),
+    Input("del_out_bpart", "value"),
+)
+def handle_ndoi_selection(bpart):
+    result = []
+    if bpart:
+        result.append(html.H2("Annual Plot"))
+        try:
+            ex_fig = api.update_bar_annual(bpart, [1922, 2021])
+            ex_dcc = dcc.Graph(figure=ex_fig)
+            result.append(ex_dcc)
+        except:
+            ex_fig = go.Figure()
+            ex_fig.update_layout(
+                margin={'r': 0, 't': 0, 'l': 0, 'b': 10},
+                xaxis = {"visible": False},
+                yaxis = {"visible": False},
+                annotations = [
+                    {
+                        "text": "No Data Available",
+                        "xref": "paper",
+                        "yref": "paper",
+                        "showarrow": False,
+                        "font": {"size": 28}
+                    }
+                ]
+            )
+            ex_dcc = dcc.Graph(figure=ex_fig)
+            result.append(ex_dcc)
+
+        result.append(html.H2("Monthly Plot"))
+        try:
+            res_fig = api.update_monthly(bpart, [1922, 2021])
+            res_dcc = dcc.Graph(figure=res_fig)
+            result.append(res_dcc)
+        except:
+            res_fig = go.Figure()
+            res_fig.update_layout(
+                margin={'r': 0, 't': 0, 'l': 0, 'b': 10},
+                xaxis = {"visible": False},
+                yaxis = {"visible": False},
+                annotations = [
+                    {
+                        "text": "No Data Available",
+                        "xref": "paper",
+                        "yref": "paper",
+                        "showarrow": False,
+                        "font": {"size": 28}
+                    }
+                ]
+            )
+            res_dcc = dcc.Graph(figure=res_fig)
+            result.append(res_dcc)
+
+
+        result.append(html.H2("Timeseries Plot"))
+        try:
+            contractor_fig = api.update_timeseries(bpart)
+            contractor_dcc = dcc.Graph(figure=contractor_fig)
+            result.append(contractor_dcc)
+        except:
+            contractor_fig = go.Figure()
+            contractor_fig.update_layout(
+                margin={'r': 0, 't': 0, 'l': 0, 'b': 0},
+                xaxis = {"visible": False},
+                yaxis = {"visible": False},
+                annotations = [
+                    {
+                        "text": "No Data Available",
+                        "xref": "paper",
+                        "yref": "paper",
+                        "showarrow": False,
+                        "font": {"size": 28}
+                    }
+                ]
+            )
+            contractor_dcc = dcc.Graph(figure=contractor_fig)
+            result.append(contractor_dcc)
+    return result
