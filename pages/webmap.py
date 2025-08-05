@@ -47,13 +47,13 @@ fig_r = api.create_reservoir_plot(reservoir_geodf)
 fig_r_centroid = api.create_reservoir_centroid(reservoir_geodf)
 
 # map for main rivers
-fig_river_sj = api.create_river_plot("assets/qgis/san_joaquin_river.shp", "San Joaquin River")
+fig_river_sj = api.create_river_plot("assets/qgis/san_joaq_river.shp", "San Joaquin River")
 
-fig_river_amer = api.create_river_plot("assets/qgis/american_river.shp", "American River")
+fig_river_amer = api.create_river_plot("assets/qgis/amer_river.shp", "American River")
 
-fig_river_feath = api.create_river_plot("assets/qgis/feather_river.shp", "Feather River")
+fig_river_feath = api.create_river_plot("assets/qgis/feath_river.shp", "Feather River")
 
-fig_river_sac = api.create_river_plot("assets/qgis/sacramento_river.shp", "Sacramento River")
+fig_river_sac = api.create_river_plot("assets/qgis/sac_river.shp", "Sacramento River")
 
 # choropleth map for pools
 fig_p = api.create_pool_plot(pool_geodf)
@@ -104,6 +104,7 @@ graph_modal = html.Div([
         ],
         id="graph_modal",
         is_open=False,
+        size="lg",
         style={'margin-left': '50px', 'margin-right': '50px'},
         scrollable=True
     )
@@ -293,7 +294,7 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
     return final_fig
 
 
-def handle_click(custom_data):
+def generate_graph(custom_data):
     result = []
     if custom_data and len(custom_data) > 1:
         data_type = custom_data[-1]
@@ -371,6 +372,31 @@ def handle_click(custom_data):
             )
             contractor_dcc = dcc.Graph(figure=contractor_fig)
             result.append(contractor_dcc)
+        
+        result.append(html.H2("Monthly Exceedance Plot"))
+        try:
+            ex_fig = api.update_monthly_exc(bpart, [1922, 2021])
+            ex_dcc = dcc.Graph(figure=ex_fig)
+            result.append(ex_dcc)
+        except:
+            ex_fig = go.Figure()
+            ex_fig.update_layout(
+                margin={'r': 0, 't': 0, 'l': 0, 'b': 10},
+                xaxis = {"visible": False},
+                yaxis = {"visible": False},
+                annotations = [
+                    {
+                        "text": "No Data Available",
+                        "xref": "paper",
+                        "yref": "paper",
+                        "showarrow": False,
+                        "font": {"size": 28}
+                    }
+                ]
+            )
+            ex_dcc = dcc.Graph(figure=ex_fig)
+            result.append(ex_dcc)
+
     return result
 
 
@@ -393,7 +419,7 @@ def handle_change(clickData, scen1: str, scen2: str, selected_values: list):
     Input("del_out_bpart", "value"),
 )
 def handle_ndoi_selection(bpart):
-    return handle_click([bpart, "FLOW"])
+    return generate_graph([bpart, "FLOW"])
 
 
 @callback(
@@ -419,12 +445,12 @@ def handle_graph_click(clickData, n1, is_open):
             if bpart == "NDOI":
                 results = []
                 results.append(dcc.Dropdown(ndoi_bparts, ndoi_bparts[0], id="del_out_bpart"))
-                chart = handle_click(custom_data)
+                chart = generate_graph(custom_data)
                 div = html.Div(children=chart, id="ndoi_graph_id")
                 results.append(div)
                 return True, None, results
             else:
-                chart = handle_click(custom_data)
+                chart = generate_graph(custom_data)
                 return True, None, chart
             
 

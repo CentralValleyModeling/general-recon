@@ -9,8 +9,9 @@ import yaml
 
 sys.path.append(".")
 import utils.query_data as qd
-from pages.styles import PLOT_COLORS
-from utils.tools import monthfilter, month_list, cfs_taf
+from pages.styles import PLOT_COLORS, ASSUMPTION_ORDER, ASSUMPTION_COLORS
+from utils.tools import monthfilter, month_list, cfs_taf, convert_cm_nums
+
 
 swp2convention = {
     "SWP_TA_AVEK": "SWC_AVEKWA",
@@ -772,6 +773,65 @@ def create_fig_1(geodf: gpd.GeoDataFrame):
     fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
 
     return fig1
+
+def update_monthly_exc(b_part, slider_yr_range):
+    startyr = slider_yr_range[0]
+    endyr = slider_yr_range[1]
+    df = qd.df_dv.loc[
+        (qd.df_dv["iwy"] >= startyr)
+        & (qd.df_dv["iwy"] <= endyr)
+    ]
+
+    series_container = []
+    # Filter the calendar months
+    df0 = df.loc[df["icm"].isin(convert_cm_nums(month_list))]
+
+    for assumption in ASSUMPTION_ORDER:
+        series_i = df0.loc[df0["Assumption"] == assumption, b_part]
+        series_i = series_i.sort_values()
+        series_i = series_i.reset_index(drop=True)
+        series_i.rename(assumption, inplace=True)
+        series_container.append(series_i)
+
+    df3 = pd.concat(series_container, axis=1)
+    fig = go.Figure()
+
+    for i, column in enumerate(df3.columns):
+        series_sorted = df3[column].dropna()
+        exceedance_prob = (series_sorted.index + 1) / len(series_sorted) * 100
+        # linearly interpolate the line above so we get 100 points, from 1-100
+        df = pd.DataFrame(data={"y": series_sorted, "x": exceedance_prob})
+        integer_index = df["x"].round(decimals=0).astype(int)
+        # This step should really be an interpolation using scipy.interp1d, but it works
+        # with the dependencies that we have right now
+        # TODO: 2024-07-18 Consider updating to an interpolation method
+        df = df.groupby(integer_index).mean()
+        df = df.reindex(index=range(1, 101, 1)).ffill()
+        #print(df3)
+        fig.add_trace(
+            go.Scatter(
+                x=df.index,
+                y=df["y"],
+                mode="lines",
+                name=column,
+                line=dict(color=ASSUMPTION_COLORS.get(column, "#cccccc")),
+            )
+        )
+    # if CSV_EXPORT:
+    #     df3.to_csv(f'csv_export/ranked_{b_part}_{climate}_{monthchecklist}.csv', index=True)
+
+    fig.update_layout(
+        plot_bgcolor="white",
+        xaxis_title="Non Exceedance Probability (%)",
+        xaxis_tickformat=",d",
+        yaxis_title="",
+        legend_title="Scenario",
+        showlegend=True,
+        xaxis=dict(gridcolor="LightGrey"),
+        yaxis=dict(gridcolor="LightGrey"),
+    )
+
+    return fig
 
 
 def update_monthly(b_part, slider_yr_range):
