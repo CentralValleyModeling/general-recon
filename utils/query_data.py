@@ -11,17 +11,24 @@ def cache_read_csv(path: str, *args, index_col=0, parse_dates=True, **kwargs) ->
     """
     return pd.read_csv(path, *args, index_col=index_col, parse_dates=parse_dates, **kwargs)
 
-# Load variable definitions from yaml file once and keep in memory
-@lru_cache(maxsize=1)
-def load_var_dict():
-    with open("constants/dvars.yaml", "r") as file:
+# Generic cached YAML loader function
+@lru_cache(maxsize=10)
+def load_yaml(filepath: str) -> dict:
+    """
+    Generic cached YAML loader to avoid re-reading the same files multiple times.
+    Uses LRU cache to store up to 10 dictionaries in memory for performance.
+    """
+    with open(filepath, "r") as file:
         return yaml.safe_load(file)
 
-# Load state variable definitions from yaml file once and keep in memory
-@lru_cache(maxsize=1)
+# Convenience functions using the generic YAML loader
+def load_var_dict():
+    """Load variable definitions from yaml file once and keep in memory"""
+    return load_yaml("constants/dvars.yaml")
+
 def load_svar_dict():
-    with open("constants/svars.yaml", "r") as file:
-        return yaml.safe_load(file)
+    """Load state variable definitions from yaml file once and keep in memory"""
+    return load_yaml("constants/svars.yaml")
 
 @lru_cache(maxsize=1)
 def get_fully_processed_df_dv():
