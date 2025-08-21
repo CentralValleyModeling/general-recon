@@ -47,13 +47,14 @@ fig_r = api.create_reservoir_plot(reservoir_geodf)
 fig_r_centroid = api.create_reservoir_centroid(reservoir_geodf)
 
 # map for main rivers
-fig_river_sj = api.create_river_plot("assets/qgis/san_joaq_river_smooth.shp", "San Joaquin River")
 
-fig_river_amer = api.create_river_plot("assets/qgis/amer_river_smooth.shp", "American River")
+fig_river_sj = api.create_line_plot("assets/qgis/san_joaq_river_smooth.shp", line_color='rgb( 37, 170, 225)')
 
-fig_river_feath = api.create_river_plot("assets/qgis/feath_river_smooth.shp", "Feather River")
+fig_river_amer = api.create_line_plot("assets/qgis/amer_river_smooth.shp", line_color='rgb( 37, 170, 225)')
 
-fig_river_sac = api.create_river_plot("assets/qgis/sac_river_smooth.shp", "Sacramento River")
+fig_river_feath = api.create_line_plot("assets/qgis/feath_river_smooth.shp", line_color='rgb( 37, 170, 225)')
+
+fig_river_sac = api.create_line_plot("assets/qgis/sac_river_smooth.shp", line_color='rgb( 37, 170, 225)')
 
 # choropleth map for pools
 fig_p = api.create_pool_plot(pool_geodf)
@@ -62,7 +63,14 @@ fig_p = api.create_pool_plot(pool_geodf)
 fig_p_centroid = api.create_pool_centroid(pool_geodf)
 
 # map for aqueducts
-fig_aqueducts = api.create_aqueduct_plot()
+fig_aqueducts = api.create_line_plot(
+    "assets/qgis/caa_pools.shp", 
+    line_color='rgb(192, 192, 192)',
+    data_filter = (
+        lambda g: g.dropna(subset=["Branch"]),
+        lambda g: g[g["Branch"].str.contains('Aqueduct')]
+    )
+)
 
 # centroid map for delta outflows
 fig_del_outflows = api.create_del_outflows_centroid()
@@ -188,7 +196,8 @@ def layout():
 
 @callback(
     Output("drop_container", "style"),
-    Input("my_filter", "value")
+    Input("my_filter", "value"),
+    prevent_initial_call=True
 )
 def filter_to_drop(selected_values):
     if 'Contractors' in selected_values:
@@ -405,7 +414,8 @@ def generate_graph(custom_data):
     Input("my_id", "clickData"),
     Input("scenario_1", "value"),
     Input("scenario_2", "value"),
-    Input("my_filter", "value")
+    Input("my_filter", "value"),
+    prevent_initial_call=False
 )
 def handle_change(clickData, scen1: str, scen2: str, selected_values: list):
     input_changed = ctx.triggered_id
@@ -417,6 +427,7 @@ def handle_change(clickData, scen1: str, scen2: str, selected_values: list):
 @callback(
     Output("ndoi_graph_id", "children"),
     Input("del_out_bpart", "value"),
+    prevent_initial_call=True
 )
 def handle_ndoi_selection(bpart):
     return generate_graph([bpart, "FLOW"])
@@ -429,6 +440,7 @@ def handle_ndoi_selection(bpart):
     Input("my_id", "clickData"),
     Input("close", "n_clicks"),
     State("graph_modal", "is_open"),
+    prevent_initial_call=True
 )
 def handle_graph_click(clickData, n1, is_open):
     if is_open:

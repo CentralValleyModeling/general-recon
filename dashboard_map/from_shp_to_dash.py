@@ -6,12 +6,28 @@ import pyproj
 import pandas as pd
 import plotly.graph_objects as go
 import yaml
+from functools import lru_cache
+import shapely.geometry
+import numpy as np
 
 sys.path.append(".")
 import utils.query_data as qd
 from pages.styles import PLOT_COLORS, ASSUMPTION_ORDER, ASSUMPTION_COLORS
 from utils.tools import monthfilter, month_list, cfs_taf, convert_cm_nums
 
+import time
+import functools
+
+def log_execution_time(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        elapsed = end_time - start_time
+        print(f"Function '{func.__name__}' executed in {elapsed:.4f} seconds")
+        return result
+    return wrapper
 
 swp2convention = {
     "SWP_TA_AVEK": "SWC_AVEKWA",
@@ -194,6 +210,7 @@ def area_from_geodf(geodf: gpd.GeoDataFrame):
     return area_geodf["AREA"]
 
 
+@log_execution_time
 def load_shp() -> gpd.GeoDataFrame:
     geodf = gpd.read_file("assets/qgis/SWP_Contractors.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
@@ -219,7 +236,7 @@ def load_shp() -> gpd.GeoDataFrame:
 
     return geodf
 
-
+@log_execution_time
 def load_shp_reservoir() -> gpd.GeoDataFrame:
     geodf = gpd.read_file("assets/qgis/calsim_lakes_for_visualization.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
@@ -254,6 +271,7 @@ arc_id2alias = {
     "C_DMC003": "Total Jones Exports"
 }
 
+@log_execution_time
 def load_shp_export() -> gpd.GeoDataFrame:
     geodf = gpd.read_file("assets/qgis/main_exports.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
@@ -305,6 +323,7 @@ arc_id2alias_up = {
     "C_AMR004": "American River at H-Street"
 }
 
+@log_execution_time
 def load_shp_upstream_flows() -> gpd.GeoDataFrame:
     geodf = gpd.read_file("assets/qgis/upstream_flows.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
@@ -340,12 +359,8 @@ def load_shp_upstream_flows() -> gpd.GeoDataFrame:
 
     return geodf
 
-def load_shp_river(filename: str) -> gpd.GeoDataFrame:
-    geodf = gpd.read_file(filename)
-    geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 
-    return geodf
-
+@log_execution_time
 def load_shp_pool() -> gpd.GeoDataFrame:
     geodf = gpd.read_file("assets/qgis/caa_pools.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
@@ -363,14 +378,8 @@ def load_shp_pool() -> gpd.GeoDataFrame:
 
     return geodf
 
-def load_shp_aqueduct() -> gpd.GeoDataFrame:
-    geodf = gpd.read_file("assets/qgis/caa_pools.shp")
-    geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
-    geodf = geodf.dropna(subset=["Branch"])
-    geodf = geodf[geodf["Branch"].str.contains('Aqueduct')]
 
-    return geodf
-
+@log_execution_time
 def create_ca_plot():
     # read shapefile for california state boundary
     # downloaded from https://data.ca.gov/dataset/ca-geographic-boundaries
@@ -392,6 +401,7 @@ def create_ca_plot():
 
     return figca
 
+@log_execution_time
 def create_plot(geodf: gpd.GeoDataFrame):
     fig = px.choropleth_mapbox(
         geodf,
@@ -417,7 +427,7 @@ def create_plot(geodf: gpd.GeoDataFrame):
 
     return fig
 
-
+@log_execution_time
 def create_reservoir_plot(geodf: gpd.GeoDataFrame):
     fig = px.choropleth_mapbox(
         geodf,
@@ -435,6 +445,7 @@ def create_reservoir_plot(geodf: gpd.GeoDataFrame):
 
     return fig
 
+@log_execution_time
 def create_reservoir_centroid(geodf: gpd.GeoDataFrame):
     centroid_df = geodf.geometry.to_crs(epsg=32618)
     centroid_projected = centroid_df.geometry.centroid
@@ -459,6 +470,7 @@ def create_reservoir_centroid(geodf: gpd.GeoDataFrame):
 
     return fig1
 
+@log_execution_time
 def create_export_plot(geodf: gpd.GeoDataFrame):
     fig = px.choropleth_mapbox(
         geodf,
@@ -476,6 +488,7 @@ def create_export_plot(geodf: gpd.GeoDataFrame):
 
     return fig
 
+@log_execution_time
 def create_export_centroid(geodf: gpd.GeoDataFrame):
     centroid_df = geodf.geometry.to_crs(epsg=32618)
     centroid_projected = centroid_df.geometry.centroid
@@ -504,6 +517,7 @@ def create_export_centroid(geodf: gpd.GeoDataFrame):
 
     return fig1
 
+@log_execution_time
 def create_up_flows_plot(geodf: gpd.GeoDataFrame):
     fig = px.choropleth_mapbox(
         geodf,
@@ -521,6 +535,7 @@ def create_up_flows_plot(geodf: gpd.GeoDataFrame):
 
     return fig
 
+@log_execution_time
 def create_up_flows_centroid(geodf: gpd.GeoDataFrame):
     centroid_df = geodf.geometry.to_crs(epsg=32618)
     centroid_projected = centroid_df.geometry.centroid
@@ -549,6 +564,7 @@ def create_up_flows_centroid(geodf: gpd.GeoDataFrame):
 
     return fig1
 
+@log_execution_time
 def create_del_outflows_centroid():
     data = {
         'BPART': ['NDOI'],
@@ -579,49 +595,18 @@ def create_del_outflows_centroid():
 
     return fig1
 
-import shapely.geometry
-import numpy as np
+###############################
+@lru_cache
+@log_execution_time
+def create_line_plot(shp_file_name: str, data_filter: list=tuple(), line_color='rgb( 37, 170, 225)'):
+    # Read the sahpe file into a geodf
+    geodf = gpd.read_file(shp_file_name)
+    geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 
-def create_river_plot(filename, river_name):
-    geodf = load_shp_river(filename)
+    # Apply the filters (if any)
+    for f in data_filter:
+        geodf = f(geodf)
 
-    lats = []
-    lons = []
-
-    for feature in geodf.geometry:
-        if isinstance(feature, shapely.geometry.linestring.LineString):
-            linestrings = [feature]
-        elif isinstance(feature, shapely.geometry.multilinestring.MultiLineString):
-            linestrings = feature.geoms
-        else:
-            continue
-        for linestring in linestrings:
-            x, y = linestring.xy
-            lats = np.append(lats, y)
-            lons = np.append(lons, x)
-            lats = np.append(lats, None)
-            lons = np.append(lons, None)
-    
-    river_names = [river_name] * len(lats)
-    df = pd.DataFrame({'lat': lats, 'lon': lons, 'name': river_names})
-    
-    fig = px.line_mapbox(
-        df,
-        lat='lat', 
-        lon='lon', 
-        color_discrete_sequence=['rgb( 37, 170, 225)'],
-    )
-
-    fig.update_traces(
-        hovertemplate=None,
-        hoverinfo="skip",
-        showlegend=False
-    )
-
-    return fig
-
-def create_aqueduct_plot():
-    geodf = load_shp_aqueduct()
 
     lats = []
     lons = []
@@ -646,7 +631,7 @@ def create_aqueduct_plot():
         df,
         lat='lat', 
         lon='lon', 
-        color_discrete_sequence=['rgb(192, 192, 192)'],
+        color_discrete_sequence=[line_color],
     )
 
     fig.update_traces(
@@ -655,8 +640,11 @@ def create_aqueduct_plot():
         showlegend=False
     )
 
-    return fig 
+    return fig
 
+###############################
+
+@log_execution_time
 def create_pool_plot(geodf: gpd.GeoDataFrame):
     fig = px.choropleth_mapbox(
         geodf,
@@ -674,6 +662,7 @@ def create_pool_plot(geodf: gpd.GeoDataFrame):
 
     return fig
 
+@log_execution_time
 def create_pool_centroid(geodf: gpd.GeoDataFrame):
     centroid_df = geodf.geometry.to_crs(epsg=32618)
     centroid_projected = centroid_df.geometry.centroid
@@ -745,7 +734,7 @@ def create_df_for_scen(
 
     return scen_geodf
 
-
+@log_execution_time
 def create_fig_1(geodf: gpd.GeoDataFrame):
     centroid_df = geodf.geometry.to_crs(epsg=32618)
     centroid_projected = centroid_df.geometry.centroid
