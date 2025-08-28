@@ -24,6 +24,7 @@ PLOT_COLORS = [
 
 ASSUMPTION_ORDER = [
     "DCR 2023",
+    "DCR 2025",
 ]
 
 SCENARIO_ORDER = [
@@ -31,12 +32,14 @@ SCENARIO_ORDER = [
     "DCR23_CC50",
     "DCR23_CC75",
     "DCR23_CC95",
+    "DCR25_Baseline",
 ]
 
 BASELINE = "DCR 2023"
 
 ASSUMPTION_COLORS = {
     "DCR 2023": "#0072b1",
+    "DCR 2025": "#b10000",
 }
 
 CLIMATE_ORDER = [

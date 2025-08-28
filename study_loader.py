@@ -23,17 +23,21 @@ studies = [
           r"C:\jobs\20230428_DCR23\models\9.3.1_danube_adj\DSS\input\DCR2023_SV_Danube_Adj_v1.8.dss",
           "DCR23_Baseline", "DCR 2023", "Current", 1),
 
-    Study(r"C:\jobs\20230428_DCR23\models\9.3.1_danube_cc50\9.3.1_danube_cc50\DSS\output\DCR2023_DV_9.3.1_Danube_cc50_v1.8.dss",
-          r"C:\jobs\20230428_DCR23\models\9.3.1_danube_cc50\9.3.1_danube_cc50\DSS\input\DCR2023_SV_Danube_cc50_v1.8.dss",
+    Study(r"C:\jobs\20230428_DCR23\models\9.3.1_danube_cc50\DSS\output\DCR2023_DV_9.3.1_Danube_cc50_v1.8.dss",
+          r"C:\jobs\20230428_DCR23\models\9.3.1_danube_cc50\DSS\input\DCR2023_SV_Danube_cc50_v1.8.dss",
           "DCR23_CC50", "DCR 2023", "2043_CC50", 1),
 
-    Study(r"C:\jobs\20230428_DCR23\models\9.3.1_danube_cc75\9.3.1_danube_cc75\DSS\output\DCR2023_DV_9.3.1_Danube_CC75_v1.8.dss",
-          r"C:\jobs\20230428_DCR23\models\9.3.1_danube_cc75\9.3.1_danube_cc75\DSS\input\DCR2023_SV_Danube_cc75_v1.8.dss",
+    Study(r"C:\jobs\20230428_DCR23\models\9.3.1_danube_cc75\DSS\output\DCR2023_DV_9.3.1_Danube_CC75_v1.8.dss",
+          r"C:\jobs\20230428_DCR23\models\9.3.1_danube_cc75\DSS\input\DCR2023_SV_Danube_cc75_v1.8.dss",
           "DCR23_CC75", "DCR 2023", "2043_CC75", 1),
 
-    Study(r"C:\jobs\20230428_DCR23\models\9.3.1_danube_cc95\9.3.1_danube_cc95\DSS\output\DCR2023_DV_9.3.1_Danube_CC95_v1.8.dss",
-          r"C:\jobs\20230428_DCR23\models\9.3.1_danube_cc95\9.3.1_danube_cc95\DSS\input\DCR2023_SV_Danube_cc95_v1.8.dss",
+    Study(r"C:\jobs\20230428_DCR23\models\9.3.1_danube_cc95\DSS\output\DCR2023_DV_9.3.1_Danube_CC95_v1.8.dss",
+          r"C:\jobs\20230428_DCR23\models\9.3.1_danube_cc95\DSS\input\DCR2023_SV_Danube_cc95_v1.8.dss",
           "DCR23_CC95", "DCR 2023", "2043_CC95", 1),
+
+    Study(r"C:\jobs\2025_DCR25\models\9.7.0_danube_adj\DSS\output\DCR2025_DV_9.7.0_Danube_Adj_v3.0.dss",
+          r"C:\jobs\2025_DCR25\models\9.7.0_danube_adj\DSS\input\DCR2023_SV_Danube_Adj_v1.8.dss",
+          "DCR25_Baseline", "DCR 2025", "Current", 1),
 ]
 
 date_map = pd.read_csv("constants/date_map.csv", index_col=0, parse_dates=True)
