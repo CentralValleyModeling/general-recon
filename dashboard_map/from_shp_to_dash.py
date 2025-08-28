@@ -199,9 +199,6 @@ def area_from_geodf(geodf: gpd.GeoDataFrame):
     # create a new geodf to get the area
     area_geodf = geodf.copy()
 
-    # Change the CRS with unit = degree to a CRS with unit = meter
-    # area_geodf = area_geodf.to_crs({"init": "epsg:32610"})
-
     # Create the area column
     # area_geodf["AREA"] = geodf["geometry"].area
     area_geodf["AREA"] = area_projected
@@ -211,7 +208,7 @@ def area_from_geodf(geodf: gpd.GeoDataFrame):
 
 
 @log_execution_time
-def load_shp() -> gpd.GeoDataFrame:
+def load_shp_contractors() -> gpd.GeoDataFrame:
     geodf = gpd.read_file("assets/qgis/SWP_Contractors.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 
@@ -428,7 +425,8 @@ def create_plot(geodf: gpd.GeoDataFrame):
     return fig
 
 @log_execution_time
-def create_reservoir_plot(geodf: gpd.GeoDataFrame):
+def create_reservoir_plot():
+    geodf=load_shp("reservoirs")
     fig = px.choropleth_mapbox(
         geodf,
         geojson=geodf.geometry,
@@ -445,33 +443,30 @@ def create_reservoir_plot(geodf: gpd.GeoDataFrame):
 
     return fig
 
-@log_execution_time
-def create_reservoir_centroid(geodf: gpd.GeoDataFrame):
-    centroid_df = geodf.geometry.to_crs(epsg=32618)
-    centroid_projected = centroid_df.geometry.centroid
-    centroid_geographic = centroid_projected.to_crs(epsg=4326)
 
-    fig1 = px.scatter_mapbox(
+@log_execution_time
+def create_export_plot():
+    geodf=load_shp("exports")
+    fig = px.choropleth_mapbox(
         geodf,
-        lat=centroid_geographic.y,
-        lon=centroid_geographic.x,
-        custom_data=["CALSIMNAME", "TABLENAME", "DATA_TYPE"]
+        geojson=geodf.geometry,
+        locations=geodf.index,
+        custom_data=["BPART", "ALIAS", "DATA_TYPE"],
     )
 
-    fig1.update_traces(
-        textposition='middle center', 
-        hovertemplate="<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>", 
-        showlegend=False,
-        mode='markers',
-        marker=dict(size=15, color='rgb(141, 198, 63)', symbol="circle")
+    my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
+    fig.update_traces(
+        hovertemplate=my_hovertemplate,
+        marker={"opacity": 0.7},
+        showlegend=False
     )
 
-    fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
+    return fig
 
-    return fig1
 
 @log_execution_time
-def create_export_plot(geodf: gpd.GeoDataFrame):
+def create_up_flows_plot():
+    geodf=load_shp("up_flows")
     fig = px.choropleth_mapbox(
         geodf,
         geojson=geodf.geometry,
@@ -489,81 +484,25 @@ def create_export_plot(geodf: gpd.GeoDataFrame):
     return fig
 
 @log_execution_time
-def create_export_centroid(geodf: gpd.GeoDataFrame):
-    centroid_df = geodf.geometry.to_crs(epsg=32618)
-    centroid_projected = centroid_df.geometry.centroid
-    centroid_geographic = centroid_projected.to_crs(epsg=4326)
-
-    hoverdf = geodf[
-        ["BPART", "ALIAS", "DATA_TYPE"]
-    ].copy()
-    my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
-    fig1 = px.scatter_mapbox(
-        geodf,
-        lat=centroid_geographic.y,
-        lon=centroid_geographic.x,
-        custom_data=["BPART", "ALIAS", "DATA_TYPE"]
-    )
-
-    fig1.update_traces(
-        textposition='middle center', 
-        hovertemplate=my_hovertemplate, 
-        showlegend=False,
-        mode='markers',
-        marker=dict(size=15, color='rgb(251, 184, 32)', symbol="circle")
-        )
-
-    fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
-
-    return fig1
-
-@log_execution_time
-def create_up_flows_plot(geodf: gpd.GeoDataFrame):
+def create_pool_plot():
+    geodf=load_shp("pools")
     fig = px.choropleth_mapbox(
         geodf,
         geojson=geodf.geometry,
         locations=geodf.index,
-        custom_data=["BPART", "ALIAS", "DATA_TYPE"],
+        custom_data=["BPART","AssetReg_2", "DATA_TYPE"],
     )
 
     my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
     fig.update_traces(
-        hovertemplate=my_hovertemplate,
+        hovertemplate=my_hovertemplate, 
         marker={"opacity": 0.7},
         showlegend=False
     )
 
     return fig
 
-@log_execution_time
-def create_up_flows_centroid(geodf: gpd.GeoDataFrame):
-    centroid_df = geodf.geometry.to_crs(epsg=32618)
-    centroid_projected = centroid_df.geometry.centroid
-    centroid_geographic = centroid_projected.to_crs(epsg=4326)
-
-    hoverdf = geodf[
-        ["BPART", "ALIAS", "DATA_TYPE"]
-    ].copy()
-    my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
-    fig1 = px.scatter_mapbox(
-        geodf,
-        lat=centroid_geographic.y,
-        lon=centroid_geographic.x,
-        custom_data= ["BPART", "ALIAS", "DATA_TYPE"]
-    )
-
-    fig1.update_traces(
-        textposition='middle center', 
-        hovertemplate=my_hovertemplate, 
-        showlegend=False,
-        mode='markers',
-        marker=dict(size=15, color='rgb(0, 93, 131)', symbol="circle")
-    )
-
-    fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
-
-    return fig1
-
+@lru_cache
 @log_execution_time
 def create_del_outflows_centroid():
     data = {
@@ -595,13 +534,12 @@ def create_del_outflows_centroid():
 
     return fig1
 
-###############################
+
 @lru_cache
 @log_execution_time
-def create_line_plot(shp_file_name: str, data_filter: list=tuple(), line_color='rgb( 37, 170, 225)'):
-    # Read the sahpe file into a geodf
-    geodf = gpd.read_file(shp_file_name)
-    geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
+def create_line_plot(data_type: str, data_filter: list=tuple(), line_color='rgb( 37, 170, 225)'):
+    # Read the shape file into a geodf
+    geodf = load_shp(data_type)
 
     # Apply the filters (if any)
     for f in data_filter:
@@ -642,50 +580,70 @@ def create_line_plot(shp_file_name: str, data_filter: list=tuple(), line_color='
 
     return fig
 
-###############################
 
 @log_execution_time
-def create_pool_plot(geodf: gpd.GeoDataFrame):
-    fig = px.choropleth_mapbox(
-        geodf,
-        geojson=geodf.geometry,
-        locations=geodf.index,
-        custom_data=["BPART","AssetReg_2", "DATA_TYPE"],
-    )
+@lru_cache
+def create_centroid_plot(data_type: str, custom_data=("BPART", "ALIAS", "DATA_TYPE"), centroid_color='rgb( 37, 170, 225)'):
+    geodf = load_shp(data_type)
 
-    my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
-    fig.update_traces(
-        hovertemplate=my_hovertemplate, 
-        marker={"opacity": 0.7},
-        showlegend=False
-    )
-
-    return fig
-
-@log_execution_time
-def create_pool_centroid(geodf: gpd.GeoDataFrame):
     centroid_df = geodf.geometry.to_crs(epsg=32618)
     centroid_projected = centroid_df.geometry.centroid
     centroid_geographic = centroid_projected.to_crs(epsg=4326)
 
+    my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
     fig1 = px.scatter_mapbox(
         geodf,
         lat=centroid_geographic.y,
         lon=centroid_geographic.x,
-        custom_data=["BPART","AssetReg_2", "DATA_TYPE"]
+        custom_data=custom_data
     )
 
     fig1.update_traces(
         textposition='middle center', 
-        hovertemplate="<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>", 
+        hovertemplate=my_hovertemplate, 
         showlegend=False,
         mode='markers',
-        marker=dict(size=15, color='rgb(109, 129, 150)', symbol="circle")
+        marker=dict(size=15, color=centroid_color, symbol="circle")
     )
 
     fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
 
     return fig1
+
+@lru_cache
+@log_execution_time
+def load_shp(data_type: str) -> gpd.GeoDataFrame:
+    geodf = None
+    match data_type:
+        case "contractors":
+            geodf = load_shp_contractors()
+        case "exports":
+            geodf = load_shp_export()
+        case "reservoirs":
+            geodf = load_shp_reservoir()
+        case "up_flows":
+            geodf = load_shp_upstream_flows()
+        case "pools":
+            geodf = load_shp_pool()
+        case "san_joaq_river":
+            geodf = gpd.read_file("assets/qgis/san_joaq_river_smooth.shp")
+            geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
+        case "amer_river":
+            geodf = gpd.read_file("assets/qgis/amer_river_smooth.shp")
+            geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
+        case "feath_river":
+            geodf = gpd.read_file("assets/qgis/feath_river_smooth.shp")
+            geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
+        case "sac_river":
+            geodf = gpd.read_file("assets/qgis/sac_river_smooth.shp")
+            geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
+        case "aqueducts":
+            geodf = gpd.read_file("assets/qgis/caa_pools.shp")
+            geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
+        case _:
+            geodf=None
+
+    return geodf
 
 
 def create_df_for_scen(
@@ -911,7 +869,7 @@ def run_test_app():
 
     scenario_list = data_df["Scenario"].unique()
 
-    geodf = load_shp()
+    geodf = load_shp_contractors()
 
     reservoir_geodf = load_shp_reservoir()
 

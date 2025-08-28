@@ -11,60 +11,48 @@ data_df = api.calc_mean()
 scenario_list = data_df["Scenario"].unique()
 
 # get the geodata of the agencies
-geodf = api.load_shp()
-      
-# reservoir geodf
-reservoir_geodf = api.load_shp_reservoir()
-
-# export geodf
-export_geodf = api.load_shp_export()
-
-# pool geodf
-pool_geodf = api.load_shp_pool()
+geodf = api.load_shp("contractors")
 
 # choropleth map for exports
-fig_exp = api.create_export_plot(export_geodf)
+fig_exp = api.create_export_plot()
 
 # centroid map for exports
-fig_exp_centroid = api.create_export_centroid(export_geodf)
-
-# upstream flows geodf
-up_flows_geodf = api.load_shp_upstream_flows()
+fig_exp_centroid = api.create_centroid_plot('exports', centroid_color='rgb(251, 184, 32)')
 
 # choropleth map for upstream flows
-fig_up_flows = api.create_up_flows_plot(up_flows_geodf)
+fig_up_flows = api.create_up_flows_plot()
 
 # centroid map for upstream flows
-fig_up_flows_centroid = api.create_up_flows_centroid(up_flows_geodf)
+fig_up_flows_centroid = api.create_centroid_plot('up_flows', centroid_color='rgb(0, 93, 131)')
 
 # Get the figure for the state border
 figca = api.create_ca_plot()
 
 # choropleth map for reservoirs
-fig_r = api.create_reservoir_plot(reservoir_geodf)
+fig_r = api.create_reservoir_plot()
 
 # centroid map for reservoirs
-fig_r_centroid = api.create_reservoir_centroid(reservoir_geodf)
+fig_r_centroid = api.create_centroid_plot('reservoirs', custom_data=("CALSIMNAME", "TABLENAME", "DATA_TYPE"), centroid_color='rgb(141, 198, 63)')
 
 # map for main rivers
 
-fig_river_sj = api.create_line_plot("assets/qgis/san_joaq_river_smooth.shp", line_color='rgb( 37, 170, 225)')
+fig_river_sj = api.create_line_plot("san_joaq_river", line_color='rgb( 37, 170, 225)')
 
-fig_river_amer = api.create_line_plot("assets/qgis/amer_river_smooth.shp", line_color='rgb( 37, 170, 225)')
+fig_river_amer = api.create_line_plot("amer_river", line_color='rgb( 37, 170, 225)')
 
-fig_river_feath = api.create_line_plot("assets/qgis/feath_river_smooth.shp", line_color='rgb( 37, 170, 225)')
+fig_river_feath = api.create_line_plot("feath_river", line_color='rgb( 37, 170, 225)')
 
-fig_river_sac = api.create_line_plot("assets/qgis/sac_river_smooth.shp", line_color='rgb( 37, 170, 225)')
+fig_river_sac = api.create_line_plot("sac_river", line_color='rgb( 37, 170, 225)')
 
 # choropleth map for pools
-fig_p = api.create_pool_plot(pool_geodf)
+fig_p = api.create_pool_plot()
 
 # centroid map for reservoirs
-fig_p_centroid = api.create_pool_centroid(pool_geodf)
+fig_p_centroid = api.create_centroid_plot('pools', custom_data=("BPART","AssetReg_2", "DATA_TYPE"), centroid_color='rgb(109, 129, 150)')
 
 # map for aqueducts
 fig_aqueducts = api.create_line_plot(
-    "assets/qgis/caa_pools.shp", 
+    "aqueducts", 
     line_color='rgb(192, 192, 192)',
     data_filter = (
         lambda g: g.dropna(subset=["Branch"]),
