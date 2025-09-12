@@ -137,6 +137,11 @@ pool2bpart = create_pool2bpart_map()
 
 @lru_cache
 def calc_mean():
+    """Calculates the average annual sum for each scenario.
+
+    Returns:
+        pd.DataFrame: average annual sum and associated metadata as a pandas DataFrame.
+    """
     combined_df = pd.DataFrame(
         columns=["Scenario", "CONTRACTOR_CONVENTION", "icy", "VAL"]
     )
@@ -194,6 +199,14 @@ def calc_mean():
 
 
 def area_from_geodf(geodf: gpd.GeoDataFrame):
+    """Calculates the area of each geometric shape in the given GeoDataFrame.
+
+    Args:
+        geodf (gpd.GeoDataFrame): the GeoDataFrame containing the shapes.
+
+    Returns:
+        gpd.GeoDataFrame: a new GeoDataFrame containing the areas under a column named AREA
+    """
     area_df = geodf.geometry.to_crs(epsg=32618)
     area_projected = area_df.geometry.area
 
@@ -210,6 +223,12 @@ def area_from_geodf(geodf: gpd.GeoDataFrame):
 
 @lru_cache
 def load_shp_contractors() -> gpd.GeoDataFrame:
+    """Converts the shapefile into a GeoDataFrame for the contractors. Add columns for the CONTRACTOR_CONVENTION,
+      AGENCYNAME, AREA, and RANK to the geodf.
+
+    Returns:
+        gpd.GeoDataFrame: GeoDataFrame for the contractors.
+    """
     geodf = gpd.read_file("assets/qgis/SWP_Contractors.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 
