@@ -135,6 +135,7 @@ def create_pool2bpart_map():
 
 pool2bpart = create_pool2bpart_map()
 
+@lru_cache
 def calc_mean():
     combined_df = pd.DataFrame(
         columns=["Scenario", "CONTRACTOR_CONVENTION", "icy", "VAL"]
@@ -207,7 +208,7 @@ def area_from_geodf(geodf: gpd.GeoDataFrame):
     return area_geodf["AREA"]
 
 
-@log_execution_time
+@lru_cache
 def load_shp_contractors() -> gpd.GeoDataFrame:
     geodf = gpd.read_file("assets/qgis/SWP_Contractors.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
@@ -233,7 +234,7 @@ def load_shp_contractors() -> gpd.GeoDataFrame:
 
     return geodf
 
-@log_execution_time
+
 def load_shp_reservoir() -> gpd.GeoDataFrame:
     geodf = gpd.read_file("assets/qgis/calsim_lakes_for_visualization.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
@@ -268,7 +269,7 @@ arc_id2alias = {
     "C_DMC003": "Total Jones Exports"
 }
 
-@log_execution_time
+
 def load_shp_export() -> gpd.GeoDataFrame:
     geodf = gpd.read_file("assets/qgis/main_exports.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
@@ -320,7 +321,7 @@ arc_id2alias_up = {
     "C_AMR004": "American River at H-Street"
 }
 
-@log_execution_time
+
 def load_shp_upstream_flows() -> gpd.GeoDataFrame:
     geodf = gpd.read_file("assets/qgis/upstream_flows.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
@@ -357,7 +358,6 @@ def load_shp_upstream_flows() -> gpd.GeoDataFrame:
     return geodf
 
 
-@log_execution_time
 def load_shp_pool() -> gpd.GeoDataFrame:
     geodf = gpd.read_file("assets/qgis/caa_pools.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
@@ -376,7 +376,7 @@ def load_shp_pool() -> gpd.GeoDataFrame:
     return geodf
 
 
-@log_execution_time
+@lru_cache
 def create_ca_plot():
     # read shapefile for california state boundary
     # downloaded from https://data.ca.gov/dataset/ca-geographic-boundaries
@@ -398,10 +398,15 @@ def create_ca_plot():
 
     return figca
 
-@log_execution_time
-def create_plot(geodf: gpd.GeoDataFrame):
+
+@lru_cache
+def create_contractor_plot(scen1, scen2):
+    geodf = load_shp('contractors')
+    data_df = calc_mean()
+    scen_geodf = create_df_for_scen(data_df, geodf, scen1, scen2)
+
     fig = px.choropleth_mapbox(
-        geodf,
+        scen_geodf,
         geojson=geodf.geometry,
         locations=geodf.index,
         custom_data=[
@@ -424,86 +429,8 @@ def create_plot(geodf: gpd.GeoDataFrame):
 
     return fig
 
-@log_execution_time
-def create_reservoir_plot():
-    geodf=load_shp("reservoirs")
-    fig = px.choropleth_mapbox(
-        geodf,
-        geojson=geodf.geometry,
-        locations=geodf.index,
-        custom_data=["CALSIMNAME", "TABLENAME", "DATA_TYPE"],
-    )
-
-    my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
-    fig.update_traces(
-        hovertemplate=my_hovertemplate, 
-        marker={"opacity": 0.7},
-        showlegend=False
-    )
-
-    return fig
-
-
-@log_execution_time
-def create_export_plot():
-    geodf=load_shp("exports")
-    fig = px.choropleth_mapbox(
-        geodf,
-        geojson=geodf.geometry,
-        locations=geodf.index,
-        custom_data=["BPART", "ALIAS", "DATA_TYPE"],
-    )
-
-    my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
-    fig.update_traces(
-        hovertemplate=my_hovertemplate,
-        marker={"opacity": 0.7},
-        showlegend=False
-    )
-
-    return fig
-
-
-@log_execution_time
-def create_up_flows_plot():
-    geodf=load_shp("up_flows")
-    fig = px.choropleth_mapbox(
-        geodf,
-        geojson=geodf.geometry,
-        locations=geodf.index,
-        custom_data=["BPART", "ALIAS", "DATA_TYPE"],
-    )
-
-    my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
-    fig.update_traces(
-        hovertemplate=my_hovertemplate,
-        marker={"opacity": 0.7},
-        showlegend=False
-    )
-
-    return fig
-
-@log_execution_time
-def create_pool_plot():
-    geodf=load_shp("pools")
-    fig = px.choropleth_mapbox(
-        geodf,
-        geojson=geodf.geometry,
-        locations=geodf.index,
-        custom_data=["BPART","AssetReg_2", "DATA_TYPE"],
-    )
-
-    my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
-    fig.update_traces(
-        hovertemplate=my_hovertemplate, 
-        marker={"opacity": 0.7},
-        showlegend=False
-    )
-
-    return fig
 
 @lru_cache
-@log_execution_time
 def create_del_outflows_centroid():
     data = {
         'BPART': ['NDOI'],
@@ -536,7 +463,6 @@ def create_del_outflows_centroid():
 
 
 @lru_cache
-@log_execution_time
 def create_line_plot(data_type: str, data_filter: list=tuple(), line_color='rgb( 37, 170, 225)'):
     # Read the shape file into a geodf
     geodf = load_shp(data_type)
@@ -581,7 +507,6 @@ def create_line_plot(data_type: str, data_filter: list=tuple(), line_color='rgb(
     return fig
 
 
-@log_execution_time
 @lru_cache
 def create_centroid_plot(data_type: str, custom_data=("BPART", "ALIAS", "DATA_TYPE"), centroid_color='rgb( 37, 170, 225)'):
     geodf = load_shp(data_type)
@@ -610,8 +535,28 @@ def create_centroid_plot(data_type: str, custom_data=("BPART", "ALIAS", "DATA_TY
 
     return fig1
 
+
 @lru_cache
-@log_execution_time
+def create_choropleth_plot(data_type: str, custom_data=("BPART", "ALIAS", "DATA_TYPE")):
+    geodf = load_shp(data_type)
+
+    fig = px.choropleth_mapbox(
+        geodf,
+        geojson=geodf.geometry,
+        locations=geodf.index,
+        custom_data=custom_data,
+    )
+
+    my_hovertemplate = "<b>%{customdata[1]}</b><br>%{customdata[0]}<extra></extra>"
+    fig.update_traces(
+        hovertemplate=my_hovertemplate, 
+        marker={"opacity": 0.7},
+        showlegend=False
+    )
+
+    return fig
+
+@lru_cache
 def load_shp(data_type: str) -> gpd.GeoDataFrame:
     geodf = None
     match data_type:
@@ -692,21 +637,31 @@ def create_df_for_scen(
 
     return scen_geodf
 
-@log_execution_time
-def create_fig_1(geodf: gpd.GeoDataFrame):
-    centroid_df = geodf.geometry.to_crs(epsg=32618)
+@lru_cache
+def get_scenarios():
+    data_df = calc_mean()
+    return data_df["Scenario"].unique()
+
+
+@lru_cache
+def create_contractor_centroid(scen1, scen2):
+    geodf = load_shp('contractors')
+    data_df = calc_mean()
+    scen_geodf = create_df_for_scen(data_df, geodf, scen1, scen2)
+
+    centroid_df = scen_geodf.geometry.to_crs(epsg=32618)
     centroid_projected = centroid_df.geometry.centroid
     centroid_geographic = centroid_projected.to_crs(epsg=4326)
 
-    hoverdf = geodf[
+    hoverdf = scen_geodf[
         ["BPART", "CONTRACTOR_CONVENTION", "AGENCYNAME", "VAL_DIFF", "VAL_PERC", "DATA_TYPE"]
     ].copy()
     my_hovertemplate = "<b>%{customdata[1]}<br>AGENCYNAME=%{customdata[2]}</b><br><br>VAL_DIFF=%{customdata[3]}<br>VAL_PERC=%{customdata[4]}<extra></extra>"
     fig1 = px.scatter_mapbox(
-        geodf,
+        scen_geodf,
         lat=centroid_geographic.y,
         lon=centroid_geographic.x,
-        text=geodf["VAL_DIFF_SIGN"].astype(str) + "%" + "<br>" + geodf["BPART_SUFFIX"],
+        text=scen_geodf["VAL_DIFF_SIGN"].astype(str) + "%" + "<br>" + scen_geodf["BPART_SUFFIX"],
         custom_data=["BPART", "CONTRACTOR_CONVENTION", "AGENCYNAME", "VAL_DIFF", "VAL_PERC", "DATA_TYPE"],
     )
 
@@ -721,6 +676,7 @@ def create_fig_1(geodf: gpd.GeoDataFrame):
 
     return fig1
 
+@lru_cache
 def update_monthly_exc(b_part, slider_yr_range):
     startyr = slider_yr_range[0]
     endyr = slider_yr_range[1]
@@ -764,8 +720,6 @@ def update_monthly_exc(b_part, slider_yr_range):
                 line=dict(color=ASSUMPTION_COLORS.get(column, "#cccccc")),
             )
         )
-    # if CSV_EXPORT:
-    #     df3.to_csv(f'csv_export/ranked_{b_part}_{climate}_{monthchecklist}.csv', index=True)
 
     fig.update_layout(
         plot_bgcolor="white",
@@ -780,7 +734,7 @@ def update_monthly_exc(b_part, slider_yr_range):
 
     return fig
 
-
+@lru_cache
 def update_monthly(b_part, slider_yr_range):
     startyr = slider_yr_range[0]
     endyr = slider_yr_range[1]
@@ -818,7 +772,7 @@ def update_monthly(b_part, slider_yr_range):
 
     return fig
 
-
+@lru_cache
 def update_timeseries(b_part):
     fig = px.line(
         qd.df_dv,
@@ -835,6 +789,7 @@ def update_timeseries(b_part):
 
     return fig
 
+@lru_cache
 def update_bar_annual(b_part, slider_yr_range):
     startyr = slider_yr_range[0]
     endyr = slider_yr_range[1]
@@ -862,111 +817,3 @@ def update_bar_annual(b_part, slider_yr_range):
         plot_bgcolor="white"
     )
     return fig
-
-def run_test_app():
-    app = Dash(__name__)
-    data_df = calc_mean()
-
-    scenario_list = data_df["Scenario"].unique()
-
-    geodf = load_shp_contractors()
-
-    reservoir_geodf = load_shp_reservoir()
-
-    # Get the figure for the state border
-    figca = create_ca_plot()
-
-    app.layout = html.Div(
-        children=[
-            html.H1("State Water Project Contractor Deliveries"),
-            html.Div(
-                [
-                    html.Label("Scenario 1:", htmlFor=("scenario_1")),
-                    dcc.Dropdown(scenario_list, scenario_list[0], id="scenario_1"),
-                ],
-                style={"width": "48%", "display": "inline-block"},
-            ),
-            html.Div(
-                [
-                    html.Label("Scenario 2:", htmlFor=("scenario_2")),
-                    dcc.Dropdown(scenario_list, scenario_list[1], id="scenario_2"),
-                ],
-                style={"width": "48%", "float": "right"},
-            ),
-            html.Div("hello", id="reservoir-click"),
-            dcc.Graph(
-                id="my_id",
-            ),
-        ]
-    )
-
-    @callback(
-        Output("reservoir-click", "children"),
-        Input("my_id", "clickData"),
-    )
-    def hande_reservoir_click(clickData):
-        # if there is clickData
-
-        # else return empty string
-
-        # if clickData has a point,
-        return f"<pre>{clickData['points']}</pre>"
-
-    @callback(
-        Output("my_id", "figure"),
-        Input("scenario_1", "value"),
-        Input("scenario_2", "value"),
-    )
-    def update_graph(scen1: str, scen2: str):
-        # Geo DataFrame to hold all necessary data
-        scen_geodf = create_df_for_scen(data_df, geodf, scen1, scen2)
-
-        # Choropleth map to show % change of flow by agency
-        fig = create_plot(scen_geodf)
-
-        # Scatter graph to show positive & negative percentages
-        fig1 = create_fig_1(scen_geodf)
-
-        # choropleth map for reservoirs
-        fig_r = create_reservoir_plot(reservoir_geodf)
-
-        trace2 = figca.data[0]
-        trace1 = fig.data[0]
-        trace3 = fig1.data[0]
-        trace4 = fig_r.data[0]
-
-        mycolor_scale = [
-            [0, "#0000ff"],
-            [0.1, "#3333ff"],
-            [0.2, "#6666ff"],
-            [0.3, "#9999ff"],
-            [0.4, "#ccccff"],
-            [0.5, "#ffffff"],
-            [0.6, "#ffcccc"],
-            [0.7, "#ff9999"],
-            [0.8, "#ff6666"],
-            [0.9, "#ff3333"],
-            [1.0, "#ff0000"],
-        ]
-
-        layout = go.Layout(
-            autosize=False,
-            height=1000,
-            colorscale={"diverging": mycolor_scale},
-            coloraxis={
-                "cmin": -50,
-                "cmax": 50,
-                "cauto": False,
-                "autocolorscale": False,
-                "colorbar": {"title": {"text": "VAL DIFF %"}},
-            },
-        )
-        final_fig = go.Figure(data=[trace1, trace2, trace3, trace4], layout=layout)
-
-        return final_fig
-
-    app.run(debug=True)
-
-
-if __name__ == "__main__":
-    run_test_app()

@@ -4,23 +4,18 @@ import dashboard_map.from_shp_to_dash as api
 import dash_bootstrap_components as dbc
 from dash.exceptions import PreventUpdate
 
-# get the average annual sum of each delivery/agencyname
-data_df = api.calc_mean()
 
 # get a list of the scenarios for the dropdown
-scenario_list = data_df["Scenario"].unique()
-
-# get the geodata of the agencies
-geodf = api.load_shp("contractors")
+scenario_list = api.get_scenarios()
 
 # choropleth map for exports
-fig_exp = api.create_export_plot()
+fig_exp = api.create_choropleth_plot('exports')
 
 # centroid map for exports
 fig_exp_centroid = api.create_centroid_plot('exports', centroid_color='rgb(251, 184, 32)')
 
 # choropleth map for upstream flows
-fig_up_flows = api.create_up_flows_plot()
+fig_up_flows = api.create_choropleth_plot('up_flows')
 
 # centroid map for upstream flows
 fig_up_flows_centroid = api.create_centroid_plot('up_flows', centroid_color='rgb(0, 93, 131)')
@@ -29,7 +24,7 @@ fig_up_flows_centroid = api.create_centroid_plot('up_flows', centroid_color='rgb
 figca = api.create_ca_plot()
 
 # choropleth map for reservoirs
-fig_r = api.create_reservoir_plot()
+fig_r = api.create_choropleth_plot('reservoirs', ("CALSIMNAME", "TABLENAME", "DATA_TYPE"))
 
 # centroid map for reservoirs
 fig_r_centroid = api.create_centroid_plot('reservoirs', custom_data=("CALSIMNAME", "TABLENAME", "DATA_TYPE"), centroid_color='rgb(141, 198, 63)')
@@ -45,7 +40,7 @@ fig_river_feath = api.create_line_plot("feath_river", line_color='rgb( 37, 170, 
 fig_river_sac = api.create_line_plot("sac_river", line_color='rgb( 37, 170, 225)')
 
 # choropleth map for pools
-fig_p = api.create_pool_plot()
+fig_p = api.create_choropleth_plot('pools', ("BPART","AssetReg_2", "DATA_TYPE"))
 
 # centroid map for reservoirs
 fig_p_centroid = api.create_centroid_plot('pools', custom_data=("BPART","AssetReg_2", "DATA_TYPE"), centroid_color='rgb(109, 129, 150)')
@@ -231,14 +226,11 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
 
     # add contractors if selected
     if show_contractors:
-        # Geo DataFrame to hold all necessary data
-        scen_geodf = api.create_df_for_scen(data_df, geodf, scen1, scen2)
-
         # Choropleth map to show % change of flow by agency
-        fig = api.create_plot(scen_geodf)
+        fig = api.create_contractor_plot(scen1, scen2)
 
         # Scatter graph to show positive & negative percentages
-        fig1 = api.create_fig_1(scen_geodf)
+        fig1 = api.create_contractor_centroid(scen1, scen2)
 
         trace1 = fig.data[0]
         trace3 = fig1.data[0]
@@ -299,7 +291,7 @@ def generate_graph(custom_data):
         if data_type != "RESERVOIRS":
             result.append(html.H2("Annual Plot"))
             try:
-                ex_fig = api.update_bar_annual(bpart, [1922, 2021])
+                ex_fig = api.update_bar_annual(bpart, (1922, 2021))
                 ex_dcc = dcc.Graph(figure=ex_fig)
                 result.append(ex_dcc)
             except:
@@ -323,7 +315,7 @@ def generate_graph(custom_data):
 
         result.append(html.H2("Monthly Plot"))
         try:
-            res_fig = api.update_monthly(bpart, [1922, 2021])
+            res_fig = api.update_monthly(bpart, (1922, 2021))
             res_dcc = dcc.Graph(figure=res_fig)
             result.append(res_dcc)
         except:
@@ -372,7 +364,7 @@ def generate_graph(custom_data):
         
         result.append(html.H2("Monthly Exceedance Plot"))
         try:
-            ex_fig = api.update_monthly_exc(bpart, [1922, 2021])
+            ex_fig = api.update_monthly_exc(bpart, (1922, 2021))
             ex_dcc = dcc.Graph(figure=ex_fig)
             result.append(ex_dcc)
         except:
