@@ -5,6 +5,7 @@ import pandas as pd
 import pandss as pdss
 import numpy as np
 import matplotlib.pyplot as plt
+from functools import lru_cache
 
 # Inputting file
 logging.basicConfig(level=logging.INFO)
@@ -186,7 +187,7 @@ def read_run_to_structure_csv(df: pd.DataFrame) -> dict:
 
     return table
 
-
+@lru_cache
 def read_all_runs_to_structure_csv(csv_filename: str) -> dict:
     # Create dataframe from the given file
     df = pd.read_csv(csv_filename, index_col=0, parse_dates=True)
