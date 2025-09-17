@@ -29,6 +29,7 @@ def log_execution_time(func):
         return result
     return wrapper
 
+
 swp2convention = {
     "SWP_TA_AVEK": "SWC_AVEKWA",
     "SWP_TA_CVWD": "SWC_CVWD",
@@ -56,6 +57,7 @@ swp2convention = {
     "SWP_TA_ACFC": "SWC_ACFCWCDZ7",
 }
 
+
 agencyname2convention = {
     "Antelope Valley - East Kern Water Agency": "SWC_AVEKWA",
     "Coachella Valley Water District": "SWC_CVWD",
@@ -80,6 +82,7 @@ agencyname2convention = {
     "Ventura County Watershed Protection District": "SWC_VCWPD",
 }
 
+
 name2tablename = {
     "Lake Shasta": "Shasta Storage",
     "Trinity Lake": "Trinity Storage",
@@ -88,6 +91,7 @@ name2tablename = {
     "San Luis Reservoir": "San Luis Storage",
 }
 
+
 tablename2calsimname = {
     "Shasta Storage": "S_SHSTA",
     "Trinity Storage": "S_TRNTY",
@@ -95,6 +99,7 @@ tablename2calsimname = {
     "Oroville Storage": "S_OROVL",
     "San Luis Storage": "S_SLUIS_SWP",  # this is for SWP, not CVP
 }
+
 
 swp2description = {
     "SWP_TA_AVEK": "Antelope Valley-East Kern WA",
@@ -123,7 +128,13 @@ swp2description = {
     "SWP_TA_ACFC": "Alameda County FC&WCD, Zone 7",
 }
 
+
 def create_pool2bpart_map():
+    """Maps alias name to corresponding bpart for the pools.
+
+    Returns:
+        dict: Python dictionary mapping alias name to bpart name for the pools on the map.
+    """
     pool2bpart = {}
     with open("dashboard_map/dvars.yaml", "r") as file:
         var_dict = yaml.safe_load(file)
@@ -135,12 +146,13 @@ def create_pool2bpart_map():
 
 pool2bpart = create_pool2bpart_map()
 
+
 @lru_cache
 def calc_mean():
     """Calculates the average annual sum for each scenario.
 
     Returns:
-        pd.DataFrame: average annual sum and associated metadata as a pandas DataFrame.
+        pd.DataFrame: Average annual sum and associated metadata as a pandas DataFrame.
     """
     combined_df = pd.DataFrame(
         columns=["Scenario", "CONTRACTOR_CONVENTION", "icy", "VAL"]
@@ -202,10 +214,10 @@ def area_from_geodf(geodf: gpd.GeoDataFrame):
     """Calculates the area of each geometric shape in the given GeoDataFrame.
 
     Args:
-        geodf (gpd.GeoDataFrame): the GeoDataFrame containing the shapes.
+        geodf (gpd.GeoDataFrame): The GeoDataFrame containing the shapes.
 
     Returns:
-        gpd.GeoDataFrame: a new GeoDataFrame containing the areas under a column named AREA
+        gpd.GeoDataFrame: A new GeoDataFrame containing the areas under a column named AREA.
     """
     area_df = geodf.geometry.to_crs(epsg=32618)
     area_projected = area_df.geometry.area
@@ -255,6 +267,11 @@ def load_shp_contractors() -> gpd.GeoDataFrame:
 
 
 def load_shp_reservoir() -> gpd.GeoDataFrame:
+    """Converts the shapefile into a GeoDataFrame for the reservoirs. Add columns for TABLENAME, CALSIMNAME, and DATA_TYPE to the geodf.
+
+    Returns:
+        gpd.GeoDataFrame: GeoDataFrame for the reservoirs.
+    """
     geodf = gpd.read_file("assets/qgis/calsim_lakes_for_visualization.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 
@@ -278,10 +295,12 @@ def load_shp_reservoir() -> gpd.GeoDataFrame:
 
     return geodf
 
+
 arc_id2bpart = {
     "C_CAA003": "C_CAA003",
     "C_DMC003": "C_DMC000"
 }
+
 
 arc_id2alias = {
     "C_CAA003": "Total Banks Exports",
@@ -290,6 +309,11 @@ arc_id2alias = {
 
 
 def load_shp_export() -> gpd.GeoDataFrame:
+    """Converts the shapefile into a GeoDataFrame for the exports. Add columns for BPART, ALIAS, and DATA_TYPE to the geodf.
+
+    Returns:
+        gpd.GeoDataFrame: GeoDataFrame for the exports.
+    """
     geodf = gpd.read_file("assets/qgis/main_exports.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 
@@ -312,6 +336,7 @@ def load_shp_export() -> gpd.GeoDataFrame:
 
     return geodf
 
+
 arc_id2bpart_up = {
     "C_LWSTN": "C_LWSTN",
     "D_LWSTN_CCT011": "D_LWSTN_CCT011",
@@ -325,6 +350,7 @@ arc_id2bpart_up = {
     "C_NTOMA": "C_NTOMA",
     "C_AMR004": "C_AMR004"
 }
+
 
 arc_id2alias_up = {
     "C_LWSTN": "Trinity Release",
@@ -342,6 +368,11 @@ arc_id2alias_up = {
 
 
 def load_shp_upstream_flows() -> gpd.GeoDataFrame:
+    """Converts the shapefile into a GeoDataFrame for the upstream flows. Add columns for BPART, ALIAS, and DATA_TYPE to the geodf.
+
+    Returns:
+        gpd.GeoDataFrame: GeoDataFrame for the upstream flows.
+    """
     geodf = gpd.read_file("assets/qgis/upstream_flows.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 
@@ -378,6 +409,11 @@ def load_shp_upstream_flows() -> gpd.GeoDataFrame:
 
 
 def load_shp_pool() -> gpd.GeoDataFrame:
+    """Converts the shapefile into a GeoDataFrame for the pools. Add columns for BPART, AssetReg_2, and DATA_TYPE to the geodf.
+
+    Returns:
+        gpd.GeoDataFrame: GeoDataFrame for the pools.
+    """
     geodf = gpd.read_file("assets/qgis/caa_pools.shp")
     geodf.to_crs(pyproj.CRS.from_epsg(4326), inplace=True)
 
@@ -397,6 +433,11 @@ def load_shp_pool() -> gpd.GeoDataFrame:
 
 @lru_cache
 def create_ca_plot():
+    """Creates choropleth plot of California State Border.
+
+    Returns:
+        plotly.graph_objects.Figure: Plotly figure of California State Border.
+    """
     # read shapefile for california state boundary
     # downloaded from https://data.ca.gov/dataset/ca-geographic-boundaries
     geodf = gpd.read_file("assets/qgis/CA_State.shp")
@@ -420,6 +461,16 @@ def create_ca_plot():
 
 @lru_cache
 def create_contractor_plot(scen1, scen2):
+    """Creates choropleth plot of SWP Contractors with each contractor having hoverdata displaying the contractor convention, 
+      agency name, and difference of the average annual sum of the first climate scenario minus the second climate scenario.
+
+    Args:
+        scen1 (str): First climate scenario.
+        scen2 (str): Second climate scenario.
+
+    Returns:
+        plotly.graph_objects.Figure: Plotly figure for the SWP contractors.
+    """
     geodf = load_shp('contractors')
     data_df = calc_mean()
     scen_geodf = create_df_for_scen(data_df, geodf, scen1, scen2)
@@ -451,6 +502,11 @@ def create_contractor_plot(scen1, scen2):
 
 @lru_cache
 def create_del_outflows_centroid():
+    """Creates centroid plot for the delta outflow at Martinez with hoverdata displaying the delta outflow bpart 'NDOI'.
+
+    Returns:
+         plotly.graph_objects.Scatter: Plotly centroid figure of delta outflow at Martinez.
+    """
     data = {
         'BPART': ['NDOI'],
         'lat': [37.997417],
@@ -482,7 +538,61 @@ def create_del_outflows_centroid():
 
 
 @lru_cache
+def create_contractor_centroid(scen1, scen2):
+    """Creates centroid plot for the SWP Contractors with hoverdata displaying the CONTRACTOR_CONVENTION, BPART, water delivery average annual sum
+    difference, and water delivery average annual sum difference percentage, for each contractor. 
+
+    Args:
+        scen1 (str): First climate scenario.
+        scen2 (str): Second climate scenario.
+
+    Returns:
+        plotly.graph_objects.Scatter: Plotly centroid figure of SWP Contractors.
+    """
+    geodf = load_shp('contractors')
+    data_df = calc_mean()
+    scen_geodf = create_df_for_scen(data_df, geodf, scen1, scen2)
+
+    centroid_df = scen_geodf.geometry.to_crs(epsg=32618)
+    centroid_projected = centroid_df.geometry.centroid
+    centroid_geographic = centroid_projected.to_crs(epsg=4326)
+
+    hoverdf = scen_geodf[
+        ["BPART", "CONTRACTOR_CONVENTION", "AGENCYNAME", "VAL_DIFF", "VAL_PERC", "DATA_TYPE"]
+    ].copy()
+    my_hovertemplate = "<b>%{customdata[1]}<br>AGENCYNAME=%{customdata[2]}</b><br><br>VAL_DIFF=%{customdata[3]}<br>VAL_PERC=%{customdata[4]}<extra></extra>"
+    fig1 = px.scatter_mapbox(
+        scen_geodf,
+        lat=centroid_geographic.y,
+        lon=centroid_geographic.x,
+        text=scen_geodf["VAL_DIFF_SIGN"].astype(str) + "%" + "<br>" + scen_geodf["BPART_SUFFIX"],
+        custom_data=["BPART", "CONTRACTOR_CONVENTION", "AGENCYNAME", "VAL_DIFF", "VAL_PERC", "DATA_TYPE"],
+    )
+
+    fig1.update_traces(
+        textposition='middle center', 
+        hovertemplate=my_hovertemplate, 
+        showlegend=False,
+        mode='text'
+    )
+
+    fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
+
+    return fig1
+
+
+@lru_cache
 def create_line_plot(data_type: str, data_filter: list=tuple(), line_color='rgb( 37, 170, 225)'):
+    """Creates line plot on the map for the given data type.
+
+    Args:
+        data_type (str): Data type for plot to display.
+        data_filter (list, optional): Filter to apply on the function. Defaults to tuple().
+        line_color (str, optional): Line color. Defaults to 'rgb( 37, 170, 225)'.
+
+    Returns:
+        px.line_mapbox figure: Plotly Line Plot figure of given data type.
+    """
     # Read the shape file into a geodf
     geodf = load_shp(data_type)
 
@@ -528,6 +638,16 @@ def create_line_plot(data_type: str, data_filter: list=tuple(), line_color='rgb(
 
 @lru_cache
 def create_centroid_plot(data_type: str, custom_data=("BPART", "ALIAS", "DATA_TYPE"), centroid_color='rgb( 37, 170, 225)'):
+    """Creates a centroid plot on the map for given type of data.
+
+    Args:
+        data_type (str): Data type for plot to display.
+        custom_data (tuple, optional): Customized data to recognize data type and display in hover. Defaults to ("BPART", "ALIAS", "DATA_TYPE").
+        centroid_color (str, optional): Centroid marker color. Defaults to 'rgb( 37, 170, 225)'.
+
+    Returns:
+        plotly.graph_objects.Scatter: Plotly centroid figure of given data type.
+    """
     geodf = load_shp(data_type)
 
     centroid_df = geodf.geometry.to_crs(epsg=32618)
@@ -557,6 +677,15 @@ def create_centroid_plot(data_type: str, custom_data=("BPART", "ALIAS", "DATA_TY
 
 @lru_cache
 def create_choropleth_plot(data_type: str, custom_data=("BPART", "ALIAS", "DATA_TYPE")):
+    """Creates a choropleth plot on the map for given type of data.
+
+    Args:
+        data_type (str): Data type for plot to display.
+        custom_data (tuple, optional):  Customized data to recognize data type and display in hover. Defaults to ("BPART", "ALIAS", "DATA_TYPE").
+
+    Returns:
+        plotly.graph_objects.Figure: Plotly figure for the given data type.
+    """
     geodf = load_shp(data_type)
 
     fig = px.choropleth_mapbox(
@@ -575,8 +704,17 @@ def create_choropleth_plot(data_type: str, custom_data=("BPART", "ALIAS", "DATA_
 
     return fig
 
+
 @lru_cache
 def load_shp(data_type: str) -> gpd.GeoDataFrame:
+    """Converts shapefile into a GeoDataFrame for the given data type, by calling the specific load_shp function corresponding to the data type.
+
+    Args:
+        data_type (str): Data type for shapefile to GeoDataFrame conversion.
+
+    Returns:
+        gpd.GeoDataFrame: GeoDataFrame for the given data type.
+    """
     geodf = None
     match data_type:
         case "contractors":
@@ -613,6 +751,19 @@ def load_shp(data_type: str) -> gpd.GeoDataFrame:
 def create_df_for_scen(
     data_df: pd.DataFrame, geodf: gpd.GeoDataFrame, scenario1: str, scenario2: str
 ):
+    """Creates finalized GeoDataFrame for SWP Contractors with filtered scenarios and additional columns for getting
+    the difference of the average annual sum for scenario 1 - scenario 2 for each SWP contractor (in value and percentage form), as well as the 
+    DATA_TYPE column to specify the data type.
+
+    Args:
+        data_df (pd.DataFrame): Pandas DataFrame containing average annual sum and associated metadata.
+        geodf (gpd.GeoDataFrame): Initial GeoDataFrame for SWP Contractors.
+        scenario1 (str): First climate scenario.
+        scenario2 (str): Second climate scenario.
+
+    Returns:
+        gpd.GeoDataFrame: Finalized GeoDataFrame for SWP Contractors.
+    """
     scen_geodf = geodf.copy()
     scen_geodf = scen_geodf.set_index("CONTRACTOR_CONVENTION")
 
@@ -656,47 +807,29 @@ def create_df_for_scen(
 
     return scen_geodf
 
+
 @lru_cache
 def get_scenarios():
+    """Creates list of the different climate scenarios by getting the scenarios from data_df.
+
+    Returns:
+        list: List of the different unique climate scenarios.
+    """
     data_df = calc_mean()
     return data_df["Scenario"].unique()
 
 
 @lru_cache
-def create_contractor_centroid(scen1, scen2):
-    geodf = load_shp('contractors')
-    data_df = calc_mean()
-    scen_geodf = create_df_for_scen(data_df, geodf, scen1, scen2)
-
-    centroid_df = scen_geodf.geometry.to_crs(epsg=32618)
-    centroid_projected = centroid_df.geometry.centroid
-    centroid_geographic = centroid_projected.to_crs(epsg=4326)
-
-    hoverdf = scen_geodf[
-        ["BPART", "CONTRACTOR_CONVENTION", "AGENCYNAME", "VAL_DIFF", "VAL_PERC", "DATA_TYPE"]
-    ].copy()
-    my_hovertemplate = "<b>%{customdata[1]}<br>AGENCYNAME=%{customdata[2]}</b><br><br>VAL_DIFF=%{customdata[3]}<br>VAL_PERC=%{customdata[4]}<extra></extra>"
-    fig1 = px.scatter_mapbox(
-        scen_geodf,
-        lat=centroid_geographic.y,
-        lon=centroid_geographic.x,
-        text=scen_geodf["VAL_DIFF_SIGN"].astype(str) + "%" + "<br>" + scen_geodf["BPART_SUFFIX"],
-        custom_data=["BPART", "CONTRACTOR_CONVENTION", "AGENCYNAME", "VAL_DIFF", "VAL_PERC", "DATA_TYPE"],
-    )
-
-    fig1.update_traces(
-        textposition='middle center', 
-        hovertemplate=my_hovertemplate, 
-        showlegend=False,
-        mode='text'
-    )
-
-    fig1.update_layout(uniformtext_minsize=10, uniformtext_mode='hide')
-
-    return fig1
-
-@lru_cache
 def update_monthly_exc(b_part, slider_yr_range):
+    """Updates monthly exceedance plot for given B-Part in given year range.
+
+    Args:
+        b_part (str): Specific B-Part.
+        slider_yr_range (list): Start and end year.
+
+    Returns:
+        plotly.graph_objects.Scatter: Plotly figure for monthly exceedance data.
+    """
     startyr = slider_yr_range[0]
     endyr = slider_yr_range[1]
     df = qd.df_dv.loc[
@@ -753,8 +886,18 @@ def update_monthly_exc(b_part, slider_yr_range):
 
     return fig
 
+
 @lru_cache
 def update_monthly(b_part, slider_yr_range):
+    """Updates monthly plot for given B-Part in given year range.
+
+    Args:
+        b_part (str): Specific B-Part.
+        slider_yr_range (list): Start and end year.
+
+    Returns:
+        px.line figure: Plotly Line Plot for monthly data.
+    """
     startyr = slider_yr_range[0]
     endyr = slider_yr_range[1]
     df0 = qd.df_dv.loc[
@@ -791,8 +934,17 @@ def update_monthly(b_part, slider_yr_range):
 
     return fig
 
+
 @lru_cache
 def update_timeseries(b_part):
+    """Updates timeseries plot for given B-Part.
+
+    Args:
+        b_part (_type_): Specific B-Part.
+
+    Returns:
+        px.line figure: Plotly Line Plot for timeseries data.
+    """
     fig = px.line(
         qd.df_dv,
         x=qd.df_dv.index,
@@ -810,6 +962,15 @@ def update_timeseries(b_part):
 
 @lru_cache
 def update_bar_annual(b_part, slider_yr_range):
+    """Updates annual plot for given B-Part in given year range.
+
+    Args:
+        b_part (str): Specific B-Part.
+        slider_yr_range (list): Start and end year.
+
+    Returns:
+        px.bar figure: Plotly Bar Plot for annual data.
+    """
     startyr = slider_yr_range[0]
     endyr = slider_yr_range[1]
     df1 = qd.df_dv.loc[
