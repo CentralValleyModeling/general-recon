@@ -73,13 +73,24 @@ def period_avg(
     return (calendar_year_sum_avg, calendar_year_sum_avg_percent)
 
 
-def rank_and_pick_year(df: pd.DataFrame) -> pd.DataFrame:
+def rank_and_pick_year(df: pd.DataFrame, year_type: str) -> pd.DataFrame:
     df1 = df.copy(deep=True)
-    df1 = df1.sort_values(by=["VALUE"], ascending=False)
+    if year_type == "wet":
+        df1 = df1.sort_values(by=["VALUE"], ascending=False)
+    if year_type == "dry":
+        df1 = df1.sort_values(by=["VALUE"])
     return df1
 
 
 def wettest_year(df: pd.DataFrame, rank: int) -> tuple:
+    row = df.iloc[rank]
+    val = int(row["VALUE"])
+    percent = int((val / 4113) * 100)
+    year = row.name.year
+
+    return (year, val, percent)
+
+def dryest_year(df: pd.DataFrame, rank: int) -> tuple:
     row = df.iloc[rank]
     val = int(row["VALUE"])
     percent = int((val / 4113) * 100)
@@ -167,20 +178,21 @@ def read_run_to_structure_csv(df: pd.DataFrame) -> dict:
     table["10-Year (1978-1987)"] = period_avg(calendar_year_df, 1978, 1987)
 
     # Calculate the rank of calendar_year_df
-    ranked_df = rank_and_pick_year(calendar_year_df)
+    ranked_df_wet = rank_and_pick_year(calendar_year_df, "wet")
+
 
     # Column 2: Single Wettest Year (most)
-    wettest_yr, wettest_val, wettest_perc = wettest_year(ranked_df, 0)
+    wettest_yr, wettest_val, wettest_perc = wettest_year(ranked_df_wet, 0)
     wettest_key = f"Single Wet Year ({wettest_yr})"
     table[wettest_key] = (wettest_val, wettest_perc)
 
     # Column 3: Single Wettest Year (2nd most)
-    wettest_yr, wettest_val, wettest_perc = wettest_year(ranked_df, 1)
+    wettest_yr, wettest_val, wettest_perc = wettest_year(ranked_df_wet, 1)
     wettest_key = f"Single Wet Year ({wettest_yr})"
     table[wettest_key] = (wettest_val, wettest_perc)
 
     # Column 8: Single Wettest Year (3rd most)
-    wettest_yr, wettest_val, wettest_perc = wettest_year(ranked_df, 2)
+    wettest_yr, wettest_val, wettest_perc = wettest_year(ranked_df_wet, 2)
     # wettest_key = f"Single Wet Year ({wettest_yr})"
     wettest_key = "Single Wet Year (1938)"
     table[wettest_key] = (wettest_val, wettest_perc)
@@ -265,20 +277,20 @@ def read_run_to_structure(dss_filename: str) -> dict:
     table["10-Year (1978-1987)"] = period_avg(calendar_year_df, 1978, 1987)
 
     # Calculate the rank of calendar_year_df
-    ranked_df = rank_and_pick_year(calendar_year_df)
+    ranked_df_wet = rank_and_pick_year(calendar_year_df, "wet")
 
     # Column 2: Single Wettest Year (most)
-    wettest_yr, wettest_val, wettest_perc = wettest_year(ranked_df, 0)
+    wettest_yr, wettest_val, wettest_perc = wettest_year(ranked_df_wet, 0)
     wettest_key = f"Single Wet Year ({wettest_yr})"
     table[wettest_key] = (wettest_val, wettest_perc)
 
     # Column 3: Single Wettest Year (2nd most)
-    wettest_yr, wettest_val, wettest_perc = wettest_year(ranked_df, 1)
+    wettest_yr, wettest_val, wettest_perc = wettest_year(ranked_df_wet, 1)
     wettest_key = f"Single Wet Year ({wettest_yr})"
     table[wettest_key] = (wettest_val, wettest_perc)
 
     # Column 8: Single Wettest Year (3rd most)
-    wettest_yr, wettest_val, wettest_perc = wettest_year(ranked_df, 2)
+    wettest_yr, wettest_val, wettest_perc = wettest_year(ranked_df_wet, 2)
     wettest_key = f"Single Wet Year ({wettest_yr})"
     table[wettest_key] = (wettest_val, wettest_perc)
 
