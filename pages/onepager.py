@@ -1,7 +1,8 @@
-from dash import html, register_page, dash_table, dcc  #, callback # If you need callbacks, import it here.
+from dash import html, register_page, dash_table, dcc #, callback # If you need callbacks, import it here.
 import utils.onepager_api as api
 import plotly.express as px
 import pandas as pd
+
 
 register_page(
     __name__,

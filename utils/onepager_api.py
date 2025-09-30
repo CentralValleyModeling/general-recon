@@ -90,13 +90,13 @@ def wettest_year(df: pd.DataFrame, rank: int) -> tuple:
 
     return (year, val, percent)
 
-def dryest_year(df: pd.DataFrame, rank: int) -> tuple:
-    row = df.iloc[rank]
-    val = int(row["VALUE"])
-    percent = int((val / 4113) * 100)
-    year = row.name.year
+# def dryest_year(df: pd.DataFrame, rank: int) -> tuple:
+#     row = df.iloc[rank]
+#     val = int(row["VALUE"])
+#     percent = int((val / 4113) * 100)
+#     year = row.name.year
 
-    return (year, val, percent)
+#     return (year, val, percent)
 
 
 def table_a_from_csv(
@@ -177,8 +177,11 @@ def read_run_to_structure_csv(df: pd.DataFrame) -> dict:
     # Column 7: 10 year annual average from 1978-1987
     table["10-Year (1978-1987)"] = period_avg(calendar_year_df, 1978, 1987)
 
-    # Calculate the rank of calendar_year_df
+    # Calculate the rank of calendar_year_df for wet
     ranked_df_wet = rank_and_pick_year(calendar_year_df, "wet")
+
+    # Calculate the rank of calendar_year_df for dry
+    # ranked_df_dry = rank_and_pick_year(calendar_year_df, "dry")
 
 
     # Column 2: Single Wettest Year (most)
@@ -196,6 +199,21 @@ def read_run_to_structure_csv(df: pd.DataFrame) -> dict:
     # wettest_key = f"Single Wet Year ({wettest_yr})"
     wettest_key = "Single Wet Year (1938)"
     table[wettest_key] = (wettest_val, wettest_perc)
+
+    # # Column 2-D: Single Dryest Year (most)
+    # dryest_yr, dryest_val, dryest_perc = dryest_year(ranked_df_dry, 0)
+    # dryest_key = f"Single Dry Year ({dryest_yr})"
+    # table[dryest_key] = (dryest_val, dryest_perc)
+
+    # # Column 3-D: Single Dryest Year (2nd most)
+    # dryest_yr, dryest_val, dryest_perc = dryest_year(ranked_df_dry, 1)
+    # dryest_key = f"Single Dry Year ({dryest_yr})"
+    # table[dryest_key] = (dryest_val, dryest_perc)
+
+    # # Column 8-D: Single Wettest Year (3rd most)
+    # dryest_yr, dryest_val, dryest_perc = dryest_year(ranked_df_dry, 2)
+    # dryest_key = "Single Wet Year (1938)"
+    # table[dryest_key] = (dryest_val, dryest_perc)
 
     return table
 
