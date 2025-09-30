@@ -38,6 +38,15 @@ studies = [
     Study(r"C:\jobs\2025_DCR25\models\9.7.0_danube_adj\DSS\output\DCR2025_DV_9.7.0_Danube_Adj_v3.0.dss",
           r"C:\jobs\2025_DCR25\models\9.7.0_danube_adj\DSS\input\DCR2023_SV_Danube_Adj_v1.8.dss",
           "DCR25_Baseline", "DCR 2025", "Current", 1),
+
+    Study(r"C:\jobs\2025_DCR25\models\3.7.0_danube_cc50\DSS\output\CCA4_v3.7.0__2043_50CC_LU100_SLR15_20241220.dss",
+          r"C:\jobs\2025_DCR25\models\3.7.0_danube_cc50\DSS\input\DCR2023_SV_Danube_2043_cc50_v1.9.dss",
+          "DCR25_CC50", "DCR 2025", "2043_CC50", 1),
+
+    Study(r"C:\jobs\2025_DCR25\models\3.7.0_danube_cc95\DSS\output\CCA5_v3.7.0__2043_95CC_LU100_SLR30_20241227.dss",
+          r"C:\jobs\2025_DCR25\models\3.7.0_danube_cc95\DSS\input\DCR2023_SV_Danube_2043_cc95_v1.9.dss",
+          "DCR25_CC95", "DCR 2025", "2043_CC95", 1)
+
 ]
 
 date_map = pd.read_csv("constants/date_map.csv", index_col=0, parse_dates=True)

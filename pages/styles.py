@@ -33,6 +33,8 @@ SCENARIO_ORDER = [
     "DCR23_CC75",
     "DCR23_CC95",
     "DCR25_Baseline",
+    "DCR25_CC50",
+    "DCR25_CC75"
 ]
 
 BASELINE = "DCR 2023"
