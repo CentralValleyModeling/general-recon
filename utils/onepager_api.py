@@ -75,14 +75,14 @@ def period_avg(
 
 def rank_and_pick_year(df: pd.DataFrame, year_type: str) -> pd.DataFrame:
     df1 = df.copy(deep=True)
-    if year_type == "wet":
+    if year_type == "Wet":
         df1 = df1.sort_values(by=["VALUE"], ascending=False)
-    if year_type == "dry":
+    if year_type == "Dry":
         df1 = df1.sort_values(by=["VALUE"])
     return df1
 
 
-def wettest_year(df: pd.DataFrame, rank: int) -> tuple:
+def dryest_wettest_year(df: pd.DataFrame, rank: int) -> tuple:
     row = df.iloc[rank]
     val = int(row["VALUE"])
     percent = int((val / 4113) * 100)
@@ -90,13 +90,6 @@ def wettest_year(df: pd.DataFrame, rank: int) -> tuple:
 
     return (year, val, percent)
 
-# def dryest_year(df: pd.DataFrame, rank: int) -> tuple:
-#     row = df.iloc[rank]
-#     val = int(row["VALUE"])
-#     percent = int((val / 4113) * 100)
-#     year = row.name.year
-
-#     return (year, val, percent)
 
 
 def table_a_from_csv(
@@ -128,12 +121,18 @@ def table_a_from_csv(
     return df
 
 
-def read_run_to_structure_csv(df: pd.DataFrame) -> dict:
+deliveries2bpart = {
+    "Table A":["SWP_TA_TOTAL", "SWP_CO_TOTAL", "SWP_TA_FEATH", "SWP_CO_FEATH"],
+    "Article 21":["SWP_IN_TOTAL", "SWP_IN_FEATH"]
+}
+
+def read_run_to_structure_csv(df: pd.DataFrame, delivery_type = "Article 21", year_type = "Dry") -> dict:
     # Structure to return
     table = {}
 
     # DSS key path for timeseries
-    path_swp_list = ["SWP_TA_TOTAL", "SWP_CO_TOTAL", "SWP_TA_FEATH", "SWP_CO_FEATH"]
+    # path_swp_list = ["SWP_TA_TOTAL", "SWP_CO_TOTAL", "SWP_TA_FEATH", "SWP_CO_FEATH"]
+    path_swp_list = deliveries2bpart[delivery_type]
 
     # date range we are interested in
     start = pd.to_datetime("1921-10-01")
@@ -153,14 +152,22 @@ def read_run_to_structure_csv(df: pd.DataFrame) -> dict:
         frames.append(df2)
 
     # Now calculate- the timeseries for Table A
-    df_A = frames[0] + frames[1]
-    df_A = df_A - frames[2]
-    df_A = df_A - frames[3]
+    if delivery_type == "Table A":
+        df_A = frames[0] + frames[1]
+        df_A = df_A - frames[2]
+        df_A = df_A - frames[3]
+    if delivery_type == 'Article 21':
+        df_A = frames[0] - frames[1]
+    # else:
+    #     df_A = frames[0] - frames[1]
+    
+
     # print(df_A)
 
     # Convert df from monthly to yearly
     calendar_year_df = df_A.resample(pd.offsets.YearEnd()).sum()
     print(calendar_year_df.head())
+
 
     # Column 1. long term average
     table["Long-term Average"] = period_avg(calendar_year_df)
@@ -178,68 +185,90 @@ def read_run_to_structure_csv(df: pd.DataFrame) -> dict:
     table["10-Year (1978-1987)"] = period_avg(calendar_year_df, 1978, 1987)
 
     # Calculate the rank of calendar_year_df for wet
-    ranked_df_wet = rank_and_pick_year(calendar_year_df, "wet")
-
-    # Calculate the rank of calendar_year_df for dry
-    # ranked_df_dry = rank_and_pick_year(calendar_year_df, "dry")
+    ranked_df = rank_and_pick_year(calendar_year_df, year_type)
 
 
     # Column 2: Single Wettest Year (most)
-    wettest_yr, wettest_val, wettest_perc = wettest_year(ranked_df_wet, 0)
-    wettest_key = f"Single Wet Year ({wettest_yr})"
-    table[wettest_key] = (wettest_val, wettest_perc)
+    wettest_yr, wettest_val, wettest_perc = dryest_wettest_year(ranked_df, 0)
+    # table["dry_wet_data_1"] = (wettest_val, wettest_perc)
+    # table["dry_wet_label_1"] = f"Single {year_type} Year ({wettest_yr})"
+    table[f"Single {year_type} Year ({wettest_yr})"] = (wettest_val, wettest_perc)
 
     # Column 3: Single Wettest Year (2nd most)
-    wettest_yr, wettest_val, wettest_perc = wettest_year(ranked_df_wet, 1)
-    wettest_key = f"Single Wet Year ({wettest_yr})"
-    table[wettest_key] = (wettest_val, wettest_perc)
+    wettest_yr, wettest_val, wettest_perc = dryest_wettest_year(ranked_df, 1)
+    # table["dry_wet_data_2"] = (wettest_val, wettest_perc)
+    # table["dry_wet_label_2"] = f"Single {year_type} Year ({wettest_yr})"
+    table[f"Single {year_type} Year ({wettest_yr})"] = (wettest_val, wettest_perc)
 
     # Column 8: Single Wettest Year (3rd most)
-    wettest_yr, wettest_val, wettest_perc = wettest_year(ranked_df_wet, 2)
-    # wettest_key = f"Single Wet Year ({wettest_yr})"
-    wettest_key = "Single Wet Year (1938)"
-    table[wettest_key] = (wettest_val, wettest_perc)
-
-    # # Column 2-D: Single Dryest Year (most)
-    # dryest_yr, dryest_val, dryest_perc = dryest_year(ranked_df_dry, 0)
-    # dryest_key = f"Single Dry Year ({dryest_yr})"
-    # table[dryest_key] = (dryest_val, dryest_perc)
-
-    # # Column 3-D: Single Dryest Year (2nd most)
-    # dryest_yr, dryest_val, dryest_perc = dryest_year(ranked_df_dry, 1)
-    # dryest_key = f"Single Dry Year ({dryest_yr})"
-    # table[dryest_key] = (dryest_val, dryest_perc)
-
-    # # Column 8-D: Single Wettest Year (3rd most)
-    # dryest_yr, dryest_val, dryest_perc = dryest_year(ranked_df_dry, 2)
-    # dryest_key = "Single Wet Year (1938)"
-    # table[dryest_key] = (dryest_val, dryest_perc)
+    wettest_yr, wettest_val, wettest_perc = dryest_wettest_year(ranked_df, 2)
+    # table["dry_wet_data_3"] = (wettest_val, wettest_perc)
+    # table["dry_wet_label_3"] = f"Single {year_type} Year ({wettest_yr})"
+    table[f"Single {year_type} Year ({wettest_yr})"] = (wettest_val, wettest_perc)
 
     return table
 
-@lru_cache
-def read_all_runs_to_structure_csv(csv_filename: str) -> dict:
-    # Create dataframe from the given file
-    df = pd.read_csv(csv_filename, index_col=0, parse_dates=True)
 
-    # scenarios we are interested in
-    scen_list = ["AdjHist", "CC50", "CC75", "CC95"]
+@lru_cache
+def load_data(csv_filename: str):
+    df = pd.read_csv(csv_filename, index_col=0, parse_dates=True)
+    return df
+
+@lru_cache
+def read_all_runs_to_structure_csv(csv_filename: str, delivery_type, scen1, scen2) -> dict:
+    # Create dataframe from the given file
+    df = load_data(csv_filename)
+
+    # Get the finalized df
+    df_1 = df.loc[df["Scenario"] == scen1]
+    df_2 = df.loc[df["Scenario"] == scen2]
+
+    table_1 = read_run_to_structure_csv(df_1, delivery_type, "Dry")
+    table_2 = read_run_to_structure_csv(df_1, delivery_type, "Wet")
+    
+    table_3 = read_run_to_structure_csv(df_2, delivery_type, "Dry")
+    table_4 = read_run_to_structure_csv(df_2, delivery_type, "Wet")
+
+    # Build the rows for dry year
+    data = []
+    for item in table_1.keys():
+        val_1, perc_1 = table_1[item]
+        val_2, perc_2 = table_3.get(item, (0, 0))
+        row = ["Dry", item, val_1, perc_1, val_2, perc_2, val_2 - val_1]
+        data.append(row)
+    
+    # Build the rows for wet year
+    for item in table_2.keys():
+        val_1, perc_1 = table_2[item]
+        val_2, perc_2 = table_4.get(item, (0, 0))
+        row = ["Wet", item, val_1, perc_1, val_2, perc_2, val_2 - val_1]
+        data.append(row)
+
+    # Create the df
+    df_onepager = pd.DataFrame(
+        data,
+        columns=["YEAR_TYPE", "ITEM", "VAL_1", "PERC_1", "VAL_2", "PERC_2", "CHANGE"]
+    )
+    print("df_onepager =")
+    print(df_onepager.head())
+
+    return df_onepager
 
     # Read all the scenarios
     # scen_aliases = df.Scenario.unique()
-    combined_struct = dict()
-    for scenario in scen_list:
-        print("processing scenario: ", scenario)
-        # Get the df for the scenario
-        df1 = df.loc[df["Scenario"] == scenario]
+    # combined_struct = dict()
+    # for scenario in scen_list:
+    #     print("processing scenario: ", scenario)
+    #     # Get the df for the scenario
+    #     df1 = df.loc[df["Scenario"] == scenario]
 
-        # Dictionary for current table from the current file: key = table_1
-        table = read_run_to_structure_csv(df1)
+    #     # Dictionary for current table from the current file: key = table_1
+    #     table = read_run_to_structure_csv(df1, delivery_type, year_type)
 
-        # Add table_1 to combined_struct
-        combined_struct[scenario] = table
+    #     # Add table_1 to combined_struct
+    #     combined_struct[scenario] = table
 
-    return combined_struct
+    # return combined_struct
 
 
 def read_run_to_structure(dss_filename: str) -> dict:
@@ -298,17 +327,17 @@ def read_run_to_structure(dss_filename: str) -> dict:
     ranked_df_wet = rank_and_pick_year(calendar_year_df, "wet")
 
     # Column 2: Single Wettest Year (most)
-    wettest_yr, wettest_val, wettest_perc = wettest_year(ranked_df_wet, 0)
+    wettest_yr, wettest_val, wettest_perc = dryest_wettest_year(ranked_df_wet, 0)
     wettest_key = f"Single Wet Year ({wettest_yr})"
     table[wettest_key] = (wettest_val, wettest_perc)
 
     # Column 3: Single Wettest Year (2nd most)
-    wettest_yr, wettest_val, wettest_perc = wettest_year(ranked_df_wet, 1)
+    wettest_yr, wettest_val, wettest_perc = dryest_wettest_year(ranked_df_wet, 1)
     wettest_key = f"Single Wet Year ({wettest_yr})"
     table[wettest_key] = (wettest_val, wettest_perc)
 
     # Column 8: Single Wettest Year (3rd most)
-    wettest_yr, wettest_val, wettest_perc = wettest_year(ranked_df_wet, 2)
+    wettest_yr, wettest_val, wettest_perc = dryest_wettest_year(ranked_df_wet, 2)
     wettest_key = f"Single Wet Year ({wettest_yr})"
     table[wettest_key] = (wettest_val, wettest_perc)
 
