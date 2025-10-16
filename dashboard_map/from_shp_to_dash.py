@@ -259,6 +259,7 @@ def load_shp_contractors() -> gpd.GeoDataFrame:
     geodf["AREA"] = area_from_geodf(geodf)
 
     # Add rank column based on area
+    # geodf = geodf.dropna()
     geodf["RANK"] = geodf["AREA"].rank(method="first").astype(int)
 
     # geodf = geodf[geodf["BPART"].isin(qd.df_dv.columns)]
