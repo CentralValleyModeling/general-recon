@@ -59,9 +59,9 @@ def layout():
                             scenario_list, scenario_list[1], id="scenario_2",
                             style={'flex-grow': '0.5'}
                         ),
-                    ], style={'display': 'flex', 'flex': '1', 'margin': '20px'},
+                    ], style={'display': 'flex', 'flex': '1', 'margin-right': '20px'},
                 ),
-            ], style={'display': 'flex', 'flex': '1'},
+            ], style={'display': 'flex', 'flex': '1', "padding": "15px"},
         ),
         html.H2("SWP Deliveries under Existing Conditions, TAF/year (Percent Allocation)"),
         html.Div(id="data_table"),
@@ -100,9 +100,18 @@ def handle_selection(delivery_type, scen1, scen2):
                         [
                             html.Td(f"{year_type} Periods", rowSpan=row_count, style={'font-weight': 'bold'}),
                             html.Td(row["ITEM"]),
-                            html.Td(f"{row['VAL_1']:d} ({row['PERC_1']:0.2f}%)"),
-                            html.Td(f"{row['VAL_2']:d} ({row['PERC_2']:0.2f}%)"),
-                            html.Td(f"{row['CHANGE']:+d}")
+                            html.Td(
+                                f"{row['VAL_1']:,d} ({row['PERC_1']:0.1f}%)",
+                                style={'textAlign': 'right', 'paddingRight': '10%'}
+                            ),
+                            html.Td(
+                                f"{row['VAL_2']:,d} ({row['PERC_2']:0.1f}%)",
+                                style={'textAlign': 'right', 'paddingRight': '10%'}
+                            ),
+                            html.Td(
+                                f"{row['CHANGE']:+d}",
+                                style={'textAlign': 'right', 'paddingRight': '10%'}
+                            )
                         ]
                     )
                 )
@@ -111,10 +120,19 @@ def handle_selection(delivery_type, scen1, scen2):
                     html.Tr(
                         [
                             # skip first column
-                            html.Td(row["ITEM"]),
-                            html.Td(f"{row['VAL_1']:d} ({row['PERC_1']:0.2f}%)"),
-                            html.Td(f"{row['VAL_2']:d} ({row['PERC_2']:0.2f}%)"),
-                            html.Td(f"{row['CHANGE']:+d}")
+                            html.Td(row['ITEM']),
+                            html.Td(
+                                f"{row['VAL_1']:,d} ({row['PERC_1']:0.1f}%)",
+                                style={'textAlign': 'right', 'paddingRight': '10%'}
+                            ),
+                            html.Td(
+                                f"{row['VAL_2']:,d} ({row['PERC_2']:0.1f}%)",
+                                style={'textAlign': 'right', 'paddingRight': '10%'}
+                            ),
+                            html.Td(
+                                f"{row['CHANGE']:+d}",
+                                style={'textAlign': 'right', 'paddingRight': '10%'}
+                            )
                         ]
                     )
                 )
@@ -125,8 +143,8 @@ def handle_selection(delivery_type, scen1, scen2):
             html.Thead(html.Tr([
                 html.Th(""),
                 html.Th(""),
-                html.Th("Final DCR 2023 Existing Conditions"),
-                html.Th("Draft DCR 2025 Existing Conditions"),
+                html.Th(f"Final DCR 2023 Existing Conditions ({scen1})"),
+                html.Th(f"Draft DCR 2025 Existing Conditions ({scen2})"),
                 html.Th("Change")
             ])),
             html.Tbody(tab_rows)
@@ -137,7 +155,7 @@ def handle_selection(delivery_type, scen1, scen2):
     graph_df = pd.DataFrame(graph_data, columns=['YEAR_TYPE', 'SCENARIO', 'SWP Delivery Type', 'SWP Deliveries (TAF/year)'])
     graph_df_wet = graph_df[graph_df["YEAR_TYPE"] == "Wet"]
     fig = px.bar(graph_df_wet, x="SWP Delivery Type", y="SWP Deliveries (TAF/year)", color="SCENARIO", barmode="group", color_discrete_sequence=["#336DFF", "#000000"])
-
+    fig.update_yaxes(tickformat=",")
     return [tab], fig
 
 
