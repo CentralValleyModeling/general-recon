@@ -226,7 +226,7 @@ def cfs_taf(df: pd.DataFrame, var_dict: dict) -> pd.DataFrame:
         b = var
         if var_dict[var]["table_convert"] == "cfs_taf":
             if var not in df.columns:
-                print(f"Warning: '{var}' not found in DataFrame. Skipping.")
+                # print(f"Warning: '{var}' not found in DataFrame. Skipping.")
                 continue
             df_convert[b] = df_convert[b] * df["cfs_taf"]
         else:
