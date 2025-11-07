@@ -11,7 +11,7 @@ register_page(
     path='/onepager'
 )
 
-# Generate historical data
+# Generate historical data 
 
 dss_filenames = {
     "hist": "data/2023DCR_Hist_DV.dss"
@@ -19,6 +19,7 @@ dss_filenames = {
 
 csv_filename = "data\\temp.csv"
 
+yaml_data = api.take_yaml("utils/op.yaml")
 
 # scenario_list = ["DCR23_Baseline", "DCR23_CC50", "DCR23_CC75", "DCR23_CC95", "DCR25_Baseline", "DCR25_CC50", "DCR25_CC95"]
 scenario_list = ["AdjHist", "CC50", "CC75", "CC95"]
@@ -82,6 +83,7 @@ def layout():
     prevent_initial_call=False
 )
 def handle_selection(delivery_type, scen1, scen2):
+    add_perc = (delivery_type == 'Table A')
     df = api.read_all_runs_to_structure_csv(csv_filename, delivery_type, scen1, scen2)
     tab_rows = []
     graph_data = []
@@ -101,11 +103,11 @@ def handle_selection(delivery_type, scen1, scen2):
                             html.Td(f"{year_type} Periods", rowSpan=row_count, style={'font-weight': 'bold'}),
                             html.Td(row["ITEM"]),
                             html.Td(
-                                f"{row['VAL_1']:,d} ({row['PERC_1']:0.1f}%)",
+                                f"{row['VAL_1']:,d} ({row['PERC_1']:0.1f}%)" if add_perc else f"{row['VAL_1']:,d}",
                                 style={'textAlign': 'right', 'paddingRight': '10%'}
                             ),
                             html.Td(
-                                f"{row['VAL_2']:,d} ({row['PERC_2']:0.1f}%)",
+                                f"{row['VAL_2']:,d} ({row['PERC_2']:0.1f}%)" if add_perc else f"{row['VAL_2']:,d}",
                                 style={'textAlign': 'right', 'paddingRight': '10%'}
                             ),
                             html.Td(
@@ -122,11 +124,11 @@ def handle_selection(delivery_type, scen1, scen2):
                             # skip first column
                             html.Td(row['ITEM']),
                             html.Td(
-                                f"{row['VAL_1']:,d} ({row['PERC_1']:0.1f}%)",
+                                f"{row['VAL_1']:,d} ({row['PERC_1']:0.1f}%)" if add_perc else f"{row['VAL_1']:,d}",
                                 style={'textAlign': 'right', 'paddingRight': '10%'}
                             ),
                             html.Td(
-                                f"{row['VAL_2']:,d} ({row['PERC_2']:0.1f}%)",
+                                f"{row['VAL_2']:,d} ({row['PERC_2']:0.1f}%)" if add_perc else f"{row['VAL_2']:,d}",
                                 style={'textAlign': 'right', 'paddingRight': '10%'}
                             ),
                             html.Td(
@@ -245,3 +247,14 @@ def handle_selection(delivery_type, scen1, scen2):
 
 
     
+
+
+
+# {'Table Headings':
+#   [
+#       {'Heading': '', 'YrRange': None, 'Type': 'Long-Term'}, 
+#       {'Heading': 'Wet years 1978-1980', 'YrRange': '1978, 1980', 'Type': 'Wet Periods'}, 
+#       {'Heading': 'Dry years 1976-1966', 'YrRange': '1976, 1977', 'Type': 'Dry Periods'}, 
+#       {'Heading': 'My Custom years', 'YrRange': '1976, 1977', 'Type': 'Custom'}
+#   ]
+# }

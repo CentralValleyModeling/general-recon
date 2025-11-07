@@ -11,6 +11,11 @@ import yaml
 # Inputting file
 logging.basicConfig(level=logging.INFO)
 
+def take_yaml(filename):
+    with open(filename, 'r') as file:
+        data_dict = yaml.safe_load(file)
+    return data_dict
+
 
 def cfs_to_taf(df: pd.DataFrame, col: str) -> pd.DataFrame:
     df = df.copy()
@@ -83,7 +88,7 @@ def rank_and_pick_year(df: pd.DataFrame, year_type: str) -> pd.DataFrame:
     return df1
 
 
-def dryest_wettest_year(df: pd.DataFrame, rank: int) -> tuple:
+def dryest_wettest_year_1(df: pd.DataFrame, rank: int) -> tuple:
     row = df.iloc[rank]
     val = int(row["VALUE"])
     percent = int((val / 4113) * 100)
@@ -91,6 +96,13 @@ def dryest_wettest_year(df: pd.DataFrame, rank: int) -> tuple:
 
     return (year, val, percent)
 
+def dryest_wettest_year(df: pd.DataFrame, year: int) -> tuple:
+    row = df[df.index.year == year]
+    val = int(row["VALUE"])
+    percent = int((val / 4113) * 100)
+    year = row.name.year
+
+    return (year, val, percent)
 
 
 def table_a_from_csv(
@@ -169,6 +181,77 @@ def read_run_to_structure_csv(df: pd.DataFrame, delivery_type = "Article 21", ye
     calendar_year_df = df_A.resample(pd.offsets.YearEnd()).sum()
     print(calendar_year_df.head())
 
+    # Read yaml file
+    yaml_data = take_yaml("utils/op.yaml")
+    for data in yaml_data['Table Headings']:
+        heading = data['Heading']
+        year_range = data['YrRange']
+        data_type = data['Type']
+
+        year_list = []
+        if year_range:
+            for s in year_range.split(','):
+                s = s.strip()
+                if s:
+                    year = int(s)
+                    year_list.append(year)
+        
+        match len(year_list):
+            case 0:
+                table[heading] = period_avg(calendar_year_df)
+            case 1:
+                 if data_type.startswith(year_type):
+                    wettest_yr, wettest_val, wettest_perc = dryest_wettest_year(calendar_year_df, year_list[0])
+                    table[heading] = (wettest_val, wettest_perc)
+            case 2:
+                table[heading] = period_avg(calendar_year_df, year_list[0], year_list[1])
+            case _:
+                print(f"Invalid year range: {year_list}")
+    
+    return table
+
+def read_run_to_structure_csv_1(df: pd.DataFrame, delivery_type = "Article 21", year_type = "Dry") -> dict:
+    # Structure to return
+    table = {}
+
+    # DSS key path for timeseries
+    # path_swp_list = ["SWP_TA_TOTAL", "SWP_CO_TOTAL", "SWP_TA_FEATH", "SWP_CO_FEATH"]
+    path_swp_list = deliveries2bpart[delivery_type]
+
+    # date range we are interested in
+    start = pd.to_datetime("1921-10-01")
+    end = pd.to_datetime("2021-09-30")
+
+    frames: list[pd.DataFrame] = []
+
+    for path_string_swp in path_swp_list:
+        # Create a new dataframe with values only
+        df1 = df[[path_string_swp]]
+        df1 = df1.rename(columns={path_string_swp: "VALUE"})
+
+        # Get the data frame for the given path
+        df2 = table_a_from_csv(df1, path_string_swp, start, end)
+
+        # Now add the dataframe to our list of frames
+        frames.append(df2)
+
+    # Now calculate- the timeseries for Table A
+    if delivery_type == "Table A":
+        df_A = frames[0] + frames[1]
+        df_A = df_A - frames[2]
+        df_A = df_A - frames[3]
+    if delivery_type == 'Article 21':
+        df_A = frames[0] - frames[1]
+    # else:
+    #     df_A = frames[0] - frames[1]
+    
+
+    # print(df_A)
+
+    # Convert df from monthly to yearly
+    calendar_year_df = df_A.resample(pd.offsets.YearEnd()).sum()
+    print(calendar_year_df.head())
+
 
     # Column 1. long term average
     table["Long-term Average"] = period_avg(calendar_year_df)
@@ -187,6 +270,9 @@ def read_run_to_structure_csv(df: pd.DataFrame, delivery_type = "Article 21", ye
 
     # Calculate the rank of calendar_year_df for wet
     ranked_df = rank_and_pick_year(calendar_year_df, year_type)
+    print("RANKED DF:")
+    print(ranked_df.head())
+    print(ranked_df.columns)
 
 
     # Column 2: Single Wettest Year (most)
