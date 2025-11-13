@@ -1,10 +1,7 @@
-# import and common setups
-
 import logging
 import pandas as pd
 import pandss as pdss
 import numpy as np
-import matplotlib.pyplot as plt
 from functools import lru_cache
 import yaml
 
@@ -12,11 +9,53 @@ import yaml
 logging.basicConfig(level=logging.INFO)
 
 def take_yaml(filename):
-    with open(filename, 'r') as file:
-        data_dict = yaml.safe_load(file)
-    return data_dict
+    return YamlConfig(filename)
 
+class YamlConfig:
+    def __init__(self, filename):
+        self.filename = filename
+        self.period_info = {} # key = period_type, value = (start year, end year, heading)
+        self.load_data()
 
+    def get_period_info(self, period_type):
+        return self.period_info.get(period_type, [])
+    
+    def get_period_types(self):
+        return self.period_info.keys()
+
+    def print(self):
+        print("filename:", self.filename)
+        print("period info:", self.period_info)
+
+    def str_to_int(self, string):
+        try:
+            return int(string)
+        except:
+            return None
+
+    def load_data(self):
+        with open(self.filename, 'r') as file:
+            yaml_data = yaml.safe_load(file)
+            for key, data_list in yaml_data.items():
+                for data in data_list:
+                    heading = data['Heading']
+                    year_range = data['YrRange']
+                    period_type = data['Type']
+                    start_year = None
+                    end_year = None
+                    if year_range:
+                        years = year_range.split(',')
+                        if len(years) == 2:
+                            start_year = self.str_to_int(years[0])
+                            end_year = self.str_to_int(years[1])
+                        elif len(years) == 1:
+                            start_year = self.str_to_int(years[0])
+                    if period_type in self.period_info:
+                        self.period_info[period_type].append((heading, start_year, end_year))
+                    else:
+                        self.period_info[period_type] = [(heading, start_year, end_year)]
+
+                
 def cfs_to_taf(df: pd.DataFrame, col: str) -> pd.DataFrame:
     df = df.copy()
     periods = pd.PeriodIndex(data=df.index, freq="1M")
@@ -79,45 +118,12 @@ def period_avg(
     return (calendar_year_sum_avg, calendar_year_sum_avg_percent)
 
 
-def rank_and_pick_year(df: pd.DataFrame, year_type: str) -> pd.DataFrame:
-    df1 = df.copy(deep=True)
-    if year_type == "Wet":
-        df1 = df1.sort_values(by=["VALUE"], ascending=False)
-    if year_type == "Dry":
-        df1 = df1.sort_values(by=["VALUE"])
-    return df1
-
-
-def dryest_wettest_year_1(df: pd.DataFrame, rank: int) -> tuple:
-    row = df.iloc[rank]
-    val = int(row["VALUE"])
-    percent = int((val / 4113) * 100)
-    year = row.name.year
-
-    return (year, val, percent)
-
-def dryest_wettest_year(df: pd.DataFrame, year: int) -> tuple:
-    row = df[df.index.year == year]
-    val = int(row["VALUE"])
-    percent = int((val / 4113) * 100)
-    year = row.name.year
-
-    return (year, val, percent)
-
-
 def table_a_from_csv(
     df: pd.DataFrame,
     path_string_swp: str,
     start_date: pd.Timestamp,
     end_date: pd.Timestamp,
 ) -> pd.DataFrame:
-    # df1 = df.loc[df["Scenario"] == "AdjHist"]
-    # df2 = df1["SWP_TA_TOTAL"]
-    # return df2
-
-    # Check the unit and convert if necessary
-    # if rts.units.lower() == "cfs":
-    #    df = cfs_to_taf(df, col=path_string_swp)
 
     # Create a mask for the data within the desired range of dates
     mask = (df.index >= start_date) & (df.index <= end_date)
@@ -128,9 +134,6 @@ def table_a_from_csv(
     # We don't know the unit so just assuming that the conversion is needed
     df = cfs_to_taf(df, col="VALUE")
 
-    # Rename the column containing the data to VALUE
-    # df = df.rename(columns={path_string_swp : 'VALUE'})
-
     return df
 
 
@@ -139,12 +142,11 @@ deliveries2bpart = {
     "Article 21":["SWP_IN_TOTAL", "SWP_IN_FEATH"]
 }
 
-def read_run_to_structure_csv(df: pd.DataFrame, delivery_type = "Article 21", year_type = "Dry") -> dict:
+def read_run_to_structure_csv(df: pd.DataFrame, delivery_type = "Article 21", period_type = "Dry Periods") -> dict:   
     # Structure to return
     table = {}
 
     # DSS key path for timeseries
-    # path_swp_list = ["SWP_TA_TOTAL", "SWP_CO_TOTAL", "SWP_TA_FEATH", "SWP_CO_FEATH"]
     path_swp_list = deliveries2bpart[delivery_type]
 
     # date range we are interested in
@@ -171,128 +173,17 @@ def read_run_to_structure_csv(df: pd.DataFrame, delivery_type = "Article 21", ye
         df_A = df_A - frames[3]
     if delivery_type == 'Article 21':
         df_A = frames[0] - frames[1]
-    # else:
-    #     df_A = frames[0] - frames[1]
-    
-
-    # print(df_A)
 
     # Convert df from monthly to yearly
     calendar_year_df = df_A.resample(pd.offsets.YearEnd()).sum()
     print(calendar_year_df.head())
 
     # Read yaml file
-    yaml_data = take_yaml("utils/op.yaml")
-    for data in yaml_data['Table Headings']:
-        heading = data['Heading']
-        year_range = data['YrRange']
-        data_type = data['Type']
-
-        year_list = []
-        if year_range:
-            for s in year_range.split(','):
-                s = s.strip()
-                if s:
-                    year = int(s)
-                    year_list.append(year)
-        
-        match len(year_list):
-            case 0:
-                table[heading] = period_avg(calendar_year_df)
-            case 1:
-                 if data_type.startswith(year_type):
-                    wettest_yr, wettest_val, wettest_perc = dryest_wettest_year(calendar_year_df, year_list[0])
-                    table[heading] = (wettest_val, wettest_perc)
-            case 2:
-                table[heading] = period_avg(calendar_year_df, year_list[0], year_list[1])
-            case _:
-                print(f"Invalid year range: {year_list}")
+    config = take_yaml("utils/op.yaml")
+    period_info = config.get_period_info(period_type)
+    for heading, start_year, end_year in period_info:
+        table[heading] = period_avg(calendar_year_df, start_year, end_year)
     
-    return table
-
-def read_run_to_structure_csv_1(df: pd.DataFrame, delivery_type = "Article 21", year_type = "Dry") -> dict:
-    # Structure to return
-    table = {}
-
-    # DSS key path for timeseries
-    # path_swp_list = ["SWP_TA_TOTAL", "SWP_CO_TOTAL", "SWP_TA_FEATH", "SWP_CO_FEATH"]
-    path_swp_list = deliveries2bpart[delivery_type]
-
-    # date range we are interested in
-    start = pd.to_datetime("1921-10-01")
-    end = pd.to_datetime("2021-09-30")
-
-    frames: list[pd.DataFrame] = []
-
-    for path_string_swp in path_swp_list:
-        # Create a new dataframe with values only
-        df1 = df[[path_string_swp]]
-        df1 = df1.rename(columns={path_string_swp: "VALUE"})
-
-        # Get the data frame for the given path
-        df2 = table_a_from_csv(df1, path_string_swp, start, end)
-
-        # Now add the dataframe to our list of frames
-        frames.append(df2)
-
-    # Now calculate- the timeseries for Table A
-    if delivery_type == "Table A":
-        df_A = frames[0] + frames[1]
-        df_A = df_A - frames[2]
-        df_A = df_A - frames[3]
-    if delivery_type == 'Article 21':
-        df_A = frames[0] - frames[1]
-    # else:
-    #     df_A = frames[0] - frames[1]
-    
-
-    # print(df_A)
-
-    # Convert df from monthly to yearly
-    calendar_year_df = df_A.resample(pd.offsets.YearEnd()).sum()
-    print(calendar_year_df.head())
-
-
-    # Column 1. long term average
-    table["Long-term Average"] = period_avg(calendar_year_df)
-
-    # Column 4: 2 year annual average from 1982-1983
-    table["2-Year (1982-1983)"] = period_avg(calendar_year_df, 1982, 1983)
-
-    # Column 5: 4 year annual average from 1982-1983
-    table["4-Year (1980-1983)"] = period_avg(calendar_year_df, 1980, 1983)
-
-    # Column 6: 6 year annual average from 1978-1983
-    table["6-Year (1978-1983)"] = period_avg(calendar_year_df, 1978, 1983)
-
-    # Column 7: 10 year annual average from 1978-1987
-    table["10-Year (1978-1987)"] = period_avg(calendar_year_df, 1978, 1987)
-
-    # Calculate the rank of calendar_year_df for wet
-    ranked_df = rank_and_pick_year(calendar_year_df, year_type)
-    print("RANKED DF:")
-    print(ranked_df.head())
-    print(ranked_df.columns)
-
-
-    # Column 2: Single Wettest Year (most)
-    wettest_yr, wettest_val, wettest_perc = dryest_wettest_year(ranked_df, 0)
-    # table["dry_wet_data_1"] = (wettest_val, wettest_perc)
-    # table["dry_wet_label_1"] = f"Single {year_type} Year ({wettest_yr})"
-    table[f"Single {year_type} Year ({wettest_yr})"] = (wettest_val, wettest_perc)
-
-    # Column 3: Single Wettest Year (2nd most)
-    wettest_yr, wettest_val, wettest_perc = dryest_wettest_year(ranked_df, 1)
-    # table["dry_wet_data_2"] = (wettest_val, wettest_perc)
-    # table["dry_wet_label_2"] = f"Single {year_type} Year ({wettest_yr})"
-    table[f"Single {year_type} Year ({wettest_yr})"] = (wettest_val, wettest_perc)
-
-    # Column 8: Single Wettest Year (3rd most)
-    wettest_yr, wettest_val, wettest_perc = dryest_wettest_year(ranked_df, 2)
-    # table["dry_wet_data_3"] = (wettest_val, wettest_perc)
-    # table["dry_wet_label_3"] = f"Single {year_type} Year ({wettest_yr})"
-    table[f"Single {year_type} Year ({wettest_yr})"] = (wettest_val, wettest_perc)
-
     return table
 
 
@@ -300,6 +191,7 @@ def read_run_to_structure_csv_1(df: pd.DataFrame, delivery_type = "Article 21", 
 def load_data(csv_filename: str):
     df = pd.read_csv(csv_filename, index_col=0, parse_dates=True)
     return df
+
 
 @lru_cache
 def read_all_runs_to_structure_csv(csv_filename: str, delivery_type, scen1, scen2) -> dict:
@@ -310,26 +202,24 @@ def read_all_runs_to_structure_csv(csv_filename: str, delivery_type, scen1, scen
     df_1 = df.loc[df["Scenario"] == scen1]
     df_2 = df.loc[df["Scenario"] == scen2]
 
-    table_1 = read_run_to_structure_csv(df_1, delivery_type, "Dry")
-    table_2 = read_run_to_structure_csv(df_1, delivery_type, "Wet")
-    
-    table_3 = read_run_to_structure_csv(df_2, delivery_type, "Dry")
-    table_4 = read_run_to_structure_csv(df_2, delivery_type, "Wet")
+    # Get the yaml config
+    config = take_yaml("utils/op.yaml")
 
-    # Build the rows for dry year
+    # get the types
+    period_types = config.get_period_types()
+
     data = []
-    for item in table_1.keys():
-        val_1, perc_1 = table_1[item]
-        val_2, perc_2 = table_3.get(item, (0, 0))
-        row = ["Dry", item, val_1, perc_1, val_2, perc_2, val_2 - val_1]
-        data.append(row)
-    
-    # Build the rows for wet year
-    for item in table_2.keys():
-        val_1, perc_1 = table_2[item]
-        val_2, perc_2 = table_4.get(item, (0, 0))
-        row = ["Wet", item, val_1, perc_1, val_2, perc_2, val_2 - val_1]
-        data.append(row)
+
+    for period_type in period_types:
+        table_1 = read_run_to_structure_csv(df_1, delivery_type, period_type)
+        table_2 = read_run_to_structure_csv(df_2, delivery_type, period_type)
+
+        # Build the rows for dry year
+        for item in table_1.keys():
+            val_1, perc_1 = table_1[item]
+            val_2, perc_2 = table_2[item]
+            row = [period_type, item, val_1, perc_1, val_2, perc_2, val_2 - val_1]
+            data.append(row)
 
     # Create the df
     df_onepager = pd.DataFrame(
@@ -340,188 +230,3 @@ def read_all_runs_to_structure_csv(csv_filename: str, delivery_type, scen1, scen
     print(df_onepager.head())
 
     return df_onepager
-
-    # Read all the scenarios
-    # scen_aliases = df.Scenario.unique()
-    # combined_struct = dict()
-    # for scenario in scen_list:
-    #     print("processing scenario: ", scenario)
-    #     # Get the df for the scenario
-    #     df1 = df.loc[df["Scenario"] == scenario]
-
-    #     # Dictionary for current table from the current file: key = table_1
-    #     table = read_run_to_structure_csv(df1, delivery_type, year_type)
-
-    #     # Add table_1 to combined_struct
-    #     combined_struct[scenario] = table
-
-    # return combined_struct
-
-
-def read_run_to_structure(dss_filename: str) -> dict:
-    # Structure to return
-    table = {}
-
-    # Create DSS object for the given file
-    dss_object = pdss.DSS(dss_filename)
-
-    # DSS key path for timeseries
-    path_swp_list = [
-        "/CALSIM/SWP_TA_TOTAL/SWP_DELIVERY/.*/1MON/L2020A/",
-        "/CALSIM/SWP_CO_TOTAL/SWP_DELIVERY/.*/1MON/L2020A/",
-        "/CALSIM/SWP_TA_FEATH/SWP_DELIVERY/.*/1MON/L2020A/",
-        "/CALSIM/SWP_CO_FEATH/SWP_DELIVERY/.*/1MON/L2020A/",
-    ]
-
-    # date range we are interested in
-    start = pd.to_datetime("1921-10-01")
-    end = pd.to_datetime("2021-09-30")
-
-    frames: list[pd.DataFrame] = []
-
-    for path_string_swp in path_swp_list:
-        # Get the data frame for the given path
-        df = table_a(dss_object, path_string_swp, start, end)
-
-        # Now add the dataframe to our list of frames
-        frames.append(df)
-
-    # Now calculate- the timeseries for Table A
-    df_A = frames[0] + frames[1]
-    df_A = df_A - frames[2]
-    df_A = df_A - frames[3]
-    # print(df_A)
-
-    # Convert df from monthly to yearly
-    calendar_year_df = df_A.resample(pd.offsets.YearEnd()).sum()
-
-    # Column 1. long term average
-    table["Long-term Average"] = period_avg(calendar_year_df)
-
-    # Column 4: 2 year annual average from 1982-1983
-    table["2-Year (1982-1983)"] = period_avg(calendar_year_df, 1982, 1983)
-
-    # Column 5: 4 year annual average from 1982-1983
-    table["4-Year (1980-1983)"] = period_avg(calendar_year_df, 1980, 1983)
-
-    # Column 6: 6 year annual average from 1978-1983
-    table["6-Year (1978-1983)"] = period_avg(calendar_year_df, 1978, 1983)
-
-    # Column 7: 10 year annual average from 1978-1987
-    table["10-Year (1978-1987)"] = period_avg(calendar_year_df, 1978, 1987)
-
-    # Calculate the rank of calendar_year_df
-    ranked_df_wet = rank_and_pick_year(calendar_year_df, "wet")
-
-    # Column 2: Single Wettest Year (most)
-    wettest_yr, wettest_val, wettest_perc = dryest_wettest_year(ranked_df_wet, 0)
-    wettest_key = f"Single Wet Year ({wettest_yr})"
-    table[wettest_key] = (wettest_val, wettest_perc)
-
-    # Column 3: Single Wettest Year (2nd most)
-    wettest_yr, wettest_val, wettest_perc = dryest_wettest_year(ranked_df_wet, 1)
-    wettest_key = f"Single Wet Year ({wettest_yr})"
-    table[wettest_key] = (wettest_val, wettest_perc)
-
-    # Column 8: Single Wettest Year (3rd most)
-    wettest_yr, wettest_val, wettest_perc = dryest_wettest_year(ranked_df_wet, 2)
-    wettest_key = f"Single Wet Year ({wettest_yr})"
-    table[wettest_key] = (wettest_val, wettest_perc)
-
-    return table
-
-
-def read_all_runs_to_structure_1(runs: dict[str, str]) -> dict:
-    # Dictionary to represent the combined structure
-    combined_struct = {}
-    for name, path in runs.items():
-        # Dictionary for current table from the current file: key = table_1
-        table_1 = {}
-
-        # Build the row_1 (Adjusted Historical) of table_1
-        structure = read_run_to_structure(path)
-
-        # Assign the Adjusted Historical structure to table_1
-        table_1["Adjusted Historical (1922-2021)"] = structure
-
-        # Calculate and assign the CC 50% structure to table_1
-        # TODO: table_1['CC 50% (1922-2021)'] = ...
-
-        # Calculate and assign the CC 75% structure to table_1
-        # TODO: table_1['CC 75% (1922-2021)'] = ...
-
-        # Calculate and assign the 95% structure to table_1
-        # TODO: table_1['CC 95% (1922-2021)'] = ...
-
-        # Add table_1 to combined_struct
-        combined_struct["table_1"] = table_1
-
-    return combined_struct
-
-
-def read_all_runs_to_structure(runs: dict[str, str]) -> dict:
-    # Dictionary to represent the combined structure
-    combined_struct = {}
-    for name, path in runs.items():
-        # Dictionary for current table from the current file: key = table_1
-        table_1 = {}
-
-        # Build the row_1 (Adjusted Historical) of table_1
-        structure = read_run_to_structure(path)
-
-        # Assign the Adjusted Historical structure to table_1
-        table_1["Adjusted Historical (1922-2021)"] = structure
-
-        # Calculate and assign the CC 50% structure to table_1
-        # TODO: table_1['CC 50% (1922-2021)'] = ...
-
-        # Calculate and assign the CC 75% structure to table_1
-        # TODO: table_1['CC 75% (1922-2021)'] = ...
-
-        # Calculate and assign the 95% structure to table_1
-        # TODO: table_1['CC 95% (1922-2021)'] = ...
-
-        # Add table_1 to combined_struct
-        combined_struct["table_1"] = table_1
-
-    return combined_struct
-
-
-def print_structure(combined_struct: dict[str, dict]) -> None:
-    print(combined_struct)
-
-
-if __name__ == "__main__":
-    # # DSS filename to read
-    # dss_filenames = {
-    #     "hist": "2023DCR_Hist_DV.dss"
-    # }
-    # struct = read_all_runs_to_structure(dss_filenames)
-
-    # # DEBUG
-    # print_structure(struct)
-
-    # TODO: hand the struct to a frontend
-    # TODO: write the frontend
-
-    # pseudo code below
-    # structrure = {
-    #    "table_1": {
-    #        "dvr_2023_hist":{
-    #            (1977, 1977): (wettest_val, wettest_perc)
-    #        }
-    #    }
-    # }
-
-    # value, percent = structrure['table_name']['dssname'][(1977, 1977)]
-
-    csv_filename = "data\\dv_data.csv"
-    # start = pd.to_datetime("1921-10-01")
-    # end = pd.to_datetime("2021-09-30")
-    # df = table_a_from_csv(csv_filename, start, end)
-    # print(df.head())
-
-    result = read_all_runs_to_structure_csv(csv_filename)
-    for k, v in result.items():
-        print(f"key = '{k}':")
-        print(v)

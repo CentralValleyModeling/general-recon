@@ -2,6 +2,7 @@ from dash import html, register_page, dash_table, dcc, Input, Output, callback #
 import utils.onepager_api as api
 import plotly.express as px
 import pandas as pd
+import plotly.graph_objects as go
 
 
 register_page(
@@ -19,9 +20,8 @@ dss_filenames = {
 
 csv_filename = "data\\temp.csv"
 
-yaml_data = api.take_yaml("utils/op.yaml")
+yaml_config = api.take_yaml("utils/op.yaml")
 
-# scenario_list = ["DCR23_Baseline", "DCR23_CC50", "DCR23_CC75", "DCR23_CC95", "DCR25_Baseline", "DCR25_CC50", "DCR25_CC95"]
 scenario_list = ["AdjHist", "CC50", "CC75", "CC95"]
 
 def layout():
@@ -68,15 +68,14 @@ def layout():
         html.Div(id="data_table"),
         html.Br(),
         html.Br(),
-        html.H2("SWP Deliveries under Existing Conditions, for Climate Scenarios"),
-        dcc.Graph(id='data_graph'),
+        html.Div(id='data_graph')
     ], style={'width': '80%'})
 
     return layout
 
 @callback(
     Output("data_table", "children"),
-    Output("data_graph", "figure"),
+    Output("data_graph", "children"),
     Input("delivery_type", "value"),
     Input("scenario_1", "value"),
     Input("scenario_2", "value"),
@@ -87,7 +86,7 @@ def handle_selection(delivery_type, scen1, scen2):
     df = api.read_all_runs_to_structure_csv(csv_filename, delivery_type, scen1, scen2)
     tab_rows = []
     graph_data = []
-    for year_type in ["Wet", "Dry"]:
+    for year_type in yaml_config.get_period_types():
         df_1 = df[df["YEAR_TYPE"] == year_type]
         row_count = len(df_1)
         i = 0
@@ -100,7 +99,7 @@ def handle_selection(delivery_type, scen1, scen2):
                 tab_rows.append(
                     html.Tr(
                         [
-                            html.Td(f"{year_type} Periods", rowSpan=row_count, style={'font-weight': 'bold'}),
+                            html.Td(f"{year_type}", rowSpan=row_count, style={'font-weight': 'bold'}),
                             html.Td(row["ITEM"]),
                             html.Td(
                                 f"{row['VAL_1']:,d} ({row['PERC_1']:0.1f}%)" if add_perc else f"{row['VAL_1']:,d}",
@@ -154,107 +153,13 @@ def handle_selection(delivery_type, scen1, scen2):
         style={'width': '80%', 'margin': '20px auto'}
     )
 
-    graph_df = pd.DataFrame(graph_data, columns=['YEAR_TYPE', 'SCENARIO', 'SWP Delivery Type', 'SWP Deliveries (TAF/year)'])
-    graph_df_wet = graph_df[graph_df["YEAR_TYPE"] == "Wet"]
-    fig = px.bar(graph_df_wet, x="SWP Delivery Type", y="SWP Deliveries (TAF/year)", color="SCENARIO", barmode="group", color_discrete_sequence=["#336DFF", "#000000"])
-    fig.update_yaxes(tickformat=",")
-    return [tab], fig
-
-
-
-
-# def handle_selection_old(delivery_type, scen1, scen2):
-#     year_type = "Wet"
-#     combined_struct = api.read_all_runs_to_structure_csv(csv_filename, delivery_type, year_type, scen1, scen2)
-#     data_list = []
-#     graph_data = []
-#     dry_wet_label_1 = ""
-#     dry_wet_label_2 = ""
-#     dry_wet_label_3 = ""
-#     for study_name, table in combined_struct.items():
-#         # print(f"{study_name} = {table}")
-#         dry_wet_label_1 = table["dry_wet_label_1"]
-#         dry_wet_label_2 = table["dry_wet_label_2"]
-#         dry_wet_label_3 = table["dry_wet_label_3"]
-
-#         data = {}
-#         data["v0"] = study_name
-#         data["v1"], data["p1"] = table["Long-term Average"]
-#         data["v2"], data["p2"] = table["dry_wet_data_1"]
-#         data["v3"], data["p3"] = table["dry_wet_data_2"]
-#         data["v4"], data["p4"] = table["2-Year (1982-1983)"]
-#         data["v5"], data["p5"] = table["4-Year (1980-1983)"]
-#         data["v6"], data["p6"] = table["6-Year (1978-1983)"]
-#         data["v7"], data["p7"] = table["10-Year (1978-1987)"]
-#         data["v8"], data["p8"] = table["dry_wet_data_3"]
-#         data_list.append(data)
-
-#         # populate data for graph
-#         graph_row = [study_name, "Long-term Average", data["v1"]]
-#         graph_data.append(graph_row)
-
-#         graph_row = [study_name, dry_wet_label_1, data["v2"]]
-#         graph_data.append(graph_row)
-
-#         graph_row = [study_name, dry_wet_label_2, data["v3"]]
-#         graph_data.append(graph_row)
-
-#         graph_row = [study_name, "2-Year (1982-1983)", data["v4"]]
-#         graph_data.append(graph_row)
-
-#         graph_row = [study_name, "4-Year (1980-1983)", data["v5"]]
-#         graph_data.append(graph_row)
-
-#         graph_row = [study_name, "6-Year (1978-1983)", data["v6"]]
-#         graph_data.append(graph_row)
-
-#         graph_row = [study_name, "10-Year (1978-1987)", data["v7"]]
-#         graph_data.append(graph_row)
-
-#         graph_row = [study_name, dry_wet_label_3, data["v8"]]
-#         graph_data.append(graph_row)
-
-#     header1 = (f"Table 5-4. Estimated Average and {year_type}-Period Deliveries of SWP {delivery_type} Water (Existing Conditions, in taf/year) and Percent of Maximum SWP {delivery_type} Amount, 4,133 TAF/year")
-
-#     tab = dash_table.DataTable(
-#         columns=[
-#             {"name": [header1, "Scenario", ""], "id": "v0"},
-#             {"name": [header1, "Long-term Average", "val"], "id": "v1"},
-#             {"name": [header1, "Long-term Average", "%"], "id": "p1"},
-#             {"name": [header1, f"{dry_wet_label_1}", "val"], "id": "v2"},
-#             {"name": [header1, f"{dry_wet_label_1}", "%"], "id": "p2"},
-#             {"name": [header1, f"{dry_wet_label_2}", "val"], "id": "v3"},
-#             {"name": [header1, f"{dry_wet_label_2}", "%"], "id": "p3"},
-#             {"name": [header1, "2-Year (1982-1983)", "val"], "id": "v4"},
-#             {"name": [header1, "2-Year (1982-1983)", "%"], "id": "p4"},
-#             {"name": [header1, "4-Year (1980-1983)", "val"], "id": "v5"},
-#             {"name": [header1, "4-Year (1980-1983)", "%"], "id": "p5"},
-#             {"name": [header1, "6-Year (1978-1983)", "val"], "id": "v6"},
-#             {"name": [header1, "6-Year (1978-1983)", "%"], "id": "p6"},
-#             {"name": [header1, "10-Year (1978-1987)", "val"], "id": "v7"},
-#             {"name": [header1, "10-Year (1978-1987)", "%"], "id": "p7"},
-#             {"name": [header1, f"{dry_wet_label_3}", "val"], "id": "v8"},
-#             {"name": [header1, f"{dry_wet_label_3}", "%"], "id": "p8"}, 
-#         ], 
-#         data=data_list,
-#         merge_duplicate_headers=True,
-#     )
-
-#     graph_df = pd.DataFrame(graph_data, columns=['Scenario', 'Measure', 'Value'])
-#     fig = px.bar(graph_df, x="Measure", y="Value", color="Scenario", barmode="group")
-
-#     return tab, fig
-
-
-    
-
-
-
-# {'Table Headings':
-#   [
-#       {'Heading': '', 'YrRange': None, 'Type': 'Long-Term'}, 
-#       {'Heading': 'Wet years 1978-1980', 'YrRange': '1978, 1980', 'Type': 'Wet Periods'}, 
-#       {'Heading': 'Dry years 1976-1966', 'YrRange': '1976, 1977', 'Type': 'Dry Periods'}, 
-#       {'Heading': 'My Custom years', 'YrRange': '1976, 1977', 'Type': 'Custom'}
-#   ]
-# }
+    bar_figs = []
+    for year_type in yaml_config.get_period_types():
+        graph_df = pd.DataFrame(graph_data, columns=['YEAR_TYPE', 'SCENARIO', 'SWP Delivery Type', 'SWP Deliveries (TAF/year)'])
+        graph_df_wet = graph_df[graph_df["YEAR_TYPE"] == "Wet Periods"]
+        bar = px.bar(graph_df_wet, x="SWP Delivery Type", y="SWP Deliveries (TAF/year)", color="SCENARIO", barmode="group", color_discrete_sequence=["#336DFF", "#000000"])
+        bar.update_yaxes(tickformat=",")
+        heading = html.H2(f"{year_type} SWP Deliveries under Existing Conditions, for Climate Scenarios {scen1} and {scen2}")
+        bar_figs.append(heading)
+        bar_figs.append(dcc.Graph(figure=bar))
+    return [tab], bar_figs

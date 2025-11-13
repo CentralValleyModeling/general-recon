@@ -1,7 +1,7 @@
 Table Headings:
 
   - Heading: "Long-Term Average"
-    YrRange:
+    YrRange: 1921, 2020
     Type: Wet Periods
 
   - Heading: 2-Year (1982-1983)
@@ -26,7 +26,7 @@ Table Headings:
 
   - Heading: 2-Year (1982-1983)
     YrRange: 1982, 1983
-    Type: Dry Periods
+    Type: Custom Type
 
   - Heading: 4-Year (1980-1983)
     YrRange: 1980, 1983
