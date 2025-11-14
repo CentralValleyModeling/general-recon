@@ -156,7 +156,7 @@ def handle_selection(delivery_type, scen1, scen2):
     bar_figs = []
     for year_type in yaml_config.get_period_types():
         graph_df = pd.DataFrame(graph_data, columns=['YEAR_TYPE', 'SCENARIO', 'SWP Delivery Type', 'SWP Deliveries (TAF/year)'])
-        graph_df_wet = graph_df[graph_df["YEAR_TYPE"] == "Wet Periods"]
+        graph_df_wet = graph_df[graph_df["YEAR_TYPE"] == year_type]
         bar = px.bar(graph_df_wet, x="SWP Delivery Type", y="SWP Deliveries (TAF/year)", color="SCENARIO", barmode="group", color_discrete_sequence=["#336DFF", "#000000"])
         bar.update_yaxes(tickformat=",")
         heading = html.H2(f"{year_type} SWP Deliveries under Existing Conditions, for Climate Scenarios {scen1} and {scen2}")
