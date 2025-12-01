@@ -1,0 +1,68 @@
+<!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
+<qgis version="3.44.1-Solothurn">
+  <identifier>i12_CalSim3Model_Arcs_20221021</identifier>
+  <parentidentifier></parentidentifier>
+  <language>ENG</language>
+  <type>dataset</type>
+  <title>i12 CalSim3 Model Arcs</title>
+  <abstract>As part of the QA/QC process for the CalSim 3.0model, the georeference of the AutoCad Schematic was developed. This process seems to have served its purpose as it has both demonstrated the inherent accuracy of the model and brought to light certain areas where some improvement may be realized. It was not possible to fully reference the schematic. The main challenge was that by necessity the model often represents groups of elements as single nodes. Consequently, all arcs designated "diversion, return, inflow, delta net depletion, spill, surface runoff or closure term" were considered conceptual and were not made to conform exactly to the features they represent, although they were placed as closely to those features as possible. This was about an 80% effort as time and budget were committed to referencing the entire schematic and stream channels only represented one portion of the model. The main goal here was simplicity for two reasons. The first was that, due to the reasons discussed above, these arcs are essentially conceptual in nature, often representing systems instead of single paths. Secondly, there was some discussion of creating a network form these data. The stream channels should remain fairly stable over the life of the model, but the demand units, diversions and returns may well vary considerably. This means that edits will become necessary in the future and manipulating networks while retaining topology will be simplified if the number of bends, vertices and crossings are kept to a minimum.&#xd;
+&#xd;
+These data were created to QA/QC the schematic layout of the CalSim 3.0 model. To date the model has been conceptual and schematic in nature. The process of georeferencing that schematic helps confirm the logical structure of the model.</abstract>
+  <keywords vocabulary="Search keys">
+    <keyword>elevation</keyword>
+    <keyword>location</keyword>
+  </keywords>
+  <keywords vocabulary="gmd:topicCategory">
+    <keyword>elevation</keyword>
+    <keyword>location</keyword>
+  </keywords>
+  <contact>
+    <contactAddress>
+      <type>both</type>
+      <address>1516 9th Street</address>
+      <city>Sacramento</city>
+      <administrativearea>CA</administrativearea>
+      <postalcode>95814</postalcode>
+      <country>US</country>
+    </contactAddress>
+    <name>Mohammad Hasan</name>
+    <organization>California Department of Water Resources | Modeling Support Office</organization>
+    <position>Engineer, Water Resources</position>
+    <voice>1-916-288-0568</voice>
+    <fax></fax>
+    <email>mohammad.hasan@water.ca.gov</email>
+    <role>Point of contact</role>
+  </contact>
+  <links>
+    <link url="https://doi.org/10.5066/xxxxxxxx" mimeType="" type="" size="" name="Digital Data" description="" format=""/>
+  </links>
+  <dates>
+    <date type="Published" value="2022-10-24T00:00:00"/>
+  </dates>
+  <fees></fees>
+  <constraints type="Limitations of use">None. Reference should be made to the California Department of Water Resources, Modeling Support Office, Hydrology Development Section as the originator of this data. Users are advised to read the dataset's metadata thoroughly to understand appropriate use and data limitations.</constraints>
+  <rights> California Department of Water Resources,  Modeling Support Office, Hydrology Development Group.</rights>
+  <encoding></encoding>
+  <crs>
+    <spatialrefsys nativeFormat="Wkt">
+      <wkt>PROJCRS["unknown",BASEGEOGCRS["unknown",DATUM["North American Datum 1983",ELLIPSOID["GRS 1980",6378137,298.257222101,LENGTHUNIT["metre",1]],ID["EPSG",6269]],PRIMEM["Greenwich",0,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8901]]],CONVERSION["unknown",METHOD["Transverse Mercator",ID["EPSG",9807]],PARAMETER["Latitude of natural origin",0,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8801]],PARAMETER["Longitude of natural origin",-120,ANGLEUNIT["degree",0.0174532925199433],ID["EPSG",8802]],PARAMETER["Scale factor at natural origin",0.9996,SCALEUNIT["unity",1],ID["EPSG",8805]],PARAMETER["False easting",500000,LENGTHUNIT["metre",1],ID["EPSG",8806]],PARAMETER["False northing",0,LENGTHUNIT["metre",1],ID["EPSG",8807]]],CS[Cartesian,2],AXIS["(E)",east,ORDER[1],LENGTHUNIT["metre",1,ID["EPSG",9001]]],AXIS["(N)",north,ORDER[2],LENGTHUNIT["metre",1,ID["EPSG",9001]]]]</wkt>
+      <proj4>+proj=tmerc +lat_0=0 +lon_0=-120 +k=0.9996 +x_0=500000 +y_0=0 +datum=NAD83 +units=m +no_defs +type=crs</proj4>
+      <srsid>0</srsid>
+      <srid>0</srid>
+      <authid></authid>
+      <description>unknown</description>
+      <projectionacronym></projectionacronym>
+      <ellipsoidacronym>PARAMETER:6378137:6356752.31414035614579916</ellipsoidacronym>
+      <geographicflag>false</geographicflag>
+    </spatialrefsys>
+  </crs>
+  <extent>
+    <spatial minx="-123.72289999999999566" miny="37.62960000000000349" minz="0" maxx="-120.26550000000000296" maxz="0" dimensions="2" crs="" maxy="41.35940000000000083"/>
+    <temporal>
+      <period>
+        <start>2022-10-26T01:00:00Z</start>
+        <end></end>
+      </period>
+    </temporal>
+  </extent>
+</qgis>

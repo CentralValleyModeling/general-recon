@@ -6,7 +6,7 @@ GLOBAL_MARGIN = {
 }
 
 THEME_COLORS = {
-    "blue": "#007fbd",
+    "blue": "#285E80",
 }
 
 PLOT_COLORS = [
@@ -23,29 +23,30 @@ PLOT_COLORS = [
 ]
 
 ASSUMPTION_ORDER = [
-    "Baseline",
-    "Maintain",
-    "Degradation",
-    "FIRO",
-    "SOD Storage",
-    "DCP",
-    "Combo"
+    "DCR 2023",
+    "DCR 2025",
 ]
 
-SCENARIO_COLORS = {
-    "Baseline": "#4d4d4d",
-    "Maintain": "#999999",
-    "Degradation": "#ff6c66",
-    "FIRO": "#55b4eb",
-    "SOD Storage": "#0072b1",
-    "DCP": "#003759",
-    "Combo": "#039d73"
+SCENARIO_ORDER = [
+    "DCR23_Baseline",
+    "DCR23_CC50",
+    "DCR23_CC75",
+    "DCR23_CC95",
+    "DCR25_Baseline",
+    "DCR25_CC50",
+    "DCR25_CC75"
+]
+
+BASELINE = "DCR 2023"
+
+ASSUMPTION_COLORS = {
+    "DCR 2023": "#0072b1",
+    "DCR 2025": "#b10000",
 }
 
 CLIMATE_ORDER = [
     "Current",
     "2043_CC50",
+    "2043_CC75",
     "2043_CC95",
-    "2085_CC50",
-    "2085_CC75"
 ]

@@ -14,7 +14,7 @@ from dash import (
 
 from charts.chart_layouts import (
     CardWidget,
-    card_bar_plot_wy_vert,
+    card_bar_plot_vert,
     card_bar_plot_orovl_CAP,
 )
 
@@ -37,7 +37,7 @@ exp_card = CardWidget(
     button_label="Drilldown",
     popover_label="exp-info",
     popover_content=load_markdown("page_text/info-total-exports.md"),
-    charts=card_bar_plot_wy_vert(df_dv, b_part="EXPORTACTUALTDIF", climate_order=CLIMATE_ORDER),
+    charts=card_bar_plot_vert(df_dv, b_part="EXPORTACTUALTDIF", climate_order=CLIMATE_ORDER, rpt_year="icy"),
 )
 
 swp_exp_card = CardWidget(
@@ -46,16 +46,25 @@ swp_exp_card = CardWidget(
     button_label="Drilldown",
     popover_label="swpexp-info",
     popover_content=load_markdown("page_text/info-swp-exports.md"),
-    charts=card_bar_plot_wy_vert(df_dv, b_part="C_CAA003_SWP", climate_order=CLIMATE_ORDER),
+    charts=card_bar_plot_vert(df_dv, b_part="C_CAA003_SWP", climate_order=CLIMATE_ORDER, rpt_year="icy"),
 )
 
 ta_card = CardWidget(
     "SWP Table A deliveries",
-    button_id="SWP_TA_CO_SOD",
+    button_id="SWP_TA_CO_FROM_DELTA",
     button_label="Drilldown",
     popover_label="ta-info",
     popover_content=load_markdown("page_text/info-table-a.md"),
-    charts=card_bar_plot_wy_vert(df_dv, b_part="SWP_TA_CO_SOD", climate_order=CLIMATE_ORDER),
+    charts=card_bar_plot_vert(df_dv, b_part="SWP_TA_CO_FROM_DELTA", climate_order=CLIMATE_ORDER, rpt_year="icy"),
+)
+
+a21_card = CardWidget(
+    "SWP Article 21 deliveries",
+    button_id="SWP_IN_TOTAL",
+    button_label="Drilldown",
+    popover_label="a21-info",
+    popover_content=load_markdown("page_text/info-article-21.md"),
+    charts=card_bar_plot_vert(df_dv, b_part="SWP_IN_TOTAL", climate_order=CLIMATE_ORDER, rpt_year="icy"),
 )
 
 ndoi_card = CardWidget(
@@ -64,7 +73,7 @@ ndoi_card = CardWidget(
     button_label="Drilldown",
     popover_label="ndoi-info",
     popover_content=load_markdown("page_text/info-ndoi.md"),
-    charts=card_bar_plot_wy_vert(df_dv, b_part="NDOI", climate_order=CLIMATE_ORDER),
+    charts=card_bar_plot_vert(df_dv, b_part="NDOI", climate_order=CLIMATE_ORDER, rpt_year="icy"),
 )
 
 orovl_sep_card = CardWidget(
@@ -73,7 +82,24 @@ orovl_sep_card = CardWidget(
     button_label="Drilldown",
     popover_label="orovl-info",
     popover_content=load_markdown("page_text/info-orovl.md"),
-    charts=card_bar_plot_wy_vert(df_dv, b_part="S_OROVL", climate_order=CLIMATE_ORDER, cm=[9]),
+    charts=card_bar_plot_vert(df_dv, 
+                              b_part="S_OROVL", 
+                              climate_order=CLIMATE_ORDER, 
+                              cm=[9],
+                              yaxisoverride="Thousand acre-feet"),
+)
+
+sluis_swp_sep_card = CardWidget(
+    "San Luis SWP September storage",
+    button_id="S_SLUIS_SWP",
+    button_label="Drilldown",
+    popover_label=None,
+    popover_content=None,
+    charts=card_bar_plot_vert(df_dv,
+                              b_part="S_SLUIS_SWP",
+                              climate_order=CLIMATE_ORDER,
+                              cm=[9],
+                              yaxisoverride="Thousand acre-feet"),
 )
 
 orovl_sep_co_card = CardWidget(
@@ -100,10 +126,10 @@ def layout():
                         id="intro-text",
                         children=[
                             dbc.Col(
-                                class_name="col-md-8", children=[load_markdown("page_text/site-introduction.md")]
+                                class_name="col-md-6", children=[load_markdown("page_text/site-introduction.md")]
                             ),
                             dbc.Col(
-                                class_name="col-md-4", children=[html.Img(src="/assets/1997_02_05_DK_09434-014_Aqueduct_web.jpg", style={"width": "100%"})]
+                                class_name="col-md-6", children=[html.Img(src="/assets/1997_02_05_DK_09434-014_Aqueduct_web.jpg", style={"width": "75%"})]
                             ),
                             html.Hr(style={"margin": "0.5rem 0"}),
                         ],
@@ -140,6 +166,15 @@ def layout():
                         id="home-cards-row-0",
                         children=[
                             dbc.Col(
+                                class_name="col-md-12", children=[a21_card.create_card()]
+                            ),
+                            html.Hr(style={"margin": "0.5rem 0"}),
+                        ],
+                    ),
+                    dbc.Row(
+                        id="home-cards-row-0",
+                        children=[
+                            dbc.Col(
                                 class_name="col-md-12", children=[ndoi_card.create_card()]
                             ),
                             html.Hr(style={"margin": "0.5rem 0"}),
@@ -158,11 +193,20 @@ def layout():
                         id="home-cards-row-0",
                         children=[
                             dbc.Col(
-                                class_name="col-md-12", children=[orovl_sep_co_card.create_card()]
+                                class_name="col-md-12", children=[sluis_swp_sep_card.create_card()]
                             ),
                             html.Hr(style={"margin": "0.5rem 0"}),
                         ],
                     ),
+                    #dbc.Row(
+                    #    id="home-cards-row-0",
+                    #    children=[
+                    #        dbc.Col(
+                    #            class_name="col-md-12", children=[orovl_sep_co_card.create_card()]
+                    #        ),
+                    #        html.Hr(style={"margin": "0.5rem 0"}),
+                    #    ],
+                    #),
                 ],
             ),
         ],

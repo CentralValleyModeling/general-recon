@@ -1,4 +1,5 @@
 import warnings
+import traceback
 warnings.simplefilter(action='ignore', category=FutureWarning)
 
 import dash_bootstrap_components as dbc
@@ -7,8 +8,17 @@ import plotly.express as px
 import plotly.graph_objects as go
 from dash import dcc, html
 
+from typing import Optional, Literal
 from data import create_download_button
-from pages.styles import PLOT_COLORS, SCENARIO_COLORS, ASSUMPTION_ORDER, CLIMATE_ORDER, THEME_COLORS
+from pages.styles import (
+    PLOT_COLORS,
+    ASSUMPTION_COLORS,
+    ASSUMPTION_ORDER,
+    SCENARIO_ORDER,
+    CLIMATE_ORDER,
+    THEME_COLORS,
+    BASELINE
+)
 from utils.query_data import scen_aliases, var_dict
 from utils.tools import cfs_taf, convert_cm_nums, month_list, monthfilter
 
@@ -223,8 +233,9 @@ def card_bar_plot(
 
     try:
         df0 = cfs_taf(df0, var_dict)
-    except Exception:
-        print(f"Unable to convert from CFS to TAF for {b_part}")
+    except KeyError as e:
+        print(f"Unable to convert from CFS to TAF for {b_part}: {e}")
+        #traceback.print_exc()
     # For the last year
     df1 = df0.groupby(["Climate"]).sum(numeric_only=True) / (endyr - startyr + 1)
     df_plot = df1
@@ -253,7 +264,7 @@ def card_bar_plot(
     return layout
 
 
-def card_bar_plot_wy_vert(
+def card_bar_plot_vert(
     df: pd.DataFrame,
     b_part: str = "C_CAA003",
     wyt: list[int] = None,
@@ -261,14 +272,24 @@ def card_bar_plot_wy_vert(
     startyr: int = 1922,
     endyr: int = 2021,
     climate_order = [],
+    rpt_year: Literal["iwy", "icy"] = "iwy",
+    yaxisoverride: Optional[str]=None,
+
 ):
     if wyt is None:
         wyt = [1, 2, 3, 4, 5]
     if cm is None:
         cm = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
+    if yaxisoverride is not None:
+        yaxis_title = yaxisoverride
+    elif rpt_year == "iwy":
+        yaxis_title = "Thousand acre-feet per water year"
+    elif rpt_year == "icy":
+        yaxis_title = "Thousand acre-feet per calendar year"
+
     df0 = df.loc[
-        (df["iwy"] >= startyr)
+        (df[rpt_year] >= startyr)
        & (df["icm"].isin(cm))
     ]
     try:
@@ -292,10 +313,10 @@ def card_bar_plot_wy_vert(
     df_plot["Assumption"] = pd.Categorical(df_plot["Assumption"],
                                            categories=ASSUMPTION_ORDER, ordered=True)
 
-    # Compute "Maintain" baseline for each Climate group
+    # Compute baseline for each Climate group
     df_plot["BaselineValue"] = df_plot.groupby("Climate")[b_part].transform(
-        lambda x: x.loc[x.index[df_plot.loc[x.index, "Assumption"] == "Maintain"]].values[0] 
-        if (df_plot.loc[x.index, "Assumption"] == "Maintain").any() else None
+        lambda x: x.loc[x.index[df_plot.loc[x.index, "Assumption"] == BASELINE]].values[0] 
+        if (df_plot.loc[x.index, "Assumption"] == BASELINE).any() else None
     )
 
     # Compute Percent Change
@@ -316,7 +337,7 @@ def card_bar_plot_wy_vert(
         barmode="group",
         orientation="v",
         custom_data=["Assumption","Scenario",b_part,"PercentChange","Climate","ValueChange"],
-        color_discrete_map=SCENARIO_COLORS,
+        color_discrete_map=ASSUMPTION_COLORS,
         text_auto=True
 
     )
@@ -326,7 +347,7 @@ def card_bar_plot_wy_vert(
         showlegend=True,
         xaxis_title="Climate",
         xaxis_tickformat=",d",
-        yaxis_title="Thousand acre-feet per year",
+        yaxis_title=yaxis_title,
         yaxis_tickformat=",d",
         yaxis_showgrid=True,
         yaxis_gridcolor="lightgray",
@@ -337,7 +358,7 @@ def card_bar_plot_wy_vert(
                     "<b>Scenario:</b> %{customdata[0]}<br>" +
                     "<b>Scenario Alias:</b> %{customdata[1]}<br>" +
                     "<b>Value:</b> %{customdata[2]:,.2f}<br>" +
-                    "<b>Change vs Maintain:</b> %{customdata[5]:,d} (%{customdata[3]:.2f}%)<br>" +
+                    "<b>Change vs Design Capacity:</b> %{customdata[5]:,d} (%{customdata[3]:.2f}%)<br>" +
                     "<b>Climate:</b> %{customdata[4]}"
 
 )
@@ -391,10 +412,10 @@ def card_bar_plot_orovl_CAP(
                                            categories=ASSUMPTION_ORDER, ordered=True)
 
 
-    # Compute "Maintain" baseline for each Climate group
+    # Compute baseline for each Climate group
     df_plot["BaselineValue"] = df_plot.groupby("Climate")[b_part].transform(
-        lambda x: x.loc[x.index[df_plot.loc[x.index, "Assumption"] == "Maintain"]].values[0] 
-        if (df_plot.loc[x.index, "Assumption"] == "Maintain").any() else None
+        lambda x: x.loc[x.index[df_plot.loc[x.index, "Assumption"] == BASELINE]].values[0] 
+        if (df_plot.loc[x.index, "Assumption"] == BASELINE).any() else None
     )
 
     # Compute Percent Change
@@ -413,7 +434,7 @@ def card_bar_plot_orovl_CAP(
         barmode="group",
         orientation="v",
         custom_data=["Assumption","Scenario",b_part,"PercentChange","Climate"],
-        color_discrete_map=SCENARIO_COLORS,
+        color_discrete_map=ASSUMPTION_COLORS,
         text_auto=True
 
     )
@@ -434,7 +455,7 @@ def card_bar_plot_orovl_CAP(
                     "<b>Scenario:</b> %{customdata[0]}<br>" +
                     "<b>Scenario Alias:</b> %{customdata[1]}<br>" +
                     "<b>Value:</b> %{customdata[2]:,.2f}<br>" +
-                    "<b>Change vs Maintain:</b> %{customdata[3]:.2f}% <br>" + 
+                    "<b>Change vs Design Capacity:</b> %{customdata[3]:.2f}% <br>" + 
                     "<b>Climate:</b> %{customdata[4]}"
 )
 
@@ -524,7 +545,7 @@ def mon_exc_plot(df, b_part, monthchecklist,climate):
                 y=df["y"],
                 mode="lines",
                 name=column,
-                line=dict(color=PLOT_COLORS[i % len(PLOT_COLORS)]),
+                line=dict(color=ASSUMPTION_COLORS.get(column, "#cccccc")),
             )
         )
     if CSV_EXPORT:
@@ -544,10 +565,11 @@ def mon_exc_plot(df, b_part, monthchecklist,climate):
     return fig
 
 def ann_exc_plot(
-        df,
-        b_part,
-        yearwindow,
-        title: str = None,
+        df: pd.DataFrame,
+        b_part: str,
+        yearwindow: str,
+        title: Optional[str] = None,
+        groupby: Literal["Assumption", "Scenario"] = "Assumption"
 ):
     series_container = []
     if yearwindow == "Calendar Year":
@@ -557,13 +579,20 @@ def ann_exc_plot(
 
     #df0 = df.loc[df["icm"].isin(convert_cm_nums(monthchecklist))]
     df0 = cfs_taf(df, var_dict)
-    df0 = df0.groupby(["Assumption", yw]).sum(numeric_only=True)
+    df0 = df0.groupby([groupby, yw]).sum(numeric_only=True)
 
-    for assumption in ASSUMPTION_ORDER:
-        series_i = df0.loc[df0.index.get_level_values(0) == assumption, b_part]
+    if groupby == "Assumption":
+        ORDER = ASSUMPTION_ORDER
+    elif groupby == "Scenario":
+        ORDER = SCENARIO_ORDER
+    else:
+        raise ValueError(f"Unexpected groupby value: {groupby}")
+
+    for i in ORDER:
+        series_i = df0.loc[df0.index.get_level_values(0) == i, b_part]
         series_i = series_i.sort_values()
         series_i = series_i.reset_index(drop=True)
-        series_i.rename(assumption, inplace=True)
+        series_i.rename(i, inplace=True)
         series_container.append(series_i)
 
     df3 = pd.concat(series_container, axis=1)
@@ -587,7 +616,12 @@ def ann_exc_plot(
                 y=df["y"],
                 mode="lines",
                 name=column,
-                line=dict(color=PLOT_COLORS[i % len(PLOT_COLORS)]),
+                line=dict(
+                    color=ASSUMPTION_COLORS.get(column, "#cccccc")
+                    if groupby == "Assumption"
+                    else PLOT_COLORS[i % len(PLOT_COLORS)]
+                ),
+
             )
         )
 
@@ -639,9 +673,9 @@ def distplot(
         yaxis=dict(gridcolor="LightGrey"),
     )
 
-    fig.for_each_trace(lambda trace: trace.update(visible='legendonly')
-                       if trace.name in scen_aliases[-4:] else ()
-    )
+#    fig.for_each_trace(lambda trace: trace.update(visible='legendonly')
+#                       if trace.name in scen_aliases[-4:] else ()
+#    )
 
     return fig
 

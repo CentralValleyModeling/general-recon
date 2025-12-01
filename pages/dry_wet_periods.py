@@ -7,7 +7,7 @@ import plotly.express as px
 from dash import Input, Output, State, callback, dcc, html, register_page
 
 #from charts.chart_layouts import ann_exc_plot, mon_exc_plot
-from pages.styles import ASSUMPTION_ORDER, CLIMATE_ORDER, PLOT_COLORS, SCENARIO_COLORS
+from pages.styles import ASSUMPTION_ORDER, CLIMATE_ORDER, PLOT_COLORS, ASSUMPTION_COLORS, BASELINE
 from utils.query_data import date_map, df_dv, scen_aliases, var_dict
 from utils.tools import (
     cfs_taf,
@@ -166,7 +166,7 @@ def update_annual(assumption, climate, variable, avg_window):
 
     df = df.reindex(ASSUMPTION_ORDER, level="Assumption")
 
-    df["denominator"] = df.loc["Maintain", variable]
+    df["denominator"] = df.loc[BASELINE, variable]
     df["vol_change"] = ((df.loc[:, variable]-df["denominator"]))
     df["percent_change"] = ((df.loc[:, variable]-df["denominator"])/df["denominator"])*100
 
@@ -175,7 +175,7 @@ def update_annual(assumption, climate, variable, avg_window):
         x=df.index.get_level_values(0),
         y=variable,
         color=df.index.get_level_values(0),
-        color_discrete_map=SCENARIO_COLORS,
+        color_discrete_map=ASSUMPTION_COLORS,
         custom_data=df[["percent_change", "vol_change"]],
         text_auto=True
     )
@@ -189,6 +189,6 @@ def update_annual(assumption, climate, variable, avg_window):
     )
 
     fig.update_traces(
-        hovertemplate="<b>Change vs Maintain:</b> %{customdata[0]:.2f}% (%{customdata[1]:,d} TAF)<br>"
+        hovertemplate="<b>Change vs Design Capacity:</b> %{customdata[0]:.2f}% (%{customdata[1]:,d} TAF)<br>"
     )
     return fig

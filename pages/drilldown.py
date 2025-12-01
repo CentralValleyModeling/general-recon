@@ -7,7 +7,7 @@ import plotly.express as px
 from dash import Input, Output, State, callback, dcc, html, register_page
 
 from charts.chart_layouts import ann_exc_plot, mon_exc_plot
-from pages.styles import PLOT_COLORS, ASSUMPTION_ORDER, SCENARIO_COLORS, CLIMATE_ORDER
+from pages.styles import PLOT_COLORS, ASSUMPTION_ORDER, ASSUMPTION_COLORS, CLIMATE_ORDER
 from utils.query_data import date_map, df_dv, scen_aliases, var_dict
 from data import load_markdown
 from utils.tools import (
@@ -228,7 +228,7 @@ def update_timeseries(b_part, climate_filter):
         x=df_plot.index,
         y=b_part,
         color="Assumption",
-        color_discrete_map=SCENARIO_COLORS,
+        color_discrete_map=ASSUMPTION_COLORS,
     )
     fig.update_layout(
         title=f"{alias} ({b_part})",
@@ -282,7 +282,7 @@ def update_annual_timeseries(
         x=year_type,
         y=b_part,
         color="Assumption",
-        color_discrete_map=SCENARIO_COLORS,
+        color_discrete_map=ASSUMPTION_COLORS,
     )
     fig.update_layout(
         plot_bgcolor="white",
@@ -392,7 +392,7 @@ def update_monthly(b_part, wytchecklist, slider_yr_range, climate_filter):
         y=b_part,
         color=df.index.get_level_values(0),
         labels={"color": "Assumption"},
-        color_discrete_map=SCENARIO_COLORS,
+        color_discrete_map=ASSUMPTION_COLORS,
     )
     fig.update_layout(
         plot_bgcolor="white",
@@ -451,7 +451,7 @@ def update_bar_annual(b_part, wytchecklist, slider_yr_range, climate_filter):
             y=b_part,
             color=df_annual.index.get_level_values(0),
             text_auto=True,
-            color_discrete_map=SCENARIO_COLORS,
+            color_discrete_map=ASSUMPTION_COLORS,
             custom_data=df_annual[[b_part]]
         )
 

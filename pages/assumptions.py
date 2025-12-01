@@ -5,13 +5,13 @@ from data import load_markdown
 from pathlib import Path
 
 
-register_page(
-    __name__,
-    name="Model Assumptions",
-    top_nav=True,
-    path="/assumptions",
-    order=99,
-)
+#register_page(
+#    __name__,
+#    name="Model Assumptions",
+#    top_nav=True,
+#    path="/assumptions",
+#    order=99,
+#)
 
 modeling_assumptions = load_markdown("page_text/modeling_assumptions.md")
 md_path = Path("data/page_text/modeling_assumptions.md")

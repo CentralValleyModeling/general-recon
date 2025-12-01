@@ -1,0 +1,97 @@
+<!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
+<qgis version="3.42.2-Münster">
+  <identifier>swp_asset_lines</identifier>
+  <parentidentifier></parentidentifier>
+  <language>ENG</language>
+  <type>dataset</type>
+  <title>i17_StateWaterProject_Asset_Lines</title>
+  <abstract>This is a line dataset of linear State Water Project assets, such as canals, pipelines, check structures, penstocks, siphons, tunnels, reservoirs, power plants, and pumping plants as defined in O&amp;M's SWP Asset Register. The linear features were digitized from a combination of atlas dataset i17_StateWaterProject_Centerline, NAIP 2022 aerial photography and georeferenced design drawings. Each feature has been assigned an SWP Asset Register Object ID, Functional Location, Asset Description, Asset Level, and Asset Type. The Object ID serves as a unique identifier. The Asset Register is a hierarchical system and assets of a higher level will often overlap with "child" assets of a lower level. For example, pool assets overlap with different canal or pipeline assets because pools are Level 4 and canals and pipelines are Level 5. 
+This dataset has relationship classes with four other tables: 
+i17_StateWaterProject_BlueBook_Table1_Conveyance_Lines 
+i17_StateWaterProject_BlueBook_Table2_Pools 
+i17_StateWaterProject_BlueBook_Table3_Plants 
+i17_StateWaterProject_BlueBook_Table4_Reservoirs 
+These tables are digital versions of SWP Blue Book tables 1-4 and are related through the Asset Register Object ID field. The tables contain additional information on conveyance lines, pools, power and pumping plants, and reservoirs that come specifically from the Blue Book. 
+The ultimate goal is for this dataset to contain all the linear features in the SWP and in the Asset Register. However, there are several assets that are known to be missing and these will be addressed in updates over time. Missing assets are as follows: 
+Peace Valley Pipeline Inlet, Castaic PP Penstocks, Castaic Lake Penstocks, Yucaipa Pipeline, Mentone South Pipeline, Mentone East Pipeline, Tehachapi Tunnel 2 Transition, Santa Ana Pipeline Transition, Polonio Pass Treatment Plant Valve, Pool W4, Tank Site 5 Terminus (2 Tanks) [Coastal Branch], Canal between entering into Thermalito Afterbay, Gorman Creek Siphon, Hungry Valley Siphon 2A, Hungry Valley Siphon 2B, Side Hill Siphon, CHPS Forebay, Crafton Hills Reservoir Outlet Works, Crafton Hills Reservoir Inlet Works 
+In addition, the location of the Grizzly Valley Pipeline is uncertain and only an approximate centerline is provided.
+This dataset is current as of 5/30/2024.
+
+This is a line dataset of linear State Water Project assets. The associated data are considered DWR enterprise GIS data, which meet all appropriate requirements of the DWR Spatial Data Standards, specifically the DWR Spatial Data Standard version 3.6, dated September 27, 2023. DWR makes no warranties or guarantees — either expressed or implied — as to the completeness, accuracy, or correctness of the data. DWR neither accepts nor assumes liability arising from or for any incorrect, incomplete, or misleading subject data. The official DWR GIS steward for this data set is carlos.lewis@water.ca.gov, who may be contacted at 916-398-1525, or at carlos.lewis@water.ca.gov. Comments, problems, improvements, updates, or suggestions should be forwarded to the official GIS steward as available and appropriate. The information included in this dataset is For Official Use Only (FOUO) and should be handled as sensitive information not to be disclosed. This dataset should be safeguarded, handled, transmitted, and stored in accordance with appropriate security directives. No use, reproduction, or disclosure is authorized without the express written permission of the California Department of Water Resources. Unauthorized release may result in criminal and administrative penalties.</abstract>
+  <keywords vocabulary="Search keys">
+    <keyword>structure</keyword>
+    <keyword>state water project</keyword>
+    <keyword>assets</keyword>
+    <keyword>blue book</keyword>
+    <keyword>asset register</keyword>
+    <keyword>asset</keyword>
+    <keyword>asset lines</keyword>
+    <keyword>canals</keyword>
+    <keyword>pipelines</keyword>
+    <keyword>reservoirs</keyword>
+    <keyword>DWR GIS Atlas</keyword>
+  </keywords>
+  <keywords vocabulary="gmd:topicCategory">
+    <keyword>structure</keyword>
+    <keyword>state water project</keyword>
+    <keyword>assets</keyword>
+    <keyword>blue book</keyword>
+    <keyword>asset register</keyword>
+    <keyword>asset</keyword>
+    <keyword>asset lines</keyword>
+    <keyword>canals</keyword>
+    <keyword>pipelines</keyword>
+    <keyword>reservoirs</keyword>
+  </keywords>
+  <contact>
+    <contactAddress>
+      <type></type>
+      <address></address>
+      <city></city>
+      <administrativearea></administrativearea>
+      <postalcode></postalcode>
+      <country></country>
+    </contactAddress>
+    <name>Carlos Lewis</name>
+    <organization>DOE Geomatics Branch</organization>
+    <position></position>
+    <voice>916-398-1525</voice>
+    <fax></fax>
+    <email>carlos.lewis@water.ca.gov</email>
+    <role>Point of contact</role>
+  </contact>
+  <links>
+    <link description="" name="Digital Data" url="https://doi.org/10.5066/xxxxxxxx" type="" format="" mimeType="" size=""/>
+  </links>
+  <history>Data source: Object IDs, Functional Locations, Asset Descriptions, Asset Levels, and Asset Types.</history>
+  <dates>
+    <date value="2024-02-01T00:00:00" type="Published"/>
+  </dates>
+  <fees></fees>
+  <constraints type="Limitations of use">The original source projection of the DWR GIS atlas dataset was SWP 2016 Oblique Mercator. For copies of data in original projection, please contact DWR directly.
+The information included in this dataset is For Official Use Only (FOUO) and should be handled as sensitive information not to be disclosed. This dataset should be safeguarded, handled, transmitted, and stored in accordance with appropriate security directives. No use, reproduction, or disclosure is authorized without the express written permission of the California Department of Water Resources. Unauthorized release may result in criminal and administrative penalties.</constraints>
+  <rights>Division of Engineering, Geomatics Branch; Division of Operations and Maintenance</rights>
+  <encoding></encoding>
+  <crs>
+    <spatialrefsys nativeFormat="Wkt">
+      <wkt></wkt>
+      <proj4></proj4>
+      <srsid>0</srsid>
+      <srid>0</srid>
+      <authid></authid>
+      <description></description>
+      <projectionacronym></projectionacronym>
+      <ellipsoidacronym></ellipsoidacronym>
+      <geographicflag>false</geographicflag>
+    </spatialrefsys>
+  </crs>
+  <extent>
+    <spatial maxy="40.15550000000000352" miny="33.83630000000000138" minx="-122.08310000000000173" minz="0" dimensions="2" maxx="-116.74630000000000507" crs="" maxz="0"/>
+    <temporal>
+      <period>
+        <start>2024-02-01T16:00:00Z</start>
+        <end></end>
+      </period>
+    </temporal>
+  </extent>
+</qgis>

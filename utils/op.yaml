@@ -1,0 +1,41 @@
+Table Headings:
+
+  - Heading: "Long-Term Average"
+    YrRange: 1921, 2020
+    Type: Wet Periods
+
+  - Heading: 2-Year (1982-1983)
+    YrRange: 1982, 1983
+    Type: Wet Periods
+
+  - Heading: 4-Year (1980-1983)
+    YrRange: 1980, 1983
+    Type: Wet Periods
+
+  - Heading: 6-Year (1978-1983)
+    YrRange: 1978, 1983
+    Type: Wet Periods
+  
+  - Heading: 10-Year (1978-1987)
+    YrRange: 1978, 1987
+    Type: Wet Periods
+  
+  - Heading: "Long-Term Average"
+    YrRange:
+    Type: Dry Periods
+
+  - Heading: 2-Year (1982-1983)
+    YrRange: 1982, 1983
+    Type: Custom Type
+
+  - Heading: 4-Year (1980-1983)
+    YrRange: 1980, 1983
+    Type: Dry Periods
+
+  - Heading: 6-Year (1978-1983)
+    YrRange: 1978, 1983
+    Type: Dry Periods
+  
+  - Heading: 10-Year (1978-1987)
+    YrRange: 1978, 1987
+    Type: Dry Periods
