@@ -183,7 +183,6 @@ def read_run_to_structure_csv(df: pd.DataFrame, delivery_type = "Article 21", pe
     period_info = config.get_period_info(period_type)
     for heading, start_year, end_year in period_info:
         table[heading] = period_avg(calendar_year_df, start_year, end_year)
-    
     return table
 
 
