@@ -10,14 +10,14 @@ THEME_COLORS = {
 }
 
 PLOT_COLORS = [
-    "#4d4d4d",
-    "#999999",
-    "#ff6c66",
-    "#55b4eb",
-    "#0072b1",
-    "#003759",
-    "#039d73",
-    "#B6E880",
+    "#5536B4", # dcr23 baseline
+    "#0A57B5", # dcr23 cc50
+    "#20540D", # dcr23 cc75
+    "#127A81", # dcr23 cc95
+    "#000000", # dcr25 baseline
+    "#FFCC66", # dcr25 cc50
+    "#00B050", # dcr25 cc95
+    "#FF9900", # dcr25 cc75
     "#FF97FF",
     "#FECB52",
 ]
@@ -40,7 +40,7 @@ SCENARIO_ORDER = [
 BASELINE = "DCR 2023"
 
 ASSUMPTION_COLORS = {
-    "DCR 2023": "#0072b1",
+    "DCR 2023": "#c26827",
     "DCR 2025": "#b10000",
 }
 
