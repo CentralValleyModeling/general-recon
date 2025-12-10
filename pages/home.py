@@ -31,26 +31,9 @@ register_page(
     order=0,
 )
 
-exp_card = CardWidget(
-    "Total Delta exports",
-    button_id="EXPORTACTUALTDIF",
-    button_label="Drilldown",
-    popover_label="exp-info",
-    popover_content=load_markdown("page_text/info-total-exports.md"),
-    charts=card_bar_plot_vert(df_dv, b_part="EXPORTACTUALTDIF", climate_order=CLIMATE_ORDER, rpt_year="icy"),
-)
-
-swp_exp_card = CardWidget(
-    "SWP Banks Exports",
-    button_id="C_CAA003_SWP",
-    button_label="Drilldown",
-    popover_label="swpexp-info",
-    popover_content=load_markdown("page_text/info-swp-exports.md"),
-    charts=card_bar_plot_vert(df_dv, b_part="C_CAA003_SWP", climate_order=CLIMATE_ORDER, rpt_year="icy"),
-)
-
 ta_card = CardWidget(
     "SWP Table A deliveries",
+    text=load_markdown("page_text/results-discussion-table-a.md"),
     button_id="SWP_TA_CO_FROM_DELTA",
     button_label="Drilldown",
     popover_label="ta-info",
@@ -134,24 +117,6 @@ def layout():
                             html.Hr(style={"margin": "0.5rem 0"}),
                         ],
                         
-                    ),
-                    dbc.Row(
-                        id="home-cards-row-0",
-                        children=[
-                            dbc.Col(
-                                class_name="col-md-12", children=[exp_card.create_card()]
-                            ),
-                            html.Hr(style={"margin": "0.5rem 0"}),
-                        ],
-                    ),
-                    dbc.Row(
-                        id="home-cards-row-0",
-                        children=[
-                            dbc.Col(
-                                class_name="col-md-12", children=[swp_exp_card.create_card()]
-                            ),
-                            html.Hr(style={"margin": "0.5rem 0"}),
-                        ],
                     ),
                     dbc.Row(
                         id="home-cards-row-0",
