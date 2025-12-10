@@ -129,7 +129,7 @@ def layout():
                                 class_name="col-md-6", children=[load_markdown("page_text/site-introduction.md")]
                             ),
                             dbc.Col(
-                                class_name="col-md-6", children=[html.Img(src="/assets/1997_02_05_DK_09434-014_Aqueduct_web.jpg", style={"width": "75%"})]
+                                class_name="col-md-6", children=[html.Img(src="/assets/dcr25_cover.png", style={"width": "75%"})]
                             ),
                             html.Hr(style={"margin": "0.5rem 0"}),
                         ],
