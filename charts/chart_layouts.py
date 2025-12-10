@@ -358,7 +358,7 @@ def card_bar_plot_vert(
                     "<b>Scenario:</b> %{customdata[0]}<br>" +
                     "<b>Scenario Alias:</b> %{customdata[1]}<br>" +
                     "<b>Value:</b> %{customdata[2]:,.2f}<br>" +
-                    "<b>Change vs Design Capacity:</b> %{customdata[5]:,d} (%{customdata[3]:.2f}%)<br>" +
+                    "<b>Change vs Respective Baseline:</b> %{customdata[5]:,d} (%{customdata[3]:.2f}%)<br>" +
                     "<b>Climate:</b> %{customdata[4]}"
 
 )
@@ -455,7 +455,7 @@ def card_bar_plot_orovl_CAP(
                     "<b>Scenario:</b> %{customdata[0]}<br>" +
                     "<b>Scenario Alias:</b> %{customdata[1]}<br>" +
                     "<b>Value:</b> %{customdata[2]:,.2f}<br>" +
-                    "<b>Change vs Design Capacity:</b> %{customdata[3]:.2f}% <br>" + 
+                    "<b>Change vs Respective Baseline:</b> %{customdata[3]:.2f}% <br>" + 
                     "<b>Climate:</b> %{customdata[4]}"
 )
 

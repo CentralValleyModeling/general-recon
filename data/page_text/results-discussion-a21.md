@@ -1,0 +1,1 @@
+The Draft DCR 2025 shows an increase in Article 21 deliveries over the long-term average and most wet periods.

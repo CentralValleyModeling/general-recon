@@ -43,6 +43,7 @@ ta_card = CardWidget(
 
 a21_card = CardWidget(
     "SWP Article 21 deliveries",
+    text=load_markdown("page_text/results-discussion-a21.md"),
     button_id="SWP_IN_TOTAL",
     button_label="Drilldown",
     popover_label="a21-info",
