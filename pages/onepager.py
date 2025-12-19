@@ -19,11 +19,13 @@ dss_filenames = {
 }
 
 
-csv_filename = "data\\temp.csv"
+# csv_filename = "data\\temp.csv"
+csv_filename = "data\\dv_data.csv"
 
 yaml_config = api.take_yaml("utils/op.yaml")
 
-scenario_list = ["AdjHist", "CC50", "CC75", "CC95"]
+# scenario_list = ["AdjHist", "CC50", "CC75", "CC95"]
+scenario_list = api.get_scenarios(csv_filename)
 
 def layout():
     layout = html.Div(children=[

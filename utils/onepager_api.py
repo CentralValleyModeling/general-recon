@@ -8,6 +8,16 @@ import yaml
 # Inputting file
 logging.basicConfig(level=logging.INFO)
 
+@lru_cache
+def get_scenarios(csv_filename):
+    """Creates list of the different climate scenarios by getting the scenarios from TBD.
+
+    Returns:
+        list: List of the different unique climate scenarios.
+    """
+    df = load_data(csv_filename)
+    return df["Scenario"].unique()
+
 def take_yaml(filename):
     return YamlConfig(filename)
 
@@ -142,10 +152,9 @@ deliveries2bpart = {
     "Article 21":["SWP_IN_TOTAL", "SWP_IN_FEATH"]
 }
 
-def read_run_to_structure_csv(df: pd.DataFrame, delivery_type = "Article 21", period_type = "Dry Periods") -> dict:   
-    # Structure to return
-    table = {}
 
+def annual_delivery_by_type(df: pd.DataFrame, delivery_type = "Article 21") -> pd.DataFrame:
+    print("Running annual_delivery_by_type()...")
     # DSS key path for timeseries
     path_swp_list = deliveries2bpart[delivery_type]
 
@@ -176,6 +185,47 @@ def read_run_to_structure_csv(df: pd.DataFrame, delivery_type = "Article 21", pe
 
     # Convert df from monthly to yearly
     calendar_year_df = df_A.resample(pd.offsets.YearEnd()).sum()
+
+    return calendar_year_df
+
+
+def read_run_to_structure_csv(df: pd.DataFrame, delivery_type = "Article 21", period_type = "Dry Periods") -> dict:   
+    # Structure to return
+    table = {}
+
+    # # DSS key path for timeseries
+    # path_swp_list = deliveries2bpart[delivery_type]
+
+    # # date range we are interested in
+    # start = pd.to_datetime("1921-10-01")
+    # end = pd.to_datetime("2021-09-30")
+
+    # frames: list[pd.DataFrame] = []
+
+    # for path_string_swp in path_swp_list:
+    #     # Create a new dataframe with values only
+    #     df1 = df[[path_string_swp]]
+    #     df1 = df1.rename(columns={path_string_swp: "VALUE"})
+
+    #     # Get the data frame for the given path
+    #     df2 = table_a_from_csv(df1, path_string_swp, start, end)
+
+    #     # Now add the dataframe to our list of frames
+    #     frames.append(df2)
+
+    # # Now calculate- the timeseries for Table A
+    # if delivery_type == "Table A":
+    #     df_A = frames[0] + frames[1]
+    #     df_A = df_A - frames[2]
+    #     df_A = df_A - frames[3]
+    # if delivery_type == 'Article 21':
+    #     df_A = frames[0] - frames[1]
+
+    # # Convert df from monthly to yearly
+    # calendar_year_df = df_A.resample(pd.offsets.YearEnd()).sum()
+    # print(calendar_year_df.head())
+
+    calendar_year_df = annual_delivery_by_type(df, delivery_type)
     print(calendar_year_df.head())
 
     # Read yaml file
