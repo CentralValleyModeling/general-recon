@@ -26,7 +26,7 @@ navbar = dbc.Navbar(
         dbc.NavbarBrand(
             [
                 html.Img(src="/assets/dwr_seal.png", height="50px", className="me-2"),
-                html.Span("CalSim 3 Results Console (ReCon)", style={"fontSize": "2rem"})
+                html.Span("Draft Delivery Capability Report 2025", style={"fontSize": "2rem"})
             ],
             href="/",
             style={"color": "white", "display": "flex", "alignItems": "center"}
@@ -44,7 +44,7 @@ navbar = dbc.Navbar(
             navbar=True,
         )
     ]),
-    color="#285E80",  # still needs custom CSS for full override
+    color="#056887",  # still needs custom CSS for full override
     dark=True,
     sticky="top"
 )

@@ -6,7 +6,7 @@ GLOBAL_MARGIN = {
 }
 
 THEME_COLORS = {
-    "blue": "#285E80",
+    "blue": "#056887",
 }
 
 PLOT_COLORS = [
@@ -40,8 +40,8 @@ SCENARIO_ORDER = [
 BASELINE = "DCR 2023"
 
 ASSUMPTION_COLORS = {
-    "DCR 2023": "#c26827",
-    "DCR 2025": "#b10000",
+    "DCR 2023": "#2D7FCF",
+    "DCR 2025": "#000000",
 }
 
 CLIMATE_ORDER = [

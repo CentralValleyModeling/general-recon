@@ -31,26 +31,9 @@ register_page(
     order=0,
 )
 
-exp_card = CardWidget(
-    "Total Delta exports",
-    button_id="EXPORTACTUALTDIF",
-    button_label="Drilldown",
-    popover_label="exp-info",
-    popover_content=load_markdown("page_text/info-total-exports.md"),
-    charts=card_bar_plot_vert(df_dv, b_part="EXPORTACTUALTDIF", climate_order=CLIMATE_ORDER, rpt_year="icy"),
-)
-
-swp_exp_card = CardWidget(
-    "SWP Banks Exports",
-    button_id="C_CAA003_SWP",
-    button_label="Drilldown",
-    popover_label="swpexp-info",
-    popover_content=load_markdown("page_text/info-swp-exports.md"),
-    charts=card_bar_plot_vert(df_dv, b_part="C_CAA003_SWP", climate_order=CLIMATE_ORDER, rpt_year="icy"),
-)
-
 ta_card = CardWidget(
     "SWP Table A deliveries",
+    text=load_markdown("page_text/results-discussion-table-a.md"),
     button_id="SWP_TA_CO_FROM_DELTA",
     button_label="Drilldown",
     popover_label="ta-info",
@@ -60,6 +43,7 @@ ta_card = CardWidget(
 
 a21_card = CardWidget(
     "SWP Article 21 deliveries",
+    text=load_markdown("page_text/results-discussion-a21.md"),
     button_id="SWP_IN_TOTAL",
     button_label="Drilldown",
     popover_label="a21-info",
@@ -129,30 +113,11 @@ def layout():
                                 class_name="col-md-6", children=[load_markdown("page_text/site-introduction.md")]
                             ),
                             dbc.Col(
-                                # class_name="col-md-6", children=[html.Img(src="/assets/1997_02_05_DK_09434-014_Aqueduct_web.jpg", style={"width": "75%"})]
-                                class_name="col-md-6", children=[html.Img(src="/assets/2024_05_09_SN_0825_Lake_Levels_Aerial.jpg", style={"width": "75%"})]
+                                class_name="col-md-6", children=[html.Img(src="/assets/dcr25_cover.png", style={"width": "75%"})]
                             ),
                             html.Hr(style={"margin": "0.5rem 0"}),
                         ],
                         
-                    ),
-                    dbc.Row(
-                        id="home-cards-row-0",
-                        children=[
-                            dbc.Col(
-                                class_name="col-md-12", children=[exp_card.create_card()]
-                            ),
-                            html.Hr(style={"margin": "0.5rem 0"}),
-                        ],
-                    ),
-                    dbc.Row(
-                        id="home-cards-row-0",
-                        children=[
-                            dbc.Col(
-                                class_name="col-md-12", children=[swp_exp_card.create_card()]
-                            ),
-                            html.Hr(style={"margin": "0.5rem 0"}),
-                        ],
                     ),
                     dbc.Row(
                         id="home-cards-row-0",
