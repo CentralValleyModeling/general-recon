@@ -171,7 +171,7 @@ def layout():
                 ), 
             ], style={'display': 'flex', 'gap': '10px', 'padding-top': '20px', 'padding-bottom': '20px'},
         ),
-        dcc.Graph(id="my_id"),
+        dcc.Graph(id="my_id", config={"scrollZoom": True}),
     ])
 
     return layout

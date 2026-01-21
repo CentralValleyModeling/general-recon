@@ -41,7 +41,7 @@ def layout():
                                 {'label': 'Table A', 'value': 'Table A'},
                                 {'label': 'Article 21', 'value': 'Article 21'},
                             ],
-                            value='Table A',
+                            value='Article 21',
                             style={'flex-grow': '0.5', 'margin-right': '20px'}
                         )
                     ],
@@ -60,18 +60,19 @@ def layout():
                     [
                         html.Label("Scenario 2:", htmlFor=("scenario_2"), style={'margin-right': '15px', 'font-weight': 'bold'}),
                         dcc.Dropdown(
-                            scenario_list, scenario_list[1], id="scenario_2",
+                            scenario_list, scenario_list[4], id="scenario_2",
                             style={'flex-grow': '0.5'}
                         ),
                     ], style={'display': 'flex', 'flex': '1', 'margin-right': '20px'},
                 ),
             ], style={'display': 'flex', 'flex': '1', "padding": "15px"},
         ),
-        html.H2("SWP Deliveries under Existing Conditions, TAF/year (Percent Allocation)"),
+        html.H2("SWP Deliveries, TAF/year (Percent Allocation)"),
         html.Div(id="data_table"),
         html.Br(),
         html.Br(),
-        html.Div(id='data_graph')
+        html.Div(id='data_graph'),
+        html.Div(id='likelihood_graph')
     ], style={'width': '80%'})
 
     return layout
@@ -79,6 +80,7 @@ def layout():
 @callback(
     Output("data_table", "children"),
     Output("data_graph", "children"),
+    Output("likelihood_graph", "children"),
     Input("delivery_type", "value"),
     Input("scenario_1", "value"),
     Input("scenario_2", "value"),
@@ -147,8 +149,8 @@ def handle_selection(delivery_type, scen1, scen2):
             html.Thead(html.Tr([
                 html.Th(""),
                 html.Th(""),
-                html.Th(f"Final DCR 2023 Existing Conditions ({scen1})"),
-                html.Th(f"Draft DCR 2025 Existing Conditions ({scen2})"),
+                html.Th(f"Final DCR 2023 Conditions ({scen1})"),
+                html.Th(f"Draft DCR 2025 Conditions ({scen2})"),
                 html.Th("Change")
             ])),
             html.Tbody(tab_rows)
@@ -162,7 +164,34 @@ def handle_selection(delivery_type, scen1, scen2):
         graph_df_wet = graph_df[graph_df["YEAR_TYPE"] == year_type]
         bar = px.bar(graph_df_wet, x="SWP Delivery Type", y="SWP Deliveries (TAF/year)", color="SCENARIO", barmode="group", color_discrete_sequence=["#336DFF", "#000000"])
         bar.update_yaxes(tickformat=",")
-        heading = html.H2(f"{year_type} SWP Deliveries under Existing Conditions, for Climate Scenarios {scen1} and {scen2}")
+        bar.update_traces(texttemplate='%{y:,.0f}', textposition='outside', textfont=dict(color='black'), cliponaxis=False)
+        # set background light gray, gridlines black, and add black border
+        bar.update_layout(
+            plot_bgcolor='lightgray',
+            paper_bgcolor='white',
+            xaxis=dict(showgrid=False),
+            yaxis=dict(showgrid=True, gridcolor='black'),
+            shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
+            margin=dict(t=50, b=50, l=50, r=50)
+        )
+        heading = html.H2(f"Estimated {year_type} SWP {delivery_type}, for Climate Scenarios {scen1} and {scen2}")
         bar_figs.append(heading)
         bar_figs.append(dcc.Graph(figure=bar))
-    return [tab], bar_figs
+    
+    likelihood_figs = []
+    likelihood_df = api.build_likelihood_by_taf(csv_filename, "Article 21", "DCR23_Baseline", "DCR25_Baseline")
+    # print("likelihood_df:\n", likelihood_df)
+    bar = px.bar(likelihood_df, x="RANGE", y="LIKELIHOOD", color="SCENARIO", barmode="group", color_discrete_sequence=["#336DFF", "#000000"])
+    bar.update_traces(texttemplate='%{y:,.0f}', textposition='outside', textfont=dict(color='black'), cliponaxis=False)
+    bar.update_layout(
+        plot_bgcolor='lightgray',
+        paper_bgcolor='white',
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=True, gridcolor='black'),
+        shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
+        margin=dict(t=50, b=50, l=50, r=50)
+    )
+    heading = html.H2(f"Estimated Likelihood of Annual Deliveries of SWP Article 21 Water (Existing Conditions)")
+    likelihood_figs.append(heading)
+    likelihood_figs.append(dcc.Graph(figure=bar))
+    return [tab], bar_figs, likelihood_figs

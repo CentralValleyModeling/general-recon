@@ -185,17 +185,16 @@ def card_mon_plot(
     )
 
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="lightgray",
         xaxis=dict(
             tickmode="array",
             tickvals=monthfilter,
             ticktext=month_list,
-            showgrid=True,
-            gridcolor="LightGray",
+            showgrid=False,
         ),
         yaxis=dict(
             showgrid=True,
-            gridcolor="LightGray",
+            gridcolor="black",
         ),
         yaxis_tickformat=",d",
         xaxis_title="Month",
@@ -250,16 +249,20 @@ def card_bar_plot(
     )
     fig.update_layout(
         barmode="relative",
-        plot_bgcolor="white",
+        plot_bgcolor="lightgray",
         # width=600,
         height=300,
         showlegend=False,
         xaxis_title="TAF/Year",
         yaxis_title="",
         xaxis_tickformat=",d",
-
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=True, gridcolor="black"),
+        shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
     )
     layout = html.Div([dcc.Graph(figure=fig)])
+    # show values for horizontal bars (use x) in black
+    fig.update_traces(texttemplate='%{x:,.0f}', textposition='outside', textfont=dict(color='black'), cliponaxis=False)
 
     return layout
 
@@ -342,15 +345,16 @@ def card_bar_plot_vert(
 
     )
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="lightgray",
         legend_title="Scenario",
         showlegend=True,
         xaxis_title="Climate",
         xaxis_tickformat=",d",
         yaxis_title=yaxis_title,
         yaxis_tickformat=",d",
-        yaxis_showgrid=True,
-        yaxis_gridcolor="lightgray",
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=True, gridcolor="black"),
+        shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
     )
 
     fig.update_traces(
@@ -362,6 +366,8 @@ def card_bar_plot_vert(
                     "<b>Climate:</b> %{customdata[4]}"
 
 )
+    # show values above vertical bars in black
+    fig.update_traces(texttemplate='%{y:,.0f}', textposition='outside', textfont=dict(color='black'), cliponaxis=False)
 
     layout = html.Div([dcc.Graph(figure=fig)],style={"flex": "1"})
 
@@ -439,15 +445,16 @@ def card_bar_plot_orovl_CAP(
 
     )
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="lightgray",
         legend_title="Scenario",
         showlegend=True,
         xaxis_title="Climate",
         xaxis_tickformat=",d",
         yaxis_title="Percent < 1.6 MAF",
         yaxis_tickformat=",.0%",
-        yaxis_showgrid=True,
-        yaxis_gridcolor="lightgray",
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=True, gridcolor="black"),
+        shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
     )
 
     fig.update_traces(
@@ -458,6 +465,8 @@ def card_bar_plot_orovl_CAP(
                     "<b>Change vs Respective Baseline:</b> %{customdata[3]:.2f}% <br>" + 
                     "<b>Climate:</b> %{customdata[4]}"
 )
+    # show percent labels above vertical bars in black
+    fig.update_traces(texttemplate='%{y:,.0f}', textposition='outside', textfont=dict(color='black'), cliponaxis=False)
 
     layout = html.Div([dcc.Graph(figure=fig)],style={"flex": "1"})
 
@@ -505,10 +514,11 @@ def ann_bar_plot(df, b_part="C_CAA003", startyr=1922, endyr=2021, wyt=[1, 2, 3, 
     )
     fig.update_layout(
         barmode="relative",
-        plot_bgcolor="white",
+        plot_bgcolor="lightgray",
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=True, gridcolor="black"),
+        shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
     )
-    # fig.update_xaxes(gridcolor='LightGrey')
-    fig.update_yaxes(gridcolor="LightGrey")
     return fig
 
 
@@ -552,14 +562,15 @@ def mon_exc_plot(df, b_part, monthchecklist,climate):
         df3.to_csv(f'csv_export/ranked_{b_part}_{climate}_{monthchecklist}.csv', index=True)
 
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="lightgray",
         xaxis_title="Non Exceedance Probability (%)",
         xaxis_tickformat=",d",
         yaxis_title="",
         legend_title="Scenario",
         showlegend=True,
-        xaxis=dict(gridcolor="LightGrey"),
-        yaxis=dict(gridcolor="LightGrey"),
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=True, gridcolor="black"),
+        shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
     )
 
     return fig
@@ -627,14 +638,15 @@ def ann_exc_plot(
 
     fig1.update_layout(
         title=title,
-        plot_bgcolor="white",
+        plot_bgcolor="lightgray",
         xaxis_title="Non Exceedance Probability (%)",
         xaxis_tickformat=",d",
         yaxis_title="",
         legend_title="Scenario",
         showlegend=True,
-        xaxis=dict(gridcolor="LightGrey"),
-        yaxis=dict(gridcolor="LightGrey"),
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=True, gridcolor="black"),
+        shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
     )
 
     return fig1
@@ -663,14 +675,15 @@ def distplot(
 
     fig.update_layout(
         title=title,
-        plot_bgcolor="white",
+        plot_bgcolor="lightgray",
         xaxis_title=xlabel,
         xaxis_tickformat=",d",
         yaxis_title=ylabel,
         legend_title="Scenario",
         showlegend=True,
-        xaxis=dict(gridcolor="LightGrey"),
-        yaxis=dict(gridcolor="LightGrey"),
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=True, gridcolor="black"),
+        shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
     )
 
 #    fig.for_each_trace(lambda trace: trace.update(visible='legendonly')
@@ -726,7 +739,7 @@ def ta_dry_wet_barplot(
         # width=1200,
         height=600,
     )
-    fig.update_traces(textposition="outside")
+    fig.update_traces(texttemplate='%{y:,.0f}', textposition='outside', textfont=dict(color='black'), cliponaxis=False)
 
     return fig
 
@@ -776,7 +789,7 @@ def a21_dry_wet_barplot(
         # width=1200,
         height=600,
     )
-    fig.update_traces(textposition="outside")
+    fig.update_traces(texttemplate='%{y:,.0f}', textposition='outside', textfont=dict(color='black'), cliponaxis=False)
 
     fig.layout.autosize = True
 

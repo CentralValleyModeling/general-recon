@@ -1,3 +1,4 @@
+# 
 # Imports
 from collections import namedtuple
 
@@ -183,12 +184,17 @@ def update_annual(assumption, climate, variable, avg_window):
         title=f"{(var_dict[variable]['alias'])} ({variable})",
         legend_title="Scenario",
         barmode="relative",
-        plot_bgcolor="white",
+        plot_bgcolor="lightgray",
         yaxis_tickformat=",d",
-        yaxis_title=f"{units}"
+        yaxis_title=f"{units}",
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=True, gridcolor="black"),
+        shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
     )
 
     fig.update_traces(
         hovertemplate="<b>Change vs Design Capacity:</b> %{customdata[0]:.2f}% (%{customdata[1]:,d} TAF)<br>"
     )
+    # show numeric labels above bars in black
+    fig.update_traces(texttemplate='%{y:,.0f}', textposition='outside', textfont=dict(color='black'), cliponaxis=False)
     return fig

@@ -1,3 +1,4 @@
+# 
 # Imports
 from collections import namedtuple
 
@@ -232,13 +233,14 @@ def update_timeseries(b_part, climate_filter):
     )
     fig.update_layout(
         title=f"{alias} ({b_part})",
-        plot_bgcolor="white",
+        plot_bgcolor="lightgray",
         legend_title="Scenario",
-        xaxis=dict(gridcolor="LightGray"),
+        xaxis=dict(showgrid=False),
         xaxis_title="CalSim 3 simulation period (monthly timestep)",
-        yaxis=dict(gridcolor="LightGray"),
+        yaxis=dict(showgrid=True, gridcolor='black'),
         yaxis_title=units,
         yaxis_tickformat=",d",
+        shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
     )
     return fig
 
@@ -285,12 +287,13 @@ def update_annual_timeseries(
         color_discrete_map=ASSUMPTION_COLORS,
     )
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="lightgray",
         legend_title="Scenario",
-        xaxis=dict(gridcolor="LightGray"),
-        yaxis=dict(gridcolor="LightGray"),
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=True, gridcolor="black"),
         yaxis_title=f"{units} (annual {agg_method.lower()})",
         yaxis_tickformat=",d",
+        shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
     )
     return fig
 
@@ -310,12 +313,13 @@ def update_exceedance(b_part, monthchecklist, climate_filter):
     fig = mon_exc_plot(df_plot, b_part, monthchecklist, climate_filter)
 
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="lightgray",
         legend_title="Scenario",
-        xaxis=dict(gridcolor="LightGray"),
-        yaxis=dict(gridcolor="LightGray"),
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=True, gridcolor="black"),
         yaxis_title=units,
         yaxis_tickformat=",d",
+        shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
     )
     return fig
 
@@ -333,12 +337,13 @@ def update_annual_exceedance(b_part, monthchecklist, yearwindow, climate_filter)
         df_plot = df_dv.loc[df_dv['Climate'] == climate_filter]
         fig = ann_exc_plot(df_plot, b_part, yearwindow)
         fig.update_layout(
-            plot_bgcolor="white",
+            plot_bgcolor="lightgray",
             legend_title="Scenario",
-            xaxis=dict(gridcolor="LightGray"),
-            yaxis=dict(gridcolor="LightGray"),
+            xaxis=dict(showgrid=False),
+            yaxis=dict(showgrid=True, gridcolor="black"),
             yaxis_title="Thousand acre-feet per year",
             yaxis_tickformat=",d",
+            shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
         )
 
     else:
@@ -395,22 +400,22 @@ def update_monthly(b_part, wytchecklist, slider_yr_range, climate_filter):
         color_discrete_map=ASSUMPTION_COLORS,
     )
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="lightgray",
         legend_title="Scenario",
         xaxis=dict(
             tickmode="array",
             tickvals=monthfilter,
             ticktext=month_list,
-            showgrid=True,
-            gridcolor="LightGray",
+            showgrid=False,
         ),
         yaxis=dict(
             showgrid=True,
-            gridcolor="LightGray",
+            gridcolor="black",
             title=units
         ),
         yaxis_tickformat=",d",
-        xaxis_title="Month"
+        xaxis_title="Month",
+        shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
     )
 
     return fig
@@ -459,14 +464,19 @@ def update_bar_annual(b_part, wytchecklist, slider_yr_range, climate_filter):
             title=f"Annual average {alias} ({climate_filter})",
             legend_title="Scenario",
             barmode="relative",
-            plot_bgcolor="white",
+            plot_bgcolor="lightgray",
             yaxis_title=units,
             yaxis_tickformat=",d",
+            xaxis=dict(showgrid=False),
+            yaxis=dict(showgrid=True, gridcolor="black"),
+            shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
         )
 
         fig.update_traces(
             hovertemplate="<b>Value:</b> %{customdata[0]:.2f}<br>"
         )
+        # show numeric labels above bars in black
+        fig.update_traces(texttemplate='%{y:,.0f}', textposition='outside', textfont=dict(color='black'), cliponaxis=False)
     else:
         fig = px.line()
         fig.update_layout(

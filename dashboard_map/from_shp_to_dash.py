@@ -875,14 +875,15 @@ def update_monthly_exc(b_part, slider_yr_range):
         )
 
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="lightgray",
         xaxis_title="Non Exceedance Probability (%)",
         xaxis_tickformat=",d",
         yaxis_title="",
         legend_title="Scenario",
         showlegend=True,
-        xaxis=dict(gridcolor="LightGrey"),
-        yaxis=dict(gridcolor="LightGrey"),
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=True, gridcolor="black"),
+        shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
     )
 
     return fig
@@ -917,20 +918,20 @@ def update_monthly(b_part, slider_yr_range):
         color_discrete_sequence=PLOT_COLORS,
     )
     fig.update_layout(
-        plot_bgcolor="white",
+        plot_bgcolor="lightgray",
         xaxis=dict(
             tickmode="array",
             tickvals=monthfilter,
             ticktext=month_list,
-            showgrid=True,
-            gridcolor="LightGray",
+            showgrid=False,
         ),
         yaxis=dict(
             showgrid=True,
-            gridcolor="LightGray",
+            gridcolor="black",
         ),
         yaxis_tickformat=",d",
         xaxis_title="Month",
+        shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
     )
 
     return fig
@@ -954,9 +955,10 @@ def update_timeseries(b_part):
         color_discrete_sequence=PLOT_COLORS,
     )
     fig.update_layout(
-        plot_bgcolor="white",
-        xaxis=dict(gridcolor="LightGray"),
-        yaxis=dict(gridcolor="LightGray"),
+        plot_bgcolor="lightgray",
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=True, gridcolor="black"),
+        shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
     )
 
     return fig
@@ -995,6 +997,11 @@ def update_bar_annual(b_part, slider_yr_range):
     )
     fig.update_layout(
         barmode="relative",
-        plot_bgcolor="white"
+        plot_bgcolor="lightgray",
+        xaxis=dict(showgrid=False),
+        yaxis=dict(showgrid=True, gridcolor="black"),
+        shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
     )
+    # show numeric labels above bars in black
+    fig.update_traces(texttemplate='%{y:,.0f}', textposition='outside', textfont=dict(color='black'), cliponaxis=False)
     return fig
