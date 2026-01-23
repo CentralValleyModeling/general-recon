@@ -114,7 +114,8 @@ def period_avg(
         end = pd.to_datetime(str(end_year) + "-12-31")
 
         mask = (calendar_year_df.index >= start) & (calendar_year_df.index <= end)
-        calendar_year_df = calendar_year_df.loc[mask]
+        # AZ
+        calendar_year_df = calendar_year_df.loc[mask].copy()
 
     # Calculate the annual average (use rounding, not truncation)
     calendar_year_sum_avg = int(round(calendar_year_df["VALUE"].mean()))
@@ -133,7 +134,8 @@ def table_a_from_csv(
     mask = (df.index >= start_date) & (df.index <= end_date)
 
     # Filter out any data that is not within the range indicated by the mask
-    df = df.loc[mask]
+    # AZ
+    df = df.loc[mask].copy()
 
     # We don't know the unit so just assuming that the conversion is needed
     df = cfs_to_taf(df)
@@ -153,14 +155,13 @@ def annual_delivery_by_type(df: pd.DataFrame, delivery_type = "Article 21") -> p
     path_swp_list = deliveries2bpart[delivery_type]
 
     # date range we are interested in (YYYY-MM-DD)
-    start = pd.to_datetime("1921-01-01")
+    start = pd.to_datetime("1922-01-01")
     end = pd.to_datetime("2021-12-31")
 
     frames: list[pd.DataFrame] = []
 
     for path_string_swp in path_swp_list:
         # Create a new dataframe with values only
-        # TODO: add 'cfs_taf' column to df
         df1 = df[[path_string_swp, 'cfs_taf']].copy()
         df1 = df1.rename(columns={path_string_swp: "VALUE"})
 
@@ -178,8 +179,21 @@ def annual_delivery_by_type(df: pd.DataFrame, delivery_type = "Article 21") -> p
         df_A = df_A - frames[2]
         df_A = df_A - frames[3]
     if delivery_type == 'Article 21':
-        # df_A = frames[0] - frames[1]
         df_A = frames[0]
+
+        # 2003 and 2015 Jan-Dec deliveries are calculated by taking the
+        # average of Jan-Sep deliveries and multiplying by 12
+        # Filter out rows matching the year and month
+        # indexes_to_remove = [
+        #     pd.to_datetime("2003-10-31 23:59:59"),
+        #     pd.to_datetime("2003-11-30 23:59:59"),
+        #     pd.to_datetime("2003-12-31 23:59:59"),
+        #     pd.to_datetime("2015-10-31 23:59:59"),
+        #     pd.to_datetime("2015-11-30 23:59:59"),
+        #     pd.to_datetime("2015-12-31 23:59:59")
+        # ]
+        # df_A = df_A.drop(index=indexes_to_remove)
+
 
     # print(f"annual_delivery_by_type(delivery_type = {delivery_type}): 1 df_A.head():\n", df_A.head(15))
 
@@ -188,7 +202,6 @@ def annual_delivery_by_type(df: pd.DataFrame, delivery_type = "Article 21") -> p
 
     calendar_year_df['VALUE'] = calendar_year_df['VALUE'] * (12.0 / calendar_year_df['COUNT'])
 
-    # print(f"annual_delivery_by_type(delivery_type = {delivery_type}): 3 calendar_year_df.head():\n", calendar_year_df.head(100))
 
     return calendar_year_df
 
@@ -200,6 +213,9 @@ def read_run_to_structure_csv(df: pd.DataFrame, delivery_type = "Article 21", pe
     table = {}
 
     calendar_year_df = annual_delivery_by_type(df, delivery_type)
+    # DEBUG
+    # calendar_year_df.to_csv(f"auhona_caldf_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.csv")
+    # time.sleep(1)
     
     # Read yaml file
     config = take_yaml("utils/op.yaml")
@@ -272,6 +288,10 @@ def read_all_runs_to_structure_csv(csv_filename: str, delivery_type, scen1, scen
     # Get the finalized df
     df_1 = df.loc[df["Scenario"] == scen1]
     df_2 = df.loc[df["Scenario"] == scen2]
+
+    # DEBUG
+    # df_2.to_csv(f"auhona_{scen2}_data_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.csv")
+    # time.sleep(1)
 
     print(f"read_all_runs_to_structure_csv(): scen2 = {scen2}, df_2.head():\n", df_2.head(100))
 

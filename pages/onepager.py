@@ -172,9 +172,11 @@ def handle_selection(delivery_type, scen1, scen2):
             xaxis=dict(showgrid=False),
             yaxis=dict(showgrid=True, gridcolor='black'),
             shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
-            margin=dict(t=50, b=50, l=50, r=50)
+            margin=dict(t=50, b=50, l=50, r=50),
+            xaxis_title=None,
+            yaxis_title="Estimated Annual Delivery (thousand acre-feet)"
         )
-        heading = html.H2(f"Estimated {year_type} SWP {delivery_type}, for Climate Scenarios {scen1} and {scen2}")
+        heading = html.H2(f"SWP Estimated {year_type}")
         bar_figs.append(heading)
         bar_figs.append(dcc.Graph(figure=bar))
     
@@ -182,14 +184,16 @@ def handle_selection(delivery_type, scen1, scen2):
     likelihood_df = api.build_likelihood_by_taf(csv_filename, "Article 21", "DCR23_Baseline", "DCR25_Baseline")
     # print("likelihood_df:\n", likelihood_df)
     bar = px.bar(likelihood_df, x="RANGE", y="LIKELIHOOD", color="SCENARIO", barmode="group", color_discrete_sequence=["#336DFF", "#000000"])
-    bar.update_traces(texttemplate='%{y:,.0f}', textposition='outside', textfont=dict(color='black'), cliponaxis=False)
+    bar.update_traces(texttemplate='%{y:,.0f}%', textposition='outside', textfont=dict(color='black'), cliponaxis=False)
     bar.update_layout(
         plot_bgcolor='lightgray',
         paper_bgcolor='white',
         xaxis=dict(showgrid=False),
         yaxis=dict(showgrid=True, gridcolor='black'),
         shapes=[dict(type='rect', xref='paper', yref='paper', x0=0, x1=1, y0=0, y1=1, line=dict(color='black', width=1), fillcolor='rgba(0,0,0,0)')],
-        margin=dict(t=50, b=50, l=50, r=50)
+        margin=dict(t=50, b=50, l=50, r=50),
+        xaxis_title=None,
+        yaxis_title="Likelihood of Annual Delivery (%)"
     )
     heading = html.H2(f"Estimated Likelihood of Annual Deliveries of SWP Article 21 Water (Existing Conditions)")
     likelihood_figs.append(heading)
