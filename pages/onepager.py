@@ -18,13 +18,10 @@ dss_filenames = {
     "hist": "data/2023DCR_Hist_DV.dss"
 }
 
-
-# csv_filename = "data\\temp.csv"
 csv_filename = "data\\dv_data.csv"
 
 yaml_config = api.take_yaml("utils/op.yaml")
 
-# scenario_list = ["AdjHist", "CC50", "CC75", "CC95"]
 scenario_list = api.get_scenarios(csv_filename)
 
 def layout():
@@ -165,7 +162,6 @@ def handle_selection(delivery_type, scen1, scen2):
         bar = px.bar(graph_df_wet, x="SWP Delivery Type", y="SWP Deliveries (TAF/year)", color="SCENARIO", barmode="group", color_discrete_sequence=["#336DFF", "#000000"])
         bar.update_yaxes(tickformat=",")
         bar.update_traces(texttemplate='%{y:,.0f}', textposition='outside', textfont=dict(color='black'), cliponaxis=False)
-        # set background light gray, gridlines black, and add black border
         bar.update_layout(
             plot_bgcolor='lightgray',
             paper_bgcolor='white',
@@ -182,7 +178,6 @@ def handle_selection(delivery_type, scen1, scen2):
     
     likelihood_figs = []
     likelihood_df = api.build_likelihood_by_taf(csv_filename, "Article 21", "DCR23_Baseline", "DCR25_Baseline")
-    # print("likelihood_df:\n", likelihood_df)
     bar = px.bar(likelihood_df, x="RANGE", y="LIKELIHOOD", color="SCENARIO", barmode="group", color_discrete_sequence=["#336DFF", "#000000"])
     bar.update_traces(texttemplate='%{y:,.0f}%', textposition='outside', textfont=dict(color='black'), cliponaxis=False)
     bar.update_layout(
@@ -199,3 +194,4 @@ def handle_selection(delivery_type, scen1, scen2):
     likelihood_figs.append(heading)
     likelihood_figs.append(dcc.Graph(figure=bar))
     return [tab], bar_figs, likelihood_figs
+

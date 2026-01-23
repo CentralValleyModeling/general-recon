@@ -1,10 +1,8 @@
 import logging
 import pandas as pd
 import pandss as pdss
-import numpy as np
 from functools import lru_cache
 import yaml
-import math
 
 # Inputting file
 logging.basicConfig(level=logging.INFO)
@@ -134,7 +132,6 @@ def table_a_from_csv(
     mask = (df.index >= start_date) & (df.index <= end_date)
 
     # Filter out any data that is not within the range indicated by the mask
-    # AZ
     df = df.loc[mask].copy()
 
     # We don't know the unit so just assuming that the conversion is needed
@@ -148,8 +145,6 @@ deliveries2bpart = {
     "Article 21":["SWP_IN_TOTAL"]
 }
 
-import datetime
-import time
 def annual_delivery_by_type(df: pd.DataFrame, delivery_type = "Article 21") -> pd.DataFrame:
     # DSS key path for timeseries
     path_swp_list = deliveries2bpart[delivery_type]
@@ -168,7 +163,6 @@ def annual_delivery_by_type(df: pd.DataFrame, delivery_type = "Article 21") -> p
         # Get the data frame for the given path
         df2 = table_a_from_csv(df1, path_string_swp, start, end)
         df2.drop(columns=['cfs_taf'], inplace=True)
-        print(f"annual_delivery_by_type(delivery_type = {delivery_type}): path_string_swp = {path_string_swp}, df2.head():\n", df2.head(15))    
 
         # Now add the dataframe to our list of frames
         frames.append(df2)
@@ -181,24 +175,7 @@ def annual_delivery_by_type(df: pd.DataFrame, delivery_type = "Article 21") -> p
     if delivery_type == 'Article 21':
         df_A = frames[0]
 
-        # 2003 and 2015 Jan-Dec deliveries are calculated by taking the
-        # average of Jan-Sep deliveries and multiplying by 12
-        # Filter out rows matching the year and month
-        # indexes_to_remove = [
-        #     pd.to_datetime("2003-10-31 23:59:59"),
-        #     pd.to_datetime("2003-11-30 23:59:59"),
-        #     pd.to_datetime("2003-12-31 23:59:59"),
-        #     pd.to_datetime("2015-10-31 23:59:59"),
-        #     pd.to_datetime("2015-11-30 23:59:59"),
-        #     pd.to_datetime("2015-12-31 23:59:59")
-        # ]
-        # df_A = df_A.drop(index=indexes_to_remove)
-
-
-    # print(f"annual_delivery_by_type(delivery_type = {delivery_type}): 1 df_A.head():\n", df_A.head(15))
-
     calendar_year_df = df_A.resample(pd.offsets.YearEnd()).agg(VALUE = ('VALUE', 'sum'), COUNT = ('VALUE', 'count'))
-    # print(f"annual_delivery_by_type(delivery_type = {delivery_type}): 2 calendar_year_df.head():\n", calendar_year_df.head(100))
 
     calendar_year_df['VALUE'] = calendar_year_df['VALUE'] * (12.0 / calendar_year_df['COUNT'])
 
@@ -207,21 +184,15 @@ def annual_delivery_by_type(df: pd.DataFrame, delivery_type = "Article 21") -> p
 
 
 def read_run_to_structure_csv(df: pd.DataFrame, delivery_type = "Article 21", period_type = "Dry Periods") -> dict:   
-    print(f"read_run_to_structure_csv(delivery_type = {delivery_type}, period_type = {period_type}):")
-    
     # Structure to return
     table = {}
 
     calendar_year_df = annual_delivery_by_type(df, delivery_type)
-    # DEBUG
-    # calendar_year_df.to_csv(f"auhona_caldf_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.csv")
-    # time.sleep(1)
     
     # Read yaml file
     config = take_yaml("utils/op.yaml")
     period_info = config.get_period_info(period_type)
     for heading, start_year, end_year in period_info:
-        # print(f"read_run_to_structure_csv: {heading}: {start_year}- {end_year}")
         table[heading] = period_avg(calendar_year_df, start_year, end_year)
     return table
 
@@ -239,7 +210,6 @@ def build_likelihood_by_taf(csv_filename: str, delivery_type, scen1, scen2) -> p
     for scen in [scen1, scen2]:
         df_1 = annual_delivery_by_type(df.loc[df["Scenario"] == scen], delivery_type)
         df_1 = df_1.sort_values(by="VALUE", ascending=False)
-        # print(f"df_1 for {scen} =\n", df_1.head())
 
         # Create a dataframe for the final output
         df_2 = pd.DataFrame({
@@ -289,12 +259,6 @@ def read_all_runs_to_structure_csv(csv_filename: str, delivery_type, scen1, scen
     df_1 = df.loc[df["Scenario"] == scen1]
     df_2 = df.loc[df["Scenario"] == scen2]
 
-    # DEBUG
-    # df_2.to_csv(f"auhona_{scen2}_data_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.csv")
-    # time.sleep(1)
-
-    print(f"read_all_runs_to_structure_csv(): scen2 = {scen2}, df_2.head():\n", df_2.head(100))
-
     # Get the yaml config
     config = take_yaml("utils/op.yaml")
 
@@ -304,10 +268,7 @@ def read_all_runs_to_structure_csv(csv_filename: str, delivery_type, scen1, scen
     data = []
 
     for period_type in period_types:
-        print(f"read_all_runs_to_structure_csv(): scen1 = {scen1}, period_type = {period_type}")
         table_1 = read_run_to_structure_csv(df_1, delivery_type, period_type)
-
-        print(f"read_all_runs_to_structure_csv(): scen2 = {scen2}, period_type = {period_type}")
         table_2 = read_run_to_structure_csv(df_2, delivery_type, period_type)
 
         # Build the rows for dry year
@@ -324,3 +285,4 @@ def read_all_runs_to_structure_csv(csv_filename: str, delivery_type, scen1, scen
     )
 
     return df_onepager
+
