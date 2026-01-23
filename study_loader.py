@@ -35,8 +35,8 @@ studies = [
           r"C:\jobs\20230428_DCR23\models\9.3.1_danube_cc95\DSS\input\DCR2023_SV_Danube_cc95_v1.8.dss",
           "DCR23_CC95", "DCR 2023", "2043_CC95", 1),
 
-    Study(r"C:\jobs\2025_DCR25\models\9.7.0_danube_adj\DSS\output\DCR2025_DV_9.7.0_Danube_Adj_v3.0.dss",
-          r"C:\jobs\2025_DCR25\models\9.7.0_danube_adj\DSS\input\DCR2023_SV_Danube_Adj_v1.8.dss",
+    Study(r"C:\jobs\2025_DCR25\models\3.7.0_danube_adj\DSS\output\CCA1_v3.7.0__Baseline_LU100_SLR0_20241219.dss",
+          r"C:\jobs\2025_DCR25\models\3.7.0_danube_adj\DSS\input\CCA_SV_Danube_Adj_v1.9.dss",
           "DCR25_Baseline", "DCR 2025", "Current", 1),
 
     Study(r"C:\jobs\2025_DCR25\models\3.7.0_danube_cc50\DSS\output\CCA4_v3.7.0__2043_50CC_LU100_SLR15_20241220.dss",
