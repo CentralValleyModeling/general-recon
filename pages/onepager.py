@@ -3,7 +3,7 @@ import utils.onepager_api as api
 import plotly.express as px
 import pandas as pd
 import plotly.graph_objects as go
-
+from pathlib import Path
 
 register_page(
     __name__,
@@ -12,13 +12,7 @@ register_page(
     path='/onepager'
 )
 
-# Generate historical data 
-
-dss_filenames = {
-    "hist": "data/2023DCR_Hist_DV.dss"
-}
-
-csv_filename = "data\\dv_data.csv"
+csv_filename = Path("data") / "dv_data.csv"
 
 yaml_config = api.take_yaml("utils/op.yaml")
 
