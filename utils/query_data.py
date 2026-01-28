@@ -55,7 +55,6 @@ var_dict["SWP_TA_CO_SOD"] = {
     "table_display": "wy",
     "type": "Delivery",
     "units": "cfs",
-    
 }
 
 var_dict["SWP_CO_SOD"] = {
@@ -111,6 +110,10 @@ for s in df_dv["Scenario"].unique():
     scenario_df = df_dv.loc[df_dv["Scenario"] == s]
     scenario_df.index = pd.to_datetime(scenario_df.index)
 
+    #print(scenario_df)
+
+
+
     lastpartialyear = scenario_df.loc[
         (scenario_df.index >= start_date_1) & (scenario_df.index <= end_date_1)
     ]
@@ -121,12 +124,15 @@ for s in df_dv["Scenario"].unique():
         [lastpartialyearavg] * len(new_date_range), ignore_index=True
     )
     extended_df["Scenario"] = s
+    extended_df["Assumption"] = scenario_df["Assumption"].iloc[0]
+    extended_df["Climate"] = scenario_df["Climate"].iloc[0]
     extended_df.index = new_date_range
     scenario_df = pd.concat([scenario_df, extended_df])
     df_dv_extended = pd.concat([df_dv_extended, scenario_df])
 df_dv_extended.update(date_map)
 
 df_dv = pd.DataFrame(df_dv_extended)
+
 
 # Now do SV file mappings
 
