@@ -32,7 +32,7 @@ def layout():
                                 {'label': 'Table A', 'value': 'Table A'},
                                 {'label': 'Article 21', 'value': 'Article 21'},
                             ],
-                            value='Article 21',
+                            value='Table A',
                             style={'flex-grow': '0.5', 'margin-right': '20px'}
                         )
                     ],
