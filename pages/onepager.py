@@ -177,7 +177,7 @@ def handle_selection(delivery_type, scen1, scen2):
         bar_figs.append(dcc.Graph(figure=bar))
     
     likelihood_figs = []
-    likelihood_df = api.build_likelihood_by_taf(csv_filename, "Article 21", "DCR23_Baseline", "DCR25_Baseline")
+    likelihood_df = api.build_likelihood_by_taf(csv_filename, delivery_type, scen1, scen2)
     bar = px.bar(likelihood_df, x="RANGE", y="LIKELIHOOD", color="SCENARIO", barmode="group", color_discrete_sequence=["#336DFF", "#000000"])
     bar.update_traces(texttemplate='%{y:,.0f}%', textposition='outside', textfont=dict(color='black'), cliponaxis=False)
     bar.update_layout(
@@ -190,7 +190,7 @@ def handle_selection(delivery_type, scen1, scen2):
         xaxis_title=None,
         yaxis_title="Likelihood of Annual Delivery (%)"
     )
-    heading = html.H2(f"Estimated Likelihood of Annual Deliveries of SWP Article 21 Water (Existing Conditions)")
+    heading = html.H2(f"Estimated Likelihood of Annual Deliveries of SWP {delivery_type} Water")
     likelihood_figs.append(heading)
     likelihood_figs.append(dcc.Graph(figure=bar))
     return [tab], bar_figs, likelihood_figs

@@ -202,6 +202,18 @@ def load_data(csv_filename: str):
     df = pd.read_csv(csv_filename, index_col=0, parse_dates=True)
     return df
 
+
+likelihood_taf_range_labels = {
+    "Article 21": ["0-20", "20-100", "100-200", "200-300", "300-400", "400-500", "500-600", "600-700", "More than 700"],
+    "Table A": ["0-500", "500-1000", "1000-1500", "1500-2000", "2000-2500", "2500-3000", "3000-3500", "3500-4000", "More than 4000"]
+}
+
+likelihood_taf_ranges = {
+    "Article 21": [0, 20, 100, 200, 300, 400, 500, 600, 700],
+    "Table A": [0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000]
+}
+
+
 def build_likelihood_by_taf(csv_filename: str, delivery_type, scen1, scen2) -> pd.DataFrame:
     # Create dataframe from the given file
     df = load_data(csv_filename)
@@ -213,33 +225,37 @@ def build_likelihood_by_taf(csv_filename: str, delivery_type, scen1, scen2) -> p
 
         # Create a dataframe for the final output
         df_2 = pd.DataFrame({
-            "RANGE": ["0-20", "20-100", "100-200", "200-300", "300-400", "400-500", "500-600", "600-700", "More than 700"], 
+            "RANGE": likelihood_taf_range_labels[delivery_type], 
             "SCENARIO": [scen] * 9, 
             "FREQ": [0] * 9, 
             "LIKELIHOOD": [0] * 9
         })
 
+        ranges = likelihood_taf_ranges[delivery_type]
+        
+        # Populate df_2 with frequencies
         for index, row in df_1.iterrows():
             val = row["VALUE"]
-            if val < 20:
+            if val < ranges[1]:
                 df_2.loc[0, "FREQ"] += 1
-            elif val < 100:
+            elif val < ranges[2]:
                 df_2.loc[1, "FREQ"] += 1
-            elif val < 200:
+            elif val < ranges[3]:
                 df_2.loc[2, "FREQ"] += 1    
-            elif val < 300:
+            elif val < ranges[4]:
                 df_2.loc[3, "FREQ"] += 1
-            elif val < 400:
+            elif val < ranges[5]:
                 df_2.loc[4, "FREQ"] += 1
-            elif val < 500:
+            elif val < ranges[6]:
                 df_2.loc[5, "FREQ"] += 1
-            elif val < 600:
+            elif val < ranges[7]:
                 df_2.loc[6, "FREQ"] += 1
-            elif val < 700:
+            elif val < ranges[8]:
                 df_2.loc[7, "FREQ"] += 1    
             else:
                 df_2.loc[8, "FREQ"] += 1
 
+        # Now calculate likelihood
         freq_sum = sum(df_2["FREQ"])
         if freq_sum != 0:
             df_2["LIKELIHOOD"] = df_2["FREQ"] / freq_sum
