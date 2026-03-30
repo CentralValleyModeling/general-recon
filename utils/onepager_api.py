@@ -112,7 +112,6 @@ def period_avg(
         end = pd.to_datetime(str(end_year) + "-12-31")
 
         mask = (calendar_year_df.index >= start) & (calendar_year_df.index <= end)
-        # AZ
         calendar_year_df = calendar_year_df.loc[mask].copy()
 
     # Calculate the annual average (use rounding, not truncation)
@@ -230,6 +229,7 @@ def build_likelihood_by_taf(csv_filename: str, delivery_type, scen1, scen2) -> p
             "FREQ": [0] * 9, 
             "LIKELIHOOD": [0] * 9
         })
+        
 
         ranges = likelihood_taf_ranges[delivery_type]
         
@@ -301,4 +301,3 @@ def read_all_runs_to_structure_csv(csv_filename: str, delivery_type, scen1, scen
     )
 
     return df_onepager
-

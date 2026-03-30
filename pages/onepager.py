@@ -1,4 +1,4 @@
-from dash import html, register_page, dash_table, dcc, Input, Output, callback #, callback # If you need callbacks, import it here.
+from dash import html, register_page, dash_table, dcc, Input, Output, callback
 import utils.onepager_api as api
 import plotly.express as px
 import pandas as pd
@@ -58,7 +58,7 @@ def layout():
                 ),
             ], style={'display': 'flex', 'flex': '1', "padding": "15px"},
         ),
-        html.H2("SWP Deliveries, TAF/year (Percent Allocation)"),
+        html.H4("SWP Deliveries, TAF/year (Percent Allocation)"),
         html.Div(id="data_table"),
         html.Br(),
         html.Br(),
