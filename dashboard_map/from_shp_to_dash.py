@@ -779,13 +779,13 @@ def create_df_for_scen(
     # Create a column in scen_geodf for the difference of both scenarios' avg annual sum
     scen_geodf["VAL_1"] = data_df_1["VAL"]
     scen_geodf["VAL_2"] = data_df_2["VAL"]
-    scen_geodf["VAL_DIFF"] = scen_geodf["VAL_1"] - scen_geodf["VAL_2"]
+    scen_geodf["VAL_DIFF"] = scen_geodf["VAL_2"] - scen_geodf["VAL_1"]
     scen_geodf["BPART"] = data_df_1["BPART"]
     scen_geodf["BPART_SUFFIX"] = data_df_1["BPART_SUFFIX"]
 
     # Create a column in scen_geodf for val_diff percentages
     scen_geodf["VAL_PERC"] = (
-        ((scen_geodf["VAL_1"] - scen_geodf["VAL_2"]) / scen_geodf["VAL_1"]) * 100
+        ((scen_geodf["VAL_2"] - scen_geodf["VAL_1"]) / scen_geodf["VAL_1"]) * 100
     ).round()
 
     # If VAL_1 is 0, set VAL_PERC to None
