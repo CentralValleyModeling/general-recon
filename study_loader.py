@@ -43,14 +43,13 @@ studies = [
           r"C:\jobs\2025_DCR25\models\3.7.0_danube_cc50\DSS\input\DCR2023_SV_Danube_2043_cc50_v1.9.dss",
           "DCR25_CC50", "DCR 2025", "2043_CC50", 1),
 
+      Study(r"C:\jobs\2025_DCR25\models\3.7.0_danube_cc75\DSS\output\CCA_v3.7.0__2043_75CC_LU100_SLR30_20241227.dss",
+          r"C:\jobs\2025_DCR25\models\3.7.0_danube_cc75\DSS\input\DCR2023_SV_Danube_cc75_v1.2.1.dss",
+          "DCR25_CC75", "DCR 2025", "2043_CC75", 1),
+
     Study(r"C:\jobs\2025_DCR25\models\3.7.0_danube_cc95\DSS\output\CCA5_v3.7.0__2043_95CC_LU100_SLR30_20241227.dss",
           r"C:\jobs\2025_DCR25\models\3.7.0_danube_cc95\DSS\input\DCR2023_SV_Danube_2043_cc95_v1.9.dss",
-          "DCR25_CC95", "DCR 2025", "2043_CC95", 1),
-
-    Study(r"C:\jobs\2025_DCR25\models\3.7.0_danube_cc75\DSS\output\CCA_v3.7.0__2043_75CC_LU100_SLR30_20241227.dss",
-          r"C:\jobs\2025_DCR25\models\3.7.0_danube_cc75\DSS\input\DCR2023_SV_Danube_cc75_v1.2.1.dss",
-          "DCR25_CC75", "DCR 2025", "2043_CC75", 1)
-
+          "DCR25_CC95", "DCR 2025", "2043_CC95", 1)
 ]
 
 date_map = pd.read_csv("constants/date_map.csv", index_col=0, parse_dates=True)

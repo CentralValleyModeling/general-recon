@@ -62,17 +62,17 @@ fig_del_outflows = api.create_del_outflows_centroid()
 ndoi_bparts = ["NDOI", "NDOI_ADD", "NDOI_ADD_ANN", "NDOI_ADD_CVP", "NDOI_ADD_SWP", "NDOI_MIN", "DELTAINFLOWFORNDOI"]
 
 mycolor_scale = [
-    [0, "#0000ff"],
-    [0.1, "#3333ff"],
-    [0.2, "#6666ff"],
-    [0.3, "#9999ff"],
-    [0.4, "#ccccff"],
-    [0.5, "#ffffff"],
-    [0.6, "#ffcccc"],
-    [0.7, "#ff9999"],
-    [0.8, "#ff6666"],
-    [0.9, "#ff3333"],
     [1.0, "#ff0000"],
+    [0.9, "#ff3333"],
+    [0.8, "#ff6666"],
+    [0.7, "#ff9999"],
+    [0.6, "#ffcccc"],
+    [0.5, "#ffffff"],
+    [0.4, "#ccccff"],
+    [0.3, "#9999ff"],
+    [0.2, "#6666ff"],
+    [0.1, "#3333ff"],
+    [0, "#0000ff"]
 ]
 
 # Register the page webmap on the dashboard menu
