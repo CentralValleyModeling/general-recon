@@ -61,20 +61,6 @@ fig_del_outflows = api.create_del_outflows_centroid()
 # list of NDOI bparts
 ndoi_bparts = ["NDOI", "NDOI_ADD", "NDOI_ADD_ANN", "NDOI_ADD_CVP", "NDOI_ADD_SWP", "NDOI_MIN", "DELTAINFLOWFORNDOI"]
 
-mycolor_scale = [
-    [1.0, "#ff0000"],
-    [0.9, "#ff3333"],
-    [0.8, "#ff6666"],
-    [0.7, "#ff9999"],
-    [0.6, "#ffcccc"],
-    [0.5, "#ffffff"],
-    [0.4, "#ccccff"],
-    [0.3, "#9999ff"],
-    [0.2, "#6666ff"],
-    [0.1, "#3333ff"],
-    [0, "#0000ff"]
-]
-
 # Register the page webmap on the dashboard menu
 register_page(
     __name__,
@@ -270,12 +256,20 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
         map_center={'lon': -122.0, 'lat': 38.0},
         map_zoom=6.3,
         height=800,
-        colorscale={"diverging": mycolor_scale},
         coloraxis={
+            "colorscale": [
+                [0.0, "#b2182b"],   # dark red
+                [0.35, "#ef8a62"],  # lighter red
+                [0.48, "#fddbc7"],  # soft tan
+                [0.50, "#f7f7f7"],  # near white
+                [0.52, "#d1e5f0"],  # light blue
+                [0.65, "#67a9cf"],  # medium blue
+                [1.0, "#2166ac"]    # dark blue
+            ],
             "cmin": -50,
             "cmax": 50,
+            "cmid": 0,
             "cauto": False,
-            "autocolorscale": False,
             "colorbar": {"title": {"text": "VAL DIFF %"}},
         }
     )
@@ -447,4 +441,3 @@ def handle_graph_click(clickData, n1, is_open):
             
 
     return False, None, None
-
