@@ -260,7 +260,7 @@ def load_shp_contractors() -> gpd.GeoDataFrame:
 
     # Add rank column based on area
     # geodf = geodf.dropna()
-    geodf["RANK"] = geodf["AREA"].rank(method="first").astype(int)
+    geodf["RANK"] = geodf["AREA"].rank(method="first").fillna(0).astype(int)
 
     # geodf = geodf[geodf["BPART"].isin(qd.df_dv.columns)]
 
@@ -476,10 +476,13 @@ def create_contractor_plot(scen1, scen2):
     data_df = calc_mean()
     scen_geodf = create_df_for_scen(data_df, geodf, scen1, scen2)
 
+    # Set the index to match the original geodf for proper geometry alignment
+    scen_geodf = scen_geodf.set_index(geodf.index)
+
     fig = px.choropleth_mapbox(
         scen_geodf,
-        geojson=geodf.geometry,
-        locations=geodf.index,
+        geojson=scen_geodf.geometry,
+        locations=scen_geodf.index,
         custom_data=[
             "BPART",
             "VAL_DIFF",
@@ -553,6 +556,9 @@ def create_contractor_centroid(scen1, scen2):
     geodf = load_shp('contractors')
     data_df = calc_mean()
     scen_geodf = create_df_for_scen(data_df, geodf, scen1, scen2)
+
+    # Set the index to match the original geodf for proper geometry alignment
+    scen_geodf = scen_geodf.set_index(geodf.index)
 
     centroid_df = scen_geodf.geometry.to_crs(epsg=32618)
     centroid_projected = centroid_df.geometry.centroid
@@ -802,9 +808,8 @@ def create_df_for_scen(
     # create a column that shows what type of data is in the df
     scen_geodf["DATA_TYPE"] = "CONTRACTORS"
 
-    # Set index to rank so that plotting is done in the order of the area
+    # Reset index to ensure geometry alignment
     scen_geodf = scen_geodf.reset_index()
-    scen_geodf = scen_geodf.set_index("RANK")
 
     return scen_geodf
 
