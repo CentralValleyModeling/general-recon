@@ -185,7 +185,7 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
     final_fig = go.Figure(
         layout=dict(
             mapbox=dict(
-                style="carto-positron",
+                style="https://tiles.openfreemap.org/styles/positron",
                 center={"lon": -122.0, "lat": 38.0},
                 zoom=6.3
             ),
@@ -251,10 +251,12 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
         final_fig.add_trace(trace11)
  
     final_fig.update_layout(
-        map_style='outdoors',
+        mapbox=dict(
+            style="https://tiles.openfreemap.org/styles/positron",
+            center={"lon": -122.0, "lat": 38.0},
+            zoom=6.3,
+        ),
         margin={'r': 0, 't': 0, 'l': 0, 'b': 0},
-        map_center={'lon': -122.0, 'lat': 38.0},
-        map_zoom=6.3,
         height=800,
         coloraxis={
             "colorscale": [
