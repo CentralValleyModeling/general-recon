@@ -15,11 +15,9 @@ from pages.styles import (
     ASSUMPTION_COLORS,
     ASSUMPTION_ORDER,
     SCENARIO_ORDER,
-    CLIMATE_ORDER,
     THEME_COLORS,
-    BASELINE
 )
-from utils.query_data import scen_aliases, var_dict
+from utils.query_data import scen_aliases, scenario_category, var_dict
 from utils.tools import cfs_taf, convert_cm_nums, month_list, monthfilter
 
 
@@ -211,7 +209,6 @@ def card_bar_plot(
     startyr: int = 1922,
     endyr: int = 2021,
     cy_wy: str = "wy",
-    climate_order: list = [],
     cm: list = list(range(1, 13))
 ):
     if wyt is None:
@@ -274,7 +271,7 @@ def card_bar_plot_vert(
     cm: list[int] = None,
     startyr: int = 1922,
     endyr: int = 2021,
-    climate_order = [],
+    scenario_order: list[str] | None = None,
     rpt_year: Literal["iwy", "icy"] = "iwy",
     yaxisoverride: Optional[str]=None,
 
@@ -283,6 +280,8 @@ def card_bar_plot_vert(
         wyt = [1, 2, 3, 4, 5]
     if cm is None:
         cm = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    if scenario_order is None:
+        scenario_order = SCENARIO_ORDER
 
     if yaxisoverride is not None:
         yaxis_title = yaxisoverride
@@ -305,36 +304,39 @@ def card_bar_plot_vert(
     df2 = df2.reset_index()
     df_plot = df2
 
+    df_plot["Scenario"] = df_plot["Scenario"].astype(str)
+    df_plot["ScenarioCategory"] = scenario_category(df_plot["Scenario"])
     df_plot["Climate"] = df_plot["Climate"].astype(str)
     df_plot["Assumption"] = df_plot["Assumption"].astype(str)
 
-    missing_categories = set(df_plot["Climate"].unique()) - set(climate_order)
+    missing_categories = set(df_plot["ScenarioCategory"].unique()) - set(scenario_order)
     if missing_categories:
-        print(f"Warning: These categories are in df_plot['Climate'] but missing in CLIMATE_ORDER: {missing_categories}")
+        print(f"Warning: These scenario categories are missing from scenario_order: {missing_categories}")
 
-    df_plot["Climate"] = pd.Categorical(df_plot["Climate"], categories=climate_order, ordered=True)
+    df_plot["ScenarioCategory"] = pd.Categorical(
+        df_plot["ScenarioCategory"], categories=scenario_order, ordered=True
+    )
     df_plot["Assumption"] = pd.Categorical(df_plot["Assumption"],
                                            categories=ASSUMPTION_ORDER, ordered=True)
 
-    # Compute baseline for each Climate group
-    df_plot["BaselineValue"] = df_plot.groupby("Climate")[b_part].transform(
-        lambda x: x.loc[x.index[df_plot.loc[x.index, "Assumption"] == BASELINE]].values[0] 
-        if (df_plot.loc[x.index, "Assumption"] == BASELINE).any() else None
-    )
+    baseline_values = df_plot.loc[
+        df_plot["ScenarioCategory"] == "Current"
+    ].set_index("Assumption")[b_part].to_dict()
+    df_plot["BaselineValue"] = df_plot["Assumption"].astype(str).map(baseline_values)
 
     # Compute Percent Change
     
     df_plot["ValueChange"] = df_plot[b_part] - df_plot["BaselineValue"]
     df_plot["PercentChange"] = ((df_plot[b_part] - df_plot["BaselineValue"]) / df_plot["BaselineValue"]) * 100
 
-    df_plot = df_plot.sort_values(["Climate", "Assumption"])
+    df_plot = df_plot.sort_values(["ScenarioCategory", "Assumption"])
 
     if CSV_EXPORT:
         df_plot[["Climate","Assumption",b_part]].to_csv(f'csv_export/{b_part}.csv', index=False)
 
     fig = px.bar(
         df_plot,
-        x="Climate",
+        x="ScenarioCategory",
         y=b_part,
         color="Assumption",
         barmode="group",
@@ -346,9 +348,9 @@ def card_bar_plot_vert(
     )
     fig.update_layout(
         plot_bgcolor="lightgray",
-        legend_title="Scenario",
+        legend_title="DCR",
         showlegend=True,
-        xaxis_title="Climate",
+        xaxis_title="Scenario",
         xaxis_tickformat=",d",
         yaxis_title=yaxis_title,
         yaxis_tickformat=",d",
@@ -380,12 +382,14 @@ def card_bar_plot_orovl_CAP(
     cm: list[int] = None,
     startyr: int = 1922,
     endyr: int = 2021,
-    climate_order = [],
+    scenario_order: list[str] | None = None,
 ):
     if wyt is None:
         wyt = [1, 2, 3, 4, 5]
     if cm is None:
         cm = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    if scenario_order is None:
+        scenario_order = SCENARIO_ORDER
 
     df0 = df.loc[
         (df["iwy"] >= startyr)
@@ -406,35 +410,38 @@ def card_bar_plot_orovl_CAP(
     df2.rename(columns={0: b_part}, inplace=True)
     df_plot = df2
 
+    df_plot["Scenario"] = df_plot["Scenario"].astype(str)
+    df_plot["ScenarioCategory"] = scenario_category(df_plot["Scenario"])
     df_plot["Climate"] = df_plot["Climate"].astype(str)
     df_plot["Assumption"] = df_plot["Assumption"].astype(str)
 
-    missing_categories = set(df_plot["Climate"].unique()) - set(climate_order)
+    missing_categories = set(df_plot["ScenarioCategory"].unique()) - set(scenario_order)
     if missing_categories:
-        print(f"Warning: These categories are in df_plot['Climate'] but missing in CLIMATE_ORDER: {missing_categories}")
+        print(f"Warning: These scenario categories are missing from scenario_order: {missing_categories}")
 
-    df_plot["Climate"] = pd.Categorical(df_plot["Climate"], categories=climate_order, ordered=True)
+    df_plot["ScenarioCategory"] = pd.Categorical(
+        df_plot["ScenarioCategory"], categories=scenario_order, ordered=True
+    )
     df_plot["Assumption"] = pd.Categorical(df_plot["Assumption"],
                                            categories=ASSUMPTION_ORDER, ordered=True)
 
 
-    # Compute baseline for each Climate group
-    df_plot["BaselineValue"] = df_plot.groupby("Climate")[b_part].transform(
-        lambda x: x.loc[x.index[df_plot.loc[x.index, "Assumption"] == BASELINE]].values[0] 
-        if (df_plot.loc[x.index, "Assumption"] == BASELINE).any() else None
-    )
+    baseline_values = df_plot.loc[
+        df_plot["ScenarioCategory"] == "Current"
+    ].set_index("Assumption")[b_part].to_dict()
+    df_plot["BaselineValue"] = df_plot["Assumption"].astype(str).map(baseline_values)
 
     # Compute Percent Change
     df_plot["PercentChange"] = ((df_plot[b_part] - df_plot["BaselineValue"]) / df_plot["BaselineValue"]) * 100
 
-    df_plot = df_plot.sort_values(["Climate", "Assumption"])
+    df_plot = df_plot.sort_values(["ScenarioCategory", "Assumption"])
     #print(df_plot)
     if CSV_EXPORT:
         df_plot[["Climate","Assumption",b_part]].to_csv(f'csv_export/{b_part}.csv', index=False)
 
     fig = px.bar(
         df_plot,
-        x="Climate",
+        x="ScenarioCategory",
         y=b_part,
         color="Assumption",
         barmode="group",
@@ -446,9 +453,9 @@ def card_bar_plot_orovl_CAP(
     )
     fig.update_layout(
         plot_bgcolor="lightgray",
-        legend_title="Scenario",
+        legend_title="DCR",
         showlegend=True,
-        xaxis_title="Climate",
+        xaxis_title="Scenario",
         xaxis_tickformat=",d",
         yaxis_title="Percent < 1.6 MAF",
         yaxis_tickformat=",.0%",
@@ -595,7 +602,7 @@ def ann_exc_plot(
     if groupby == "Assumption":
         ORDER = ASSUMPTION_ORDER
     elif groupby == "Scenario":
-        ORDER = SCENARIO_ORDER
+        ORDER = scen_aliases
     else:
         raise ValueError(f"Unexpected groupby value: {groupby}")
 

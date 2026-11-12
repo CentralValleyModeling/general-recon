@@ -28,13 +28,10 @@ ASSUMPTION_ORDER = [
 ]
 
 SCENARIO_ORDER = [
-    "DCR23_Baseline",
-    "DCR23_CC50",
-    "DCR23_CC75",
-    "DCR23_CC95",
-    "DCR25_Baseline",
-    "DCR25_CC50",
-    "DCR25_CC75"
+    "Current",
+    "CC50",
+    "CC75",
+    "CC95",
 ]
 
 BASELINE = "DCR 2023"
@@ -43,10 +40,3 @@ ASSUMPTION_COLORS = {
     "DCR 2023": "#2D7FCF",
     "DCR 2025": "#000000",
 }
-
-CLIMATE_ORDER = [
-    "Current",
-    "2043_CC50",
-    "2043_CC75",
-    "2043_CC95",
-]

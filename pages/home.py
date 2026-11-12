@@ -20,7 +20,7 @@ from charts.chart_layouts import (
 
 from data import load_markdown, universal_data_download
 from utils.query_data import df_dv
-from pages.styles import CLIMATE_ORDER
+from pages.styles import SCENARIO_ORDER
 
 register_page(
     __name__,
@@ -38,7 +38,7 @@ ta_card = CardWidget(
     button_label="Drilldown",
     popover_label="ta-info",
     popover_content=load_markdown("page_text/info-table-a.md"),
-    charts=card_bar_plot_vert(df_dv, b_part="SWP_TA_CO_FROM_DELTA", climate_order=CLIMATE_ORDER, rpt_year="icy"),
+    charts=card_bar_plot_vert(df_dv, b_part="SWP_TA_CO_FROM_DELTA", scenario_order=SCENARIO_ORDER, rpt_year="icy"),
 )
 
 a21_card = CardWidget(
@@ -48,7 +48,7 @@ a21_card = CardWidget(
     button_label="Drilldown",
     popover_label="a21-info",
     popover_content=load_markdown("page_text/info-article-21.md"),
-    charts=card_bar_plot_vert(df_dv, b_part="SWP_IN_TOTAL", climate_order=CLIMATE_ORDER, rpt_year="icy"),
+    charts=card_bar_plot_vert(df_dv, b_part="SWP_IN_TOTAL", scenario_order=SCENARIO_ORDER, rpt_year="icy"),
 )
 
 ndoi_card = CardWidget(
@@ -57,7 +57,7 @@ ndoi_card = CardWidget(
     button_label="Drilldown",
     popover_label="ndoi-info",
     popover_content=load_markdown("page_text/info-ndoi.md"),
-    charts=card_bar_plot_vert(df_dv, b_part="NDOI", climate_order=CLIMATE_ORDER, rpt_year="icy"),
+    charts=card_bar_plot_vert(df_dv, b_part="NDOI", scenario_order=SCENARIO_ORDER, rpt_year="icy"),
 )
 
 orovl_sep_card = CardWidget(
@@ -68,7 +68,7 @@ orovl_sep_card = CardWidget(
     popover_content=load_markdown("page_text/info-orovl.md"),
     charts=card_bar_plot_vert(df_dv, 
                               b_part="S_OROVL", 
-                              climate_order=CLIMATE_ORDER, 
+                              scenario_order=SCENARIO_ORDER,
                               cm=[9],
                               yaxisoverride="Thousand acre-feet"),
 )
@@ -81,7 +81,7 @@ sluis_swp_sep_card = CardWidget(
     popover_content=None,
     charts=card_bar_plot_vert(df_dv,
                               b_part="S_SLUIS_SWP",
-                              climate_order=CLIMATE_ORDER,
+                              scenario_order=SCENARIO_ORDER,
                               cm=[9],
                               yaxisoverride="Thousand acre-feet"),
 )
@@ -92,7 +92,7 @@ orovl_sep_co_card = CardWidget(
     button_label="Drilldown",
     popover_label="orovl-co-info",
     popover_content=load_markdown("page_text/info-orovl-co.md"),
-    charts=card_bar_plot_orovl_CAP(df_dv, b_part="S_OROVL", climate_order=CLIMATE_ORDER, cm=[9]),
+    charts=card_bar_plot_orovl_CAP(df_dv, b_part="S_OROVL", scenario_order=SCENARIO_ORDER, cm=[9]),
 )
 
 def layout():

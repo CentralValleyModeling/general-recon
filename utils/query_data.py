@@ -1,6 +1,13 @@
 import pandas as pd
 import yaml
 
+
+def scenario_category(scenarios: pd.Series) -> pd.Series:
+    """Map DCR-specific scenario names to shared chart categories."""
+    categories = scenarios.astype(str).str.rsplit("_", n=1).str[-1]
+    return categories.replace({"Baseline": "Current"})
+
+
 date_map = pd.read_csv("constants/date_map.csv", index_col=0, parse_dates=True)
 df_dv_orig = pd.read_csv("data/dv_data.csv", index_col=0, parse_dates=True)
 df_dv = pd.read_csv("data/dv_data.csv", index_col=0, parse_dates=True)

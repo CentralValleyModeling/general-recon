@@ -8,8 +8,8 @@ import plotly.express as px
 from dash import Input, Output, State, callback, dcc, html, register_page
 
 #from charts.chart_layouts import ann_exc_plot, mon_exc_plot
-from pages.styles import ASSUMPTION_ORDER, CLIMATE_ORDER, PLOT_COLORS, ASSUMPTION_COLORS, BASELINE
-from utils.query_data import date_map, df_dv, scen_aliases, var_dict
+from pages.styles import ASSUMPTION_ORDER, PLOT_COLORS, ASSUMPTION_COLORS, BASELINE, SCENARIO_ORDER
+from utils.query_data import date_map, df_dv, scenario_category, scen_aliases, var_dict
 from utils.tools import (
     cfs_taf,
     common_pers,
@@ -18,7 +18,6 @@ from data import load_markdown
 
 
 per_of_interest_text = load_markdown("page_text/pers_of_interest.md")
-
 register_page(
     __name__,
     name="Dry/Wet Periods",
@@ -96,10 +95,10 @@ def layout():
                 value=ASSUMPTION_ORDER,
             ),
             create_radio_filter(
-                label="Climate",
-                filter_id="filter-climate",
-                options=CLIMATE_ORDER,
-                value=CLIMATE_ORDER[1],
+                label="Scenario condition",
+                filter_id="filter-scenario",
+                options=SCENARIO_ORDER,
+                value="CC50",
             ),
             create_radio_filter(
                 label="Averaging Windows",
@@ -138,11 +137,11 @@ def layout():
 @callback(
     Output("graph-annual", "figure"),
     Input("filter-assumption", "value"),
-    Input("filter-climate", "value"),
+    Input("filter-scenario", "value"),
     Input("filter-variable", "value"),
     Input("filter-average-windows", "value"),
 )
-def update_annual(assumption, climate, variable, avg_window):
+def update_annual(assumption, scenario, variable, avg_window):
     endyr = int(common_pers[avg_window].split("-")[1])
     startyr = int(common_pers[avg_window].split("-")[0])
 
@@ -155,7 +154,7 @@ def update_annual(assumption, climate, variable, avg_window):
 
     mask = (
         df_dv["Assumption"].isin(list(assumption)) &
-        (df_dv["Climate"] == climate) &
+        (scenario_category(df_dv["Scenario"]) == scenario) &
         (df_dv["iwy"].between(startyr, endyr))#&
         #[df_dv["WYT_SAC_"].isin([1,2,3,4,5])]
     )

@@ -8,8 +8,8 @@ import plotly.express as px
 from dash import Input, Output, State, callback, dcc, html, register_page
 
 from charts.chart_layouts import ann_exc_plot, mon_exc_plot
-from pages.styles import PLOT_COLORS, ASSUMPTION_ORDER, ASSUMPTION_COLORS, CLIMATE_ORDER
-from utils.query_data import date_map, df_dv, scen_aliases, var_dict
+from pages.styles import PLOT_COLORS, ASSUMPTION_ORDER, ASSUMPTION_COLORS, SCENARIO_ORDER
+from utils.query_data import date_map, df_dv, scenario_category, scen_aliases, var_dict
 from data import load_markdown
 from utils.tools import (
     cfs_taf,
@@ -46,7 +46,6 @@ for var in var_dict:
 # DataFrames for the summary tables
 df_tbl = make_summary_df(scen_aliases, df_dv, var_dict)
 df_tbl_res = make_ressum_df(scen_aliases, df_dv, var_dict)
-
 # Layout Starts Here
 def layout(**kwargs):
     b = kwargs.get("type", "C_CAA003")
@@ -59,9 +58,9 @@ def layout(**kwargs):
                     html.A(drilldown_text),
                     dbc.Col(
                         [
-                            "Climate (filter for all charts): ",
+                            "Scenario condition (filter for all charts): ",
                             dcc.Dropdown(
-                                CLIMATE_ORDER, id="climate-filter", value="2043_CC50", style={"width": "100%"}
+                                SCENARIO_ORDER, id="scenario-filter", value="CC50", style={"width": "100%"}
                             ),
                             "CalSim variable name (B-Part): ",
                             dcc.Dropdown(
@@ -216,10 +215,10 @@ def update_b_part(alias):
 @callback(
     Output(component_id="timeseries-plot", component_property="figure"),
     Input(component_id="b-part", component_property="value"),
-    Input(component_id="climate-filter", component_property="value"),
+    Input(component_id="scenario-filter", component_property="value"),
 )
-def update_timeseries(b_part, climate_filter):
-    df_plot = df_dv.loc[df_dv['Climate'] == climate_filter]
+def update_timeseries(b_part, scenario_filter):
+    df_plot = df_dv.loc[scenario_category(df_dv["Scenario"]) == scenario_filter]
 
     alias = var_dict[b_part]["alias"]
     units = get_unit_descriptions(var_dict, b_part)
@@ -251,20 +250,20 @@ def update_timeseries(b_part, climate_filter):
     Input(component_id="b-part", component_property="value"),
     Input(component_id="year-type-annual-timeseries", component_property="value"),
     Input(component_id="agg-annual-timeseries", component_property="value"),
-    Input(component_id="climate-filter", component_property="value"),
+    Input(component_id="scenario-filter", component_property="value"),
 )
 def update_annual_timeseries(
     b_part,
     year_type: str = "Calendar Year",
     agg_method: str = "Mean",
-    climate_filter: str = "2043_CC50"
+    scenario_filter: str = "CC50"
 ):
     offsets = {
         "Calendar Year": 1,
         "Water Year": 10,
     }
     units = get_unit_descriptions(var_dict, b_part)
-    df_plot = df_dv.loc[df_dv['Climate'] == climate_filter]
+    df_plot = df_dv.loc[scenario_category(df_dv["Scenario"]) == scenario_filter]
 
     df_agg = (
         df_plot.loc[:, [b_part, "Assumption"]]
@@ -303,14 +302,14 @@ def update_annual_timeseries(
     Output(component_id="exceedance-plot", component_property="figure"),
     Input(component_id="b-part", component_property="value"),
     Input(component_id="monthchecklist-exc", component_property="value"),
-    Input(component_id="climate-filter", component_property="value"),
+    Input(component_id="scenario-filter", component_property="value"),
 )
-def update_exceedance(b_part, monthchecklist, climate_filter):
+def update_exceedance(b_part, monthchecklist, scenario_filter):
     
-    df_plot = df_dv.loc[df_dv['Climate'] == climate_filter]
+    df_plot = df_dv.loc[scenario_category(df_dv["Scenario"]) == scenario_filter]
     units = get_unit_descriptions(var_dict, b_part)
     
-    fig = mon_exc_plot(df_plot, b_part, monthchecklist, climate_filter)
+    fig = mon_exc_plot(df_plot, b_part, monthchecklist, scenario_filter)
 
     fig.update_layout(
         plot_bgcolor="lightgray",
@@ -330,11 +329,11 @@ def update_exceedance(b_part, monthchecklist, climate_filter):
     Input(component_id="b-part", component_property="value"),
     Input(component_id="monthchecklist-exc", component_property="value"),
     Input(component_id="yearwindow", component_property="value"),
-    Input(component_id="climate-filter", component_property="value"),
+    Input(component_id="scenario-filter", component_property="value"),
 )
-def update_annual_exceedance(b_part, monthchecklist, yearwindow, climate_filter):
+def update_annual_exceedance(b_part, monthchecklist, yearwindow, scenario_filter):
     if var_dict[b_part]["table_convert"] == "cfs_taf":
-        df_plot = df_dv.loc[df_dv['Climate'] == climate_filter]
+        df_plot = df_dv.loc[scenario_category(df_dv["Scenario"]) == scenario_filter]
         fig = ann_exc_plot(df_plot, b_part, yearwindow)
         fig.update_layout(
             plot_bgcolor="lightgray",
@@ -369,9 +368,9 @@ def update_annual_exceedance(b_part, monthchecklist, yearwindow, climate_filter)
     Input(component_id="b-part", component_property="value"),
     Input(component_id="wytchecklist-bar", component_property="value"),
     Input(component_id="slider-yr-range", component_property="value"),
-    Input(component_id="climate-filter", component_property="value"),
+    Input(component_id="scenario-filter", component_property="value"),
 )
-def update_monthly(b_part, wytchecklist, slider_yr_range, climate_filter):
+def update_monthly(b_part, wytchecklist, slider_yr_range, scenario_filter):
     startyr = slider_yr_range[0]
     endyr = slider_yr_range[1]
 
@@ -379,7 +378,7 @@ def update_monthly(b_part, wytchecklist, slider_yr_range, climate_filter):
         df_dv["WYT_SAC_MAY"].isin(convert_wyt_nums(wytchecklist))
         & (df_dv["iwy"] >= startyr)
         & (df_dv["iwy"] <= endyr)
-        & (df_dv["Climate"] == climate_filter)
+        & (scenario_category(df_dv["Scenario"]) == scenario_filter)
     ]
 
     df = cfs_taf(df, var_dict)
@@ -427,16 +426,16 @@ def update_monthly(b_part, wytchecklist, slider_yr_range, climate_filter):
     Input(component_id="b-part", component_property="value"),
     Input(component_id="wytchecklist-bar", component_property="value"),
     Input(component_id="slider-yr-range", component_property="value"),
-    Input(component_id="climate-filter", component_property="value"),
+    Input(component_id="scenario-filter", component_property="value"),
 )
-def update_bar_annual(b_part, wytchecklist, slider_yr_range, climate_filter):
+def update_bar_annual(b_part, wytchecklist, slider_yr_range, scenario_filter):
     startyr = slider_yr_range[0]
     endyr = slider_yr_range[1]
     df_filtered = df_dv.loc[
         df_dv["WYT_SAC_MAY"].isin(convert_wyt_nums(wytchecklist))
         & (df_dv["iwy"] >= startyr)
         & (df_dv["iwy"] <= endyr)
-        & (df_dv["Climate"] == climate_filter)
+        & (scenario_category(df_dv["Scenario"]) == scenario_filter)
 
     ]
 
@@ -461,7 +460,7 @@ def update_bar_annual(b_part, wytchecklist, slider_yr_range, climate_filter):
         )
 
         fig.update_layout(
-            title=f"Annual average {alias} ({climate_filter})",
+            title=f"Annual average {alias} ({scenario_filter})",
             legend_title="Scenario",
             barmode="relative",
             plot_bgcolor="lightgray",
