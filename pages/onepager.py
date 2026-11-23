@@ -141,7 +141,7 @@ def handle_selection(delivery_type, scen1, scen2):
                 html.Th(""),
                 html.Th(""),
                 html.Th(f"Final DCR 2023 Conditions ({scen1})"),
-                html.Th(f"Final DCR 2025 Conditions ({scen2})"),
+                html.Th(f"Draft DCR 2025 Conditions ({scen2})"),
                 html.Th("Change")
             ])),
             html.Tbody(tab_rows)

@@ -1,1 +1,1 @@
-The Final DCR 2025 provides a decrease in Table A deliveries over the long-term average and notable wet and dry periods. This is primarily because of the increased exports in April-May from the revised spring outflow requirement of the Agreements to Support Healthy Rivers and Landscapes. 
+The Draft DCR 2025 provides an increase in Table A deliveries over the long-term average and notable wet and dry periods. This is primarily because of the increased exports in April-May from the revised spring outflow requirement of the Agreements to Support Healthy Rivers and Landscapes. 
