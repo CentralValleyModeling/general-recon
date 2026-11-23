@@ -157,8 +157,12 @@ def layout():
                 ), 
             ], style={'display': 'flex', 'gap': '10px', 'padding-top': '20px', 'padding-bottom': '20px'},
         ),
-        dcc.Graph(id="my_id", config={"scrollZoom": True}),
-    ])
+        dcc.Graph(
+            id="my_id",
+            config={"scrollZoom": True, "responsive": True},
+            style={"flex": "1", "minHeight": 0},
+        ),
+    ], style={"display": "flex", "flexDirection": "column", "height": "calc(100vh - 50px)"})
 
     return layout
 
@@ -190,7 +194,6 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
                 zoom=6.3
             ),
             margin={'r': 0, 't': 0, 'l': 0, 'b': 0},
-            height=800,
         )
     )
 
@@ -257,7 +260,7 @@ def update_graph(scen1: str, scen2: str, selected_values: list):
             zoom=6.3,
         ),
         margin={'r': 0, 't': 0, 'l': 0, 'b': 0},
-        height=800,
+        autosize=True,
         coloraxis={
             "colorscale": [
                 [0.0, "#b2182b"],   # dark red
