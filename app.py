@@ -26,7 +26,7 @@ navbar = dbc.Navbar(
         dbc.NavbarBrand(
             [
                 html.Img(src="/assets/dwr_seal.png", height="50px", className="me-2"),
-                html.Span("Draft Delivery Capability Report 2025", style={"fontSize": "2rem"})
+                html.Span("Delivery Capability Report 2025", style={"fontSize": "2rem"})
             ],
             href="/",
             style={"color": "white", "display": "flex", "alignItems": "center"}
